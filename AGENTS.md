@@ -93,7 +93,10 @@ Online anime streaming platform built with:
 - **Server Components by default.** Only add `"use client"` when client-side interactivity, state, or browser APIs require it.
 - **Do not turn entire route trees into Client Components.**
 - **Page files compose.** `page.tsx` should primarily compose components, not contain large JSX structures or business logic.
-- **Use appropriate Next.js patterns:** layouts, `loading.tsx`, `error.tsx`, metadata APIs, Server Actions, Route Handlers.
+- Use appropriate Next.js patterns: layouts, `loading.tsx`, `error.tsx`, metadata APIs, Server Actions, Route Handlers.
+  - **Loading UI MUST use Skeletons.** Every Next.js `loading.tsx` file or component loading placeholder MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
+  - **No spinners or top loaders.** The use of spinners, top loaders, progress bars, or other non-skeleton indicators is strictly prohibited.
+  - **Maintain structural layout.** Skeletons must visually mimic the shape and structure of the fully loaded content to prevent Cumulative Layout Shift (CLS).
 - **Streaming and caching** where beneficial.
 - **Dynamic rendering** only when necessary.
 

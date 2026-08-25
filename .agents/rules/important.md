@@ -10,6 +10,11 @@ These rules apply to all code changes in this repository.
 - Use **Simple Icons** for brand/service/company icons where available.
 - Do NOT use emojis in application UI or source code unless explicitly required.
 - Do NOT introduce arbitrary icon libraries when Lucide or Simple Icons is appropriate.
+- **Next.js Loading States**:
+  - All loading pages (`loading.tsx`) and component loading placeholders MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
+  - Do NOT use alternative loading elements, including but not limited to spinners, top loaders, and progress bars.
+  - Do NOT use raw `animate-pulse` divs; always reuse the project's `Skeleton` component.
+  - Skeletons must visually mimic the shape and structure of the expected page/component to prevent Cumulative Layout Shift (CLS).
 
 ## Styling
 
