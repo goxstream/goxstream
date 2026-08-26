@@ -12,12 +12,13 @@ import {
   Cpu,
   Download,
   ShieldCheck,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useHlsConverter } from "../hooks/use-hls-converter";
-import { isFFmpegMultiThreaded } from "../lib/hls";
+import { isFFmpegMultiThreaded, isWebCodecsSupported } from "../lib/hls";
 import { ConversionLogDrawer } from "./conversion-log-drawer";
 import { PipelineStageBar } from "./pipeline-stage-bar";
 
@@ -117,6 +118,16 @@ export function HlsConverterWidget({
               Multi-Threaded (Experimental)
             </button>
           </div>
+
+          {isWebCodecsSupported() && (
+            <Badge
+              variant="outline"
+              className="text-[10px] bg-purple-500/10 text-purple-400 border-purple-500/20 gap-1 font-semibold"
+            >
+              <Zap className="size-3 text-purple-400" />
+              WebCodecs GPU Active
+            </Badge>
+          )}
 
           {engineStatus === "unloaded" && (
             <Badge

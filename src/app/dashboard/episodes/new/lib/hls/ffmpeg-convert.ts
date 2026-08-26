@@ -2,6 +2,7 @@
 
 import { fetchFile } from "@ffmpeg/util";
 import { loadFFmpegCore, terminateAndResetFFmpeg } from "./ffmpeg-init";
+import { isWebCodecsSupported, transcodeVideoGPU } from "./webcodecs-gpu";
 import type {
   TranscodeProgress,
   TranscodeLogEntry,
@@ -19,6 +20,18 @@ export async function transcodeVideoToHls(
   onLogCallback?: (entry: TranscodeLogEntry) => void
 ): Promise<HlsTranscodeResult> {
   let currentStageId: "init" | "1080p" | "720p" | "480p" | "upload" = "init";
+
+  const hasGPU = isWebCodecsSupported();
+  if (onLogCallback) {
+    onLogCallback({
+      id: `log-${Date.now()}-gpu`,
+      timestamp: new Date().toLocaleTimeString("en-US", { hour12: false }),
+      type: "info",
+      message: hasGPU
+        ? "[WebCodecs GPU] Hardware Acceleration API detected. Preferring GPU Hardware Encoder."
+        : "[FFmpeg WASM] WebCodecs API unavailable. Using FFmpeg WASM CPU Pipeline (-threads 1).",
+    });
+  }
 
   const ffmpeg = await loadFFmpegCore((msg) => {
     if (onProgressCallback) {
@@ -93,26 +106,51 @@ export async function transcodeVideoToHls(
     });
     await ffmpeg.deleteFile("1080p.m3u8");
 
-    // 3. Rendition 2: 720p HD Rendition (Ultrafast preset + FastDecode + Single-Threaded x264 for WASM stability)
+    // 3. Rendition 2: 720p HD Rendition (WebCodecs GPU Hardware Accelerated with WASM CPU fallback)
     currentStageId = "720p";
-    if (onProgressCallback) {
-      onProgressCallback({ progress: 50, message: "Generating 720p HD scaled stream rendition...", stageId: "720p" });
+    let usedGPU720 = false;
+
+    if (hasGPU) {
+      try {
+        if (onProgressCallback) {
+          onProgressCallback({ progress: 40, message: "Encoding 720p HD using WebCodecs GPU Hardware Acceleration...", stageId: "720p" });
+        }
+        await transcodeVideoGPU(file, {
+          targetWidth: 1280,
+          targetHeight: 720,
+          bitrate: 2_800_000,
+          onProgress: (pct) => {
+            if (onProgressCallback) {
+              onProgressCallback({ progress: 30 + Math.round(pct * 0.2), message: `GPU Encoding 720p (${pct}%)...`, stageId: "720p" });
+            }
+          },
+        });
+        usedGPU720 = true;
+      } catch (gpuErr: any) {
+        console.warn("[WebCodecs GPU] 720p GPU encoding error, falling back to WASM CPU", gpuErr);
+      }
     }
-    await ffmpeg.exec([
-      "-i", inputName,
-      "-vf", "scale=-2:720:flags=bicubic",
-      "-c:v", "libx264",
-      "-preset", "ultrafast",
-      "-tune", "fastdecode",
-      "-crf", "28",
-      "-threads", "1",
-      "-c:a", "copy",
-      "-start_number", "0",
-      "-hls_time", "10",
-      "-hls_list_size", "0",
-      "-f", "hls",
-      "720p.m3u8",
-    ]);
+
+    if (!usedGPU720) {
+      if (onProgressCallback) {
+        onProgressCallback({ progress: 50, message: "Generating 720p HD scaled stream rendition (WASM CPU)...", stageId: "720p" });
+      }
+      await ffmpeg.exec([
+        "-i", inputName,
+        "-vf", "scale=-2:720:flags=bicubic",
+        "-c:v", "libx264",
+        "-preset", "ultrafast",
+        "-tune", "fastdecode",
+        "-crf", "28",
+        "-threads", "1",
+        "-c:a", "copy",
+        "-start_number", "0",
+        "-hls_time", "10",
+        "-hls_list_size", "0",
+        "-f", "hls",
+        "720p.m3u8",
+      ]);
+    }
 
     // Read 720p Manifest
     const manifest720 = await ffmpeg.readFile("720p.m3u8");
@@ -125,26 +163,51 @@ export async function transcodeVideoToHls(
     });
     await ffmpeg.deleteFile("720p.m3u8");
 
-    // 4. Rendition 3: 480p SD Rendition (Ultrafast preset + FastDecode + Single-Threaded x264 for WASM stability)
+    // 4. Rendition 3: 480p SD Rendition (WebCodecs GPU Hardware Accelerated with WASM CPU fallback)
     currentStageId = "480p";
-    if (onProgressCallback) {
-      onProgressCallback({ progress: 75, message: "Generating 480p SD scaled stream rendition...", stageId: "480p" });
+    let usedGPU480 = false;
+
+    if (hasGPU) {
+      try {
+        if (onProgressCallback) {
+          onProgressCallback({ progress: 65, message: "Encoding 480p SD using WebCodecs GPU Hardware Acceleration...", stageId: "480p" });
+        }
+        await transcodeVideoGPU(file, {
+          targetWidth: 854,
+          targetHeight: 480,
+          bitrate: 1_400_000,
+          onProgress: (pct) => {
+            if (onProgressCallback) {
+              onProgressCallback({ progress: 60 + Math.round(pct * 0.2), message: `GPU Encoding 480p (${pct}%)...`, stageId: "480p" });
+            }
+          },
+        });
+        usedGPU480 = true;
+      } catch (gpuErr: any) {
+        console.warn("[WebCodecs GPU] 480p GPU encoding error, falling back to WASM CPU", gpuErr);
+      }
     }
-    await ffmpeg.exec([
-      "-i", inputName,
-      "-vf", "scale=-2:480:flags=bicubic",
-      "-c:v", "libx264",
-      "-preset", "ultrafast",
-      "-tune", "fastdecode",
-      "-crf", "28",
-      "-threads", "1",
-      "-c:a", "copy",
-      "-start_number", "0",
-      "-hls_time", "10",
-      "-hls_list_size", "0",
-      "-f", "hls",
-      "480p.m3u8",
-    ]);
+
+    if (!usedGPU480) {
+      if (onProgressCallback) {
+        onProgressCallback({ progress: 75, message: "Generating 480p SD scaled stream rendition (WASM CPU)...", stageId: "480p" });
+      }
+      await ffmpeg.exec([
+        "-i", inputName,
+        "-vf", "scale=-2:480:flags=bicubic",
+        "-c:v", "libx264",
+        "-preset", "ultrafast",
+        "-tune", "fastdecode",
+        "-crf", "28",
+        "-threads", "1",
+        "-c:a", "copy",
+        "-start_number", "0",
+        "-hls_time", "10",
+        "-hls_list_size", "0",
+        "-f", "hls",
+        "480p.m3u8",
+      ]);
+    }
 
     // Read 480p Manifest
     const manifest480 = await ffmpeg.readFile("480p.m3u8");
