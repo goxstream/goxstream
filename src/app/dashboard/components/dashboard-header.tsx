@@ -24,34 +24,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useIsMounted } from "../hooks/use-mounted";
+import { NOTIFICATIONS_DATA, CURRENT_USER } from "../lib/mock-data";
 
 export function DashboardHeader() {
   const { theme, setTheme } = useTheme();
+  const mounted = useIsMounted();
   const [notificationsOpen, setNotificationsOpen] = React.useState(false);
-
-  const notifications = [
-    {
-      id: "1",
-      title: "New Episode Uploaded",
-      description: "Jujutsu Kaisen S2 Ep 14 encoded successfully.",
-      time: "5 mins ago",
-      type: "success",
-    },
-    {
-      id: "2",
-      title: "CDN Traffic Spike Alert",
-      description: "Edge node SG-01 reached 88% bandwidth threshold.",
-      time: "20 mins ago",
-      type: "alert",
-    },
-    {
-      id: "3",
-      title: "User Moderation Report",
-      description: "3 new flagged comments awaiting review.",
-      time: "1 hour ago",
-      type: "info",
-    },
-  ];
 
   return (
     <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border/60 bg-background/95 px-4 backdrop-blur-md transition-all">
@@ -103,16 +82,22 @@ export function DashboardHeader() {
 
         <Separator orientation="vertical" className="hidden sm:block h-4 border-border/60" />
 
-        {/* Theme Toggle Button */}
+        {/* Theme Toggle Button dengan Hydration Guard */}
         <Button
           variant="ghost"
           size="icon"
-          className="size-9 rounded-lg border border-border/40 hover:bg-accent"
+          className="size-9 rounded-lg border border-border/40 hover:bg-accent cursor-pointer"
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           title="Toggle Theme"
         >
-          <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
-          <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-brand" />
+          {mounted ? (
+            <>
+              <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
+              <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-brand" />
+            </>
+          ) : (
+            <div className="size-4 rounded-full bg-muted animate-pulse" />
+          )}
           <span className="sr-only">Toggle theme</span>
         </Button>
 
@@ -145,7 +130,7 @@ export function DashboardHeader() {
               </Button>
             </div>
             <div className="divide-y divide-border/60 max-h-72 overflow-y-auto">
-              {notifications.map((n) => (
+              {NOTIFICATIONS_DATA.map((n) => (
                 <div key={n.id} className="flex gap-3 p-3 text-xs hover:bg-accent/40 transition-colors">
                   {n.type === "success" && (
                     <CheckCircle2 className="size-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -171,10 +156,7 @@ export function DashboardHeader() {
 
         {/* Quick User Avatar */}
         <Avatar className="h-8 w-8 rounded-lg border border-border/60 cursor-pointer transition-transform hover:scale-105">
-          <AvatarImage
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-            alt="Alexander Vance"
-          />
+          <AvatarImage src={CURRENT_USER.avatar} alt={CURRENT_USER.name} />
           <AvatarFallback className="rounded-lg bg-brand/10 text-brand font-semibold text-xs">
             AV
           </AvatarFallback>

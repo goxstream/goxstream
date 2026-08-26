@@ -21,6 +21,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -29,82 +30,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChartContainer, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
-
-const TRAFFIC_DATA = [
-  { time: "00:00", activeStreams: 1420, bandwidthGbps: 4.2 },
-  { time: "03:00", activeStreams: 850, bandwidthGbps: 2.5 },
-  { time: "06:00", activeStreams: 1100, bandwidthGbps: 3.1 },
-  { time: "09:00", activeStreams: 2400, bandwidthGbps: 7.4 },
-  { time: "12:00", activeStreams: 4800, bandwidthGbps: 14.8 },
-  { time: "15:00", activeStreams: 6200, bandwidthGbps: 19.2 },
-  { time: "18:00", activeStreams: 9800, bandwidthGbps: 29.5 },
-  { time: "21:00", activeStreams: 12500, bandwidthGbps: 38.6 },
-];
-
-const CHART_CONFIG = {
-  activeStreams: {
-    label: "Active Viewers",
-    color: "var(--brand, #34d094)",
-  },
-  bandwidthGbps: {
-    label: "Bandwidth (Gbps)",
-    color: "#31ffe7",
-  },
-} satisfies ChartConfig;
-
-const RECENT_ACTIVITIES = [
-  {
-    id: "act-1",
-    user: {
-      name: "Daisuke Sato",
-      email: "daisuke@encoder.gox",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80",
-    },
-    action: "Published Episode 14",
-    target: "Jujutsu Kaisen Season 2",
-    timestamp: "2 mins ago",
-    status: "completed" as const,
-  },
-  {
-    id: "act-2",
-    user: {
-      name: "Elena Rostova",
-      email: "elena@mod.gox",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80",
-    },
-    action: "Resolved Flagged Comment",
-    target: "Chainsaw Man Ep 08",
-    timestamp: "15 mins ago",
-    status: "completed" as const,
-  },
-  {
-    id: "act-3",
-    user: {
-      name: "System Worker",
-      email: "cron@cloudflare.worker",
-      avatar: "",
-    },
-    action: "Auto-synced MAL Ratings",
-    target: "128 Anime Titles",
-    timestamp: "45 mins ago",
-    status: "completed" as const,
-  },
-  {
-    id: "act-4",
-    user: {
-      name: "Kenji Takahashi",
-      email: "kenji@goxstream.com",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80",
-    },
-    action: "Updated Player Source Node",
-    target: "Server Node JP-TOK-02",
-    timestamp: "1 hour ago",
-    status: "pending" as const,
-  },
-];
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { useIsMounted } from "../hooks/use-mounted";
+import { TRAFFIC_CHART_CONFIG } from "../constants";
+import { TRAFFIC_DATA, RECENT_ACTIVITIES } from "../lib/mock-data";
 
 export function DashboardOverview() {
+  const mounted = useIsMounted();
+
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
       {/* Top Banner / Welcome Section */}
@@ -123,11 +56,11 @@ export function DashboardOverview() {
           </p>
         </div>
         <div className="flex items-center gap-2.5">
-          <Button variant="outline" size="sm" className="h-9 text-xs border-border/60 gap-1.5">
+          <Button variant="outline" size="sm" className="h-9 text-xs border-border/60 gap-1.5 cursor-pointer">
             <RefreshCw className="size-3.5 text-muted-foreground" />
             <span>Sync Stats</span>
           </Button>
-          <Button size="sm" className="h-9 text-xs gap-1.5 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold">
+          <Button size="sm" className="h-9 text-xs gap-1.5 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold cursor-pointer">
             <Plus className="size-4" />
             <span>New Anime / Episode</span>
           </Button>
@@ -229,30 +162,34 @@ export function DashboardOverview() {
             </Badge>
           </CardHeader>
           <CardContent className="pt-2">
-            <ChartContainer config={CHART_CONFIG} className="h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={TRAFFIC_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorStreams" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#34d094" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#34d094" stopOpacity={0.0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
-                  <XAxis dataKey="time" stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
-                  <Tooltip content={<ChartTooltipContent />} />
-                  <Area
-                    type="monotone"
-                    dataKey="activeStreams"
-                    stroke="#34d094"
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorStreams)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            {mounted ? (
+              <ChartContainer config={TRAFFIC_CHART_CONFIG} className="h-72 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={TRAFFIC_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorStreams" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#34d094" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="#34d094" stopOpacity={0.0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" opacity={0.15} vertical={false} />
+                    <XAxis dataKey="time" stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#888888" fontSize={11} tickLine={false} axisLine={false} />
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Area
+                      type="monotone"
+                      dataKey="activeStreams"
+                      stroke="#34d094"
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill="url(#colorStreams)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            ) : (
+              <Skeleton className="h-72 w-full rounded-lg bg-muted/30" />
+            )}
           </CardContent>
         </Card>
 
@@ -268,19 +205,19 @@ export function DashboardOverview() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2.5 my-auto">
-            <Button variant="outline" className="w-full justify-start gap-2.5 h-10 border-border/60 text-xs font-medium">
+            <Button variant="outline" className="w-full justify-start gap-2.5 h-10 border-border/60 text-xs font-medium cursor-pointer">
               <Plus className="size-4 text-brand shrink-0" />
               <span>Create New Anime Title Entry</span>
             </Button>
-            <Button variant="outline" className="w-full justify-start gap-2.5 h-10 border-border/60 text-xs font-medium">
+            <Button variant="outline" className="w-full justify-start gap-2.5 h-10 border-border/60 text-xs font-medium cursor-pointer">
               <Upload className="size-4 text-cyan-400 shrink-0" />
               <span>Upload Episode & Subtitle Files</span>
             </Button>
-            <Button variant="outline" className="w-full justify-start gap-2.5 h-10 border-border/60 text-xs font-medium">
+            <Button variant="outline" className="w-full justify-start gap-2.5 h-10 border-border/60 text-xs font-medium cursor-pointer">
               <RefreshCw className="size-4 text-purple-400 shrink-0" />
               <span>Flush CDN Cache & Edge Nodes</span>
             </Button>
-            <Button variant="outline" className="w-full justify-start gap-2.5 h-10 border-border/60 text-xs font-medium">
+            <Button variant="outline" className="w-full justify-start gap-2.5 h-10 border-border/60 text-xs font-medium cursor-pointer">
               <ExternalLink className="size-4 text-amber-400 shrink-0" />
               <span>View Public Streaming Site</span>
             </Button>
@@ -302,7 +239,7 @@ export function DashboardOverview() {
               Latest administrative changes, episode releases, and moderation actions.
             </CardDescription>
           </div>
-          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1">
+          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1 cursor-pointer">
             <span>View All Logs</span>
             <MoreHorizontal className="size-3.5" />
           </Button>
