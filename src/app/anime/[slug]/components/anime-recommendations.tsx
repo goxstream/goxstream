@@ -19,7 +19,7 @@ export function AnimeRecommendations({ recommendations }: AnimeRecommendationsPr
         <CardHeader className="pb-4">
           <CardTitle className="text-lg font-bold flex items-center gap-2">
             <Sparkles className="size-5 text-primary" />
-            <span>Rekomendasi Anime Serupa</span>
+            <span>Recommended Anime</span>
           </CardTitle>
         </CardHeader>
         <CardContent>

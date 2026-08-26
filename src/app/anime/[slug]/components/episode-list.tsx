@@ -31,7 +31,7 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
   // Generate Episode Ranges (e.g. 1-12, 13-24)
   const ranges = useMemo(() => {
     const rangeList: { label: string; value: string; min: number; max: number }[] = [
-      { label: "Semua Episode", value: "all", min: 1, max: 9999 },
+      { label: "All Episodes", value: "all", min: 1, max: 9999 },
     ];
     if (episodes.length > 12) {
       const step = 12;
@@ -82,10 +82,10 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
           <div className="space-y-1">
             <CardTitle className="text-xl font-extrabold flex items-center gap-2">
               <Play className="size-5 text-primary fill-primary" />
-              <span>Daftar Episode ({episodes.length})</span>
+              <span>Episode List ({episodes.length})</span>
             </CardTitle>
             <p className="text-xs text-muted-foreground">
-              Pilih episode untuk mulai menonton tayangan resolusi tinggi
+              Select an episode to start streaming in high definition
             </p>
           </div>
 
@@ -117,7 +117,7 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
-                placeholder="Cari episode # atau judul..."
+                placeholder="Search episode # or title..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9 h-9 text-xs border-border/80"
@@ -146,10 +146,10 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
           {filteredEpisodes.length === 0 ? (
             <div className="text-center py-12 border border-dashed border-border/60 rounded-xl">
               <p className="text-sm font-semibold text-muted-foreground">
-                Episode tidak ditemukan
+                No episodes found
               </p>
               <p className="text-xs text-muted-foreground/80 mt-1">
-                Coba sesuaikan kata kunci pencarian atau penyaring episode.
+                Try adjusting your search query or episode filter.
               </p>
             </div>
           ) : viewMode === "grid" ? (
@@ -185,7 +185,7 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
                         </Badge>
                         {isLatest && (
                           <Badge className="bg-emerald-500 text-white text-[10px] font-bold gap-0.5">
-                            <Sparkles className="size-2.5" /> BARU
+                            <Sparkles className="size-2.5" /> NEW
                           </Badge>
                         )}
                       </div>
@@ -208,7 +208,7 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
                       <p className="text-[11px] text-muted-foreground flex items-center justify-between">
                         <span>{ep.releasedAt}</span>
                         <span className="text-primary font-medium text-[10px] group-hover:underline">
-                          Tonton →
+                          Watch →
                         </span>
                       </p>
                     </div>
@@ -239,7 +239,7 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
                           </h4>
                           {isLatest && (
                             <Badge className="bg-emerald-500 text-white text-[9px] font-bold py-0 px-1.5 shrink-0">
-                              BARU
+                              NEW
                             </Badge>
                           )}
                         </div>
@@ -269,3 +269,4 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
     </section>
   );
 }
+

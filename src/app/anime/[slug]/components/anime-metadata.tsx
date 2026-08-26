@@ -34,7 +34,7 @@ export function AnimeMetadata({ anime }: AnimeMetadataProps) {
           <CardHeader className="pb-3">
             <CardTitle className="text-lg font-bold flex items-center gap-2">
               <Info className="size-5 text-primary" />
-              <span>Sinopsis & Cerita</span>
+              <span>Synopsis & Story</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -53,12 +53,12 @@ export function AnimeMetadata({ anime }: AnimeMetadataProps) {
               >
                 {isExpanded ? (
                   <>
-                    <span>Tampilkan Lebih Sedikit</span>
+                    <span>Show Less</span>
                     <ChevronUp className="size-3.5" />
                   </>
                 ) : (
                   <>
-                    <span>Baca Selengkapnya</span>
+                    <span>Read More</span>
                     <ChevronDown className="size-3.5" />
                   </>
                 )}
@@ -72,7 +72,7 @@ export function AnimeMetadata({ anime }: AnimeMetadataProps) {
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <Tag className="size-4 text-primary" />
-              <span>Kategori & Genre</span>
+              <span>Categories & Genres</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -97,7 +97,7 @@ export function AnimeMetadata({ anime }: AnimeMetadataProps) {
         <CardHeader className="pb-3">
           <CardTitle className="text-base font-bold flex items-center gap-2">
             <ShieldCheck className="size-4 text-primary" />
-            <span>Informasi Detail</span>
+            <span>Detailed Specifications</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-xs">
@@ -110,14 +110,14 @@ export function AnimeMetadata({ anime }: AnimeMetadataProps) {
 
           <div className="flex justify-between items-center py-1.5 border-b border-border/40">
             <span className="text-muted-foreground flex items-center gap-1.5">
-              <Film className="size-3.5" /> Format & Tipe
+              <Film className="size-3.5" /> Format & Type
             </span>
             <span className="font-semibold text-foreground">{anime.type}</span>
           </div>
 
           <div className="flex justify-between items-center py-1.5 border-b border-border/40">
             <span className="text-muted-foreground flex items-center gap-1.5">
-              <CalendarDays className="size-3.5" /> Musim Rilis
+              <CalendarDays className="size-3.5" /> Release Season
             </span>
             <span className="font-semibold text-foreground">
               {anime.season} {anime.year}
@@ -126,22 +126,22 @@ export function AnimeMetadata({ anime }: AnimeMetadataProps) {
 
           <div className="flex justify-between items-center py-1.5 border-b border-border/40">
             <span className="text-muted-foreground flex items-center gap-1.5">
-              <Mic className="size-3.5" /> Audio / Sulit Suara
+              <Mic className="size-3.5" /> Audio / Dubbing
             </span>
             <span className="font-semibold text-foreground">{anime.subOrDub}</span>
           </div>
 
           <div className="flex justify-between items-center py-1.5 border-b border-border/40">
             <span className="text-muted-foreground flex items-center gap-1.5">
-              <Clock className="size-3.5" /> Total Episode
+              <Clock className="size-3.5" /> Total Episodes
             </span>
             <span className="font-semibold text-foreground">
-              {anime.episodesCount} Episode
+              {anime.episodesCount} Episode{anime.episodesCount > 1 ? "s" : ""}
             </span>
           </div>
 
           <div className="flex justify-between items-center py-1.5">
-            <span className="text-muted-foreground">Status Tayang</span>
+            <span className="text-muted-foreground">Status</span>
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {anime.status}
             </span>
@@ -151,3 +151,4 @@ export function AnimeMetadata({ anime }: AnimeMetadataProps) {
     </div>
   );
 }
+

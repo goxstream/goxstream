@@ -17,10 +17,10 @@ export default function AnimeNotFound() {
 
           <div className="space-y-2">
             <h1 className="text-2xl font-extrabold tracking-tight">
-              Anime Tidak Ditemukan
+              Anime Not Found
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Maaf, judul anime yang Anda cari tidak tersedia di pustaka kami atau telah berpindah alamat.
+              Sorry, the anime title you are looking for is not available in our library or has been relocated.
             </p>
           </div>
 
@@ -30,7 +30,7 @@ export default function AnimeNotFound() {
               className={buttonVariants({ variant: "default", className: "w-full sm:w-auto font-medium gap-2" })}
             >
               <Search className="size-4" />
-              <span>Jelajahi Katalog</span>
+              <span>Explore Catalog</span>
             </Link>
 
             <Link
@@ -38,7 +38,7 @@ export default function AnimeNotFound() {
               className={buttonVariants({ variant: "outline", className: "w-full sm:w-auto font-medium gap-2 border-border/80" })}
             >
               <ArrowLeft className="size-4" />
-              <span>Kembali ke Beranda</span>
+              <span>Back to Home</span>
             </Link>
           </div>
         </div>

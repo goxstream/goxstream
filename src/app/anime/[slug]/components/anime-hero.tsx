@@ -153,7 +153,7 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
                 className={buttonVariants({ size: "lg", className: "font-semibold shadow-xs gap-2" })}
               >
                 <Play className="size-4 fill-primary-foreground" />
-                <span>Tonton Episode {latestEpisodeNum || 1}</span>
+                <span>Watch Episode {latestEpisodeNum || 1}</span>
               </Link>
 
               <Button
@@ -165,12 +165,12 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
                 {isBookmarked ? (
                   <>
                     <BookmarkCheck className="size-4 text-emerald-500" />
-                    <span>Favorit Tersimpan</span>
+                    <span>Favorited</span>
                   </>
                 ) : (
                   <>
                     <Bookmark className="size-4" />
-                    <span>Tambah Favorit</span>
+                    <span>Add to Favorites</span>
                   </>
                 )}
               </Button>
@@ -184,16 +184,17 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
                 {copied ? (
                   <>
                     <Check className="size-4 text-emerald-500" />
-                    <span>Link Disalin</span>
+                    <span>Link Copied</span>
                   </>
                 ) : (
                   <>
                     <Share2 className="size-4" />
-                    <span>Bagikan</span>
+                    <span>Share</span>
                   </>
                 )}
               </Button>
             </div>
+
           </div>
         </div>
       </div>

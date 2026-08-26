@@ -23,13 +23,13 @@ export async function generateMetadata({ params }: AnimePageProps): Promise<Meta
   if (!anime) {
     return {
       title: "Anime Not Found | GoxStream",
-      description: "Halaman anime yang Anda cari tidak ditemukan.",
+      description: "The requested anime page could not be found.",
     };
   }
 
   return {
-    title: `${anime.title} (${anime.year}) - Nonton Streaming Sub Indo | GoxStream`,
-    description: `${anime.synopsis.slice(0, 160)}... Stream ${anime.title} gratis dalam kualitas 1080p dengan subtitle Indonesia di GoxStream.`,
+    title: `${anime.title} (${anime.year}) - Stream Online | GoxStream`,
+    description: `${anime.synopsis.slice(0, 160)}... Stream ${anime.title} in 1080p HD quality with English subtitles and dubbing on GoxStream.`,
     openGraph: {
       title: `${anime.title} | GoxStream`,
       description: anime.synopsis,
