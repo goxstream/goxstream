@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, ArrowRight, Save, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEpisodeForm } from "../context/episode-form-context";
 
@@ -31,11 +31,11 @@ export function StudioFooterNav() {
   if (!currentNav) return null;
 
   return (
-    <div className="flex items-center justify-between pt-4 border-t border-border/60 mt-6">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-border/60 mt-6 min-w-0">
       <div>
         {currentNav.prev ? (
-          <Link href={currentNav.prev.href}>
-            <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+          <Link href={currentNav.prev.href} className="w-full sm:w-auto block">
+            <Button variant="outline" size="sm" className="w-full sm:w-auto gap-1.5 text-xs">
               <ArrowLeft className="size-3.5" />
               Previous: {currentNav.prev.label}
             </Button>
@@ -47,8 +47,8 @@ export function StudioFooterNav() {
 
       <div className="flex items-center gap-2">
         {currentNav.next ? (
-          <Link href={currentNav.next.href}>
-            <Button size="sm" className="gap-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
+          <Link href={currentNav.next.href} className="w-full sm:w-auto block">
+            <Button size="sm" className="w-full sm:w-auto gap-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
               Next: {currentNav.next.label}
               <ArrowRight className="size-3.5" />
             </Button>
@@ -58,7 +58,7 @@ export function StudioFooterNav() {
             size="sm"
             onClick={handleSave}
             disabled={isSaving}
-            className="gap-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90"
+            className="w-full sm:w-auto gap-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <CheckCircle2 className="size-4" />
             {isSaving ? "Publishing..." : "Publish Episode"}

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { HlsConverterWidget } from "./hls-converter-widget";
-import type { VideoServerSource } from "../../types";
+import type { VideoServerSource } from "../types";
 
 interface VideoSourcesStepProps {
   servers: VideoServerSource[];
@@ -23,37 +23,37 @@ export function VideoSourcesStep({
   onUpdateServer,
 }: VideoSourcesStepProps) {
   return (
-    <div className="space-y-4 bg-card p-6 rounded-xl border border-border/60">
-      <div className="flex items-center justify-between border-b border-border/60 pb-3">
-        <div>
+    <div className="space-y-4 bg-card p-4 sm:p-6 rounded-xl border border-border/60 min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-3 min-w-0">
+        <div className="min-w-0">
           <h3 className="text-base font-semibold text-foreground">Video Server Sources</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
             Configure default internal HLS video converter or add third-party embed & mirror links.
           </p>
         </div>
-        <Button size="sm" variant="outline" onClick={onAddServer} className="gap-1.5 text-xs">
+        <Button size="sm" variant="outline" onClick={onAddServer} className="gap-1.5 text-xs shrink-0 self-start sm:self-auto">
           <Plus className="size-4" />
           Add Server Source
         </Button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 min-w-0">
         {servers.map((srv, idx) => {
           const isDefaultServer = srv.isPrimary || srv.name.toLowerCase().includes("default") || srv.name.toLowerCase().includes("r2");
 
           return (
             <div
               key={srv.id}
-              className="p-4 rounded-xl border border-border/60 bg-muted/10 space-y-4 relative"
+              className="p-3.5 sm:p-4 rounded-xl border border-border/60 bg-muted/10 space-y-4 relative min-w-0 overflow-hidden"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Server className="size-4 text-primary" />
-                  <span className="text-sm font-semibold text-foreground">
+              <div className="flex items-center justify-between gap-2 min-w-0">
+                <div className="flex items-center gap-2 min-w-0 flex-wrap">
+                  <Server className="size-4 text-primary shrink-0" />
+                  <span className="text-sm font-semibold text-foreground truncate">
                     Source #{idx + 1} - {srv.name}
                   </span>
                   {srv.isPrimary && (
-                    <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px]">
+                    <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px] shrink-0">
                       <CheckCircle2 className="size-3 mr-1 inline" /> Primary Default
                     </Badge>
                   )}
@@ -63,34 +63,34 @@ export function VideoSourcesStep({
                     variant="ghost"
                     size="icon"
                     onClick={() => onRemoveServer(srv.id)}
-                    className="size-7 text-muted-foreground hover:text-destructive"
+                    className="size-7 text-muted-foreground hover:text-destructive shrink-0"
                   >
                     <Trash2 className="size-4" />
                   </Button>
                 )}
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-3 min-w-0">
                 {/* Server Name */}
-                <div className="space-y-1">
+                <div className="space-y-1 min-w-0">
                   <Label className="text-[11px] font-medium text-muted-foreground">Server Name</Label>
                   <Input
                     placeholder="e.g. Cloudflare R2 HLS"
                     value={srv.name}
                     onChange={(e) => onUpdateServer(srv.id, "name", e.target.value)}
-                    className="h-8 text-xs border-border/60"
+                    className="h-8 text-xs border-border/60 w-full min-w-0"
                   />
                 </div>
 
                 {/* Server Type */}
-                <div className="space-y-1">
+                <div className="space-y-1 min-w-0">
                   <Label className="text-[11px] font-medium text-muted-foreground">Stream Type</Label>
                   <Select
                     value={srv.type}
                     onValueChange={(val) => val && onUpdateServer(srv.id, "type", val)}
                   >
-                    <SelectTrigger className="h-8 text-xs border-border/60">
-                      <SelectValue />
+                    <SelectTrigger className="h-8 text-xs border-border/60 w-full min-w-0">
+                      <SelectValue className="truncate" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="hls">HLS (.m3u8 Default)</SelectItem>
@@ -102,14 +102,14 @@ export function VideoSourcesStep({
                 </div>
 
                 {/* Quality */}
-                <div className="space-y-1">
+                <div className="space-y-1 min-w-0">
                   <Label className="text-[11px] font-medium text-muted-foreground">Max Resolution</Label>
                   <Select
                     value={srv.quality}
                     onValueChange={(val) => val && onUpdateServer(srv.id, "quality", val)}
                   >
-                    <SelectTrigger className="h-8 text-xs border-border/60">
-                      <SelectValue />
+                    <SelectTrigger className="h-8 text-xs border-border/60 w-full min-w-0">
+                      <SelectValue className="truncate" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="1080p">1080p Full HD</SelectItem>
@@ -122,37 +122,37 @@ export function VideoSourcesStep({
                 </div>
 
                 {/* Server Storage Mode Widget or Raw URL Input */}
-                <div className="space-y-2 sm:col-span-3 pt-1">
+                <div className="space-y-2 sm:col-span-3 pt-1 min-w-0">
                   {isDefaultServer ? (
-                    <div className="space-y-3">
+                    <div className="space-y-3 min-w-0">
                       <div className="flex items-center gap-1.5 text-xs text-primary font-semibold">
-                        <Sparkles className="size-3.5" />
-                        <span>Default Internal Storage HLS Converter</span>
+                        <Sparkles className="size-3.5 shrink-0" />
+                        <span className="truncate">Default Internal Storage HLS Converter</span>
                       </div>
                       <HlsConverterWidget
                         onUrlGenerated={(url) => onUpdateServer(srv.id, "url", url)}
                       />
-                      <div className="space-y-1">
+                      <div className="space-y-1 min-w-0">
                         <Label className="text-[11px] font-medium text-muted-foreground">Master Playlist CDN URL</Label>
                         <Input
                           placeholder="https://cdn.goxstream.tv/hls/master.m3u8"
                           value={srv.url}
                           onChange={(e) => onUpdateServer(srv.id, "url", e.target.value)}
-                          className="h-8 text-xs border-border/60 font-mono"
+                          className="h-8 text-xs border-border/60 font-mono w-full min-w-0 truncate"
                         />
                       </div>
                     </div>
                   ) : (
-                    <div className="space-y-1">
+                    <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
-                        <Link2 className="size-3.5" />
-                        <span>Third-Party Embed / Raw Mirror Stream URL</span>
+                        <Link2 className="size-3.5 shrink-0" />
+                        <span className="truncate">Third-Party Embed / Raw Mirror Stream URL</span>
                       </div>
                       <Input
                         placeholder="https://embed.stream/v/12345 or https://bunny.cdn/..."
                         value={srv.url}
                         onChange={(e) => onUpdateServer(srv.id, "url", e.target.value)}
-                        className="h-8 text-xs border-border/60 font-mono"
+                        className="h-8 text-xs border-border/60 font-mono w-full min-w-0 truncate"
                       />
                     </div>
                   )}
