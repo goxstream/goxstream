@@ -9,7 +9,7 @@ let isMultiThreadedMode = false;
 
 /**
  * Manually initialize `@ffmpeg/ffmpeg` WebAssembly Core on-demand.
- * Supports Multi-Threaded Core (@ffmpeg/core-mt) with automatic single-thread fallback.
+ * Supports Multi-Threaded Core (@ffmpeg/core-mt) with automatic primary/fallback CDN retry and single-thread fallback.
  */
 export async function loadFFmpegCore(
   onProgress?: (msg: string) => void
@@ -40,10 +40,12 @@ export async function loadFFmpegCore(
       window.crossOriginIsolated;
 
     const mtCDN = "https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/umd";
+    const mtFallbackCDN = "https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.6/dist/umd";
     const stCDN = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-    const fallbackCDN = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd";
+    const stFallbackCDN = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd";
 
     if (supportsMultiThread) {
+      // 3a. Try Primary Multi-Threaded CDN (unpkg)
       try {
         if (onProgress) onProgress("Loading FFmpeg Multi-Threaded WASM core (@ffmpeg/core-mt)...");
         await instance.load({
@@ -55,12 +57,26 @@ export async function loadFFmpegCore(
         isMultiThreadedMode = true;
         if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully.");
         return instance;
-      } catch (mtErr: any) {
-        if (onProgress) onProgress("Multi-threaded load failed. Falling back to Single-Threaded Core...");
+      } catch (primaryMtErr: any) {
+        // 3b. Try Fallback Multi-Threaded CDN (jsDelivr)
+        try {
+          if (onProgress) onProgress("Primary Multi-Threaded CDN failed. Retrying with jsDelivr fallback...");
+          await instance.load({
+            coreURL: await toBlobURL(`${mtFallbackCDN}/ffmpeg-core.js`, "text/javascript"),
+            wasmURL: await toBlobURL(`${mtFallbackCDN}/ffmpeg-core.wasm`, "application/wasm"),
+            workerURL: await toBlobURL(`${mtFallbackCDN}/ffmpeg-core.worker.js`, "text/javascript"),
+          });
+
+          isMultiThreadedMode = true;
+          if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully via jsDelivr fallback.");
+          return instance;
+        } catch (fallbackMtErr: any) {
+          if (onProgress) onProgress("Multi-Threaded CDN load failed. Falling back to Single-Threaded Core...");
+        }
       }
     }
 
-    // Single-Threaded fallback / default
+    // 4a. Try Primary Single-Threaded CDN (unpkg)
     try {
       if (onProgress) onProgress("Loading FFmpeg Single-Threaded WASM core (@ffmpeg/core)...");
       await instance.load({
@@ -72,11 +88,12 @@ export async function loadFFmpegCore(
       if (onProgress) onProgress("FFmpeg Single-Threaded WASM Core loaded successfully.");
       return instance;
     } catch (stErr: any) {
+      // 4b. Try Fallback Single-Threaded CDN (jsDelivr)
       try {
-        if (onProgress) onProgress("Retrying with jsDelivr CDN fallback...");
+        if (onProgress) onProgress("Retrying with Single-Threaded jsDelivr CDN fallback...");
         await instance.load({
-          coreURL: await toBlobURL(`${fallbackCDN}/ffmpeg-core.js`, "text/javascript"),
-          wasmURL: await toBlobURL(`${fallbackCDN}/ffmpeg-core.wasm`, "application/wasm"),
+          coreURL: await toBlobURL(`${stFallbackCDN}/ffmpeg-core.js`, "text/javascript"),
+          wasmURL: await toBlobURL(`${stFallbackCDN}/ffmpeg-core.wasm`, "application/wasm"),
         });
 
         isMultiThreadedMode = false;
