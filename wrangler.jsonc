@@ -12,7 +12,8 @@
 	"main": ".open-next/worker.js",
 	"compatibility_date": "2026-08-20",
 	"compatibility_flags": [
-		"global_fetch_strictly_public"
+		"global_fetch_strictly_public",
+		"nodejs_compat"
 	],
 	"assets": {
 		"binding": "ASSETS",
