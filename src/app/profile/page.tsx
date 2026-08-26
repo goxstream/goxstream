@@ -7,6 +7,8 @@ import { ProfileStats } from "./components/profile-stats";
 import { ProfileActivity } from "./components/profile-activity";
 import { getCurrentUserProfile } from "@/lib/db/queries/users";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "User Profile | GoxStream Anime Platform",
   description: "View your anime statistics, streaming activity, and favorite genres.",
