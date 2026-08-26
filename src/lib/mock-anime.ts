@@ -1,4 +1,10 @@
-import type { AnimeItem, EpisodeItem, PlatformStat } from "@/types/anime";
+import type {
+  AnimeItem,
+  EpisodeItem,
+  EpisodeWatchDetails,
+  PlatformStat,
+  StreamSource,
+} from "@/types/anime";
 
 // High-fidelity SVG card placeholders with custom visual themes
 export const FEATURED_ANIME: AnimeItem = {
@@ -605,4 +611,55 @@ export function getRecommendedAnime(currentSlug: string, count = 4): AnimeItem[]
     })
     .slice(0, count);
 }
+
+export function getEpisodeWatchDetails(
+  animeSlug: string,
+  epNum: number
+): EpisodeWatchDetails | null {
+  const anime = getAnimeBySlug(animeSlug);
+  if (!anime) return null;
+
+  const episodes = getEpisodesForAnime(anime);
+  // Note: getEpisodesForAnime returns array in descending order (highest ep first)
+  const episode = episodes.find((e) => e.episodeNumber === epNum);
+  if (!episode) return null;
+
+  const prevEp = episodes.find((e) => e.episodeNumber === epNum - 1);
+  const nextEp = episodes.find((e) => e.episodeNumber === epNum + 1);
+
+  // Sample HLS streams (using reliable public HLS test video streams)
+  const sources: StreamSource[] = [
+    {
+      id: "server-alpha",
+      serverName: "Alpha HD (HLS)",
+      quality: "1080p",
+      url: "https://files.vidstack.io/sprite-fight/hls/stream.m3u8",
+      type: "hls",
+      isPrimary: true,
+    },
+    {
+      id: "server-beta",
+      serverName: "Beta Fast (HLS)",
+      quality: "720p",
+      url: "https://files.vidstack.io/sprite-fight/hls/stream.m3u8",
+      type: "hls",
+    },
+    {
+      id: "server-gamma",
+      serverName: "Gamma Fallback (MP4)",
+      quality: "1080p",
+      url: "https://files.vidstack.io/sprite-fight/720p.mp4",
+      type: "mp4",
+    },
+  ];
+
+  return {
+    anime,
+    episode,
+    prevEpisode: prevEp,
+    nextEpisode: nextEp,
+    sources,
+  };
+}
+
 

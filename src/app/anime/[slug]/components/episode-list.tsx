@@ -160,7 +160,7 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
                 return (
                   <Link
                     key={ep.id}
-                    href={`/anime/${animeSlug}?ep=${ep.episodeNumber}`}
+                    href={`/anime/${animeSlug}/episode-${ep.episodeNumber}`}
                     className="group relative flex flex-col rounded-xl overflow-hidden border border-border/60 bg-card hover:border-primary/50 transition-all duration-200 hover:shadow-xs"
                   >
                     {/* Thumbnail Poster */}
@@ -224,7 +224,7 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
                 return (
                   <Link
                     key={ep.id}
-                    href={`/anime/${animeSlug}?ep=${ep.episodeNumber}`}
+                    href={`/anime/${animeSlug}/episode-${ep.episodeNumber}`}
                     className="group flex items-center justify-between p-3 bg-card hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex items-center gap-3 min-w-0">

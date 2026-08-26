@@ -149,7 +149,7 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
-                href={`/anime/${anime.slug}#episodes`}
+                href={`/anime/${anime.slug}/episode-${latestEpisodeNum || 1}`}
                 className={buttonVariants({ size: "lg", className: "font-semibold shadow-xs gap-2" })}
               >
                 <Play className="size-4 fill-primary-foreground" />

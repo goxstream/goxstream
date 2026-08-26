@@ -51,3 +51,21 @@ export interface PlatformStat {
   value: string;
   description: string;
 }
+
+export interface StreamSource {
+  id: string;
+  serverName: string;
+  quality: string;
+  url: string;
+  type: "hls" | "mp4";
+  isPrimary?: boolean;
+}
+
+export interface EpisodeWatchDetails {
+  anime: AnimeItem;
+  episode: EpisodeItem;
+  nextEpisode?: EpisodeItem;
+  prevEpisode?: EpisodeItem;
+  sources: StreamSource[];
+}
+
