@@ -8,18 +8,32 @@ export { kvCacheAdapter } from "./kv";
 export { redisCacheAdapter } from "./redis";
 
 /**
- * Dynamically resolves the active CacheAdapter based on the current execution runtime.
- * Returns `kvCacheAdapter` in Cloudflare Workers, or `redisCacheAdapter` in Node.js/VPS.
+ * Resolves active CacheAdapter following "Cloudflare-first, Not Cloudflare-locked" principles:
+ * 1. Explicit Override: If CACHE_CONNECTION=redis or REDIS_URL/REDIS_HOST is set, override and use redisCacheAdapter.
+ * 2. Default Target: Cloudflare KV (env.KV via getCloudflareContext()).
+ * 3. Fallback: If KV is unavailable (e.g. Node.js local dev), fallback to redisCacheAdapter (In-Memory/Redis).
  */
 async function resolveCacheAdapter(): Promise<CacheAdapter> {
+  const cacheType = (process.env.CACHE_CONNECTION || "").toLowerCase();
+  const redisUrl = process.env.REDIS_URL || process.env.REDIS_HOST;
+
+  const isRedisOverride =
+    cacheType === "redis" ||
+    Boolean(redisUrl);
+
+  if (isRedisOverride) {
+    return redisCacheAdapter;
+  }
+
   try {
     const { env } = await getCloudflareContext();
     if (env?.KV) {
       return kvCacheAdapter;
     }
   } catch {
-    // Fallback to Redis / In-Memory provider in Node.js or VPS
+    // Fallback for Node.js / local dev mode
   }
+
   return redisCacheAdapter;
 }
 
