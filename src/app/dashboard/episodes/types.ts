@@ -6,12 +6,20 @@ export type ServerType = "hls" | "mp4" | "embed" | "dash";
 
 export type ServerHealth = "online" | "degraded" | "offline";
 
+export interface QualityUrls {
+  url1080p?: string;
+  url720p?: string;
+  url480p?: string;
+  url360p?: string;
+}
+
 export interface VideoServerSource {
   id: string;
   name: string;
   type: ServerType;
   quality: StreamQuality;
   url: string;
+  qualityUrls?: QualityUrls;
   isPrimary: boolean;
   health: ServerHealth;
   latencyMs: number;

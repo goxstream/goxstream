@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Trash2, Server, CheckCircle2, Link2, Sparkles } from "lucide-react";
+import { Plus, Trash2, Server, CheckCircle2, Link2, Sparkles, Layers } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { HlsConverterWidget } from "./hls-converter-widget";
 import { STREAM_TYPE_CONFIG } from "../constants";
-import type { VideoServerSource } from "../types";
+import type { VideoServerSource, QualityUrls } from "../types";
 
 interface VideoSourcesStepProps {
   servers: VideoServerSource[];
@@ -29,7 +29,7 @@ export function VideoSourcesStep({
         <div className="min-w-0">
           <h3 className="text-base font-semibold text-foreground">Video Server Sources</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Configure primary internal HLS video converter or add third-party embed & mirror links.
+            Configure primary internal HLS converter or add multi-quality backup mirror server sources.
           </p>
         </div>
         <Button size="sm" variant="outline" onClick={onAddServer} className="gap-1.5 text-xs shrink-0 self-start sm:self-auto">
@@ -87,8 +87,25 @@ export function VideoSourcesStep({
             );
           }
 
-          // Backup Mirror Servers (Third-Party / Embeds)
+          // Backup Mirror Server (1 Source Method = All 4 Qualities)
           const streamConfig = STREAM_TYPE_CONFIG[srv.type] || STREAM_TYPE_CONFIG.hls;
+          const qualityUrls: QualityUrls = srv.qualityUrls || {
+            url1080p: srv.url || "",
+            url720p: "",
+            url480p: "",
+            url360p: "",
+          };
+
+          const handleQualityUrlChange = (key: keyof QualityUrls, val: string) => {
+            const updated = {
+              ...qualityUrls,
+              [key]: val,
+            };
+            onUpdateServer(srv.id, "qualityUrls", updated);
+            if (key === "url1080p" || !srv.url) {
+              onUpdateServer(srv.id, "url", val);
+            }
+          };
 
           return (
             <div
@@ -99,8 +116,11 @@ export function VideoSourcesStep({
                 <div className="flex items-center gap-2 min-w-0 flex-wrap">
                   <Server className="size-4 text-muted-foreground shrink-0" />
                   <span className="text-sm font-semibold text-foreground truncate">
-                    Backup Source #{idx} - {srv.name}
+                    Backup Source #{idx} - {srv.name || "Mirror Server"}
                   </span>
+                  <Badge variant="outline" className="text-[10px] font-semibold bg-background border-border/60">
+                    {streamConfig.label}
+                  </Badge>
                 </div>
                 <Button
                   variant="ghost"
@@ -112,8 +132,9 @@ export function VideoSourcesStep({
                 </Button>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3 min-w-0">
-                {/* Server Name */}
+              {/* Server Name & Stream Method Bar */}
+              <div className="grid gap-3 sm:grid-cols-2 min-w-0">
+                {/* Server Name Input */}
                 <div className="space-y-1 min-w-0">
                   <Label className="text-[11px] font-medium text-muted-foreground">Server Name</Label>
                   <Input
@@ -124,9 +145,9 @@ export function VideoSourcesStep({
                   />
                 </div>
 
-                {/* Server Type */}
+                {/* Stream Method Combobox / Select */}
                 <div className="space-y-1 min-w-0">
-                  <Label className="text-[11px] font-medium text-muted-foreground">Stream Type</Label>
+                  <Label className="text-[11px] font-medium text-muted-foreground">Stream Method</Label>
                   <Select
                     value={srv.type}
                     onValueChange={(val) => val && onUpdateServer(srv.id, "type", val)}
@@ -136,49 +157,81 @@ export function VideoSourcesStep({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="hls">HLS (.m3u8)</SelectItem>
-                      <SelectItem value="mp4">MP4 Direct</SelectItem>
+                      <SelectItem value="mp4">MP4 Direct Video</SelectItem>
                       <SelectItem value="embed">iFrame Embed (Third Party)</SelectItem>
                       <SelectItem value="dash">MPEG-DASH (.mpd)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
 
-                {/* Quality */}
-                <div className="space-y-1 min-w-0">
-                  <Label className="text-[11px] font-medium text-muted-foreground">Max Resolution</Label>
-                  <Select
-                    value={srv.quality}
-                    onValueChange={(val) => val && onUpdateServer(srv.id, "quality", val)}
-                  >
-                    <SelectTrigger className="h-8 text-xs border-border/60 w-full min-w-0">
-                      <SelectValue className="truncate" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1080p">1080p Full HD</SelectItem>
-                      <SelectItem value="720p">720p HD</SelectItem>
-                      <SelectItem value="480p">480p SD</SelectItem>
-                      <SelectItem value="360p">360p Mobile</SelectItem>
-                      <SelectItem value="auto">Adaptive Auto</SelectItem>
-                    </SelectContent>
-                  </Select>
+              {/* 4 Multi-Quality URL Input Grid (1080p, 720p, 480p, 360p) */}
+              <div className="space-y-2 pt-1 min-w-0">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
+                  <Layers className="size-3.5 shrink-0 text-primary" />
+                  <span className="truncate">Multi-Quality Stream URLs ({streamConfig.label})</span>
                 </div>
 
-                {/* Dynamic Stream URL Input per Selected Stream Type */}
-                <div className="space-y-1 sm:col-span-3 pt-1 min-w-0">
-                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
-                    <Link2 className="size-3.5 shrink-0" />
-                    <span className="truncate">{streamConfig.label}</span>
+                <div className="grid gap-3 sm:grid-cols-2 min-w-0">
+                  {/* 1080p Full HD URL */}
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-medium text-foreground">1080p Full HD URL</span>
+                      <Badge variant="outline" className="text-[9px] px-1 h-3.5">1080p</Badge>
+                    </div>
+                    <Input
+                      placeholder={`https://example.com/stream/1080p${srv.type === 'hls' ? '.m3u8' : srv.type === 'mp4' ? '.mp4' : ''}`}
+                      value={qualityUrls.url1080p || ""}
+                      onChange={(e) => handleQualityUrlChange("url1080p", e.target.value)}
+                      className="h-8 text-xs border-border/60 font-mono w-full min-w-0 truncate"
+                    />
                   </div>
-                  <Input
-                    placeholder={streamConfig.placeholder}
-                    value={srv.url}
-                    onChange={(e) => onUpdateServer(srv.id, "url", e.target.value)}
-                    className="h-8 text-xs border-border/60 font-mono w-full min-w-0 truncate"
-                  />
-                  <p className="text-[11px] text-muted-foreground mt-0.5">
-                    {streamConfig.hint}
-                  </p>
+
+                  {/* 720p HD URL */}
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-medium text-foreground">720p HD URL</span>
+                      <Badge variant="outline" className="text-[9px] px-1 h-3.5">720p</Badge>
+                    </div>
+                    <Input
+                      placeholder={`https://example.com/stream/720p${srv.type === 'hls' ? '.m3u8' : srv.type === 'mp4' ? '.mp4' : ''}`}
+                      value={qualityUrls.url720p || ""}
+                      onChange={(e) => handleQualityUrlChange("url720p", e.target.value)}
+                      className="h-8 text-xs border-border/60 font-mono w-full min-w-0 truncate"
+                    />
+                  </div>
+
+                  {/* 480p SD URL */}
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-medium text-foreground">480p SD URL</span>
+                      <Badge variant="outline" className="text-[9px] px-1 h-3.5">480p</Badge>
+                    </div>
+                    <Input
+                      placeholder={`https://example.com/stream/480p${srv.type === 'hls' ? '.m3u8' : srv.type === 'mp4' ? '.mp4' : ''}`}
+                      value={qualityUrls.url480p || ""}
+                      onChange={(e) => handleQualityUrlChange("url480p", e.target.value)}
+                      className="h-8 text-xs border-border/60 font-mono w-full min-w-0 truncate"
+                    />
+                  </div>
+
+                  {/* 360p Mobile URL */}
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="font-medium text-foreground">360p Mobile URL</span>
+                      <Badge variant="outline" className="text-[9px] px-1 h-3.5">360p</Badge>
+                    </div>
+                    <Input
+                      placeholder={`https://example.com/stream/360p${srv.type === 'hls' ? '.m3u8' : srv.type === 'mp4' ? '.mp4' : ''}`}
+                      value={qualityUrls.url360p || ""}
+                      onChange={(e) => handleQualityUrlChange("url360p", e.target.value)}
+                      className="h-8 text-xs border-border/60 font-mono w-full min-w-0 truncate"
+                    />
+                  </div>
                 </div>
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  Fill URL for available resolution qualities. None are strictly required, but filled fields will define the stream relation for this source method.
+                </p>
               </div>
             </div>
           );
