@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TrendingHero } from "./trending-hero";
 import { TrendingTabs } from "./trending-tabs";
 import { TrendingGenreFilter } from "./trending-genre-filter";
 import { TrendingItemCard } from "./trending-item-card";
-import {
-  MOCK_TRENDING_GENRES,
-  getTrendingAnime,
-} from "@/lib/mock-trending";
+import { MOCK_TRENDING_GENRES } from "@/lib/mock-trending";
+import { useTrendingRankings } from "@/hooks/use-trending-rankings";
 import type { TrendingPeriod } from "@/types/anime";
 
 export function TrendingClientPage() {
@@ -16,10 +15,7 @@ export function TrendingClientPage() {
   const [selectedGenre, setSelectedGenre] = useState<string>("All");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
-  // Filtered & ranked list based on active options
-  const trendingAnimeList = useMemo(() => {
-    return getTrendingAnime(period, selectedGenre);
-  }, [period, selectedGenre]);
+  const { animeList: trendingAnimeList, isLoading } = useTrendingRankings(period, selectedGenre);
 
   // Rank #1 anime for hero spotlight
   const topRankedAnime = trendingAnimeList[0];
@@ -41,59 +37,83 @@ export function TrendingClientPage() {
         </p>
       </div>
 
-      {/* #1 Trending Hero Spotlight Banner */}
-      {topRankedAnime && <TrendingHero topAnime={topRankedAnime} />}
-
-      {/* Control Toolbar: Period Tabs & View Switcher */}
-      <TrendingTabs
-        activePeriod={period}
-        onPeriodChange={setPeriod}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        totalCount={trendingAnimeList.length}
-      />
-
-      {/* Genre Filter Chips (Multi-Genre Query Filter) */}
-      <TrendingGenreFilter
-        genres={MOCK_TRENDING_GENRES}
-        selectedGenre={selectedGenre}
-        onGenreSelect={setSelectedGenre}
-      />
-
-      {/* Main Leaderboard List / Grid Display */}
-      {trendingAnimeList.length === 0 ? (
-        <div className="text-center py-16 border border-dashed border-border rounded-xl space-y-3">
-          <p className="text-base font-semibold text-foreground">
-            No trending anime found for genre "{selectedGenre}".
-          </p>
-          <button
-            onClick={() => setSelectedGenre("All")}
-            aria-label="Reset genre filter to view all trending anime"
-            className="text-xs text-primary font-bold hover:underline cursor-pointer"
-          >
-            Reset genre filter
-          </button>
+      {/* In-Component Skeleton Loader for Trending Spotlight & List */}
+      {isLoading ? (
+        <div className="space-y-6">
+          <Skeleton className="w-full aspect-[21/9] sm:aspect-[25/8] rounded-2xl" />
+          <div className="flex items-center gap-2 overflow-hidden pb-3">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton key={i} className="h-7 w-20 rounded-full shrink-0" />
+            ))}
+          </div>
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border/70">
+                <Skeleton className="size-16 rounded-lg shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-1/3 rounded" />
+                  <Skeleton className="h-3 w-1/4 rounded" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
-        <div
-          className={
-            viewMode === "grid"
-              ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"
-              : "space-y-3"
-          }
-        >
-          {/* Include #1 in grid mode or show as top item if hero isn't visible */}
-          {(viewMode === "grid" ? trendingAnimeList : rankedAnimeList).map(
-            (anime) => (
-              <TrendingItemCard
-                key={anime.id}
-                anime={anime}
-                period={period}
-                viewMode={viewMode}
-              />
-            )
+        <>
+          {/* #1 Trending Hero Spotlight Banner */}
+          {topRankedAnime && <TrendingHero topAnime={topRankedAnime} />}
+
+          {/* Control Toolbar: Period Tabs & View Switcher */}
+          <TrendingTabs
+            activePeriod={period}
+            onPeriodChange={setPeriod}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            totalCount={trendingAnimeList.length}
+          />
+
+          {/* Genre Filter Chips (Multi-Genre Query Filter) */}
+          <TrendingGenreFilter
+            genres={MOCK_TRENDING_GENRES}
+            selectedGenre={selectedGenre}
+            onGenreSelect={setSelectedGenre}
+          />
+
+          {/* Main Leaderboard List / Grid Display */}
+          {trendingAnimeList.length === 0 ? (
+            <div className="text-center py-16 border border-dashed border-border rounded-xl space-y-3">
+              <p className="text-base font-semibold text-foreground">
+                No trending anime found for genre "{selectedGenre}".
+              </p>
+              <button
+                onClick={() => setSelectedGenre("All")}
+                aria-label="Reset genre filter to view all trending anime"
+                className="text-xs text-primary font-bold hover:underline cursor-pointer"
+              >
+                Reset genre filter
+              </button>
+            </div>
+          ) : (
+            <div
+              className={
+                viewMode === "grid"
+                  ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"
+                  : "space-y-3"
+              }
+            >
+              {(viewMode === "grid" ? trendingAnimeList : rankedAnimeList).map(
+                (anime) => (
+                  <TrendingItemCard
+                    key={anime.id}
+                    anime={anime}
+                    period={period}
+                    viewMode={viewMode}
+                  />
+                )
+              )}
+            </div>
           )}
-        </div>
+        </>
       )}
     </main>
   );

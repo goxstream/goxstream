@@ -2,8 +2,8 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useMemo, useState, useCallback, useEffect } from "react";
-import { ALL_ANIME as FALLBACK_ALL_ANIME, filterAnime } from "@/lib/mock-anime";
-import type { AnimeItem } from "@/types/anime";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useBrowseAnime } from "@/hooks/use-browse-anime";
 import { BrowseHeader } from "./browse-header";
 import { BrowseFilters } from "./browse-filters";
 import { BrowseGrid } from "./browse-grid";
@@ -11,16 +11,10 @@ import { BrowsePagination } from "./browse-pagination";
 
 const ITEMS_PER_PAGE = 12;
 
-interface BrowseClientPageProps {
-  initialAnimeList?: AnimeItem[];
-}
-
-export function BrowseClientPage({ initialAnimeList }: BrowseClientPageProps) {
+export function BrowseClientPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-
-  const allAnime = initialAnimeList && initialAnimeList.length > 0 ? initialAnimeList : FALLBACK_ALL_ANIME;
 
   // Extract initial values from URL SearchParams
   const initialQuery = searchParams.get("q") || "";
@@ -43,6 +37,14 @@ export function BrowseClientPage({ initialAnimeList }: BrowseClientPageProps) {
   const [sort, setSort] = useState(initialSort);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Custom Hook Lazy Loading
+  const { animeList: fetchedList, isLoading } = useBrowseAnime({
+    genre,
+    query,
+    status,
+    type: format,
+  });
 
   // Sync state to URL search parameters
   const updateUrlParams = useCallback(
@@ -139,28 +141,14 @@ export function BrowseClientPage({ initialAnimeList }: BrowseClientPageProps) {
     return count;
   }, [query, genre, status, format, audio, season, year]);
 
-  // Compute Filtered Results
-  const filteredAnimeList = useMemo(() => {
-    return filterAnime(allAnime, {
-      query,
-      genre,
-      status,
-      format,
-      audio,
-      season,
-      year,
-      sort,
-    });
-  }, [allAnime, query, genre, status, format, audio, season, year, sort]);
-
   // Pagination Slicing
-  const totalResults = filteredAnimeList.length;
+  const totalResults = fetchedList.length;
   const totalPages = Math.ceil(totalResults / ITEMS_PER_PAGE);
 
   const paginatedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredAnimeList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredAnimeList, currentPage]);
+    return fetchedList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [fetchedList, currentPage]);
 
   // Scroll to top of grid on page change
   useEffect(() => {
@@ -193,14 +181,26 @@ export function BrowseClientPage({ initialAnimeList }: BrowseClientPageProps) {
           activeFiltersCount={activeFiltersCount}
         />
 
-        <BrowseGrid
-          items={paginatedItems}
-          totalResults={totalResults}
-          totalAnimeCount={allAnime.length}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
-          onResetFilters={handleResetFilters}
-        />
+        {isLoading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="space-y-3">
+                <Skeleton className="aspect-[3/4] w-full rounded-xl" />
+                <Skeleton className="h-4 w-4/5 rounded" />
+                <Skeleton className="h-3 w-1/2 rounded" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <BrowseGrid
+            items={paginatedItems}
+            totalResults={totalResults}
+            totalAnimeCount={fetchedList.length}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            onResetFilters={handleResetFilters}
+          />
+        )}
 
         <BrowsePagination
           currentPage={currentPage}
