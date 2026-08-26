@@ -40,7 +40,7 @@ export function NavSecondary({ items, className }: NavSecondaryProps) {
                 {item.badge && (
                   <Badge
                     variant="outline"
-                    className="ml-auto text-[10px] h-4.5 px-1.5 font-medium border-border/60 text-muted-foreground shrink-0"
+                    className="ml-auto text-[10px] h-4.5 px-1.5 font-medium border-border/60 text-muted-foreground shrink-0 group-data-[collapsible=icon]:hidden"
                   >
                     {item.badge}
                   </Badge>

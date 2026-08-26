@@ -52,7 +52,7 @@ export function NavMain({ items }: NavMainProps) {
                   {item.badge && (
                     <Badge
                       variant="secondary"
-                      className="ml-auto text-[10px] h-5 px-1.5 font-medium bg-brand/10 text-brand border-brand/20 shrink-0"
+                      className="ml-auto text-[10px] h-5 px-1.5 font-medium bg-brand/10 text-brand border-brand/20 shrink-0 group-data-[collapsible=icon]:hidden"
                     >
                       {item.badge}
                     </Badge>
@@ -82,7 +82,7 @@ export function NavMain({ items }: NavMainProps) {
                     <Icon className="size-4 shrink-0" />
                     <span className="truncate">{item.title}</span>
                   </div>
-                  <div className="flex items-center gap-1 ml-auto shrink-0">
+                  <div className="flex items-center gap-1 ml-auto shrink-0 group-data-[collapsible=icon]:hidden">
                     {item.badge && (
                       <Badge
                         variant="secondary"
@@ -106,7 +106,7 @@ export function NavMain({ items }: NavMainProps) {
                           {subItem.badge && (
                             <Badge
                               variant="outline"
-                              className="ml-auto text-[9px] h-4 px-1 text-muted-foreground border-border/60 shrink-0"
+                              className="ml-auto text-[9px] h-4 px-1 text-muted-foreground border-border/60 shrink-0 group-data-[collapsible=icon]:hidden"
                             >
                               {subItem.badge}
                             </Badge>
