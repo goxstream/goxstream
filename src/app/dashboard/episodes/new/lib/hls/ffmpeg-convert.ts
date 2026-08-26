@@ -9,11 +9,12 @@ import type {
   HlsVariantRendition,
   HlsSegmentFile,
   MultiResolutionInputFiles,
+  PipelineStageId,
 } from "./types";
 
 /**
  * Multi-Resolution Instant Stream Copy HLS Packaging (< 15 seconds).
- * Processes pre-rendered multi-resolution inputs (1080p, 720p, 480p) via
+ * Processes pre-rendered multi-resolution inputs (1080p, 720p, 480p, 360p) via
  * 100% Stream Copy (-c copy) without CPU re-encoding overhead or WASM crashes.
  */
 export async function transcodeVideoToHls(
@@ -21,11 +22,11 @@ export async function transcodeVideoToHls(
   onProgressCallback?: (p: TranscodeProgress) => void,
   onLogCallback?: (entry: TranscodeLogEntry) => void
 ): Promise<HlsTranscodeResult> {
-  let currentStageId: "init" | "1080p" | "720p" | "480p" | "upload" = "init";
+  let currentStageId: PipelineStageId = "init";
 
   const inputFiles: MultiResolutionInputFiles =
     input instanceof File
-      ? { file1080p: input, file720p: null, file480p: null }
+      ? { file1080p: input, file720p: null, file480p: null, file360p: null }
       : input;
 
   if (onLogCallback) {
@@ -33,7 +34,7 @@ export async function transcodeVideoToHls(
       id: `log-${Date.now()}-copy`,
       timestamp: new Date().toLocaleTimeString("en-US", { hour12: false }),
       type: "info",
-      message: "[Stream Copy Pipeline] Executing 100% Fast Stream Copy (-c copy) without CPU re-encoding overhead.",
+      message: "[Stream Copy Pipeline] Executing 100% Fast Stream Copy (-c copy) for 4 resolutions without CPU re-encoding.",
     });
   }
 
@@ -119,14 +120,14 @@ export async function transcodeVideoToHls(
       const input720Name = "input_720p_" + Date.now() + ".mp4";
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 55, message: `Mounting 720p Source (${file720.name}) into VFS...`, stageId: "720p" });
+        onProgressCallback({ progress: 45, message: `Mounting 720p Source (${file720.name}) into VFS...`, stageId: "720p" });
       }
 
       const data720 = await fetchFile(file720);
       await ffmpeg.writeFile(input720Name, data720);
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 65, message: "Stream Copying 720p to HLS segments...", stageId: "720p" });
+        onProgressCallback({ progress: 55, message: "Stream Copying 720p to HLS segments...", stageId: "720p" });
       }
 
       await ffmpeg.exec([
@@ -160,14 +161,14 @@ export async function transcodeVideoToHls(
       const input480Name = "input_480p_" + Date.now() + ".mp4";
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 75, message: `Mounting 480p Source (${file480.name}) into VFS...`, stageId: "480p" });
+        onProgressCallback({ progress: 65, message: `Mounting 480p Source (${file480.name}) into VFS...`, stageId: "480p" });
       }
 
       const data480 = await fetchFile(file480);
       await ffmpeg.writeFile(input480Name, data480);
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 85, message: "Stream Copying 480p to HLS segments...", stageId: "480p" });
+        onProgressCallback({ progress: 75, message: "Stream Copying 480p to HLS segments...", stageId: "480p" });
       }
 
       await ffmpeg.exec([
@@ -194,7 +195,48 @@ export async function transcodeVideoToHls(
       await ffmpeg.deleteFile("480p.m3u8");
     }
 
-    // 4. Extract all generated .ts segment files from VFS
+    // 4. Rendition 360p Mobile SD (Stream Copy if file provided)
+    if (inputFiles.file360p) {
+      currentStageId = "360p";
+      const file360 = inputFiles.file360p;
+      const input360Name = "input_360p_" + Date.now() + ".mp4";
+
+      if (onProgressCallback) {
+        onProgressCallback({ progress: 85, message: `Mounting 360p Mobile Source (${file360.name}) into VFS...`, stageId: "360p" });
+      }
+
+      const data360 = await fetchFile(file360);
+      await ffmpeg.writeFile(input360Name, data360);
+
+      if (onProgressCallback) {
+        onProgressCallback({ progress: 90, message: "Stream Copying 360p to HLS segments...", stageId: "360p" });
+      }
+
+      await ffmpeg.exec([
+        "-i", input360Name,
+        "-c:v", "copy",
+        "-c:a", "copy",
+        "-start_number", "0",
+        "-hls_time", "10",
+        "-hls_list_size", "0",
+        "-f", "hls",
+        "360p.m3u8",
+      ]);
+
+      const manifest360 = await ffmpeg.readFile("360p.m3u8");
+      variants.push({
+        resolution: "360p",
+        manifestFileName: "360p.m3u8",
+        manifestBlob: new Blob([new Uint8Array(manifest360 as Uint8Array)], {
+          type: "application/x-mpegURL",
+        }),
+      });
+
+      await ffmpeg.deleteFile(input360Name);
+      await ffmpeg.deleteFile("360p.m3u8");
+    }
+
+    // 5. Extract all generated .ts segment files from VFS
     const dirEntries = await ffmpeg.listDir(".");
     for (const entry of dirEntries) {
       if (!entry.isDir && entry.name.endsWith(".ts")) {
@@ -210,7 +252,7 @@ export async function transcodeVideoToHls(
       }
     }
 
-    // 5. Generate Master Playlist index (master.m3u8) dynamically based on active variants
+    // 6. Generate Master Playlist index (master.m3u8) dynamically based on active variants
     const masterLines: string[] = [
       "#EXTM3U",
       "#EXT-X-VERSION:3",
@@ -235,6 +277,13 @@ export async function transcodeVideoToHls(
       masterLines.push(
         '#EXT-X-STREAM-INF:BANDWIDTH=1400000,RESOLUTION=854x480,NAME="480p"',
         "480p.m3u8",
+        ""
+      );
+    }
+    if (variants.some((v) => v.resolution === "360p")) {
+      masterLines.push(
+        '#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360,NAME="360p"',
+        "360p.m3u8",
         ""
       );
     }

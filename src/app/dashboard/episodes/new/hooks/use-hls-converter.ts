@@ -30,6 +30,7 @@ const INITIAL_STAGES: PipelineStage[] = [
   { id: "1080p", label: "1080p Copy", status: "pending" },
   { id: "720p", label: "720p Copy", status: "pending" },
   { id: "480p", label: "480p Copy", status: "pending" },
+  { id: "360p", label: "360p Copy", status: "pending" },
   { id: "upload", label: "Upload CDN", status: "pending" },
 ];
 
@@ -41,6 +42,7 @@ export function useHlsConverter({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [file720p, setFile720p] = useState<File | null>(null);
   const [file480p, setFile480p] = useState<File | null>(null);
+  const [file360p, setFile360p] = useState<File | null>(null);
 
   const [validationResult, setValidationResult] = useState<VideoValidationResult | null>(null);
   const [engineStatus, setEngineStatus] = useState<EngineStatus>(
@@ -188,6 +190,13 @@ export function useHlsConverter({
     }
   }, [addLog]);
 
+  const handleFileSelect360p = useCallback((file: File | null) => {
+    setFile360p(file);
+    if (file) {
+      addLog("info", `360p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
+    }
+  }, [addLog]);
+
   const initEngine = useCallback(async () => {
     if (engineStatus === "ready" || engineStatus === "loading") return;
 
@@ -239,6 +248,7 @@ export function useHlsConverter({
           file1080p: selectedFile,
           file720p,
           file480p,
+          file360p,
         },
         ({ progress, message, stageId }) => {
           setProgress(progress);
@@ -250,7 +260,7 @@ export function useHlsConverter({
         appendFfmpegLog
       );
 
-      updateStageStatus("480p", "completed");
+      updateStageStatus("360p", "completed");
       setHlsResult(result);
       setStatus("converted");
 
@@ -264,7 +274,7 @@ export function useHlsConverter({
       setStatusText(errMsg);
       addLog("error", errMsg);
     }
-  }, [selectedFile, file720p, file480p, validationResult, initEngine, addLog, appendFfmpegLog, updateStageStatus]);
+  }, [selectedFile, file720p, file480p, file360p, validationResult, initEngine, addLog, appendFfmpegLog, updateStageStatus]);
 
   const downloadHls = useCallback(async () => {
     if (!hlsResult) return;
@@ -329,6 +339,7 @@ export function useHlsConverter({
     selectedFile,
     file720p,
     file480p,
+    file360p,
     validationResult,
     engineStatus,
     status,
@@ -345,6 +356,7 @@ export function useHlsConverter({
     handleFileSelect,
     handleFileSelect720p,
     handleFileSelect480p,
+    handleFileSelect360p,
     initEngine,
     convertVideo,
     downloadHls,

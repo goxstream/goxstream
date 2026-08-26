@@ -149,6 +149,8 @@ export function EpisodeHeaderInfo({
         <div className="flex items-center gap-2 flex-wrap">
           {sources.map((source) => {
             const isActive = source.id === activeSourceId;
+            const isPrimary = source.isPrimary || source.id === "default-r2-primary";
+
             return (
               <button
                 key={source.id}
@@ -156,12 +158,16 @@ export function EpisodeHeaderInfo({
                 className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1.5 border ${
                   isActive
                     ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                    : isPrimary
+                    ? "bg-primary/10 hover:bg-primary/20 text-primary border-primary/30"
                     : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border-border/60"
                 }`}
               >
                 <span>{source.serverName}</span>
                 <span className={`text-[10px] px-1 py-0.2 rounded font-mono ${
-                  isActive ? "bg-primary-foreground/20 text-primary-foreground" : "bg-background text-muted-foreground"
+                  isActive
+                    ? "bg-primary-foreground/20 text-primary-foreground"
+                    : "bg-background/80 text-muted-foreground"
                 }`}>
                   {source.quality}
                 </span>

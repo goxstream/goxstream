@@ -36,11 +36,13 @@ export function HlsConverterWidget({
   const fileInput1080Ref = useRef<HTMLInputElement>(null);
   const fileInput720Ref = useRef<HTMLInputElement>(null);
   const fileInput480Ref = useRef<HTMLInputElement>(null);
+  const fileInput360Ref = useRef<HTMLInputElement>(null);
 
   const {
     selectedFile,
     file720p,
     file480p,
+    file360p,
     validationResult,
     engineStatus,
     status,
@@ -56,6 +58,7 @@ export function HlsConverterWidget({
     handleFileSelect,
     handleFileSelect720p,
     handleFileSelect480p,
+    handleFileSelect360p,
     initEngine,
     convertVideo,
     downloadHls,
@@ -89,7 +92,7 @@ export function HlsConverterWidget({
         <div className="flex items-center gap-2">
           <FileVideo className="size-4 text-primary" />
           <span className="text-xs font-bold text-foreground">
-            Instant Multi-Resolution HLS Converter (Stream Copy Pipeline)
+            Instant 4-Resolution HLS Converter (Stream Copy Pipeline)
           </span>
           <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-500 border-emerald-500/30 font-semibold gap-1">
             <Zap className="size-3 text-emerald-500" />
@@ -156,8 +159,8 @@ export function HlsConverterWidget({
         </div>
       </div>
 
-      {/* File Inputs Grid: 1080p Master (Required), 720p HD (Optional), 480p SD (Optional) */}
-      <div className="grid gap-3 sm:grid-cols-3 min-w-0">
+      {/* File Inputs Grid: 1080p Master (Required), 720p HD (Optional), 480p SD (Optional), 360p Mobile (Optional) */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 min-w-0">
         {/* 1080p Master Slot */}
         <input
           type="file"
@@ -172,7 +175,7 @@ export function HlsConverterWidget({
         >
           <div className="flex items-center justify-between gap-1">
             <span className="text-xs font-bold text-foreground flex items-center gap-1.5 truncate">
-              <Upload className="size-3.5 text-primary shrink-0" /> 1080p Master (Required)
+              <Upload className="size-3.5 text-primary shrink-0" /> 1080p Master
             </span>
             <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] px-1 h-4 shrink-0">
               Required
@@ -183,7 +186,7 @@ export function HlsConverterWidget({
           </p>
           {selectedFile && (
             <p className="text-[10px] text-emerald-500 font-semibold truncate">
-              {(selectedFile.size / (1024 * 1024)).toFixed(1)} MB • Stream Copy Ready
+              {(selectedFile.size / (1024 * 1024)).toFixed(1)} MB • Ready
             </p>
           )}
         </div>
@@ -202,7 +205,7 @@ export function HlsConverterWidget({
         >
           <div className="flex items-center justify-between gap-1">
             <span className="text-xs font-bold text-foreground flex items-center gap-1.5 truncate">
-              <Upload className="size-3.5 text-muted-foreground shrink-0" /> 720p HD (Optional)
+              <Upload className="size-3.5 text-muted-foreground shrink-0" /> 720p HD
             </span>
             <Badge variant="outline" className="text-[9px] text-muted-foreground px-1 h-4 shrink-0">
               Optional
@@ -213,7 +216,7 @@ export function HlsConverterWidget({
           </p>
           {file720p && (
             <p className="text-[10px] text-emerald-500 font-semibold truncate">
-              {(file720p.size / (1024 * 1024)).toFixed(1)} MB • Stream Copy Ready
+              {(file720p.size / (1024 * 1024)).toFixed(1)} MB • Ready
             </p>
           )}
         </div>
@@ -232,7 +235,7 @@ export function HlsConverterWidget({
         >
           <div className="flex items-center justify-between gap-1">
             <span className="text-xs font-bold text-foreground flex items-center gap-1.5 truncate">
-              <Upload className="size-3.5 text-muted-foreground shrink-0" /> 480p SD (Optional)
+              <Upload className="size-3.5 text-muted-foreground shrink-0" /> 480p SD
             </span>
             <Badge variant="outline" className="text-[9px] text-muted-foreground px-1 h-4 shrink-0">
               Optional
@@ -243,7 +246,37 @@ export function HlsConverterWidget({
           </p>
           {file480p && (
             <p className="text-[10px] text-emerald-500 font-semibold truncate">
-              {(file480p.size / (1024 * 1024)).toFixed(1)} MB • Stream Copy Ready
+              {(file480p.size / (1024 * 1024)).toFixed(1)} MB • Ready
+            </p>
+          )}
+        </div>
+
+        {/* 360p Mobile SD Slot (Optional) */}
+        <input
+          type="file"
+          ref={fileInput360Ref}
+          accept="video/mp4,.mp4"
+          onChange={(e) => handleFileSelect360p(e.target.files?.[0] || null)}
+          className="hidden"
+        />
+        <div
+          onClick={() => fileInput360Ref.current?.click()}
+          className="border border-dashed border-border/80 hover:border-primary p-3 rounded-lg bg-card cursor-pointer transition-colors space-y-2 min-w-0"
+        >
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-bold text-foreground flex items-center gap-1.5 truncate">
+              <Upload className="size-3.5 text-muted-foreground shrink-0" /> 360p Mobile
+            </span>
+            <Badge variant="outline" className="text-[9px] text-muted-foreground px-1 h-4 shrink-0">
+              Optional
+            </Badge>
+          </div>
+          <p className="text-[11px] text-muted-foreground truncate">
+            {file360p ? file360p.name : "Select MP4 360p Video"}
+          </p>
+          {file360p && (
+            <p className="text-[10px] text-emerald-500 font-semibold truncate">
+              {(file360p.size / (1024 * 1024)).toFixed(1)} MB • Ready
             </p>
           )}
         </div>
@@ -283,11 +316,12 @@ export function HlsConverterWidget({
               Packaged 100% (&lt; 15s)
             </Badge>
           </div>
-          <div className="flex items-center gap-1.5 pt-1 border-t border-sky-500/20 text-[11px] text-muted-foreground">
+          <div className="flex items-center gap-1.5 pt-1 border-t border-sky-500/20 text-[11px] text-muted-foreground flex-wrap">
             <span>Active HLS Renditions:</span>
             <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">1080p</Badge>
             {file720p && <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">720p</Badge>}
             {file480p && <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">480p</Badge>}
+            {file360p && <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">360p</Badge>}
           </div>
         </div>
       )}

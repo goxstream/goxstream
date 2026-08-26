@@ -627,29 +627,61 @@ export function getEpisodeWatchDetails(
   const prevEp = episodes.find((e) => e.episodeNumber === epNum - 1);
   const nextEp = episodes.find((e) => e.episodeNumber === epNum + 1);
 
-  // Sample HLS streams (using reliable public HLS test video streams)
+  // Synchronized Stream Sources (Default Primary R2/S3 HLS Master + Mirror 1080p, 720p, 480p, 360p)
   const sources: StreamSource[] = [
     {
-      id: "server-alpha",
-      serverName: "Alpha HD (HLS)",
-      quality: "1080p",
+      id: "default-r2-primary",
+      serverName: "Default (Primary R2/S3)",
+      quality: "Auto (1080p Master)",
       url: "https://files.vidstack.io/sprite-fight/hls/stream.m3u8",
       type: "hls",
       isPrimary: true,
+      qualityUrls: {
+        url1080p: "https://files.vidstack.io/sprite-fight/hls/stream.m3u8",
+        url720p: "https://files.vidstack.io/sprite-fight/hls/stream.m3u8",
+        url480p: "https://files.vidstack.io/sprite-fight/hls/stream.m3u8",
+        url360p: "https://files.vidstack.io/sprite-fight/hls/stream.m3u8",
+      },
     },
     {
-      id: "server-beta",
-      serverName: "Beta Fast (HLS)",
-      quality: "720p",
-      url: "https://files.vidstack.io/sprite-fight/hls/stream.m3u8",
-      type: "hls",
-    },
-    {
-      id: "server-gamma",
-      serverName: "Gamma Fallback (MP4)",
-      quality: "1080p",
+      id: "mirror-1080p",
+      serverName: "Mirror 1080p",
+      quality: "1080p Full HD",
       url: "https://files.vidstack.io/sprite-fight/720p.mp4",
       type: "mp4",
+      qualityUrls: {
+        url1080p: "https://files.vidstack.io/sprite-fight/720p.mp4",
+      },
+    },
+    {
+      id: "mirror-720p",
+      serverName: "Mirror 720p",
+      quality: "720p HD",
+      url: "https://files.vidstack.io/sprite-fight/720p.mp4",
+      type: "mp4",
+      qualityUrls: {
+        url720p: "https://files.vidstack.io/sprite-fight/720p.mp4",
+      },
+    },
+    {
+      id: "mirror-480p",
+      serverName: "Mirror 480p",
+      quality: "480p SD",
+      url: "https://files.vidstack.io/sprite-fight/720p.mp4",
+      type: "mp4",
+      qualityUrls: {
+        url480p: "https://files.vidstack.io/sprite-fight/720p.mp4",
+      },
+    },
+    {
+      id: "mirror-360p",
+      serverName: "Mirror 360p",
+      quality: "360p Mobile",
+      url: "https://files.vidstack.io/sprite-fight/720p.mp4",
+      type: "mp4",
+      qualityUrls: {
+        url360p: "https://files.vidstack.io/sprite-fight/720p.mp4",
+      },
     },
   ];
 

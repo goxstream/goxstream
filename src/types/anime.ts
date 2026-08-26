@@ -52,13 +52,21 @@ export interface PlatformStat {
   description: string;
 }
 
+export interface QualityUrls {
+  url1080p?: string;
+  url720p?: string;
+  url480p?: string;
+  url360p?: string;
+}
+
 export interface StreamSource {
   id: string;
   serverName: string;
   quality: string;
   url: string;
-  type: "hls" | "mp4";
+  type: "hls" | "mp4" | "embed" | "dash";
   isPrimary?: boolean;
+  qualityUrls?: QualityUrls;
 }
 
 export interface EpisodeWatchDetails {

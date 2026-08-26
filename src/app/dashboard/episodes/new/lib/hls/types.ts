@@ -8,7 +8,7 @@ export interface TranscodeLogEntry {
 }
 
 export type StageStatus = "pending" | "running" | "completed" | "error";
-export type PipelineStageId = "init" | "1080p" | "720p" | "480p" | "upload";
+export type PipelineStageId = "init" | "1080p" | "720p" | "480p" | "360p" | "upload";
 
 export interface PipelineStage {
   id: PipelineStageId;
@@ -26,7 +26,7 @@ export interface TranscodeProgress {
 }
 
 export interface HlsVariantRendition {
-  resolution: string; // e.g. "1080p", "720p", "480p"
+  resolution: string; // e.g. "1080p", "720p", "480p", "360p"
   manifestFileName: string; // e.g. "1080p.m3u8"
   manifestBlob: Blob;
 }
@@ -59,6 +59,7 @@ export interface MultiResolutionInputFiles {
   file1080p: File;
   file720p?: File | null;
   file480p?: File | null;
+  file360p?: File | null;
 }
 
 export interface HlsUploadOptions {
