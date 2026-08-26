@@ -15,6 +15,11 @@ These rules apply to all code changes in this repository.
   - Do NOT use alternative loading elements, including but not limited to spinners, top loaders, and progress bars.
   - Do NOT use raw `animate-pulse` divs; always reuse the project's `Skeleton` component.
   - Skeletons must visually mimic the shape and structure of the expected page/component to prevent Cumulative Layout Shift (CLS).
+- **React Bits Integration**:
+  - The `@react-bits` registry is authorized for high-fidelity interactive animations and visual components.
+  - When suggesting or working on UI components in chat, always assess if a React Bits component fits and explicitly output the recommendation using the exact Indonesian phrases:
+    * `"saya merekomendasikan bagian ini menggunakan react bits ini"` (followed by the component name).
+    * `"saya merekomendasikan jangan menggunakan react bits pada bagian ini"` (if a clean, standard shadcn component is preferred).
 
 ## Styling
 
