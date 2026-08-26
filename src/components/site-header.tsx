@@ -6,11 +6,11 @@ import { SearchDialog } from "@/components/search-dialog";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_ITEMS = [
-  { label: "Browse", href: "#trending", iconName: "Compass" },
-  { label: "Trending", href: "#trending", iconName: "Sparkles" },
-  { label: "Latest", href: "#latest", iconName: "Tv" },
-  { label: "Schedule", href: "#latest", iconName: "Calendar" },
-  { label: "Genres", href: "#features", iconName: "Film" },
+  { label: "Browse", href: "/browse", iconName: "Compass" },
+  { label: "Trending", href: "/#trending", iconName: "Sparkles" },
+  { label: "Latest", href: "/#latest", iconName: "Tv" },
+  { label: "Schedule", href: "/#latest", iconName: "Calendar" },
+  { label: "Genres", href: "/browse", iconName: "Film" },
 ];
 
 export function SiteHeader() {
