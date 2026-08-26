@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * GOXSTREAM ENTERPRISE DESIGN SYSTEM
+ * ============================================================================
+ * @file        logo.tsx
+ * @module      @/components/logo
+ * @package     GoxStream Core UI Engine
+ * @version     1.0.0
+ * @author      GoxStream Architecture & Brand Design Team
+ * @copyright   (c) 2026 GoxStream Inc. All rights reserved.
+ * @license     MIT License (https://opensource.org/licenses/MIT)
+ * 
+ * @description
+ * High-performance 1:1 Vector Icon Mark component for the GoxStream Anime Platform.
+ * Renders an inline, zero-padding, zero-latency SVG asset optimized for modern
+ * Web Vitals performance, dark/light theme adaptability, and crisp high-DPI scaling.
+ * 
+ * @see {@link https://gox.my.id}
+ * ============================================================================
+ */
+
 import type { SVGProps } from "react";
 import { cn } from "@/lib/utils";
 

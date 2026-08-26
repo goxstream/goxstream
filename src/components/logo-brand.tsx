@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * GOXSTREAM ENTERPRISE DESIGN SYSTEM
+ * ============================================================================
+ * @file        logo-brand.tsx
+ * @module      @/components/logo-brand
+ * @package     GoxStream Core UI Engine
+ * @version     1.0.0
+ * @author      GoxStream Architecture & Brand Design Team
+ * @copyright   (c) 2026 GoxStream Inc. All rights reserved.
+ * @license     MIT License (https://opensource.org/licenses/MIT)
+ * 
+ * @description
+ * Unified brand logo component composing the Icon Mark (<Logo />) and Syne
+ * Wordmark (<LogoType />) with responsive layout variants:
+ * - "horizontal": Inline row layout for headers, navbars, and footers.
+ * - "1:1": Stacked square container layout for auth cards, modals, and app badges.
+ * 
+ * @see {@link https://gox.my.id}
+ * ============================================================================
+ */
+
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { LogoType } from "@/components/logo-type";

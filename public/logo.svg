@@ -1,3 +1,17 @@
+<!--
+===============================================================================
+  GOXSTREAM OFFICIAL BRANDING ASSET
+===============================================================================
+  Asset Name   : GoxStream Icon Mark (1:1 Zero-Padding Vector)
+  File         : logo.svg
+  Specification: 1024x1024 Precision ViewBox Bounding Grid [316.4 313.82 396.35 396.35]
+  Color Scheme : Electric Emerald (#34d094) -> Cyan Mint (#31ffe7) Gradient
+  Usage        : Favicon, PWA Icon, App Shortcut, Brand Mark
+  Author       : GoxStream Architecture & Brand Design Team
+  License      : MIT License (https://opensource.org/licenses/MIT)
+  Copyright    : (c) 2026 GoxStream Inc. All rights reserved.
+===============================================================================
+-->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="316.4 313.82 396.35 396.35" width="100%" height="100%">
   <defs>
     <linearGradient id="a" x1="552.69" x2="439.934" y1="633.704" y2="429.395" gradientUnits="userSpaceOnUse">
