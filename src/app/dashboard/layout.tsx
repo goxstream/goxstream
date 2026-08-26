@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/app-sidebar";
 import { DashboardHeader } from "./components/dashboard-header";
+import { getCurrentUser } from "@/lib/auth/session";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 
@@ -16,6 +18,14 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getCurrentUser();
+
+  // Defense-in-depth Server Component Guard:
+  // Restrict Dashboard access strictly to Non-User staff roles
+  if (user && user.role === "user") {
+    redirect("/");
+  }
+
   const cookieStore = await cookies();
   const sidebarCookie = cookieStore.get(SIDEBAR_COOKIE_NAME)?.value;
   const defaultOpen = sidebarCookie === undefined ? true : sidebarCookie === "true";
