@@ -4,6 +4,8 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/app-sidebar";
 import { DashboardHeader } from "./components/dashboard-header";
 
+const SIDEBAR_COOKIE_NAME = "sidebar_state";
+
 export const metadata: Metadata = {
   title: "Master Control Dashboard | GoxStream Enterprise",
   description: "Administrative control center for GoxStream anime streaming platform.",
@@ -15,7 +17,8 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar:state")?.value === "true";
+  const sidebarCookie = cookieStore.get(SIDEBAR_COOKIE_NAME)?.value;
+  const defaultOpen = sidebarCookie === undefined ? true : sidebarCookie === "true";
 
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
