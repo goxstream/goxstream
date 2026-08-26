@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Play, Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, UserPlus } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 
 export function CtaSection() {
@@ -27,27 +27,27 @@ export function CtaSection() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2 w-full sm:w-auto">
             <Link
-              href="#trending"
+              href="/signup"
               className={buttonVariants({
                 variant: "default",
                 size: "lg",
-                className: "h-12 px-8 rounded-xl font-bold text-base justify-center",
+                className: "h-12 px-8 rounded-xl font-bold text-base justify-center gap-2",
               })}
             >
-              <Play className="mr-2 size-5 fill-primary-foreground stroke-primary-foreground" />
-              Start Watching Free
+              <UserPlus className="size-5" />
+              Create Free Account
             </Link>
 
             <Link
-              href="#latest"
+              href="/login"
               className={buttonVariants({
                 variant: "outline",
                 size: "lg",
-                className: "h-12 px-8 rounded-xl font-semibold text-base justify-center",
+                className: "h-12 px-8 rounded-xl font-semibold text-base justify-center gap-2",
               })}
             >
-              View Latest Episodes
-              <ArrowRight className="ml-2 size-4 text-muted-foreground" />
+              Sign In to Account
+              <ArrowRight className="size-4 text-muted-foreground" />
             </Link>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Play, Sparkles, Calendar, Compass } from "lucide-react";
+import { Play, Sparkles, Calendar, Compass, Tv } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
 import { SearchDialog } from "@/components/search-dialog";
@@ -61,19 +61,48 @@ export function SiteHeader() {
         </div>
 
         {/* Header Right Actions */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           {/* Search Trigger */}
           <SearchDialog />
 
           {/* Theme Mode Toggle */}
           <ThemeToggle />
 
+          {/* Pair TV Link */}
+          <Link
+            href="/activate"
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+              className: "hidden md:inline-flex rounded-lg text-xs gap-1.5 font-medium text-muted-foreground hover:text-foreground",
+            })}
+          >
+            <Tv className="size-3.5" />
+            Pair TV
+          </Link>
+
           {/* Sign In CTA */}
           <Link
-            href="#watch"
-            className={buttonVariants({ variant: "default", size: "sm", className: "hidden sm:inline-flex rounded-lg font-semibold shadow-xs" })}
+            href="/login"
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+              className: "hidden sm:inline-flex rounded-lg font-medium",
+            })}
           >
             Sign In
+          </Link>
+
+          {/* Sign Up CTA */}
+          <Link
+            href="/signup"
+            className={buttonVariants({
+              variant: "default",
+              size: "sm",
+              className: "hidden sm:inline-flex rounded-lg font-semibold shadow-xs",
+            })}
+          >
+            Sign Up
           </Link>
 
           {/* Mobile Sheet Nav */}

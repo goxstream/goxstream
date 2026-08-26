@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Play, Tv, Sparkles, Calendar, Compass, Film } from "lucide-react";
+import { Menu, Play, Tv, Sparkles, Calendar, Compass, Film, LogIn, UserPlus } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
@@ -76,23 +76,46 @@ export function MobileNav({ navItems }: MobileNavProps) {
                 </Link>
               );
             })}
+
+            <Link
+              href="/activate"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-3.5 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+            >
+              <Tv className="size-4 text-primary" />
+              Pair TV Device
+            </Link>
           </nav>
         </div>
 
         <div className="space-y-3 pt-6 border-t border-border">
           <Link
-            href="#watch"
+            href="/signup"
             onClick={() => setOpen(false)}
             className={buttonVariants({
               variant: "default",
               size: "lg",
-              className: "w-full h-11 rounded-lg font-semibold justify-center",
+              className: "w-full h-11 rounded-lg font-semibold justify-center gap-2",
             })}
           >
-            Start Watching Free
+            <UserPlus className="size-4" />
+            Create Free Account
           </Link>
 
-          <p className="text-xs text-center text-muted-foreground">
+          <Link
+            href="/login"
+            onClick={() => setOpen(false)}
+            className={buttonVariants({
+              variant: "outline",
+              size: "lg",
+              className: "w-full h-11 rounded-lg font-medium justify-center gap-2",
+            })}
+          >
+            <LogIn className="size-4 text-muted-foreground" />
+            Sign In
+          </Link>
+
+          <p className="text-xs text-center text-muted-foreground pt-1">
             Fast • Ad-Free • 1080p Simulcasts
           </p>
         </div>
