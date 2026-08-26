@@ -51,7 +51,12 @@ export function useHlsConverter({
   const [logs, setLogs] = useState<TranscodeLogEntry[]>([]);
   const [stages, setStages] = useState<PipelineStage[]>(INITIAL_STAGES);
   const [totalDuration, setTotalDuration] = useState(0);
-  const [engineMode, setEngineMode] = useState<EngineMode>("st");
+  const [engineMode, setEngineModeState] = useState<EngineMode>("mt");
+
+  const setEngineMode = useCallback((newMode: EngineMode) => {
+    setEngineModeState(newMode);
+    setEngineStatus("unloaded");
+  }, []);
 
   // Active stage timer ticker
   useEffect(() => {
@@ -197,7 +202,7 @@ export function useHlsConverter({
       setStatusText(errMsg);
       addLog("error", errMsg);
     }
-  }, [engineStatus, addLog, updateStageStatus]);
+  }, [engineStatus, engineMode, addLog, updateStageStatus]);
 
   /**
    * Action 1: Multi-Resolution Video Transcode to HLS (1080p, 720p, 480p)

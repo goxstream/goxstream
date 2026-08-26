@@ -65,7 +65,7 @@ async function loadSTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: 
  */
 export async function loadFFmpegCore(
   onProgress?: (msg: string) => void,
-  mode: EngineMode = "st"
+  mode: EngineMode = "mt"
 ): Promise<FFmpeg> {
   // 1. Return existing loaded instance if already ready
   if (ffmpegInstance && ffmpegInstance.loaded) {
@@ -84,6 +84,14 @@ export async function loadFFmpegCore(
     // Measure active network bandwidth
     const mbps = await getEstimatedDownlinkMbps();
     const isExplicitST = mode === "st";
+
+    if (onProgress) {
+      if (mode === "mt") {
+        onProgress("User selected Multi-Threaded WASM Core mode...");
+      } else if (mode === "st") {
+        onProgress("User selected Single-Threaded WASM Core mode...");
+      }
+    }
 
     const supportsMultiThread =
       !isExplicitST &&
