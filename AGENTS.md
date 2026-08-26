@@ -95,6 +95,10 @@ Online anime streaming platform built with:
 
 - **Server Components by default.** Only add `"use client"` when client-side interactivity, state, or browser APIs require it.
 - **Do not turn entire route trees into Client Components.**
+- **Context-Aware Rendering Strategy.** Server Components (RSC) and Server-Side Rendering (SSR) remain the default baseline. However, evaluate and apply the most optimal rendering paradigm based on specific feature requirements:
+  - **SSG / ISR:** Ideal for static content, documentation, or catalog pages requiring edge caching and ultra-low latency.
+  - **CSR:** Reserved for highly dynamic client UI, video player controls, client-only APIs, or rich interactivity.
+  - **PPR (Partial Prerendering):** Use where a static shell combined with streamed dynamic subtrees improves Core Web Vitals. *Note: Verify OpenNext and Cloudflare Workers runtime compatibility before adopting experimental PPR features.*
 - **Page files compose.** `page.tsx` should primarily compose components, not contain large JSX structures or business logic.
 - Use appropriate Next.js patterns: layouts, `loading.tsx`, `error.tsx`, metadata APIs, Server Actions, Route Handlers.
   - **Loading UI MUST use Skeletons.** Every Next.js `loading.tsx` file or component loading placeholder MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
