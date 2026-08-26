@@ -93,16 +93,19 @@ export async function transcodeVideoToHls(
     });
     await ffmpeg.deleteFile("1080p.m3u8");
 
-    // 3. Rendition 2: 720p HD Rendition (Ultrafast preset)
+    // 3. Rendition 2: 720p HD Rendition (Ultrafast preset + FastDecode + Sliced Threads)
     currentStageId = "720p";
     if (onProgressCallback) {
       onProgressCallback({ progress: 50, message: "Generating 720p HD scaled stream rendition...", stageId: "720p" });
     }
     await ffmpeg.exec([
       "-i", inputName,
-      "-vf", "scale=-2:720",
+      "-vf", "scale=-2:720:flags=bicubic",
       "-c:v", "libx264",
       "-preset", "ultrafast",
+      "-tune", "fastdecode",
+      "-x264opts", "subme=0:me=dia:no-cabac=1:sliced-threads=1",
+      "-crf", "28",
       "-threads", "0",
       "-c:a", "copy",
       "-start_number", "0",
@@ -123,16 +126,19 @@ export async function transcodeVideoToHls(
     });
     await ffmpeg.deleteFile("720p.m3u8");
 
-    // 4. Rendition 3: 480p SD Rendition (Ultrafast preset)
+    // 4. Rendition 3: 480p SD Rendition (Ultrafast preset + FastDecode + Sliced Threads)
     currentStageId = "480p";
     if (onProgressCallback) {
       onProgressCallback({ progress: 75, message: "Generating 480p SD scaled stream rendition...", stageId: "480p" });
     }
     await ffmpeg.exec([
       "-i", inputName,
-      "-vf", "scale=-2:480",
+      "-vf", "scale=-2:480:flags=bicubic",
       "-c:v", "libx264",
       "-preset", "ultrafast",
+      "-tune", "fastdecode",
+      "-x264opts", "subme=0:me=dia:no-cabac=1:sliced-threads=1",
+      "-crf", "28",
       "-threads", "0",
       "-c:a", "copy",
       "-start_number", "0",
