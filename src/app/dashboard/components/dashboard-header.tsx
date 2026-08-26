@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Search, Bell, Moon, Sun, CheckCircle2, AlertCircle, Radio } from "lucide-react";
+import { Search, Bell, Moon, Sun, CheckCircle2, AlertCircle, Radio, Home } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -41,8 +41,8 @@ export function DashboardHeader() {
         <Breadcrumb className="hidden sm:block">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard" className="text-xs font-medium">
-                GoxStream Master
+              <BreadcrumbLink href="/dashboard" className="flex items-center text-xs font-medium hover:text-foreground" aria-label="Home">
+                <Home className="size-3.5" />
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
