@@ -18,13 +18,13 @@ Keep feature-specific code next to its route:
 app/anime/[slug]/
 ├── page.tsx              # Page composition
 ├── components/           # Feature-private components
-│   ├── AnimeHero.tsx
-│   ├── AnimeInfo.tsx
-│   └── EpisodeList.tsx
+│   ├── anime-hero.tsx
+│   ├── anime-info.tsx
+│   └── episode-list.tsx
 ├── hooks/                # Feature-private hooks
-│   └── useAnimeData.ts
+│   └── use-anime-data.ts
 ├── lib/                  # Feature-private utilities
-│   └── formatEpisode.ts
+│   └── format-episode.ts
 ├── types.ts              # Feature-specific types
 └── constants.ts          # Feature-specific constants
 ```
@@ -42,7 +42,7 @@ app/anime/[slug]/
 Components used by only ONE feature stay in that feature's `components/` directory:
 
 ```
-app/watch/[episodeId]/components/VideoPlayer.tsx
+app/watch/[episodeId]/components/video-player.tsx
 ```
 
 ### Global (shared)
@@ -50,9 +50,9 @@ app/watch/[episodeId]/components/VideoPlayer.tsx
 Components used by MULTIPLE unrelated features go in `src/components/`:
 
 ```
-src/components/Header.tsx
-src/components/Footer.tsx
-src/components/SearchCommand.tsx
+src/components/header.tsx
+src/components/footer.tsx
+src/components/search-command.tsx
 ```
 
 ### Promotion criteria

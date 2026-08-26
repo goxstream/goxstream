@@ -127,9 +127,9 @@ Components used by only one feature stay colocated:
 app/anime/[slug]/
 ├── page.tsx
 └── components/
-    ├── AnimeHero.tsx
-    ├── AnimeInfo.tsx
-    └── EpisodeList.tsx
+    ├── anime-hero.tsx
+    ├── anime-info.tsx
+    └── episode-list.tsx
 ```
 
 ### Global components
@@ -139,9 +139,9 @@ Components reused across unrelated features go in `src/components/`:
 ```
 src/components/
 ├── ui/            # shadcn (managed by CLI — do not manually edit)
-├── Header.tsx
-├── Footer.tsx
-└── SearchCommand.tsx
+├── header.tsx
+├── footer.tsx
+└── search-command.tsx
 ```
 
 Do not promote a component to global merely because it *might* become reusable.
