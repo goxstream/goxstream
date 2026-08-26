@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Crown, Play, Star, Flame, Eye, TrendingUp, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getImageStyle } from "@/lib/utils";
 import type { TrendingAnimeItem } from "@/types/anime";
 
 interface TrendingHeroProps {
@@ -66,7 +67,7 @@ export function TrendingHero({ topAnime }: TrendingHeroProps) {
           <div className="flex flex-wrap items-center gap-6 pt-1 text-sm border-t border-border/60">
             <div className="flex items-center gap-1.5 font-bold text-amber-500">
               <Star className="size-4 fill-amber-500 stroke-amber-500" />
-              <span>{topAnime.rating.toFixed(2)}</span>
+              <span>{topAnime.rating ? topAnime.rating.toFixed(2) : "N/A"}</span>
             </div>
 
             <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -91,7 +92,7 @@ export function TrendingHero({ topAnime }: TrendingHeroProps) {
             <Button
               nativeButton={false}
               render={
-                <Link href={`/anime/${topAnime.slug}/episode-${topAnime.latestEpisode || 1}`}>
+                <Link href={`/anime/${topAnime.slug}/${topAnime.latestEpisode || 1}`}>
                   <Play className="size-4 fill-current mr-2" />
                   Watch Episode {topAnime.latestEpisode || 1}
                 </Link>
@@ -116,13 +117,13 @@ export function TrendingHero({ topAnime }: TrendingHeroProps) {
 
         {/* Right Column: Visual Poster Card */}
         <div className="lg:col-span-4 flex justify-center lg:justify-end">
-          <div className="relative group w-48 sm:w-56 md:w-64 aspect-[2/3] rounded-xl overflow-hidden shadow-lg border border-amber-500/30">
+          <div className="relative group w-48 sm:w-56 md:w-64 aspect-[2/3] rounded-xl overflow-hidden shadow-lg border border-amber-500/30 bg-muted">
             <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-              style={{ background: topAnime.coverImage }}
+              className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
+              style={getImageStyle(topAnime.coverImage)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            
+
             {/* Rank Badge Floating on Poster */}
             <div className="absolute top-3 left-3 size-10 rounded-xl bg-amber-500 text-amber-950 flex items-center justify-center font-black text-lg shadow-md border border-amber-400">
               #1

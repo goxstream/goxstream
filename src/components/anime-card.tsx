@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Play, Star, Tv } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
 interface AnimeCardProps {
@@ -19,18 +20,10 @@ export function AnimeCard({ anime }: AnimeCardProps) {
       {/* Poster Artwork Area */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
         {/* Poster Artwork / Gradient */}
-        {isGradient ? (
-          <div
-            className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
-            style={{ background: anime.coverImage }}
-          />
-        ) : (
-          <img
-            src={anime.coverImage}
-            alt={anime.title}
-            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        )}
+        <div
+          className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
+          style={getImageStyle(anime.coverImage)}
+        />
 
         {/* Abstract SVG Pattern overlay for gradients */}
         {isGradient && (

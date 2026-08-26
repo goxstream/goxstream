@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Play, Star, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getImageStyle } from "@/lib/utils";
 import type { WatchlistItem } from "@/types/user";
 
 interface WatchlistListItemProps {
@@ -20,8 +21,8 @@ export function WatchlistListItem({
     <div className="p-3 rounded-xl border border-border/60 bg-card hover:border-primary/40 transition-colors flex items-center justify-between gap-4 shadow-xs">
       <div className="flex items-center gap-3 min-w-0">
         <div
-          className="size-14 rounded-lg shrink-0 overflow-hidden relative"
-          style={{ background: item.anime.coverImage }}
+          className="size-14 rounded-lg shrink-0 overflow-hidden relative bg-muted"
+          style={getImageStyle(item.anime.coverImage)}
         />
         <div className="flex flex-col min-w-0">
           <Link

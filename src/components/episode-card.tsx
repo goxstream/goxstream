@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Play, Clock, Subtitles, Mic } from "lucide-react";
+import { getImageStyle } from "@/lib/utils";
 import type { EpisodeItem } from "@/types/anime";
 
 interface EpisodeCardProps {
@@ -7,7 +8,6 @@ interface EpisodeCardProps {
 }
 
 export function EpisodeCard({ episode }: EpisodeCardProps) {
-  const isGradient = episode.thumbnail && episode.thumbnail.startsWith("linear-gradient");
   const watchUrl = `/anime/${episode.animeSlug}/${episode.episodeNumber}`;
 
   return (
@@ -18,18 +18,10 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
       {/* Episode Thumbnail */}
       <div className="flex items-center gap-4 w-full sm:w-auto">
         <div className="relative aspect-video w-full sm:w-44 shrink-0 rounded-lg overflow-hidden bg-muted">
-          {isGradient ? (
-            <div
-              className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
-              style={{ background: episode.thumbnail }}
-            />
-          ) : (
-            <img
-              src={episode.thumbnail || "/placeholder.jpg"}
-              alt={episode.episodeTitle}
-              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          )}
+          <div
+            className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
+            style={getImageStyle(episode.thumbnail)}
+          />
 
           {/* Hover Play Button Overlay */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">

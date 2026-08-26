@@ -5,6 +5,7 @@ import { Play, Clock, CheckCircle2, Star, Radio } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { TIMEZONE_CONFIG } from "@/lib/constants";
+import { getImageStyle } from "@/lib/utils";
 import type { ScheduleItem } from "@/types/schedule";
 
 interface TimelineViewProps {
@@ -52,11 +53,11 @@ export function TimelineView({ items, dayLabel }: TimelineViewProps) {
                 {/* Anime cover thumbnail */}
                 <Link
                   href={`/anime/${item.slug}`}
-                  className="relative shrink-0 w-24 sm:w-28 aspect-2/3 rounded-lg overflow-hidden border border-border/40 group/cover"
+                  className="relative shrink-0 w-24 sm:w-28 aspect-2/3 rounded-lg overflow-hidden border border-border/40 group/cover bg-muted"
                 >
                   <div
                     className="absolute inset-0 transition-transform duration-300 group-hover/cover:scale-105"
-                    style={{ background: item.coverImage }}
+                    style={getImageStyle(item.coverImage)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   
@@ -129,7 +130,7 @@ export function TimelineView({ items, dayLabel }: TimelineViewProps) {
                       <span>•</span>
                       <span className="flex items-center gap-1 text-amber-400 font-semibold">
                         <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                        {item.rating.toFixed(2)}
+                        {item.rating ? item.rating.toFixed(2) : "N/A"}
                       </span>
                       <span>•</span>
                       <span>
@@ -157,7 +158,7 @@ export function TimelineView({ items, dayLabel }: TimelineViewProps) {
                       Episode {item.episodeNumber} Simulcast Release
                     </span>
                     <Link
-                      href={`/anime/${item.slug}`}
+                      href={`/anime/${item.slug}/${item.episodeNumber}`}
                       className={buttonVariants({ variant: "default", size: "sm", className: "h-8 gap-1.5 text-xs font-semibold" })}
                     >
                       <Play className="w-3.5 h-3.5 fill-current" />

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Crown, Star, Eye, ArrowUp, ArrowDown, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, getImageStyle } from "@/lib/utils";
 import type { TrendingAnimeItem, TrendingPeriod } from "@/types/anime";
 
 interface TrendingItemCardProps {
@@ -83,10 +83,10 @@ export function TrendingItemCard({
     return (
       <div className="group relative bg-card border border-border/60 rounded-xl overflow-hidden shadow-xs hover:border-primary/50 transition-all flex flex-col justify-between">
         {/* Cover Image Container */}
-        <div className="relative aspect-[2/3] w-full overflow-hidden">
+        <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
           <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-            style={{ background: anime.coverImage }}
+            className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
+            style={getImageStyle(anime.coverImage)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
 
@@ -125,7 +125,7 @@ export function TrendingItemCard({
             <span className="font-medium truncate">{anime.studio}</span>
             <div className="flex items-center gap-1 font-bold text-amber-500">
               <Star className="size-3.5 fill-amber-500 stroke-amber-500" />
-              <span>{anime.rating.toFixed(2)}</span>
+              <span>{anime.rating ? anime.rating.toFixed(2) : "N/A"}</span>
             </div>
           </div>
 
@@ -180,11 +180,11 @@ export function TrendingItemCard({
         {/* Thumbnail Poster */}
         <Link
           href={`/anime/${anime.slug}`}
-          className="relative size-16 sm:size-20 rounded-lg overflow-hidden shrink-0 border border-border/60 shadow-xs group-hover:scale-105 transition-transform"
+          className="relative size-16 sm:size-20 rounded-lg overflow-hidden shrink-0 border border-border/60 shadow-xs group-hover:scale-105 transition-transform bg-muted"
         >
           <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ background: anime.coverImage }}
+            className="absolute inset-0"
+            style={getImageStyle(anime.coverImage)}
           />
           <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
         </Link>
@@ -232,7 +232,7 @@ export function TrendingItemCard({
         <div className="flex items-center gap-5 text-xs">
           <div className="flex items-center gap-1 font-bold text-amber-500">
             <Star className="size-4 fill-amber-500 stroke-amber-500" />
-            <span className="text-sm">{anime.rating.toFixed(2)}</span>
+            <span className="text-sm">{anime.rating ? anime.rating.toFixed(2) : "N/A"}</span>
           </div>
 
           <div className="flex flex-col text-right">
@@ -250,7 +250,7 @@ export function TrendingItemCard({
         <Button
           nativeButton={false}
           render={
-            <Link href={`/anime/${anime.slug}/episode-${anime.latestEpisode || 1}`}>
+            <Link href={`/anime/${anime.slug}/${anime.latestEpisode || 1}`}>
               <Play className="size-3.5 mr-1.5 fill-current" />
               Watch
             </Link>

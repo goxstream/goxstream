@@ -5,6 +5,7 @@ import { Play, Clock, Star, Radio } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { TIMEZONE_CONFIG } from "@/lib/constants";
+import { getImageStyle } from "@/lib/utils";
 import type { ScheduleItem } from "@/types/schedule";
 
 interface GridViewProps {
@@ -43,7 +44,7 @@ export function GridView({ items, dayLabel }: GridViewProps) {
             >
               <div
                 className="absolute inset-0 transition-transform duration-300 group-hover:scale-105"
-                style={{ background: item.coverImage }}
+                style={getImageStyle(item.coverImage)}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
@@ -91,7 +92,7 @@ export function GridView({ items, dayLabel }: GridViewProps) {
                   <span className="truncate">{item.studio}</span>
                   <span className="flex items-center gap-1 text-amber-400 font-medium shrink-0">
                     <Star className="w-3 h-3 fill-amber-400" />
-                    {item.rating.toFixed(2)}
+                    {item.rating ? item.rating.toFixed(2) : "N/A"}
                   </span>
                 </div>
 
@@ -119,7 +120,7 @@ export function GridView({ items, dayLabel }: GridViewProps) {
               {/* Footer action button */}
               <div className="mt-4 pt-3 border-t border-border/40">
                 <Link
-                  href={`/anime/${item.slug}`}
+                  href={`/anime/${item.slug}/${item.episodeNumber}`}
                   className={buttonVariants({
                     variant: "secondary",
                     size: "sm",

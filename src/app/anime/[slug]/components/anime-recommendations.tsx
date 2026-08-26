@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Sparkles, Star, Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
 interface AnimeRecommendationsProps {
@@ -34,7 +35,7 @@ export function AnimeRecommendations({ recommendations }: AnimeRecommendationsPr
                 <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
                   <div
                     className="w-full h-full transition-transform duration-300 group-hover:scale-105"
-                    style={{ background: anime.coverImage }}
+                    style={getImageStyle(anime.coverImage)}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
 
@@ -49,7 +50,7 @@ export function AnimeRecommendations({ recommendations }: AnimeRecommendationsPr
                   <div className="absolute top-2 left-2">
                     <Badge className="bg-amber-500 text-amber-950 border-amber-400 font-bold px-1.5 py-0 text-[10px] flex items-center gap-1 shadow-xs">
                       <Star className="size-2.5 fill-amber-950" />
-                      {anime.rating.toFixed(1)}
+                      {anime.rating ? anime.rating.toFixed(1) : "N/A"}
                     </Badge>
                   </div>
 

@@ -9,13 +9,13 @@ import {
   List,
   Clock,
   Sparkles,
-  CheckCircle2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getImageStyle } from "@/lib/utils";
 import type { EpisodeItem } from "@/types/anime";
 
 interface EpisodeListProps {
@@ -160,14 +160,14 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
                 return (
                   <Link
                     key={ep.id}
-                    href={`/anime/${animeSlug}/episode-${ep.episodeNumber}`}
+                    href={`/anime/${animeSlug}/${ep.episodeNumber}`}
                     className="group relative flex flex-col rounded-xl overflow-hidden border border-border/60 bg-card hover:border-primary/50 transition-all duration-200 hover:shadow-xs"
                   >
                     {/* Thumbnail Poster */}
                     <div className="relative aspect-video w-full overflow-hidden bg-muted">
                       <div
                         className="w-full h-full transition-transform duration-300 group-hover:scale-105"
-                        style={{ background: ep.thumbnail }}
+                        style={getImageStyle(ep.thumbnail)}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
@@ -224,7 +224,7 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
                 return (
                   <Link
                     key={ep.id}
-                    href={`/anime/${animeSlug}/episode-${ep.episodeNumber}`}
+                    href={`/anime/${animeSlug}/${ep.episodeNumber}`}
                     className="group flex items-center justify-between p-3 bg-card hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex items-center gap-3 min-w-0">
@@ -269,4 +269,3 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
     </section>
   );
 }
-

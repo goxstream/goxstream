@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import DecryptedText from "@/components/DecryptedText";
 import { FEATURED_ANIME as FALLBACK_FEATURED } from "@/lib/mock-anime";
+import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
 interface HeroSectionProps {
@@ -12,7 +13,6 @@ interface HeroSectionProps {
 
 export function HeroSection({ featuredAnime }: HeroSectionProps) {
   const anime = featuredAnime || FALLBACK_FEATURED;
-  const isGradientBanner = anime.bannerImage && anime.bannerImage.startsWith("linear-gradient");
 
   return (
     <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24 bg-background border-b border-border/60">
@@ -94,18 +94,10 @@ export function HeroSection({ featuredAnime }: HeroSectionProps) {
             <div className="relative w-full max-w-md rounded-2xl overflow-hidden bg-card border border-border/80 group">
               {/* Featured Poster Visual */}
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
-                {isGradientBanner ? (
-                  <div
-                    className="absolute inset-0 size-full transition-transform duration-700 group-hover:scale-105"
-                    style={{ background: anime.bannerImage }}
-                  />
-                ) : (
-                  <img
-                    src={anime.bannerImage || anime.coverImage}
-                    alt={anime.title}
-                    className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                )}
+                <div
+                  className="absolute inset-0 size-full transition-transform duration-700 group-hover:scale-105"
+                  style={getImageStyle(anime.bannerImage || anime.coverImage)}
+                />
 
                 {/* Gradient Overlays */}
                 <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
@@ -118,7 +110,7 @@ export function HeroSection({ featuredAnime }: HeroSectionProps) {
 
                   <Badge className="bg-black/75 text-amber-400 backdrop-blur-md border border-amber-500/30 text-xs font-bold px-2.5 py-1 flex items-center gap-1">
                     <Star className="size-3.5 fill-amber-400 stroke-amber-400" />
-                    {anime.rating.toFixed(1)}
+                    {anime.rating ? anime.rating.toFixed(1) : "N/A"}
                   </Badge>
                 </div>
 

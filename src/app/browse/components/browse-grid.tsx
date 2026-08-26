@@ -5,6 +5,7 @@ import { LayoutGrid, List, SearchX, Star, Play, Tv } from "lucide-react";
 import { AnimeCard } from "@/components/anime-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
 export interface BrowseGridProps {
@@ -109,7 +110,7 @@ export function BrowseGrid({
                 {/* Thumbnail */}
                 <div
                   className="relative size-16 sm:size-20 rounded-lg shrink-0 overflow-hidden bg-muted flex items-center justify-center"
-                  style={{ background: anime.coverImage }}
+                  style={getImageStyle(anime.coverImage)}
                 >
                   <Play className="size-6 text-white/80 fill-white/80 group-hover:scale-110 transition-transform" />
                 </div>
@@ -140,7 +141,7 @@ export function BrowseGrid({
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1 font-semibold text-amber-500">
                     <Star className="size-3.5 fill-amber-500 stroke-amber-500" />
-                    {anime.rating.toFixed(1)}
+                    {anime.rating ? anime.rating.toFixed(1) : "N/A"}
                   </span>
                   <span>{anime.year}</span>
                   <span className="flex items-center gap-1">

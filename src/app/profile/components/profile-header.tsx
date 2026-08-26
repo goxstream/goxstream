@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Crown, Calendar, Settings, ShieldCheck, Mail } from "lucide-react";
+import { Calendar, Settings, ShieldCheck } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { getImageStyle } from "@/lib/utils";
 import type { UserProfile } from "@/types/user";
 
 interface ProfileHeaderProps {
@@ -16,8 +17,8 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
     <div className="relative rounded-2xl overflow-hidden border border-border/60 bg-card shadow-xs">
       {/* Banner */}
       <div
-        className="h-44 sm:h-56 w-full relative"
-        style={{ background: user.bannerUrl }}
+        className="h-44 sm:h-56 w-full relative bg-muted"
+        style={getImageStyle(user.bannerUrl)}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
       </div>
@@ -41,7 +42,6 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
               </h1>
               {user.isVip && (
                 <Badge variant="secondary" className="px-2 py-0.5 text-xs bg-amber-500/10 text-amber-500 border border-amber-500/30 font-bold gap-1">
-                  <Crown className="size-3 fill-amber-500" />
                   {user.vipTier || "VIP Member"}
                 </Badge>
               )}

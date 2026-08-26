@@ -5,6 +5,7 @@ import { Play, Trash2, Clock, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { getImageStyle } from "@/lib/utils";
 import type { WatchHistoryItem } from "@/types/user";
 
 interface HistoryTimelineItemProps {
@@ -17,8 +18,8 @@ export function HistoryTimelineItem({ item, onRemove }: HistoryTimelineItemProps
     <div className="group p-4 rounded-xl border border-border/60 bg-card hover:border-primary/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
       <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
         <div
-          className="h-20 w-32 rounded-lg shrink-0 overflow-hidden relative shadow-xs flex items-center justify-center text-white"
-          style={{ background: item.animeCover }}
+          className="h-20 w-32 rounded-lg shrink-0 overflow-hidden relative shadow-xs flex items-center justify-center text-white bg-muted"
+          style={getImageStyle(item.animeCover)}
         >
           <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
           <Link

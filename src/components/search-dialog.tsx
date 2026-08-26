@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Film, Star, Play, Sparkles } from "lucide-react";
+import { Search, Star, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Command,
@@ -19,6 +18,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { TRENDING_ANIME } from "@/lib/mock-anime";
+import { getImageStyle } from "@/lib/utils";
 
 export function SearchDialog() {
   const [open, setOpen] = useState(false);
@@ -77,7 +77,7 @@ export function SearchDialog() {
                     <div className="flex items-center gap-3">
                       <div
                         className="size-9 rounded-md flex items-center justify-center shrink-0 text-white font-bold text-xs"
-                        style={{ background: anime.coverImage }}
+                        style={getImageStyle(anime.coverImage)}
                       >
                         <Play className="size-4 fill-white" />
                       </div>

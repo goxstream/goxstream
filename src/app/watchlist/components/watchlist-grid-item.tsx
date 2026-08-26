@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getImageStyle } from "@/lib/utils";
 import type { WatchlistItem, WatchlistStatus } from "@/types/user";
 
 interface WatchlistGridItemProps {
@@ -33,8 +34,8 @@ export function WatchlistGridItem({
   return (
     <div className="group rounded-xl border border-border/60 bg-card overflow-hidden hover:border-primary/40 transition-all flex flex-col justify-between shadow-xs">
       <div
-        className="relative h-44 w-full overflow-hidden"
-        style={{ background: item.anime.coverImage }}
+        className="relative h-44 w-full overflow-hidden bg-muted"
+        style={getImageStyle(item.anime.coverImage)}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-card via-black/30 to-black/10" />
 

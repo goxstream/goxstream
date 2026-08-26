@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Play, ArrowRight, Star, History, Bookmark } from "lucide-react";
+import { Play, ArrowRight, Star, History } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { getImageStyle } from "@/lib/utils";
 import type { WatchlistItem, WatchHistoryItem } from "@/types/user";
 
 interface ProfileActivityProps {
@@ -46,8 +47,8 @@ export function ProfileActivity({ watchlist, history }: ProfileActivityProps) {
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div
-                    className="size-12 rounded-lg shrink-0 flex items-center justify-center relative overflow-hidden text-xs font-bold text-white shadow-xs"
-                    style={{ background: item.animeCover }}
+                    className="size-12 rounded-lg shrink-0 flex items-center justify-center relative overflow-hidden text-xs font-bold text-white shadow-xs bg-muted"
+                    style={getImageStyle(item.animeCover)}
                   >
                     <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
                     <Play className="size-4 fill-white relative z-10 opacity-90 group-hover:scale-110 transition-transform" />
@@ -107,13 +108,13 @@ export function ProfileActivity({ watchlist, history }: ProfileActivityProps) {
               className="group flex flex-col gap-1.5 p-2 rounded-lg border border-border/40 hover:border-primary/50 bg-background/50 hover:bg-muted/40 transition-all"
             >
               <div
-                className="h-28 w-full rounded-md relative overflow-hidden flex items-end p-2 text-white shadow-xs"
-                style={{ background: item.anime.coverImage }}
+                className="h-28 w-full rounded-md relative overflow-hidden flex items-end p-2 text-white shadow-xs bg-muted"
+                style={getImageStyle(item.anime.coverImage)}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <Badge variant="secondary" className="relative z-10 text-[9px] px-1 py-0 h-4 bg-amber-500/20 text-amber-300 border-amber-500/30 gap-0.5">
                   <Star className="size-2.5 fill-amber-400" />
-                  {item.anime.rating}
+                  {item.anime.rating ? item.anime.rating.toFixed(1) : "N/A"}
                 </Badge>
               </div>
               <span className="font-semibold text-xs text-foreground truncate group-hover:text-primary transition-colors">

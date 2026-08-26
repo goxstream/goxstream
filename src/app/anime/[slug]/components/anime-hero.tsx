@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
 interface AnimeHeroProps {
@@ -35,13 +36,16 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
     }
   };
 
+  const backdropStyle = getImageStyle(anime.bannerImage || anime.coverImage);
+  const posterStyle = getImageStyle(anime.coverImage);
+
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-card/30">
       {/* Background Banner Backdrop with Ambient Glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-35 dark:opacity-25">
         <div
           className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full blur-3xl opacity-70"
-          style={{ background: anime.bannerImage || anime.coverImage }}
+          style={backdropStyle}
         />
         <div
           className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-background via-background/80 to-transparent"
@@ -70,7 +74,7 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
           <div className="relative group mx-auto md:mx-0 w-full max-w-[260px] md:max-w-none aspect-[2/3] rounded-xl overflow-hidden shadow-md border border-border/80 bg-muted">
             <div
               className="w-full h-full transition-transform duration-500 group-hover:scale-105"
-              style={{ background: anime.coverImage }}
+              style={posterStyle}
             />
             {/* Overlay Gradient on Poster */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
@@ -79,7 +83,7 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
             <div className="absolute top-3 left-3 flex flex-col gap-1.5">
               <Badge className="bg-amber-500 text-amber-950 border-amber-400 font-bold px-2 py-0.5 text-xs shadow-xs flex items-center gap-1">
                 <Star className="size-3 fill-amber-950" />
-                {anime.rating.toFixed(2)}
+                {anime.rating ? anime.rating.toFixed(2) : "N/A"}
               </Badge>
               <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20 font-medium px-2 py-0.5 text-xs">
                 {anime.type}
@@ -142,14 +146,14 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
               <span className="text-border">•</span>
               <div className="flex items-center gap-1.5 text-foreground">
                 <Star className="size-4 text-amber-500 fill-amber-500" />
-                <span>{anime.rating.toFixed(2)} Score</span>
+                <span>{anime.rating ? anime.rating.toFixed(2) : "N/A"} Score</span>
               </div>
             </div>
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
-                href={`/anime/${anime.slug}/episode-${latestEpisodeNum || 1}`}
+                href={`/anime/${anime.slug}/${latestEpisodeNum || 1}`}
                 className={buttonVariants({ size: "lg", className: "font-semibold shadow-xs gap-2" })}
               >
                 <Play className="size-4 fill-primary-foreground" />
