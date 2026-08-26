@@ -7,6 +7,7 @@ import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { LogoBrand } from "@/components/logo-brand"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   Card,
@@ -79,6 +80,7 @@ export function SignupForm() {
           <ArrowLeftIcon data-icon="inline-start" className="size-3" />
           Back to Home
         </Link>
+        <LogoBrand variant="1:1" size="lg" className="mx-auto mb-2" />
         <CardTitle className="text-2xl font-bold tracking-tight">
           Create GoxStream Account
         </CardTitle>

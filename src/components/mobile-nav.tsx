@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Play, Tv, Sparkles, Calendar, Compass, Film, LogIn, UserPlus } from "lucide-react";
+import { Menu, Tv, Sparkles, Calendar, Compass, Film, LogIn, UserPlus } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { LogoBrand } from "@/components/logo-brand";
 import {
   Sheet,
   SheetContent,
@@ -46,18 +47,7 @@ export function MobileNav({ navItems }: MobileNavProps) {
         <div className="space-y-6">
           <SheetHeader className="p-0 text-left">
             <SheetTitle>
-              <Link
-                href="/"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 group"
-              >
-                <div className="size-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground group-hover:scale-105 transition-transform">
-                  <Play className="size-4 fill-primary-foreground stroke-primary-foreground" />
-                </div>
-                <span className="font-bold text-xl tracking-tight text-foreground">
-                  Gox<span className="text-primary">Stream</span>
-                </span>
-              </Link>
+              <LogoBrand href="/" size="lg" />
             </SheetTitle>
           </SheetHeader>
 

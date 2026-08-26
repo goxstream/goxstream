@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { Play, ShieldCheck, Zap } from "lucide-react";
+import { ShieldCheck, Zap } from "lucide-react";
+import { LogoBrand } from "@/components/logo-brand";
+import { LogoType } from "@/components/logo-type";
 import { Separator } from "@/components/ui/separator";
 
 export function SiteFooter() {
@@ -9,14 +11,7 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Info */}
           <div className="space-y-4 md:col-span-2">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="size-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
-                <Play className="size-4 fill-primary-foreground stroke-primary-foreground ml-0.5" />
-              </div>
-              <span className="font-bold text-lg tracking-tight text-foreground">
-                Gox<span className="text-primary">Stream</span>
-              </span>
-            </Link>
+            <LogoBrand href="/" size="md" />
             <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
               Fast discovery, high-fidelity streaming, and effortless watching.
               Experience your favorite anime series without friction or ad bloat.
@@ -100,7 +95,11 @@ export function SiteFooter() {
         <Separator className="my-8 bg-border/60" />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <p>© {new Date().getFullYear()} GoxStream. All rights reserved.</p>
+          <div className="inline-flex items-center gap-1">
+            <span>© {new Date().getFullYear()}</span>
+            <LogoType size="sm" />
+            <span>. All rights reserved.</span>
+          </div>
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="size-4 text-primary" />
             <span>High Quality Ad-Free Anime Player</span>

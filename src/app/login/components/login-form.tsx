@@ -7,6 +7,7 @@ import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { LogoBrand } from "@/components/logo-brand"
 import {
   Card,
   CardContent,
@@ -61,6 +62,7 @@ export function LoginForm() {
           <ArrowLeftIcon data-icon="inline-start" className="size-3" />
           Back to Home
         </Link>
+        <LogoBrand variant="1:1" size="lg" className="mx-auto mb-2" />
         <CardTitle className="text-2xl font-bold tracking-tight">
           Sign in to GoxStream
         </CardTitle>
