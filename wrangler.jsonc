@@ -15,6 +15,7 @@
 		"global_fetch_strictly_public",
 		"nodejs_compat"
 	],
+	"send_metrics": false,
 	"workers_dev": true,
 	"routes": [
 		{
