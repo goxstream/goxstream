@@ -13,6 +13,7 @@
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
 		"generate:logo": "tsx scripts/create-logo/index.ts",
+		"create:super-admin": "tsx scripts/create-super-admin/index.ts",
 		"setup:ffmpeg": "tsx scripts/setup-ffmpeg/index.ts",
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
