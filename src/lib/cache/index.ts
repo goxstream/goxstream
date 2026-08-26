@@ -1,92 +1,52 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { kvCacheAdapter } from "./kv";
+import { redisCacheAdapter } from "./redis";
+import type { CacheAdapter } from "./types";
 
-interface CacheEntry<T> {
-  value: T;
-  expiresAt: number;
-}
-
-// In-Memory fallback store for Node.js / VPS environments
-const memoryCache = new Map<string, CacheEntry<unknown>>();
-
-/**
- * Cleans expired In-Memory cache entries
- */
-function pruneMemoryCache() {
-  const now = Date.now();
-  for (const [key, entry] of memoryCache.entries()) {
-    if (entry.expiresAt <= now) {
-      memoryCache.delete(key);
-    }
-  }
-}
+export * from "./types";
+export { kvCacheAdapter } from "./kv";
+export { redisCacheAdapter } from "./redis";
 
 /**
- * Unified Cache Layer Adapter (Cloudflare-first, Not Cloudflare-locked)
- * - In Cloudflare Workers environment: Uses Cloudflare KV (env.KV)
- * - In Node.js / VPS environment: Uses In-Memory Cache with TTL
+ * Dynamically resolves the active CacheAdapter based on the current execution runtime.
+ * Returns `kvCacheAdapter` in Cloudflare Workers, or `redisCacheAdapter` in Node.js/VPS.
  */
-export async function getCacheItem<T>(key: string): Promise<T | null> {
-  // 1. Try Cloudflare KV in Workers runtime
+async function resolveCacheAdapter(): Promise<CacheAdapter> {
   try {
     const { env } = await getCloudflareContext();
     if (env?.KV) {
-      const cached = await env.KV.get(key, "json");
-      if (cached !== null) {
-        return cached as T;
-      }
-      return null;
+      return kvCacheAdapter;
     }
   } catch {
-    // Fallback to Node.js in-memory store
+    // Fallback to Redis / In-Memory provider in Node.js or VPS
   }
-
-  // 2. In-Memory fallback for Node.js / VPS
-  pruneMemoryCache();
-  const entry = memoryCache.get(key);
-  if (entry && entry.expiresAt > Date.now()) {
-    return entry.value as T;
-  }
-  return null;
+  return redisCacheAdapter;
 }
 
 /**
- * Sets a cached item in Cloudflare KV (Workers) or In-Memory Store (Node.js/VPS).
+ * Gets a cached item from Cloudflare KV (Workers) or Redis/In-Memory (Node.js/VPS).
+ */
+export async function getCacheItem<T>(key: string): Promise<T | null> {
+  const adapter = await resolveCacheAdapter();
+  return adapter.get<T>(key);
+}
+
+/**
+ * Sets a cached item in Cloudflare KV (Workers) or Redis/In-Memory (Node.js/VPS).
  */
 export async function setCacheItem<T>(
   key: string,
   value: T,
   ttlSeconds = 300
 ): Promise<void> {
-  // 1. Try Cloudflare KV in Workers runtime
-  try {
-    const { env } = await getCloudflareContext();
-    if (env?.KV) {
-      await env.KV.put(key, JSON.stringify(value), {
-        expirationTtl: ttlSeconds,
-      });
-      return;
-    }
-  } catch {
-    // Fallback to Node.js in-memory store
-  }
-
-  // 2. In-Memory fallback for Node.js / VPS
-  const expiresAt = Date.now() + ttlSeconds * 1000;
-  memoryCache.set(key, { value, expiresAt });
+  const adapter = await resolveCacheAdapter();
+  return adapter.set<T>(key, value, ttlSeconds);
 }
 
 /**
- * Deletes a cached item from Cloudflare KV or In-Memory Store.
+ * Deletes a cached item from the active cache provider.
  */
 export async function deleteCacheItem(key: string): Promise<void> {
-  try {
-    const { env } = await getCloudflareContext();
-    if (env?.KV) {
-      await env.KV.delete(key);
-    }
-  } catch {
-    // Fallback
-  }
-
-  memoryCache.delete(key);
+  const adapter = await resolveCacheAdapter();
+  return adapter.delete(key);
 }
