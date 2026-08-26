@@ -1,10 +1,17 @@
 import Link from "next/link";
-import { Tv, ArrowRight, Radio } from "lucide-react";
+import { ArrowRight, Radio } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { EpisodeCard } from "@/components/episode-card";
-import { LATEST_EPISODES } from "@/lib/mock-anime";
+import { LATEST_EPISODES as FALLBACK_EPISODES } from "@/lib/mock-anime";
+import type { EpisodeItem } from "@/types/anime";
 
-export function LatestEpisodesSection() {
+interface LatestEpisodesSectionProps {
+  latestEpisodes?: EpisodeItem[];
+}
+
+export function LatestEpisodesSection({ latestEpisodes }: LatestEpisodesSectionProps) {
+  const episodesList = latestEpisodes && latestEpisodes.length > 0 ? latestEpisodes : FALLBACK_EPISODES;
+
   return (
     <section id="latest" className="py-12 md:py-16 bg-muted/30 border-y border-border/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -21,7 +28,7 @@ export function LatestEpisodesSection() {
           </div>
 
           <Link
-            href="#schedule"
+            href="/schedule"
             className={buttonVariants({
               variant: "ghost",
               className: "self-start sm:self-auto text-sm font-semibold text-primary hover:text-primary hover:bg-primary/10 rounded-lg group",
@@ -34,7 +41,7 @@ export function LatestEpisodesSection() {
 
         {/* Episode Card List */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {LATEST_EPISODES.map((episode) => (
+          {episodesList.map((episode) => (
             <EpisodeCard key={episode.id} episode={episode} />
           ))}
         </div>

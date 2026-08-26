@@ -9,19 +9,31 @@ interface AnimeCardProps {
 }
 
 export function AnimeCard({ anime }: AnimeCardProps) {
+  const isGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
+
   return (
     <Link
-      href={`#watch-${anime.slug}`}
+      href={`/anime/${anime.slug}`}
       className="group flex flex-col rounded-xl overflow-hidden bg-card border border-border/80 hover:border-primary/60 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {/* Poster Artwork Area */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
-        {/* Dynamic Visual Gradient Artwork */}
-        <div
-          className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
-          style={{ background: anime.coverImage }}
-        >
-          {/* Abstract SVG Pattern */}
+        {/* Poster Artwork / Gradient */}
+        {isGradient ? (
+          <div
+            className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
+            style={{ background: anime.coverImage }}
+          />
+        ) : (
+          <img
+            src={anime.coverImage}
+            alt={anime.title}
+            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
+
+        {/* Abstract SVG Pattern overlay for gradients */}
+        {isGradient && (
           <div className="absolute inset-0 opacity-20 mix-blend-overlay">
             <svg className="size-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none">
               <defs>
@@ -32,7 +44,7 @@ export function AnimeCard({ anime }: AnimeCardProps) {
               <rect width="100%" height="100%" fill={`url(#grid-${anime.id})`} />
             </svg>
           </div>
-        </div>
+        )}
 
         {/* Top Badges */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-10">
@@ -42,7 +54,7 @@ export function AnimeCard({ anime }: AnimeCardProps) {
 
           <Badge className="bg-black/70 text-amber-400 backdrop-blur-md border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 flex items-center gap-1">
             <Star className="size-3 fill-amber-400 stroke-amber-400" />
-            {anime.rating.toFixed(1)}
+            {anime.rating ? anime.rating.toFixed(1) : "N/A"}
           </Badge>
         </div>
 

@@ -5,15 +5,24 @@ import Link from "next/link";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { AnimeCard } from "@/components/anime-card";
-import { TRENDING_ANIME, GENRES_LIST } from "@/lib/mock-anime";
+import { TRENDING_ANIME as FALLBACK_TRENDING, GENRES_LIST as FALLBACK_GENRES } from "@/lib/mock-anime";
+import type { AnimeItem } from "@/types/anime";
 
-export function TrendingSection() {
+interface TrendingSectionProps {
+  trendingAnime?: AnimeItem[];
+  genresList?: string[];
+}
+
+export function TrendingSection({ trendingAnime, genresList }: TrendingSectionProps) {
   const [selectedGenre, setSelectedGenre] = useState("All");
+
+  const animeList = trendingAnime && trendingAnime.length > 0 ? trendingAnime : FALLBACK_TRENDING;
+  const genres = genresList && genresList.length > 0 ? ["All", ...genresList] : FALLBACK_GENRES;
 
   const filteredAnime =
     selectedGenre === "All"
-      ? TRENDING_ANIME
-      : TRENDING_ANIME.filter((item) =>
+      ? animeList
+      : animeList.filter((item) =>
           item.genres.some((g) => g.toLowerCase() === selectedGenre.toLowerCase())
         );
 
@@ -33,7 +42,7 @@ export function TrendingSection() {
           </div>
 
           <Link
-            href="#all-anime"
+            href="/browse"
             className={buttonVariants({
               variant: "ghost",
               className: "self-start sm:self-auto text-sm font-semibold text-primary hover:text-primary hover:bg-primary/10 rounded-lg group",
@@ -46,8 +55,8 @@ export function TrendingSection() {
 
         {/* Genre Filter Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none">
-          {GENRES_LIST.map((genre) => {
-            const isActive = selectedGenre === genre;
+          {genres.slice(0, 10).map((genre) => {
+            const isActive = selectedGenre.toLowerCase() === genre.toLowerCase();
             return (
               <button
                 key={genre}

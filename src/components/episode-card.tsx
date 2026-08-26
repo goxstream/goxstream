@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Play, Clock, Subtitles, Mic } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import type { EpisodeItem } from "@/types/anime";
 
 interface EpisodeCardProps {
@@ -8,18 +7,29 @@ interface EpisodeCardProps {
 }
 
 export function EpisodeCard({ episode }: EpisodeCardProps) {
+  const isGradient = episode.thumbnail && episode.thumbnail.startsWith("linear-gradient");
+  const watchUrl = `/anime/${episode.animeSlug}/${episode.episodeNumber}`;
+
   return (
     <Link
-      href={`/anime/${episode.animeSlug}/episode-${episode.episodeNumber}`}
+      href={watchUrl}
       className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-3.5 rounded-xl bg-card border border-border/80 hover:border-primary/50 hover:bg-muted/40 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {/* Episode Thumbnail */}
       <div className="flex items-center gap-4 w-full sm:w-auto">
         <div className="relative aspect-video w-full sm:w-44 shrink-0 rounded-lg overflow-hidden bg-muted">
-          <div
-            className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
-            style={{ background: episode.thumbnail }}
-          />
+          {isGradient ? (
+            <div
+              className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
+              style={{ background: episode.thumbnail }}
+            />
+          ) : (
+            <img
+              src={episode.thumbnail || "/placeholder.jpg"}
+              alt={episode.episodeTitle}
+              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          )}
 
           {/* Hover Play Button Overlay */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">

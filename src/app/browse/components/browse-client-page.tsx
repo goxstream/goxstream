@@ -2,7 +2,8 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useMemo, useState, useCallback, useEffect } from "react";
-import { ALL_ANIME, filterAnime } from "@/lib/mock-anime";
+import { ALL_ANIME as FALLBACK_ALL_ANIME, filterAnime } from "@/lib/mock-anime";
+import type { AnimeItem } from "@/types/anime";
 import { BrowseHeader } from "./browse-header";
 import { BrowseFilters } from "./browse-filters";
 import { BrowseGrid } from "./browse-grid";
@@ -10,10 +11,16 @@ import { BrowsePagination } from "./browse-pagination";
 
 const ITEMS_PER_PAGE = 12;
 
-export function BrowseClientPage() {
+interface BrowseClientPageProps {
+  initialAnimeList?: AnimeItem[];
+}
+
+export function BrowseClientPage({ initialAnimeList }: BrowseClientPageProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+
+  const allAnime = initialAnimeList && initialAnimeList.length > 0 ? initialAnimeList : FALLBACK_ALL_ANIME;
 
   // Extract initial values from URL SearchParams
   const initialQuery = searchParams.get("q") || "";
@@ -134,7 +141,7 @@ export function BrowseClientPage() {
 
   // Compute Filtered Results
   const filteredAnimeList = useMemo(() => {
-    return filterAnime(ALL_ANIME, {
+    return filterAnime(allAnime, {
       query,
       genre,
       status,
@@ -144,7 +151,7 @@ export function BrowseClientPage() {
       year,
       sort,
     });
-  }, [query, genre, status, format, audio, season, year, sort]);
+  }, [allAnime, query, genre, status, format, audio, season, year, sort]);
 
   // Pagination Slicing
   const totalResults = filteredAnimeList.length;
@@ -189,7 +196,7 @@ export function BrowseClientPage() {
         <BrowseGrid
           items={paginatedItems}
           totalResults={totalResults}
-          totalAnimeCount={ALL_ANIME.length}
+          totalAnimeCount={allAnime.length}
           viewMode={viewMode}
           onViewModeChange={setViewMode}
           onResetFilters={handleResetFilters}

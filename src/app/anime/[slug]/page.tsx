@@ -2,11 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import {
-  getAnimeBySlug,
-  getEpisodesForAnime,
-  getRecommendedAnime,
-} from "@/lib/mock-anime";
+import { getAnimeBySlug, getTrendingAnime } from "@/lib/db/queries/anime";
+import { getEpisodesByAnimeSlug } from "@/lib/db/queries/episodes";
 import { AnimeHero } from "./components/anime-hero";
 import { AnimeMetadata } from "./components/anime-metadata";
 import { EpisodeList } from "./components/episode-list";
@@ -18,7 +15,7 @@ interface AnimePageProps {
 
 export async function generateMetadata({ params }: AnimePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const anime = getAnimeBySlug(slug);
+  const anime = await getAnimeBySlug(slug).catch(() => null);
 
   if (!anime) {
     return {
@@ -29,7 +26,7 @@ export async function generateMetadata({ params }: AnimePageProps): Promise<Meta
 
   return {
     title: `${anime.title} (${anime.year}) - Stream Online | GoxStream`,
-    description: `${anime.synopsis.slice(0, 160)}... Stream ${anime.title} in 1080p HD quality with English subtitles and dubbing on GoxStream.`,
+    description: `${anime.synopsis.slice(0, 160)}... Stream ${anime.title} in 1080p HD quality on GoxStream.`,
     openGraph: {
       title: `${anime.title} | GoxStream`,
       description: anime.synopsis,
@@ -40,14 +37,16 @@ export async function generateMetadata({ params }: AnimePageProps): Promise<Meta
 
 export default async function AnimeDetailsPage({ params }: AnimePageProps) {
   const { slug } = await params;
-  const anime = getAnimeBySlug(slug);
+  const anime = await getAnimeBySlug(slug).catch(() => null);
 
   if (!anime) {
     notFound();
   }
 
-  const episodes = getEpisodesForAnime(anime);
-  const recommendations = getRecommendedAnime(slug, 4);
+  const episodes = await getEpisodesByAnimeSlug(slug).catch(() => []);
+  const trending = await getTrendingAnime(5).catch(() => []);
+  const recommendations = trending.filter((item) => item.slug !== anime.slug).slice(0, 4);
+
   const latestEpNum = episodes.length > 0 ? Math.max(...episodes.map((e) => e.episodeNumber)) : 1;
 
   return (
@@ -56,7 +55,7 @@ export default async function AnimeDetailsPage({ params }: AnimePageProps) {
 
       <main className="flex-1">
         <AnimeHero anime={anime} latestEpisodeNum={latestEpNum} />
-        
+
         <div className="container mx-auto px-4">
           <AnimeMetadata anime={anime} />
           <EpisodeList episodes={episodes} animeSlug={anime.slug} />

@@ -3,9 +3,17 @@ import { Play, Sparkles, Star, Zap, ShieldCheck, ArrowRight, Flame } from "lucid
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import DecryptedText from "@/components/DecryptedText";
-import { FEATURED_ANIME } from "@/lib/mock-anime";
+import { FEATURED_ANIME as FALLBACK_FEATURED } from "@/lib/mock-anime";
+import type { AnimeItem } from "@/types/anime";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  featuredAnime?: AnimeItem | null;
+}
+
+export function HeroSection({ featuredAnime }: HeroSectionProps) {
+  const anime = featuredAnime || FALLBACK_FEATURED;
+  const isGradientBanner = anime.bannerImage && anime.bannerImage.startsWith("linear-gradient");
+
   return (
     <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24 bg-background border-b border-border/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -43,7 +51,7 @@ export function HeroSection() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto pt-2">
               <Link
-                href={`/anime/${FEATURED_ANIME.slug}/episode-${FEATURED_ANIME.latestEpisode || 1}`}
+                href={`/anime/${anime.slug}/1`}
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",
@@ -55,7 +63,7 @@ export function HeroSection() {
               </Link>
 
               <Link
-                href="/trending"
+                href="#trending"
                 className={buttonVariants({
                   variant: "outline",
                   size: "lg",
@@ -85,11 +93,19 @@ export function HeroSection() {
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative w-full max-w-md rounded-2xl overflow-hidden bg-card border border-border/80 group">
               {/* Featured Poster Visual */}
-              <div className="relative aspect-[4/5] w-full overflow-hidden">
-                <div
-                  className="absolute inset-0 size-full transition-transform duration-700 group-hover:scale-105"
-                  style={{ background: FEATURED_ANIME.bannerImage }}
-                />
+              <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
+                {isGradientBanner ? (
+                  <div
+                    className="absolute inset-0 size-full transition-transform duration-700 group-hover:scale-105"
+                    style={{ background: anime.bannerImage }}
+                  />
+                ) : (
+                  <img
+                    src={anime.bannerImage || anime.coverImage}
+                    alt={anime.title}
+                    className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
 
                 {/* Gradient Overlays */}
                 <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
@@ -102,16 +118,16 @@ export function HeroSection() {
 
                   <Badge className="bg-black/75 text-amber-400 backdrop-blur-md border border-amber-500/30 text-xs font-bold px-2.5 py-1 flex items-center gap-1">
                     <Star className="size-3.5 fill-amber-400 stroke-amber-400" />
-                    {FEATURED_ANIME.rating}
+                    {anime.rating.toFixed(1)}
                   </Badge>
                 </div>
 
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <Link
-                    href={`/anime/${FEATURED_ANIME.slug}/episode-${FEATURED_ANIME.latestEpisode || 1}`}
+                    href={`/anime/${anime.slug}/1`}
                     className="size-16 rounded-full bg-primary/95 text-primary-foreground flex items-center justify-center border border-primary-foreground/20 group-hover:scale-110 transition-transform duration-300"
-                    aria-label={`Watch ${FEATURED_ANIME.title}`}
+                    aria-label={`Watch ${anime.title}`}
                   >
                     <Play className="size-8 fill-primary-foreground stroke-primary-foreground ml-1" />
                   </Link>
@@ -121,24 +137,24 @@ export function HeroSection() {
                 <div className="absolute bottom-0 inset-x-0 p-5 flex flex-col gap-2 z-10 bg-card/90 backdrop-blur-md border-t border-border/60">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                      {FEATURED_ANIME.season} {FEATURED_ANIME.year}
+                      {anime.season} {anime.year}
                     </span>
                     <span className="text-xs text-muted-foreground">•</span>
                     <span className="text-xs text-muted-foreground font-medium">
-                      Ep {FEATURED_ANIME.latestEpisode} Released
+                      Ep {anime.latestEpisode || anime.episodesCount} Released
                     </span>
                   </div>
 
                   <h2 className="text-lg font-bold text-foreground line-clamp-1">
-                    {FEATURED_ANIME.title}
+                    {anime.title}
                   </h2>
 
                   <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                    {FEATURED_ANIME.synopsis}
+                    {anime.synopsis}
                   </p>
 
                   <div className="flex items-center gap-2 pt-1">
-                    {FEATURED_ANIME.genres.slice(0, 3).map((genre) => (
+                    {anime.genres.slice(0, 3).map((genre) => (
                       <span
                         key={genre}
                         className="px-2 py-0.5 rounded bg-muted text-[10px] font-semibold text-muted-foreground"

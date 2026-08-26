@@ -2,11 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import {
-  getEpisodesForAnime,
-  getEpisodeWatchDetails,
-  getRecommendedAnime,
-} from "@/lib/mock-anime";
+import { getEpisodeWatchDetails, getEpisodesByAnimeSlug } from "@/lib/db/queries/episodes";
+import { getTrendingAnime } from "@/lib/db/queries/anime";
 import { WatchContainer } from "./components/watch-container";
 
 interface WatchPageProps {
@@ -21,7 +18,7 @@ function parseEpisodeNumber(epParam: string): number {
 export async function generateMetadata({ params }: WatchPageProps): Promise<Metadata> {
   const { slug, episode: epParam } = await params;
   const epNum = parseEpisodeNumber(epParam);
-  const details = getEpisodeWatchDetails(slug, epNum);
+  const details = await getEpisodeWatchDetails(slug, epNum).catch(() => null);
 
   if (!details) {
     return {
@@ -33,8 +30,8 @@ export async function generateMetadata({ params }: WatchPageProps): Promise<Meta
   const { anime, episode } = details;
 
   return {
-    title: `Watch ${anime.title} Episode ${episode.episodeNumber} English Sub/Dub Online | GoxStream`,
-    description: `Stream ${anime.title} Episode ${episode.episodeNumber} in 1080p HD quality with English subtitles and dubbing on GoxStream.`,
+    title: `Watch ${anime.title} Episode ${episode.episodeNumber} - Online | GoxStream`,
+    description: `Stream ${anime.title} Episode ${episode.episodeNumber} in 1080p HD quality on GoxStream.`,
     openGraph: {
       title: `${anime.title} Episode ${episode.episodeNumber} | GoxStream`,
       description: anime.synopsis,
@@ -46,14 +43,15 @@ export async function generateMetadata({ params }: WatchPageProps): Promise<Meta
 export default async function WatchEpisodePage({ params }: WatchPageProps) {
   const { slug, episode: epParam } = await params;
   const epNum = parseEpisodeNumber(epParam);
-  const details = getEpisodeWatchDetails(slug, epNum);
+  const details = await getEpisodeWatchDetails(slug, epNum).catch(() => null);
 
   if (!details) {
     notFound();
   }
 
-  const episodes = getEpisodesForAnime(details.anime);
-  const recommendations = getRecommendedAnime(slug, 4);
+  const episodes = await getEpisodesByAnimeSlug(slug).catch(() => []);
+  const trending = await getTrendingAnime(5).catch(() => []);
+  const recommendations = trending.filter((item) => item.slug !== details.anime.slug).slice(0, 4);
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20 selection:text-primary">
