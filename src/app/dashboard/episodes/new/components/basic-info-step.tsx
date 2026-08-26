@@ -5,19 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { AnimeSelectCombobox } from "../../components/anime-select-combobox";
+import { ANIME_SERIES_OPTIONS } from "../constants";
 import type { BasicEpisodeData } from "../types";
 
 interface BasicInfoStepProps {
   formData: BasicEpisodeData;
   onChange: (key: string, value: string | boolean) => void;
 }
-
-const ANIME_SERIES_OPTIONS = [
-  { id: "a-01", title: "Solo Leveling Season 2: Arise from the Shadow" },
-  { id: "a-02", title: "Demon Slayer: Hashira Training Arc" },
-  { id: "a-03", title: "Jujutsu Kaisen Season 3: Culling Game" },
-  { id: "a-04", title: "Frieren: Beyond Journey's End Season 2" },
-];
 
 export function BasicInfoStep({ formData, onChange }: BasicInfoStepProps) {
   return (

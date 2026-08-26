@@ -5,28 +5,12 @@ import { usePathname } from "next/navigation";
 import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEpisodeForm } from "../context/episode-form-context";
-
-const NAVIGATION_MAP: Record<string, { prev?: { href: string; label: string }; next?: { href: string; label: string } }> = {
-  "/dashboard/episodes/new/basic": {
-    next: { href: "/dashboard/episodes/new/sources", label: "Video Sources" },
-  },
-  "/dashboard/episodes/new/sources": {
-    prev: { href: "/dashboard/episodes/new/basic", label: "Basic Info" },
-    next: { href: "/dashboard/episodes/new/subtitles", label: "Subs & Audio" },
-  },
-  "/dashboard/episodes/new/subtitles": {
-    prev: { href: "/dashboard/episodes/new/sources", label: "Video Sources" },
-    next: { href: "/dashboard/episodes/new/publish", label: "Publish Settings" },
-  },
-  "/dashboard/episodes/new/publish": {
-    prev: { href: "/dashboard/episodes/new/subtitles", label: "Subs & Audio" },
-  },
-};
+import { STUDIO_NAVIGATION_MAP } from "../constants";
 
 export function StudioFooterNav() {
   const pathname = usePathname();
   const { isSaving, handleSave } = useEpisodeForm();
-  const currentNav = NAVIGATION_MAP[pathname];
+  const currentNav = STUDIO_NAVIGATION_MAP[pathname];
 
   if (!currentNav) return null;
 

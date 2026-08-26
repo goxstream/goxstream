@@ -28,7 +28,7 @@ export function useEpisodeFormState(): EpisodeFormContextType {
   const [servers, setServers] = useState<VideoServerSource[]>([
     {
       id: "srv-1",
-      name: "Cloudflare R2 HLS Primary",
+      name: "Primary HLS Storage",
       type: "hls",
       quality: "1080p",
       url: "",
