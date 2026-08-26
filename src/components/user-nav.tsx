@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   User,
@@ -8,24 +9,60 @@ import {
   Settings,
   LogOut,
   Crown,
-  Sparkles,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { MOCK_USER_PROFILE } from "@/lib/mock-user";
+
+interface ActiveUser {
+  displayName: string;
+  username: string;
+  avatarUrl: string;
+  isVip: boolean;
+}
+
+const DEFAULT_USER: ActiveUser = {
+  displayName: "Alex Rivera",
+  username: "alex_otaku",
+  avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+  isVip: true,
+};
 
 export function UserNav() {
-  const user = MOCK_USER_PROFILE;
+  const [user, setUser] = useState<ActiveUser>(DEFAULT_USER);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchMe() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = (await res.json()) as { user?: any };
+          if (isMounted && data.user) {
+            setUser({
+              displayName: data.user.displayName,
+              username: data.user.username,
+              avatarUrl: data.user.avatarUrl,
+              isVip: Boolean(data.user.isVip),
+            });
+          }
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    fetchMe();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <DropdownMenu>
@@ -74,9 +111,6 @@ export function UserNav() {
           <DropdownMenuItem render={<Link href="/watchlist" className="flex items-center gap-2.5 px-2 py-1.5 text-xs font-medium rounded-lg cursor-pointer hover:bg-muted/70" />}>
             <Bookmark className="size-4 text-muted-foreground" />
             <span>My Watchlist</span>
-            <Badge variant="outline" className="ml-auto text-[10px] px-1.5 py-0 h-4 font-normal">
-              {user.stats.watchlistCount}
-            </Badge>
           </DropdownMenuItem>
 
           <DropdownMenuItem render={<Link href="/history" className="flex items-center gap-2.5 px-2 py-1.5 text-xs font-medium rounded-lg cursor-pointer hover:bg-muted/70" />}>
