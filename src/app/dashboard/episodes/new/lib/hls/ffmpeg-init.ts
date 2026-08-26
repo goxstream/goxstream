@@ -26,14 +26,24 @@ function timeoutPromise<T>(promise: Promise<T>, ms: number, errorMessage: string
   ]);
 }
 
+async function fetchBlobURL(url: string, mimeType: string): Promise<string> {
+  if (url.startsWith("/")) {
+    const check = await fetch(url, { method: "HEAD" });
+    if (!check.ok) {
+      throw new Error(`Local asset not found (HTTP ${check.status})`);
+    }
+  }
+  return toBlobURL(url, mimeType);
+}
+
 /**
  * Helper to fetch and instantiate Multi-Threaded FFmpeg core inside the timeout boundary.
  */
 async function loadMTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: string) => void) {
   if (onProgress) onProgress(`Fetching multi-threaded WASM core binaries from ${cdnBase}...`);
-  const coreURL = await toBlobURL(`${cdnBase}/ffmpeg-core.js`, "text/javascript");
-  const wasmURL = await toBlobURL(`${cdnBase}/ffmpeg-core.wasm`, "application/wasm");
-  const workerURL = await toBlobURL(`${cdnBase}/ffmpeg-core.worker.js`, "text/javascript");
+  const coreURL = await fetchBlobURL(`${cdnBase}/ffmpeg-core.js`, "text/javascript");
+  const wasmURL = await fetchBlobURL(`${cdnBase}/ffmpeg-core.wasm`, "application/wasm");
+  const workerURL = await fetchBlobURL(`${cdnBase}/ffmpeg-core.worker.js`, "text/javascript");
 
   if (onProgress) onProgress("Instantiating multi-threaded WASM core worker pool...");
   await instance.load({ coreURL, wasmURL, workerURL });
@@ -44,8 +54,8 @@ async function loadMTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: 
  */
 async function loadSTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: string) => void) {
   if (onProgress) onProgress(`Fetching single-threaded WASM core binaries from ${cdnBase}...`);
-  const coreURL = await toBlobURL(`${cdnBase}/ffmpeg-core.js`, "text/javascript");
-  const wasmURL = await toBlobURL(`${cdnBase}/ffmpeg-core.wasm`, "application/wasm");
+  const coreURL = await fetchBlobURL(`${cdnBase}/ffmpeg-core.js`, "text/javascript");
+  const wasmURL = await fetchBlobURL(`${cdnBase}/ffmpeg-core.wasm`, "application/wasm");
 
   if (onProgress) onProgress("Instantiating single-threaded WASM core...");
   await instance.load({ coreURL, wasmURL });

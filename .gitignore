@@ -56,3 +56,6 @@ next-env.d.ts
 
 
 !.dev.vars.example
+
+# local FFmpeg WASM binaries
+/public/ffmpeg/
