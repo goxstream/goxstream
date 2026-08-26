@@ -76,13 +76,15 @@ export async function transcodeVideoToHls(
     });
     await ffmpeg.deleteFile("1080p.m3u8");
 
-    // 3. Rendition 2: 720p HD Rendition
+    // 3. Rendition 2: 720p HD Rendition (Ultrafast preset)
     if (onProgressCallback) {
       onProgressCallback({ progress: 50, message: "Generating 720p HD scaled stream rendition..." });
     }
     await ffmpeg.exec([
       "-i", inputName,
       "-vf", "scale=-2:720",
+      "-c:v", "libx264",
+      "-preset", "ultrafast",
       "-c:a", "copy",
       "-start_number", "0",
       "-hls_time", "10",
@@ -102,13 +104,15 @@ export async function transcodeVideoToHls(
     });
     await ffmpeg.deleteFile("720p.m3u8");
 
-    // 4. Rendition 3: 480p SD Rendition
+    // 4. Rendition 3: 480p SD Rendition (Ultrafast preset)
     if (onProgressCallback) {
       onProgressCallback({ progress: 75, message: "Generating 480p SD scaled stream rendition..." });
     }
     await ffmpeg.exec([
       "-i", inputName,
       "-vf", "scale=-2:480",
+      "-c:v", "libx264",
+      "-preset", "ultrafast",
       "-c:a", "copy",
       "-start_number", "0",
       "-hls_time", "10",
