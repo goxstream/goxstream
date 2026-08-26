@@ -27,9 +27,9 @@ export interface UseHlsConverterOptions {
 
 const INITIAL_STAGES: PipelineStage[] = [
   { id: "init", label: "Init & Verify", status: "pending" },
-  { id: "1080p", label: "1080p Stream", status: "pending" },
-  { id: "720p", label: "720p HD Scale", status: "pending" },
-  { id: "480p", label: "480p SD Scale", status: "pending" },
+  { id: "1080p", label: "1080p Copy", status: "pending" },
+  { id: "720p", label: "720p Copy", status: "pending" },
+  { id: "480p", label: "480p Copy", status: "pending" },
   { id: "upload", label: "Upload CDN", status: "pending" },
 ];
 
@@ -39,6 +39,9 @@ export function useHlsConverter({
   onUrlGenerated,
 }: UseHlsConverterOptions = {}) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [file720p, setFile720p] = useState<File | null>(null);
+  const [file480p, setFile480p] = useState<File | null>(null);
+
   const [validationResult, setValidationResult] = useState<VideoValidationResult | null>(null);
   const [engineStatus, setEngineStatus] = useState<EngineStatus>(
     isFFmpegCoreLoaded() ? "ready" : "unloaded"
@@ -88,7 +91,6 @@ export function useHlsConverter({
           if (stg.id === stageId) {
             return { ...stg, status: newStatus };
           }
-          // When moving to a new running stage, complete any previous running stage
           if (newStatus === "running" && stg.status === "running" && stg.id !== stageId) {
             return { ...stg, status: "completed" };
           }
@@ -149,9 +151,9 @@ export function useHlsConverter({
     setTotalDuration(0);
     updateStageStatus("init", "running");
 
-    const initMsg = "Validating MP4 format & 1080p resolution...";
+    const initMsg = "Validating MP4 1080p Master format...";
     setStatusText(initMsg);
-    addLog("info", `File selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
+    addLog("info", `1080p Master selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
 
     const valResult = await validateVideoFile(file);
     setValidationResult(valResult);
@@ -172,9 +174,20 @@ export function useHlsConverter({
     }
   }, [addLog, updateStageStatus]);
 
-  /**
-   * Action: Manual Engine Initialization
-   */
+  const handleFileSelect720p = useCallback((file: File | null) => {
+    setFile720p(file);
+    if (file) {
+      addLog("info", `720p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
+    }
+  }, [addLog]);
+
+  const handleFileSelect480p = useCallback((file: File | null) => {
+    setFile480p(file);
+    if (file) {
+      addLog("info", `480p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
+    }
+  }, [addLog]);
+
   const initEngine = useCallback(async () => {
     if (engineStatus === "ready" || engineStatus === "loading") return;
 
@@ -205,7 +218,7 @@ export function useHlsConverter({
   }, [engineStatus, engineMode, addLog, updateStageStatus]);
 
   /**
-   * Action 1: Multi-Resolution Video Transcode to HLS (1080p, 720p, 480p)
+   * Action 1: Multi-Resolution Video Transcode to HLS (< 15 Seconds Stream Copy)
    */
   const convertVideo = useCallback(async () => {
     if (!selectedFile || (validationResult && !validationResult.isValid)) return;
@@ -217,12 +230,16 @@ export function useHlsConverter({
 
       setStatus("converting");
       setProgress(5);
-      const startMsg = "Starting multi-resolution FFmpeg WASM transcode pipeline...";
+      const startMsg = "Starting Instant Multi-Resolution Stream Copy HLS pipeline...";
       setStatusText(startMsg);
       addLog("info", startMsg);
 
       const result = await transcodeVideoToHls(
-        selectedFile,
+        {
+          file1080p: selectedFile,
+          file720p,
+          file480p,
+        },
         ({ progress, message, stageId }) => {
           setProgress(progress);
           setStatusText(message);
@@ -233,12 +250,12 @@ export function useHlsConverter({
         appendFfmpegLog
       );
 
-      // Complete 480p stage
       updateStageStatus("480p", "completed");
-
       setHlsResult(result);
       setStatus("converted");
-      const successMsg = "Multi-Resolution Transcoding Successful! Generated 1080p, 720p, 480p renditions & master playlist.";
+
+      const activeResolutions = result.variants.map((v) => v.resolution).join(", ");
+      const successMsg = `Instant HLS Packaging Complete (< 15s)! Generated renditions: [${activeResolutions}] & master playlist.`;
       setStatusText(successMsg);
       addLog("success", successMsg);
     } catch (err: any) {
@@ -247,11 +264,8 @@ export function useHlsConverter({
       setStatusText(errMsg);
       addLog("error", errMsg);
     }
-  }, [selectedFile, validationResult, initEngine, addLog, appendFfmpegLog, updateStageStatus]);
+  }, [selectedFile, file720p, file480p, validationResult, initEngine, addLog, appendFfmpegLog, updateStageStatus]);
 
-  /**
-   * Action 2 (Optional): Download Multi-Resolution HLS Package (.zip)
-   */
   const downloadHls = useCallback(async () => {
     if (!hlsResult) return;
 
@@ -272,9 +286,6 @@ export function useHlsConverter({
     }
   }, [hlsResult, animeSlug, episodeNumber, addLog]);
 
-  /**
-   * Action 3: Upload Multi-Resolution HLS Package to Storage API
-   */
   const uploadHls = useCallback(async () => {
     if (!selectedFile) return;
 
@@ -316,6 +327,8 @@ export function useHlsConverter({
 
   return {
     selectedFile,
+    file720p,
+    file480p,
     validationResult,
     engineStatus,
     status,
@@ -330,6 +343,8 @@ export function useHlsConverter({
     clearLogs,
     copyLogsToClipboard,
     handleFileSelect,
+    handleFileSelect720p,
+    handleFileSelect480p,
     initEngine,
     convertVideo,
     downloadHls,

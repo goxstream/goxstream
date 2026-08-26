@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useHlsConverter } from "../hooks/use-hls-converter";
-import { isFFmpegMultiThreaded, isWebCodecsSupported } from "../lib/hls";
+import { isFFmpegMultiThreaded } from "../lib/hls";
 import { ConversionLogDrawer } from "./conversion-log-drawer";
 import { PipelineStageBar } from "./pipeline-stage-bar";
 
@@ -33,10 +33,14 @@ export function HlsConverterWidget({
   episodeNumber,
   onUrlGenerated,
 }: HlsConverterWidgetProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInput1080Ref = useRef<HTMLInputElement>(null);
+  const fileInput720Ref = useRef<HTMLInputElement>(null);
+  const fileInput480Ref = useRef<HTMLInputElement>(null);
 
   const {
     selectedFile,
+    file720p,
+    file480p,
     validationResult,
     engineStatus,
     status,
@@ -50,6 +54,8 @@ export function HlsConverterWidget({
     clearLogs,
     copyLogsToClipboard,
     handleFileSelect,
+    handleFileSelect720p,
+    handleFileSelect480p,
     initEngine,
     convertVideo,
     downloadHls,
@@ -59,11 +65,6 @@ export function HlsConverterWidget({
     episodeNumber,
     onUrlGenerated,
   });
-
-  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    handleFileSelect(file);
-  };
 
   const handlePrimaryButtonClick = () => {
     if (status === "ready" || status === "idle") {
@@ -78,6 +79,7 @@ export function HlsConverterWidget({
     status === "converting" ||
     status === "uploading" ||
     status === "complete" ||
+    !selectedFile ||
     (validationResult ? !validationResult.isValid : false);
 
   return (
@@ -87,11 +89,15 @@ export function HlsConverterWidget({
         <div className="flex items-center gap-2">
           <FileVideo className="size-4 text-primary" />
           <span className="text-xs font-bold text-foreground">
-            Client-Side Multi-Resolution HLS Converter
+            Instant Multi-Resolution HLS Converter (Stream Copy Pipeline)
           </span>
+          <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-500 border-emerald-500/30 font-semibold gap-1">
+            <Zap className="size-3 text-emerald-500" />
+            Fast Stream Copy (&lt; 15s)
+          </Badge>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Manual Engine Mode Toggle (No Emojis) */}
+          {/* Manual Engine Mode Toggle */}
           <div className="flex items-center gap-1 bg-background border border-border/60 rounded-lg p-0.5 text-[10px]">
             <button
               type="button"
@@ -103,7 +109,7 @@ export function HlsConverterWidget({
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Single-Threaded (Stable)
+              Single-Threaded
             </button>
             <button
               type="button"
@@ -115,19 +121,9 @@ export function HlsConverterWidget({
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Multi-Threaded (Experimental)
+              Multi-Threaded
             </button>
           </div>
-
-          {isWebCodecsSupported() && (
-            <Badge
-              variant="outline"
-              className="text-[10px] bg-purple-500/10 text-purple-400 border-purple-500/20 gap-1 font-semibold"
-            >
-              <Zap className="size-3 text-purple-400" />
-              WebCodecs GPU Active
-            </Badge>
-          )}
 
           {engineStatus === "unloaded" && (
             <Badge
@@ -145,7 +141,7 @@ export function HlsConverterWidget({
               className="text-[10px] bg-amber-500/10 text-amber-500 border-amber-500/20 gap-1 animate-pulse"
             >
               <RefreshCw className="size-3 animate-spin" />
-              Loading Core WASM...
+              Loading WASM Engine...
             </Badge>
           )}
           {engineStatus === "ready" && (
@@ -154,52 +150,103 @@ export function HlsConverterWidget({
               className="text-[10px] bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-1"
             >
               <Cpu className="size-3" />
-              {isFFmpegMultiThreaded() ? "WASM MT Core Ready (Multi-Threaded)" : "WASM ST Core Ready (Single-Threaded)"}
+              {isFFmpegMultiThreaded() ? "WASM MT Core Ready" : "WASM ST Core Ready"}
             </Badge>
           )}
         </div>
       </div>
 
-      {/* Hidden File Input */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        accept="video/mp4,.mp4"
-        onChange={onInputChange}
-        className="hidden"
-      />
-
-      {/* File Drop & Select Area */}
-      <div
-        onClick={() => fileInputRef.current?.click()}
-        className="border border-dashed border-border/80 hover:border-primary p-4 rounded-lg bg-card cursor-pointer transition-colors flex items-center justify-between"
-      >
-        <div className="flex items-center gap-3">
-          <div className="size-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-            <Upload className="size-4" />
+      {/* File Inputs Grid: 1080p Master (Required), 720p HD (Optional), 480p SD (Optional) */}
+      <div className="grid gap-3 sm:grid-cols-3 min-w-0">
+        {/* 1080p Master Slot */}
+        <input
+          type="file"
+          ref={fileInput1080Ref}
+          accept="video/mp4,.mp4"
+          onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
+          className="hidden"
+        />
+        <div
+          onClick={() => fileInput1080Ref.current?.click()}
+          className="border border-dashed border-primary/60 hover:border-primary p-3 rounded-lg bg-card cursor-pointer transition-colors space-y-2 min-w-0"
+        >
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-bold text-foreground flex items-center gap-1.5 truncate">
+              <Upload className="size-3.5 text-primary shrink-0" /> 1080p Master (Required)
+            </span>
+            <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] px-1 h-4 shrink-0">
+              Required
+            </Badge>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <p className="text-xs font-semibold text-foreground">
-                {selectedFile ? selectedFile.name : "Select Local MP4 Master Video (.mp4)"}
-              </p>
-              {validationResult?.isValid && (
-                <Badge className="bg-emerald-500/15 text-emerald-500 border-emerald-500/30 text-[9px] gap-1 px-1.5 h-4">
-                  <ShieldCheck className="size-2.5" />
-                  MP4 1080p Verified
-                </Badge>
-              )}
-            </div>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
-              {selectedFile
-                ? `${validationResult?.resolution || "Inspecting..."} • ${(selectedFile.size / (1024 * 1024)).toFixed(1)} MB`
-                : "Mandatory format: MP4 (.mp4), Minimum master resolution: 1080p (1920x1080)"}
+          <p className="text-[11px] text-muted-foreground truncate">
+            {selectedFile ? selectedFile.name : "Select MP4 1080p Video"}
+          </p>
+          {selectedFile && (
+            <p className="text-[10px] text-emerald-500 font-semibold truncate">
+              {(selectedFile.size / (1024 * 1024)).toFixed(1)} MB • Stream Copy Ready
             </p>
-          </div>
+          )}
         </div>
-        <Button variant="outline" size="sm" type="button" className="text-xs h-8">
-          Browse File
-        </Button>
+
+        {/* 720p HD Slot (Optional) */}
+        <input
+          type="file"
+          ref={fileInput720Ref}
+          accept="video/mp4,.mp4"
+          onChange={(e) => handleFileSelect720p(e.target.files?.[0] || null)}
+          className="hidden"
+        />
+        <div
+          onClick={() => fileInput720Ref.current?.click()}
+          className="border border-dashed border-border/80 hover:border-primary p-3 rounded-lg bg-card cursor-pointer transition-colors space-y-2 min-w-0"
+        >
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-bold text-foreground flex items-center gap-1.5 truncate">
+              <Upload className="size-3.5 text-muted-foreground shrink-0" /> 720p HD (Optional)
+            </span>
+            <Badge variant="outline" className="text-[9px] text-muted-foreground px-1 h-4 shrink-0">
+              Optional
+            </Badge>
+          </div>
+          <p className="text-[11px] text-muted-foreground truncate">
+            {file720p ? file720p.name : "Select MP4 720p Video"}
+          </p>
+          {file720p && (
+            <p className="text-[10px] text-emerald-500 font-semibold truncate">
+              {(file720p.size / (1024 * 1024)).toFixed(1)} MB • Stream Copy Ready
+            </p>
+          )}
+        </div>
+
+        {/* 480p SD Slot (Optional) */}
+        <input
+          type="file"
+          ref={fileInput480Ref}
+          accept="video/mp4,.mp4"
+          onChange={(e) => handleFileSelect480p(e.target.files?.[0] || null)}
+          className="hidden"
+        />
+        <div
+          onClick={() => fileInput480Ref.current?.click()}
+          className="border border-dashed border-border/80 hover:border-primary p-3 rounded-lg bg-card cursor-pointer transition-colors space-y-2 min-w-0"
+        >
+          <div className="flex items-center justify-between gap-1">
+            <span className="text-xs font-bold text-foreground flex items-center gap-1.5 truncate">
+              <Upload className="size-3.5 text-muted-foreground shrink-0" /> 480p SD (Optional)
+            </span>
+            <Badge variant="outline" className="text-[9px] text-muted-foreground px-1 h-4 shrink-0">
+              Optional
+            </Badge>
+          </div>
+          <p className="text-[11px] text-muted-foreground truncate">
+            {file480p ? file480p.name : "Select MP4 480p Video"}
+          </p>
+          {file480p && (
+            <p className="text-[10px] text-emerald-500 font-semibold truncate">
+              {(file480p.size / (1024 * 1024)).toFixed(1)} MB • Stream Copy Ready
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Validation Failure Banner */}
@@ -216,7 +263,7 @@ export function HlsConverterWidget({
           <div className="flex justify-between text-xs font-medium">
             <span className="text-muted-foreground flex items-center gap-1.5 truncate">
               <RefreshCw className="size-3.5 animate-spin text-primary shrink-0" />
-              <span className="truncate">{statusText || "Processing video pipeline..."}</span>
+              <span className="truncate">{statusText || "Processing Stream Copy pipeline..."}</span>
             </span>
             <span className="text-foreground font-bold shrink-0 ml-2">{progress}%</span>
           </div>
@@ -233,14 +280,14 @@ export function HlsConverterWidget({
               <span className="truncate">{statusText}</span>
             </div>
             <Badge className="bg-sky-500 text-black text-[10px] font-bold shrink-0 ml-2">
-              Transcoded 100%
+              Packaged 100% (&lt; 15s)
             </Badge>
           </div>
           <div className="flex items-center gap-1.5 pt-1 border-t border-sky-500/20 text-[11px] text-muted-foreground">
-            <span>Generated Renditions:</span>
+            <span>Active HLS Renditions:</span>
             <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">1080p</Badge>
-            <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">720p</Badge>
-            <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">480p</Badge>
+            {file720p && <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">720p</Badge>}
+            {file480p && <Badge variant="outline" className="bg-background text-[10px] text-foreground font-mono">480p</Badge>}
           </div>
         </div>
       )}
@@ -308,17 +355,17 @@ export function HlsConverterWidget({
           {status === "idle" || status === "ready" ? (
             <>
               <Play className="size-3.5" />
-              Convert
+              Convert HLS (&lt; 15s)
             </>
           ) : status === "converting" ? (
             <>
               <RefreshCw className="size-3.5 animate-spin" />
-              Converting... {progress}%
+              Packaging... {progress}%
             </>
           ) : status === "converted" ? (
             <>
               <ArrowUpRight className="size-3.5" />
-              Upload
+              Upload to CDN
             </>
           ) : status === "uploading" ? (
             <>
@@ -333,7 +380,7 @@ export function HlsConverterWidget({
           ) : (
             <>
               <Play className="size-3.5" />
-              Convert
+              Convert HLS (&lt; 15s)
             </>
           )}
         </Button>

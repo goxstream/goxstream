@@ -55,6 +55,12 @@ export type ConverterStatus =
   | "complete"
   | "error";
 
+export interface MultiResolutionInputFiles {
+  file1080p: File;
+  file720p?: File | null;
+  file480p?: File | null;
+}
+
 export interface HlsUploadOptions {
   animeSlug: string;
   episodeNumber: string;
@@ -66,3 +72,4 @@ export interface HlsUploadResult {
   url: string;
   sizeBytes?: number;
 }
+

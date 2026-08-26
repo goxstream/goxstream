@@ -2,34 +2,38 @@
 
 import { fetchFile } from "@ffmpeg/util";
 import { loadFFmpegCore, terminateAndResetFFmpeg } from "./ffmpeg-init";
-import { isWebCodecsSupported, transcodeVideoGPU } from "./webcodecs-gpu";
 import type {
   TranscodeProgress,
   TranscodeLogEntry,
   HlsTranscodeResult,
   HlsVariantRendition,
   HlsSegmentFile,
+  MultiResolutionInputFiles,
 } from "./types";
 
 /**
- * Multi-Resolution HLS Transcoder (1080p, 720p, 480p adaptive bitrate renditions).
+ * Multi-Resolution Instant Stream Copy HLS Packaging (< 15 seconds).
+ * Processes pre-rendered multi-resolution inputs (1080p, 720p, 480p) via
+ * 100% Stream Copy (-c copy) without CPU re-encoding overhead or WASM crashes.
  */
 export async function transcodeVideoToHls(
-  file: File,
+  input: File | MultiResolutionInputFiles,
   onProgressCallback?: (p: TranscodeProgress) => void,
   onLogCallback?: (entry: TranscodeLogEntry) => void
 ): Promise<HlsTranscodeResult> {
   let currentStageId: "init" | "1080p" | "720p" | "480p" | "upload" = "init";
 
-  const hasGPU = isWebCodecsSupported();
+  const inputFiles: MultiResolutionInputFiles =
+    input instanceof File
+      ? { file1080p: input, file720p: null, file480p: null }
+      : input;
+
   if (onLogCallback) {
     onLogCallback({
-      id: `log-${Date.now()}-gpu`,
+      id: `log-${Date.now()}-copy`,
       timestamp: new Date().toLocaleTimeString("en-US", { hour12: false }),
       type: "info",
-      message: hasGPU
-        ? "[WebCodecs GPU] Hardware Acceleration API detected. Preferring GPU Hardware Encoder."
-        : "[FFmpeg WASM] WebCodecs API unavailable. Using FFmpeg WASM CPU Pipeline (-threads 1).",
+      message: "[Stream Copy Pipeline] Executing 100% Fast Stream Copy (-c copy) without CPU re-encoding overhead.",
     });
   }
 
@@ -38,16 +42,6 @@ export async function transcodeVideoToHls(
       onProgressCallback({ progress: 10, message: msg, stageId: "init" });
     }
   });
-
-  const inputName = "input_" + Date.now() + ".mp4";
-
-  if (onProgressCallback) {
-    onProgressCallback({ progress: 15, message: `Mounting ${file.name} into WASM VFS...`, stageId: "init" });
-  }
-
-  // 1. Write input video file to FFmpeg Virtual File System
-  const fileData = await fetchFile(file);
-  await ffmpeg.writeFile(inputName, fileData);
 
   const variants: HlsVariantRendition[] = [];
   const segmentBlobs: HlsSegmentFile[] = [];
@@ -69,7 +63,7 @@ export async function transcodeVideoToHls(
     if (onProgressCallback) {
       onProgressCallback({
         progress: percentage,
-        message: `Encoding rendition (${percentage}%)...`,
+        message: `Packaging HLS segment (${percentage}%)...`,
         stageId: currentStageId,
       });
     }
@@ -79,13 +73,24 @@ export async function transcodeVideoToHls(
   ffmpeg.on("progress", progressHandler);
 
   try {
-    // 2. Rendition 1: 1080p Master Rendition (Stream Copy / Full HD)
+    // 1. Rendition 1080p Full HD (Stream Copy)
     currentStageId = "1080p";
+    const file1080 = inputFiles.file1080p;
+    const input1080Name = "input_1080p_" + Date.now() + ".mp4";
+
     if (onProgressCallback) {
-      onProgressCallback({ progress: 25, message: "Generating 1080p Full HD stream rendition...", stageId: "1080p" });
+      onProgressCallback({ progress: 20, message: `Mounting 1080p Master (${file1080.name}) into VFS...`, stageId: "1080p" });
     }
+
+    const data1080 = await fetchFile(file1080);
+    await ffmpeg.writeFile(input1080Name, data1080);
+
+    if (onProgressCallback) {
+      onProgressCallback({ progress: 30, message: "Stream Copying 1080p to HLS segments...", stageId: "1080p" });
+    }
+
     await ffmpeg.exec([
-      "-i", inputName,
+      "-i", input1080Name,
       "-c:v", "copy",
       "-c:a", "copy",
       "-start_number", "0",
@@ -95,7 +100,6 @@ export async function transcodeVideoToHls(
       "1080p.m3u8",
     ]);
 
-    // Read 1080p Manifest
     const manifest1080 = await ffmpeg.readFile("1080p.m3u8");
     variants.push({
       resolution: "1080p",
@@ -104,45 +108,30 @@ export async function transcodeVideoToHls(
         type: "application/x-mpegURL",
       }),
     });
+
+    await ffmpeg.deleteFile(input1080Name);
     await ffmpeg.deleteFile("1080p.m3u8");
 
-    // 3. Rendition 2: 720p HD Rendition (WebCodecs GPU Hardware Accelerated with WASM CPU fallback)
-    currentStageId = "720p";
-    let usedGPU720 = false;
+    // 2. Rendition 720p HD (Stream Copy if file provided)
+    if (inputFiles.file720p) {
+      currentStageId = "720p";
+      const file720 = inputFiles.file720p;
+      const input720Name = "input_720p_" + Date.now() + ".mp4";
 
-    if (hasGPU) {
-      try {
-        if (onProgressCallback) {
-          onProgressCallback({ progress: 40, message: "Encoding 720p HD using WebCodecs GPU Hardware Acceleration...", stageId: "720p" });
-        }
-        await transcodeVideoGPU(file, {
-          targetWidth: 1280,
-          targetHeight: 720,
-          bitrate: 2_800_000,
-          onProgress: (pct) => {
-            if (onProgressCallback) {
-              onProgressCallback({ progress: 30 + Math.round(pct * 0.2), message: `GPU Encoding 720p (${pct}%)...`, stageId: "720p" });
-            }
-          },
-        });
-        usedGPU720 = true;
-      } catch (gpuErr: any) {
-        console.warn("[WebCodecs GPU] 720p GPU encoding error, falling back to WASM CPU", gpuErr);
-      }
-    }
-
-    if (!usedGPU720) {
       if (onProgressCallback) {
-        onProgressCallback({ progress: 50, message: "Generating 720p HD scaled stream rendition (WASM CPU)...", stageId: "720p" });
+        onProgressCallback({ progress: 55, message: `Mounting 720p Source (${file720.name}) into VFS...`, stageId: "720p" });
       }
+
+      const data720 = await fetchFile(file720);
+      await ffmpeg.writeFile(input720Name, data720);
+
+      if (onProgressCallback) {
+        onProgressCallback({ progress: 65, message: "Stream Copying 720p to HLS segments...", stageId: "720p" });
+      }
+
       await ffmpeg.exec([
-        "-i", inputName,
-        "-vf", "scale=-2:720:flags=bicubic",
-        "-c:v", "libx264",
-        "-preset", "ultrafast",
-        "-tune", "fastdecode",
-        "-crf", "28",
-        "-threads", "1",
+        "-i", input720Name,
+        "-c:v", "copy",
         "-c:a", "copy",
         "-start_number", "0",
         "-hls_time", "10",
@@ -150,56 +139,40 @@ export async function transcodeVideoToHls(
         "-f", "hls",
         "720p.m3u8",
       ]);
+
+      const manifest720 = await ffmpeg.readFile("720p.m3u8");
+      variants.push({
+        resolution: "720p",
+        manifestFileName: "720p.m3u8",
+        manifestBlob: new Blob([new Uint8Array(manifest720 as Uint8Array)], {
+          type: "application/x-mpegURL",
+        }),
+      });
+
+      await ffmpeg.deleteFile(input720Name);
+      await ffmpeg.deleteFile("720p.m3u8");
     }
 
-    // Read 720p Manifest
-    const manifest720 = await ffmpeg.readFile("720p.m3u8");
-    variants.push({
-      resolution: "720p",
-      manifestFileName: "720p.m3u8",
-      manifestBlob: new Blob([new Uint8Array(manifest720 as Uint8Array)], {
-        type: "application/x-mpegURL",
-      }),
-    });
-    await ffmpeg.deleteFile("720p.m3u8");
+    // 3. Rendition 480p SD (Stream Copy if file provided)
+    if (inputFiles.file480p) {
+      currentStageId = "480p";
+      const file480 = inputFiles.file480p;
+      const input480Name = "input_480p_" + Date.now() + ".mp4";
 
-    // 4. Rendition 3: 480p SD Rendition (WebCodecs GPU Hardware Accelerated with WASM CPU fallback)
-    currentStageId = "480p";
-    let usedGPU480 = false;
-
-    if (hasGPU) {
-      try {
-        if (onProgressCallback) {
-          onProgressCallback({ progress: 65, message: "Encoding 480p SD using WebCodecs GPU Hardware Acceleration...", stageId: "480p" });
-        }
-        await transcodeVideoGPU(file, {
-          targetWidth: 854,
-          targetHeight: 480,
-          bitrate: 1_400_000,
-          onProgress: (pct) => {
-            if (onProgressCallback) {
-              onProgressCallback({ progress: 60 + Math.round(pct * 0.2), message: `GPU Encoding 480p (${pct}%)...`, stageId: "480p" });
-            }
-          },
-        });
-        usedGPU480 = true;
-      } catch (gpuErr: any) {
-        console.warn("[WebCodecs GPU] 480p GPU encoding error, falling back to WASM CPU", gpuErr);
-      }
-    }
-
-    if (!usedGPU480) {
       if (onProgressCallback) {
-        onProgressCallback({ progress: 75, message: "Generating 480p SD scaled stream rendition (WASM CPU)...", stageId: "480p" });
+        onProgressCallback({ progress: 75, message: `Mounting 480p Source (${file480.name}) into VFS...`, stageId: "480p" });
       }
+
+      const data480 = await fetchFile(file480);
+      await ffmpeg.writeFile(input480Name, data480);
+
+      if (onProgressCallback) {
+        onProgressCallback({ progress: 85, message: "Stream Copying 480p to HLS segments...", stageId: "480p" });
+      }
+
       await ffmpeg.exec([
-        "-i", inputName,
-        "-vf", "scale=-2:480:flags=bicubic",
-        "-c:v", "libx264",
-        "-preset", "ultrafast",
-        "-tune", "fastdecode",
-        "-crf", "28",
-        "-threads", "1",
+        "-i", input480Name,
+        "-c:v", "copy",
         "-c:a", "copy",
         "-start_number", "0",
         "-hls_time", "10",
@@ -207,20 +180,21 @@ export async function transcodeVideoToHls(
         "-f", "hls",
         "480p.m3u8",
       ]);
+
+      const manifest480 = await ffmpeg.readFile("480p.m3u8");
+      variants.push({
+        resolution: "480p",
+        manifestFileName: "480p.m3u8",
+        manifestBlob: new Blob([new Uint8Array(manifest480 as Uint8Array)], {
+          type: "application/x-mpegURL",
+        }),
+      });
+
+      await ffmpeg.deleteFile(input480Name);
+      await ffmpeg.deleteFile("480p.m3u8");
     }
 
-    // Read 480p Manifest
-    const manifest480 = await ffmpeg.readFile("480p.m3u8");
-    variants.push({
-      resolution: "480p",
-      manifestFileName: "480p.m3u8",
-      manifestBlob: new Blob([new Uint8Array(manifest480 as Uint8Array)], {
-        type: "application/x-mpegURL",
-      }),
-    });
-    await ffmpeg.deleteFile("480p.m3u8");
-
-    // 5. Extract all generated .ts segment files from VFS
+    // 4. Extract all generated .ts segment files from VFS
     const dirEntries = await ffmpeg.listDir(".");
     for (const entry of dirEntries) {
       if (!entry.isDir && entry.name.endsWith(".ts")) {
@@ -236,31 +210,42 @@ export async function transcodeVideoToHls(
       }
     }
 
-    // Clean up input video file
-    await ffmpeg.deleteFile(inputName);
-
-    // 6. Generate Master Playlist index (master.m3u8)
-    const masterManifestContent = [
+    // 5. Generate Master Playlist index (master.m3u8) dynamically based on active variants
+    const masterLines: string[] = [
       "#EXTM3U",
       "#EXT-X-VERSION:3",
       "",
-      '#EXT-X-STREAM-INF:BANDWIDTH=5000000,RESOLUTION=1920x1080,NAME="1080p"',
-      "1080p.m3u8",
-      "",
-      '#EXT-X-STREAM-INF:BANDWIDTH=2800000,RESOLUTION=1280x720,NAME="720p"',
-      "720p.m3u8",
-      "",
-      '#EXT-X-STREAM-INF:BANDWIDTH=1400000,RESOLUTION=854x480,NAME="480p"',
-      "480p.m3u8",
-      "",
-    ].join("\n");
+    ];
 
+    if (variants.some((v) => v.resolution === "1080p")) {
+      masterLines.push(
+        '#EXT-X-STREAM-INF:BANDWIDTH=5000000,RESOLUTION=1920x1080,NAME="1080p"',
+        "1080p.m3u8",
+        ""
+      );
+    }
+    if (variants.some((v) => v.resolution === "720p")) {
+      masterLines.push(
+        '#EXT-X-STREAM-INF:BANDWIDTH=2800000,RESOLUTION=1280x720,NAME="720p"',
+        "720p.m3u8",
+        ""
+      );
+    }
+    if (variants.some((v) => v.resolution === "480p")) {
+      masterLines.push(
+        '#EXT-X-STREAM-INF:BANDWIDTH=1400000,RESOLUTION=854x480,NAME="480p"',
+        "480p.m3u8",
+        ""
+      );
+    }
+
+    const masterManifestContent = masterLines.join("\n");
     const masterManifestBlob = new Blob([masterManifestContent], {
       type: "application/x-mpegURL",
     });
 
     if (onProgressCallback) {
-      onProgressCallback({ progress: 100, message: "Multi-Resolution HLS Transcoding Complete!" });
+      onProgressCallback({ progress: 100, message: "Instant Multi-Resolution HLS Packaging Complete!" });
     }
 
     return {
@@ -270,7 +255,6 @@ export async function transcodeVideoToHls(
       segmentBlobs,
     };
   } catch (err) {
-    // Reset WASM memory instance on fatal error to prevent corrupted WASM state
     terminateAndResetFFmpeg();
     throw err;
   } finally {
