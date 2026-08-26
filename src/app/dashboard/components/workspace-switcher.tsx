@@ -6,6 +6,7 @@ import { ChevronsUpDown, Check, Plus, Server, HardDrive, ShieldCheck } from "luc
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -77,9 +78,11 @@ export function WorkspaceSwitcher({ workspaces }: WorkspaceSwitcherProps) {
             side={isMobile ? "bottom" : "right"}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-xs text-muted-foreground font-medium">
-              Environments & Nodes
-            </DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-xs text-muted-foreground font-medium">
+                Environments & Nodes
+              </DropdownMenuLabel>
+            </DropdownMenuGroup>
             {workspaces.map((workspace, index) => (
               <DropdownMenuItem
                 key={workspace.id}

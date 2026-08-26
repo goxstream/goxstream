@@ -83,22 +83,24 @@ export function NavUser({ user }: NavUserProps) {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-xs">
-                <Avatar className="h-8 w-8 rounded-lg border border-border/60">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg bg-brand/10 text-brand font-semibold text-xs">
-                    {getInitials(user.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-xs leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-[10px] text-muted-foreground">
-                    {user.role} • {user.email}
-                  </span>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="p-0 font-normal">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-xs">
+                  <Avatar className="h-8 w-8 rounded-lg border border-border/60">
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarFallback className="rounded-lg bg-brand/10 text-brand font-semibold text-xs">
+                      {getInitials(user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-xs leading-tight">
+                    <span className="truncate font-semibold">{user.name}</span>
+                    <span className="truncate text-[10px] text-muted-foreground">
+                      {user.role} • {user.email}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </DropdownMenuLabel>
+              </DropdownMenuLabel>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem className="gap-2 text-xs cursor-pointer">

@@ -103,19 +103,21 @@ export function DashboardHeader() {
 
         {/* Notifications Popover */}
         <Popover open={notificationsOpen} onOpenChange={setNotificationsOpen}>
-          <PopoverTrigger>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative size-9 rounded-lg border border-border/40 hover:bg-accent cursor-pointer"
-              title="Notifications"
-            >
-              <Bell className="size-4 text-foreground" />
-              <span className="absolute top-1.5 right-1.5 flex size-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
-                <span className="relative inline-flex rounded-full size-2 bg-brand"></span>
-              </span>
-            </Button>
+          <PopoverTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative size-9 rounded-lg border border-border/40 hover:bg-accent cursor-pointer"
+                title="Notifications"
+              />
+            }
+          >
+            <Bell className="size-4 text-foreground" />
+            <span className="absolute top-1.5 right-1.5 flex size-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+              <span className="relative inline-flex rounded-full size-2 bg-brand"></span>
+            </span>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0 rounded-xl border-border/60 shadow-md" align="end">
             <div className="flex items-center justify-between border-b border-border/60 px-4 py-3 bg-muted/30">
