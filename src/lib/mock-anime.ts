@@ -537,3 +537,72 @@ export const PLATFORM_STATS: PlatformStat[] = [
     description: "Full library of subbed & dubbed series and films",
   },
 ];
+
+export function getAnimeBySlug(slug: string): AnimeItem | undefined {
+  return ALL_ANIME.find((a) => a.slug === slug || a.id === slug);
+}
+
+export function getEpisodesForAnime(anime: AnimeItem): EpisodeItem[] {
+  const maxEp = anime.latestEpisode || anime.episodesCount || 12;
+  const isSubOnly = anime.subOrDub === "SUB";
+
+  const epTitles = [
+    "The Beginning of the Journey",
+    "Unseen Powers Awakening",
+    "Clash of Ideals",
+    "Shadows in the Dark",
+    "Boundaries Tested",
+    "The Hidden Truth",
+    "Echoes of the Past",
+    "Fierce Determination",
+    "Breakthrough Moment",
+    "Rising Storm",
+    "Desperate Counterattack",
+    "The Ultimate Showdown",
+    "New Horizons",
+    "The Sovereign's Command",
+    "Unshakable Will",
+    "Crossroads of Fate",
+    "The Fallen Champion",
+    "Silent Resolve",
+    "Awakening Spirit",
+    "Final Reckoning",
+    "Beyond the Horizon",
+    "The Last Stand",
+    "Legacy of Hope",
+    "Endless Tomorrow",
+  ];
+
+  const episodes: EpisodeItem[] = [];
+  for (let i = 1; i <= maxEp; i++) {
+    const titleIndex = (i - 1) % epTitles.length;
+    episodes.push({
+      id: `${anime.id}-ep-${i}`,
+      animeId: anime.id,
+      animeSlug: anime.slug,
+      animeTitle: anime.title,
+      episodeNumber: i,
+      episodeTitle: `Episode ${i}: ${epTitles[titleIndex]}`,
+      thumbnail: anime.coverImage,
+      duration: anime.type === "Movie" ? "1h 55m" : "24m",
+      releasedAt: i === maxEp ? "Latest Release" : `${maxEp - i + 1} days ago`,
+      isSub: true,
+      isDub: !isSubOnly,
+    });
+  }
+  return episodes.reverse();
+}
+
+export function getRecommendedAnime(currentSlug: string, count = 4): AnimeItem[] {
+  const current = getAnimeBySlug(currentSlug);
+  if (!current) return ALL_ANIME.slice(0, count);
+
+  return ALL_ANIME.filter((a) => a.slug !== currentSlug)
+    .sort((a, b) => {
+      const aMatches = a.genres.filter((g) => current.genres.includes(g)).length;
+      const bMatches = b.genres.filter((g) => current.genres.includes(g)).length;
+      return bMatches - aMatches;
+    })
+    .slice(0, count);
+}
+
