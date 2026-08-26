@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { FieldLabel } from "@/components/ui/field"
 import {
   InputOTP,
   InputOTPGroup,
@@ -36,6 +36,9 @@ export function ActivateForm() {
       setIsPaired(true)
     }, 1200)
   }
+
+  const slotClassName =
+    "size-11 sm:size-12 border-border/80 bg-background text-foreground font-mono text-base font-bold dark:bg-muted/40"
 
   if (isPaired) {
     return (
@@ -90,38 +93,47 @@ export function ActivateForm() {
             <Skeleton className="h-10 w-full rounded-md" />
           </div>
         ) : (
-          <form onSubmit={handleSubmit}>
-            <FieldGroup className="gap-5 items-center">
-              <Field className="items-center">
-                <FieldLabel htmlFor="tv-code">Activation Code (6 Characters)</FieldLabel>
-                <InputOTP
-                  maxLength={6}
-                  id="tv-code"
-                  value={code}
-                  onChange={(val) => setCode(val.toUpperCase())}
+          <form onSubmit={handleSubmit} className="w-full">
+            <div className="flex flex-col gap-5 items-center w-full">
+              <div className="flex flex-col items-center gap-2.5 w-full text-center">
+                <FieldLabel
+                  htmlFor="tv-code"
+                  className="self-center text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider"
                 >
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                  </InputOTPGroup>
-                  <InputOTPSeparator />
-                  <InputOTPGroup>
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
-              </Field>
+                  Activation Code (6 Characters)
+                </FieldLabel>
+                <div className="flex justify-center w-full py-1">
+                  <InputOTP
+                    maxLength={6}
+                    id="tv-code"
+                    value={code}
+                    onChange={(val) => setCode(val.toUpperCase())}
+                    containerClassName="justify-center w-auto mx-auto gap-2"
+                    className="w-auto mx-auto"
+                  >
+                    <InputOTPGroup className="shadow-xs">
+                      <InputOTPSlot index={0} className={slotClassName} />
+                      <InputOTPSlot index={1} className={slotClassName} />
+                      <InputOTPSlot index={2} className={slotClassName} />
+                    </InputOTPGroup>
+                    <InputOTPSeparator />
+                    <InputOTPGroup className="shadow-xs">
+                      <InputOTPSlot index={3} className={slotClassName} />
+                      <InputOTPSlot index={4} className={slotClassName} />
+                      <InputOTPSlot index={5} className={slotClassName} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+              </div>
 
               <Button
                 type="submit"
                 disabled={code.length < 6}
-                className="w-full mt-2"
+                className="w-full"
               >
                 Connect Device
               </Button>
-            </FieldGroup>
+            </div>
           </form>
         )}
       </CardContent>

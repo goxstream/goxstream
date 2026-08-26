@@ -48,6 +48,9 @@ export function LoginForm() {
     }, 1200)
   }
 
+  const slotClassName =
+    "size-11 sm:size-12 border-border/80 bg-background text-foreground font-mono text-base font-bold dark:bg-muted/40"
+
   return (
     <Card className="w-full max-w-md border-border/60 shadow-xs rounded-xl">
       <CardHeader className="text-center">
@@ -169,25 +172,37 @@ export function LoginForm() {
               ) : (
                 <>
                   {otpSent && (
-                    <Field className="items-center">
-                      <FieldLabel htmlFor="otp">Verification Code (OTP)</FieldLabel>
-                      <InputOTP maxLength={6} id="otp">
-                        <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                        </InputOTPGroup>
-                        <InputOTPSeparator />
-                        <InputOTPGroup>
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
-                        </InputOTPGroup>
-                      </InputOTP>
-                      <p className="text-xs text-muted-foreground text-center mt-1">
+                    <div className="flex flex-col items-center gap-2.5 w-full text-center py-1">
+                      <FieldLabel
+                        htmlFor="otp"
+                        className="self-center text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+                      >
+                        Verification Code (OTP)
+                      </FieldLabel>
+                      <div className="flex justify-center w-full py-1">
+                        <InputOTP
+                          maxLength={6}
+                          id="otp"
+                          containerClassName="justify-center w-auto mx-auto gap-2"
+                          className="w-auto mx-auto"
+                        >
+                          <InputOTPGroup className="shadow-xs">
+                            <InputOTPSlot index={0} className={slotClassName} />
+                            <InputOTPSlot index={1} className={slotClassName} />
+                            <InputOTPSlot index={2} className={slotClassName} />
+                          </InputOTPGroup>
+                          <InputOTPSeparator />
+                          <InputOTPGroup className="shadow-xs">
+                            <InputOTPSlot index={3} className={slotClassName} />
+                            <InputOTPSlot index={4} className={slotClassName} />
+                            <InputOTPSlot index={5} className={slotClassName} />
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </div>
+                      <p className="text-xs text-muted-foreground text-center">
                         A 6-digit code has been sent to your email address.
                       </p>
-                    </Field>
+                    </div>
                   )}
                 </>
               )}
