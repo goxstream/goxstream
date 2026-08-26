@@ -1,15 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { EpisodeHeader } from "./components/episode-header";
 import { EpisodeStatsCards } from "./components/episode-stats";
 import { EpisodeFilters } from "./components/episode-filters";
 import { EpisodeTable } from "./components/episode-table";
 import { EpisodePreviewModal } from "./components/episode-preview-modal";
+import { useDashboardEpisodes } from "@/hooks/use-dashboard-episodes";
 import { MOCK_EPISODES, MOCK_EPISODE_STATS } from "./constants";
 import type { EpisodeItem, EpisodeFilterState } from "./types";
 
 export default function EpisodeManagerPage() {
+  const { isLoading } = useDashboardEpisodes();
   const [episodes, setEpisodes] = useState<EpisodeItem[]>(MOCK_EPISODES);
   const [previewEpisode, setPreviewEpisode] = useState<EpisodeItem | null>(null);
 
@@ -24,13 +27,13 @@ export default function EpisodeManagerPage() {
 
   const animeOptions = useMemo(() => {
     const map = new Map<string, string>();
-    MOCK_EPISODES.forEach((ep) => {
+    episodes.forEach((ep) => {
       if (!map.has(ep.animeId)) {
         map.set(ep.animeId, ep.animeTitle);
       }
     });
     return Array.from(map.entries()).map(([id, title]) => ({ id, title }));
-  }, []);
+  }, [episodes]);
 
   const handleFilterChange = (key: keyof EpisodeFilterState, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -66,7 +69,7 @@ export default function EpisodeManagerPage() {
         if (filters.status !== "all" && ep.status !== filters.status) return false;
 
         if (filters.serverStatus !== "all") {
-          const hasMatchingHealth = ep.servers.some(
+          const hasMatchingHealth = ep.servers?.some(
             (srv) => srv.health === filters.serverStatus
           );
           if (!hasMatchingHealth) return false;
@@ -87,7 +90,11 @@ export default function EpisodeManagerPage() {
     <div className="space-y-6 p-6">
       <EpisodeHeader />
 
-      <EpisodeStatsCards stats={MOCK_EPISODE_STATS} />
+      {isLoading ? (
+        <Skeleton className="h-28 w-full rounded-xl bg-card border border-border/60" />
+      ) : (
+        <EpisodeStatsCards stats={MOCK_EPISODE_STATS} />
+      )}
 
       <EpisodeFilters
         filters={filters}
@@ -96,11 +103,15 @@ export default function EpisodeManagerPage() {
         animeOptions={animeOptions}
       />
 
-      <EpisodeTable
-        episodes={filteredEpisodes}
-        onPreview={(ep) => setPreviewEpisode(ep)}
-        onDelete={handleDeleteEpisode}
-      />
+      {isLoading ? (
+        <Skeleton className="h-96 w-full rounded-xl bg-card border border-border/60" />
+      ) : (
+        <EpisodeTable
+          episodes={filteredEpisodes}
+          onPreview={(ep) => setPreviewEpisode(ep)}
+          onDelete={handleDeleteEpisode}
+        />
+      )}
 
       <EpisodePreviewModal
         episode={previewEpisode}

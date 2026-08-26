@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getAnimeBySlug, getTrendingAnime } from "@/lib/db/queries/anime";
 import { getEpisodesByAnimeSlug } from "@/lib/db/queries/episodes";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { FEATURED_ANIME as FALLBACK_ANIME, LATEST_EPISODES, TRENDING_ANIME } from "@/lib/mock-anime";
+import type { AnimeItem, EpisodeItem } from "@/types/anime";
 
 export async function GET(
   request: Request,
@@ -14,9 +14,9 @@ export async function GET(
 
   try {
     const cached = await getCacheItem<{
-      anime: typeof FALLBACK_ANIME;
-      episodes: typeof LATEST_EPISODES;
-      recommendations: typeof TRENDING_ANIME;
+      anime: AnimeItem | null;
+      episodes: EpisodeItem[];
+      recommendations: AnimeItem[];
     }>(CACHE_KEY);
 
     if (cached) {
@@ -31,17 +31,12 @@ export async function GET(
     const anime = await getAnimeBySlug(slug).catch(() => null);
 
     if (!anime) {
-      const mockAnime = { ...FALLBACK_ANIME, slug, title: slug.replace(/-/g, " ").toUpperCase() };
-      return NextResponse.json({
-        anime: mockAnime,
-        episodes: LATEST_EPISODES,
-        recommendations: TRENDING_ANIME.slice(0, 4),
-      }, { status: 200 });
+      return NextResponse.json({ error: "Anime not found" }, { status: 404 });
     }
 
     const [episodes, trending] = await Promise.all([
-      getEpisodesByAnimeSlug(slug).catch(() => LATEST_EPISODES),
-      getTrendingAnime(5).catch(() => TRENDING_ANIME.slice(0, 5)),
+      getEpisodesByAnimeSlug(slug).catch(() => []),
+      getTrendingAnime(5).catch(() => []),
     ]);
 
     const recommendations = trending.filter((item) => item.slug !== anime.slug).slice(0, 4);
@@ -57,11 +52,6 @@ export async function GET(
       },
     });
   } catch {
-    const mockAnime = { ...FALLBACK_ANIME, slug, title: slug.replace(/-/g, " ").toUpperCase() };
-    return NextResponse.json({
-      anime: mockAnime,
-      episodes: LATEST_EPISODES,
-      recommendations: TRENDING_ANIME.slice(0, 4),
-    }, { status: 200 });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

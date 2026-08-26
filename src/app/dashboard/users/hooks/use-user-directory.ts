@@ -1,8 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useDashboardUsers } from "@/hooks/use-dashboard-users";
 import { MOCK_USERS } from "../constants";
-import type { UserAccount, UserFilters } from "../types";
+import type { UserAccount, UserFilters, MembershipTier } from "../types";
 
 export function useUserDirectory() {
+  const { users: fetchedProfiles, isLoading } = useDashboardUsers();
   const [users, setUsers] = useState<UserAccount[]>(MOCK_USERS);
   const [selectedUser, setSelectedUser] = useState<UserAccount | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
@@ -10,6 +12,31 @@ export function useUserDirectory() {
   // Form sheet state (Add & Edit)
   const [isFormSheetOpen, setIsFormSheetOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserAccount | null>(null);
+
+  useEffect(() => {
+    if (fetchedProfiles && fetchedProfiles.length > 0) {
+      const mapped: UserAccount[] = fetchedProfiles.map((p) => ({
+        id: p.id,
+        name: p.displayName,
+        username: p.username,
+        email: p.email,
+        avatar: p.avatarUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+        role: "user",
+        status: "active",
+        membershipTier: (p.isVip ? "vip" : "free") as MembershipTier,
+        createdAt: p.joinDate || "2025-01-01",
+        lastActiveAt: "Just now",
+        watchHistory: {
+          totalWatchedEpisodes: p.stats?.episodesWatched || 0,
+          totalWatchTimeHours: p.stats?.hoursWatched || 0,
+          favoriteGenre: p.stats?.favoriteGenres?.[0]?.genre || "Action",
+          lastWatchedTitle: "Jujutsu Kaisen S2",
+          lastWatchedAt: "2 hours ago",
+        },
+      }));
+      setUsers(mapped);
+    }
+  }, [fetchedProfiles]);
 
   const [filters, setFilters] = useState<UserFilters>({
     search: "",
@@ -128,6 +155,7 @@ export function useUserDirectory() {
     setIsFormSheetOpen,
     editingUser,
     filters,
+    isLoading,
     handleFilterChange,
     handleResetFilters,
     handleSelectUser,

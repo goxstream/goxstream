@@ -1,15 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AnimeHeader } from "./components/anime-header";
 import { AnimeFilters } from "./components/anime-filters";
 import { AnimeTable } from "./components/anime-table";
 import { AnimeAddSheet } from "./components/anime-add-sheet";
 import { AnimeEditSheet } from "./components/edit/anime-edit-sheet";
+import { useDashboardAnime } from "@/hooks/use-dashboard-anime";
 import { MOCK_ANIME_DATA } from "./constants";
 import type { AnimeItem, AnimeFilterState } from "./types";
 
 export default function AnimeCatalogPage() {
+  const { isLoading } = useDashboardAnime();
   const [animeList, setAnimeList] = useState<AnimeItem[]>(MOCK_ANIME_DATA);
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false);
   const [mobileEditAnime, setMobileEditAnime] = useState<AnimeItem | null>(null);
@@ -95,13 +98,17 @@ export default function AnimeCatalogPage() {
         onResetFilters={handleResetFilters}
       />
 
-      {/* Main Table with Adaptive Desktop Accordion & Mobile Sheet Edit */}
-      <AnimeTable
-        animeList={filteredAnimeList}
-        onUpdateAnime={handleUpdateAnime}
-        onDeleteAnime={handleDeleteAnime}
-        onOpenMobileEdit={(anime) => setMobileEditAnime(anime)}
-      />
+      {/* Main Table */}
+      {isLoading ? (
+        <Skeleton className="h-96 w-full rounded-xl bg-card border border-border/60" />
+      ) : (
+        <AnimeTable
+          animeList={filteredAnimeList}
+          onUpdateAnime={handleUpdateAnime}
+          onDeleteAnime={handleDeleteAnime}
+          onOpenMobileEdit={(anime) => setMobileEditAnime(anime)}
+        />
+      )}
 
       {/* Compact Add Anime Slide-over Sheet */}
       <AnimeAddSheet

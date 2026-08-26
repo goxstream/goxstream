@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getBrowseAnime } from "@/lib/db/queries/anime";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { TRENDING_ANIME as FALLBACK_SEARCH } from "@/lib/mock-anime";
+import type { AnimeItem } from "@/types/anime";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   const CACHE_TTL = 300;
 
   try {
-    const cached = await getCacheItem<{ results: typeof FALLBACK_SEARCH }>(CACHE_KEY);
+    const cached = await getCacheItem<{ results: AnimeItem[] }>(CACHE_KEY);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -21,8 +21,8 @@ export async function GET(request: Request) {
       });
     }
 
-    const items = await getBrowseAnime({ query, limit: 12 }).catch(() => FALLBACK_SEARCH);
-    const data = { results: items.length > 0 ? items : (query ? [] : FALLBACK_SEARCH) };
+    const items = await getBrowseAnime({ query, limit: 12 }).catch(() => []);
+    const data = { results: items };
 
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
@@ -33,6 +33,6 @@ export async function GET(request: Request) {
       },
     });
   } catch {
-    return NextResponse.json({ results: FALLBACK_SEARCH }, { status: 200 });
+    return NextResponse.json({ results: [] }, { status: 200 });
   }
 }

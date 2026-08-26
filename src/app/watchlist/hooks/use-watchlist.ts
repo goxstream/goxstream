@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { MOCK_WATCHLIST } from "@/lib/mock-user";
 import type { WatchlistItem, WatchlistStatus } from "@/types/user";
 import type { WatchlistTabValue, WatchlistViewMode } from "../types";
@@ -10,6 +10,30 @@ export function useWatchlist() {
   const [activeTab, setActiveTab] = useState<WatchlistTabValue>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<WatchlistViewMode>("grid");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchWatchlist() {
+      try {
+        const res = await fetch("/api/user/watchlist");
+        if (res.ok) {
+          const data = (await res.json()) as { items?: WatchlistItem[] };
+          if (isMounted && data.items && data.items.length > 0) {
+            setItems(data.items);
+          }
+        }
+      } catch {
+        // Fallback to initial mock if DB empty
+      }
+    }
+
+    fetchWatchlist();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleStatusChange = (id: string, newStatus: WatchlistStatus) => {
     setItems((prev) =>

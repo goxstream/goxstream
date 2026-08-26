@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getBrowseAnime } from "@/lib/db/queries/anime";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { ALL_ANIME as FALLBACK_ALL_ANIME } from "@/lib/mock-anime";
+import type { AnimeItem } from "@/types/anime";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   const CACHE_TTL = 300;
 
   try {
-    const cached = await getCacheItem<{ animeList: typeof FALLBACK_ALL_ANIME }>(CACHE_KEY);
+    const cached = await getCacheItem<{ animeList: AnimeItem[] }>(CACHE_KEY);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -26,8 +26,8 @@ export async function GET(request: Request) {
       });
     }
 
-    const items = await getBrowseAnime({ genre, query, status, type, limit }).catch(() => FALLBACK_ALL_ANIME);
-    const data = { animeList: items.length > 0 ? items : FALLBACK_ALL_ANIME };
+    const items = await getBrowseAnime({ genre, query, status, type, limit }).catch(() => []);
+    const data = { animeList: items };
 
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
@@ -38,6 +38,6 @@ export async function GET(request: Request) {
       },
     });
   } catch {
-    return NextResponse.json({ animeList: FALLBACK_ALL_ANIME }, { status: 200 });
+    return NextResponse.json({ animeList: [] }, { status: 200 });
   }
 }

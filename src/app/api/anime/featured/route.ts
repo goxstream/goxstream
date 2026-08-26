@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { getFeaturedAnime } from "@/lib/db/queries/anime";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { FEATURED_ANIME as FALLBACK_FEATURED } from "@/lib/mock-anime";
+import type { AnimeItem } from "@/types/anime";
 
 export async function GET() {
-  const CACHE_KEY = "kv_featured_anime_v1";
-  const CACHE_TTL = 300; // 5 minutes
+  const CACHE_KEY = "kv_featured_anime_v2";
+  const CACHE_TTL = 300;
 
   try {
-    const cached = await getCacheItem<{ featuredAnime: typeof FALLBACK_FEATURED }>(CACHE_KEY);
+    const cached = await getCacheItem<{ featuredAnime: AnimeItem | null }>(CACHE_KEY);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -18,8 +18,8 @@ export async function GET() {
       });
     }
 
-    const featuredAnime = await getFeaturedAnime().catch(() => FALLBACK_FEATURED);
-    const data = { featuredAnime: featuredAnime || FALLBACK_FEATURED };
+    const featuredAnime = await getFeaturedAnime().catch(() => null);
+    const data = { featuredAnime };
 
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
@@ -30,6 +30,6 @@ export async function GET() {
       },
     });
   } catch {
-    return NextResponse.json({ featuredAnime: FALLBACK_FEATURED }, { status: 200 });
+    return NextResponse.json({ featuredAnime: null }, { status: 200 });
   }
 }

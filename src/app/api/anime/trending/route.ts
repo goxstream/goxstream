@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import { getTrendingAnime, getAllGenres } from "@/lib/db/queries/anime";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { TRENDING_ANIME as FALLBACK_TRENDING, GENRES_LIST as FALLBACK_GENRES } from "@/lib/mock-anime";
+import type { AnimeItem } from "@/types/anime";
 
 export async function GET() {
-  const CACHE_KEY = "kv_trending_anime_v1";
-  const CACHE_TTL = 300; // 5 minutes
+  const CACHE_KEY = "kv_trending_anime_v2";
+  const CACHE_TTL = 300;
 
   try {
     const cached = await getCacheItem<{
-      trendingAnime: typeof FALLBACK_TRENDING;
-      genresList: typeof FALLBACK_GENRES;
+      trendingAnime: AnimeItem[];
+      genresList: string[];
     }>(CACHE_KEY);
 
     if (cached) {
@@ -23,13 +23,13 @@ export async function GET() {
     }
 
     const [trendingAnime, genresList] = await Promise.all([
-      getTrendingAnime(10).catch(() => FALLBACK_TRENDING),
-      getAllGenres().catch(() => FALLBACK_GENRES),
+      getTrendingAnime(10).catch(() => []),
+      getAllGenres().catch(() => []),
     ]);
 
     const data = {
-      trendingAnime: trendingAnime.length > 0 ? trendingAnime : FALLBACK_TRENDING,
-      genresList: genresList.length > 0 ? genresList : FALLBACK_GENRES,
+      trendingAnime,
+      genresList,
     };
 
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
@@ -42,7 +42,7 @@ export async function GET() {
     });
   } catch {
     return NextResponse.json(
-      { trendingAnime: FALLBACK_TRENDING, genresList: FALLBACK_GENRES },
+      { trendingAnime: [], genresList: [] },
       { status: 200 }
     );
   }
