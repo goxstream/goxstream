@@ -27,7 +27,7 @@ export function VideoPlayer({
         title={title}
         src={currentSource.url}
         controls
-        aspectRatio="16/9"
+        aspectRatio={16 / 9}
         className="w-full h-full text-white font-sans overflow-hidden"
       >
         <MediaOutlet>
