@@ -14,19 +14,36 @@ interface AnimeTableRowProps {
   anime: AnimeItem;
   isExpanded: boolean;
   onToggleExpand: (id: string) => void;
+  onOpenMobileEdit: (anime: AnimeItem) => void;
   onUpdateAnime: (updated: AnimeItem) => void;
   onDeleteAnime: (id: string) => void;
 }
 
-export function AnimeTableRow({ anime, isExpanded, onToggleExpand, onUpdateAnime, onDeleteAnime }: AnimeTableRowProps) {
+export function AnimeTableRow({
+  anime,
+  isExpanded,
+  onToggleExpand,
+  onOpenMobileEdit,
+  onUpdateAnime,
+  onDeleteAnime,
+}: AnimeTableRowProps) {
+  const handleEditClick = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      onOpenMobileEdit(anime);
+    } else {
+      onToggleExpand(anime.id);
+    }
+  };
+
   return (
     <React.Fragment>
       <TableRow
         className={`transition-colors border-border/40 hover:bg-muted/40 cursor-pointer ${isExpanded ? "bg-muted/30 font-medium" : ""}`}
-        onClick={() => onToggleExpand(anime.id)}
+        onClick={handleEditClick}
       >
         <TableCell className="text-center p-2" onClick={(e) => e.stopPropagation()}>
-          <Button variant="ghost" size="icon-xs" onClick={() => onToggleExpand(anime.id)} className="h-6 w-6 text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" size="icon-xs" onClick={handleEditClick} className="h-6 w-6 text-muted-foreground hover:text-foreground">
             {isExpanded ? <ChevronDown className="h-4 w-4 text-primary" /> : <ChevronRight className="h-4 w-4" />}
           </Button>
         </TableCell>
@@ -86,9 +103,9 @@ export function AnimeTableRow({ anime, isExpanded, onToggleExpand, onUpdateAnime
             <DropdownMenuContent align="end" className="w-40 text-xs">
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="text-[11px] text-muted-foreground font-normal">Actions</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => onToggleExpand(anime.id)}>
+                <DropdownMenuItem onClick={handleEditClick}>
                   <Edit2 className="h-3.5 w-3.5 mr-2 text-primary" />
-                  {isExpanded ? "Close Edit" : "Inline Edit"}
+                  {isExpanded ? "Close Edit" : "Edit Anime"}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />

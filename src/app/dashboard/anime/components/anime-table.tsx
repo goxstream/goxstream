@@ -16,12 +16,14 @@ interface AnimeTableProps {
   animeList: AnimeItem[];
   onUpdateAnime: (updated: AnimeItem) => void;
   onDeleteAnime: (id: string) => void;
+  onOpenMobileEdit: (anime: AnimeItem) => void;
 }
 
 export function AnimeTable({
   animeList,
   onUpdateAnime,
   onDeleteAnime,
+  onOpenMobileEdit,
 }: AnimeTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -43,16 +45,16 @@ export function AnimeTable({
 
   return (
     <div className="rounded-lg border border-border/60 bg-card/40 overflow-hidden shadow-xs">
-      <Table>
+      <Table className="table-fixed w-full">
         <TableHeader className="bg-muted/30">
           <TableRow className="border-border/60 hover:bg-transparent">
             <TableHead className="w-10 text-center"></TableHead>
-            <TableHead className="text-xs font-semibold">Title & Poster</TableHead>
-            <TableHead className="text-xs font-semibold">Status</TableHead>
-            <TableHead className="text-xs font-semibold">Format</TableHead>
-            <TableHead className="text-xs font-semibold">Season</TableHead>
-            <TableHead className="text-xs font-semibold">Genres</TableHead>
-            <TableHead className="text-xs font-semibold">Rating</TableHead>
+            <TableHead className="w-[30%] text-xs font-semibold">Title & Poster</TableHead>
+            <TableHead className="w-[14%] text-xs font-semibold">Status</TableHead>
+            <TableHead className="w-[12%] text-xs font-semibold">Format</TableHead>
+            <TableHead className="w-[13%] text-xs font-semibold">Season</TableHead>
+            <TableHead className="w-[17%] text-xs font-semibold">Genres</TableHead>
+            <TableHead className="w-[10%] text-xs font-semibold">Rating</TableHead>
             <TableHead className="w-12 text-right pr-4">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -64,6 +66,7 @@ export function AnimeTable({
               anime={anime}
               isExpanded={expandedId === anime.id}
               onToggleExpand={toggleExpand}
+              onOpenMobileEdit={onOpenMobileEdit}
               onUpdateAnime={onUpdateAnime}
               onDeleteAnime={onDeleteAnime}
             />

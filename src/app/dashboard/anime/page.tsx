@@ -5,12 +5,14 @@ import { AnimeHeader } from "./components/anime-header";
 import { AnimeFilters } from "./components/anime-filters";
 import { AnimeTable } from "./components/anime-table";
 import { AnimeAddSheet } from "./components/anime-add-sheet";
+import { AnimeEditSheet } from "./components/edit/anime-edit-sheet";
 import { MOCK_ANIME_DATA } from "./constants";
 import type { AnimeItem, AnimeFilterState } from "./types";
 
 export default function AnimeCatalogPage() {
   const [animeList, setAnimeList] = useState<AnimeItem[]>(MOCK_ANIME_DATA);
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false);
+  const [mobileEditAnime, setMobileEditAnime] = useState<AnimeItem | null>(null);
 
   // Filter state
   const [filters, setFilters] = useState<AnimeFilterState>({
@@ -38,7 +40,6 @@ export default function AnimeCatalogPage() {
   // Filtered dataset
   const filteredAnimeList = useMemo(() => {
     return animeList.filter((anime) => {
-      // Search filter
       if (filters.search) {
         const query = filters.search.toLowerCase();
         const matchesTitle =
@@ -50,20 +51,9 @@ export default function AnimeCatalogPage() {
         if (!matchesTitle && !matchesStudio && !matchesId) return false;
       }
 
-      // Status filter
-      if (filters.status !== "all" && anime.status !== filters.status) {
-        return false;
-      }
-
-      // Type filter
-      if (filters.type !== "all" && anime.type !== filters.type) {
-        return false;
-      }
-
-      // Genre filter
-      if (filters.genre !== "all" && !anime.genres.includes(filters.genre)) {
-        return false;
-      }
+      if (filters.status !== "all" && anime.status !== filters.status) return false;
+      if (filters.type !== "all" && anime.type !== filters.type) return false;
+      if (filters.genre !== "all" && !anime.genres.includes(filters.genre)) return false;
 
       return true;
     });
@@ -105,11 +95,12 @@ export default function AnimeCatalogPage() {
         onResetFilters={handleResetFilters}
       />
 
-      {/* Main Table with Inline Accordion Edit */}
+      {/* Main Table with Adaptive Desktop Accordion & Mobile Sheet Edit */}
       <AnimeTable
         animeList={filteredAnimeList}
         onUpdateAnime={handleUpdateAnime}
         onDeleteAnime={handleDeleteAnime}
+        onOpenMobileEdit={(anime) => setMobileEditAnime(anime)}
       />
 
       {/* Compact Add Anime Slide-over Sheet */}
@@ -117,6 +108,14 @@ export default function AnimeCatalogPage() {
         open={isAddSheetOpen}
         onOpenChange={setIsAddSheetOpen}
         onAddAnime={handleAddAnime}
+      />
+
+      {/* Adaptive Mobile Edit Sheet */}
+      <AnimeEditSheet
+        anime={mobileEditAnime}
+        open={Boolean(mobileEditAnime)}
+        onOpenChange={(open) => !open && setMobileEditAnime(null)}
+        onSave={handleUpdateAnime}
       />
     </div>
   );
