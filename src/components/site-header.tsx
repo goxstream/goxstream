@@ -1,19 +1,23 @@
+"use client";
+
 import Link from "next/link";
-import { Play, Sparkles, Tv, Calendar, Compass, Film } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Play, Sparkles, Calendar, Compass } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
 import { SearchDialog } from "@/components/search-dialog";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { label: "Browse", href: "/browse", iconName: "Compass" },
-  { label: "Trending", href: "/#trending", iconName: "Sparkles" },
-  { label: "Latest", href: "/#latest", iconName: "Tv" },
-  { label: "Schedule", href: "/#latest", iconName: "Calendar" },
-  { label: "Genres", href: "/browse", iconName: "Film" },
+  { label: "Trending", href: "/trending", iconName: "Sparkles" },
+  { label: "Schedule", href: "/schedule", iconName: "Calendar" },
 ];
 
 export function SiteHeader() {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md transition-colors">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 gap-4">
@@ -35,15 +39,24 @@ export function SiteHeader() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-lg transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const isActive = pathname === item.href;
+
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={cn(
+                    "px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                    isActive
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
