@@ -14,12 +14,17 @@ export class HlsConverterPOM {
   readonly uploadCdnStage: Locator;
   readonly logHistoryHeader: Locator;
 
+  readonly singleThreadedButton: Locator;
+  readonly multiThreadedButton: Locator;
+
   constructor(page: Page) {
     this.page = page;
     this.cardTitle = page.getByText(/Client-Side Multi-Resolution HLS Converter/i);
     this.browseButton = page.getByRole('button', { name: /Browse File/i });
     this.convertButton = page.getByRole('button', { name: /Convert/i });
     this.fileInput = page.locator('input[type="file"]');
+    this.singleThreadedButton = page.getByRole('button', { name: /Single-Threaded \(Stable\)/i });
+    this.multiThreadedButton = page.getByRole('button', { name: /Multi-Threaded \(Experimental\)/i });
     this.pipelineSection = page.getByText(/Build Pipeline Stages/i);
     this.initVerifyStage = page.getByText(/Init & Verify/i);
     this.stream1080pStage = page.getByText(/1080p Stream/i);

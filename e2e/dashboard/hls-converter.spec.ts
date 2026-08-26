@@ -18,6 +18,18 @@ test.describe('Dashboard - HLS Studio Converter E2E Test', () => {
     await expect(hlsConverterPOM.logHistoryHeader).toBeVisible();
   });
 
+  test('should render engine mode toggle buttons and support switching', async ({ hlsConverterPOM }) => {
+    await hlsConverterPOM.goto();
+    await expect(hlsConverterPOM.singleThreadedButton).toBeVisible();
+    await expect(hlsConverterPOM.multiThreadedButton).toBeVisible();
+
+    await hlsConverterPOM.multiThreadedButton.click();
+    await expect(hlsConverterPOM.multiThreadedButton).toHaveClass(/bg-primary/);
+
+    await hlsConverterPOM.singleThreadedButton.click();
+    await expect(hlsConverterPOM.singleThreadedButton).toHaveClass(/bg-primary/);
+  });
+
   test('should accept sample video file upload and initiate pipeline', async ({ hlsConverterPOM, page }) => {
     await hlsConverterPOM.goto();
 
@@ -33,3 +45,4 @@ test.describe('Dashboard - HLS Studio Converter E2E Test', () => {
     await expect(page.getByText(/File selected: sample-master-1080p.mp4/i)).toBeVisible();
   });
 });
+

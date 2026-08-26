@@ -44,6 +44,8 @@ export function HlsConverterWidget({
     logs,
     stages,
     totalDuration,
+    engineMode,
+    setEngineMode,
     clearLogs,
     copyLogsToClipboard,
     handleFileSelect,
@@ -80,14 +82,42 @@ export function HlsConverterWidget({
   return (
     <div className="p-4 rounded-xl border border-border/60 bg-muted/20 space-y-4">
       {/* Header & Engine Status */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <FileVideo className="size-4 text-primary" />
           <span className="text-xs font-bold text-foreground">
             Client-Side Multi-Resolution HLS Converter
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Manual Engine Mode Toggle (No Emojis) */}
+          <div className="flex items-center gap-1 bg-background border border-border/60 rounded-lg p-0.5 text-[10px]">
+            <button
+              type="button"
+              onClick={() => setEngineMode("st")}
+              disabled={engineStatus === "loading" || status === "converting"}
+              className={`px-2 py-0.5 rounded-md font-medium transition-colors ${
+                engineMode === "st"
+                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Single-Threaded (Stable)
+            </button>
+            <button
+              type="button"
+              onClick={() => setEngineMode("mt")}
+              disabled={engineStatus === "loading" || status === "converting"}
+              className={`px-2 py-0.5 rounded-md font-medium transition-colors ${
+                engineMode === "mt"
+                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Multi-Threaded (Experimental)
+            </button>
+          </div>
+
           {engineStatus === "unloaded" && (
             <Badge
               variant="outline"

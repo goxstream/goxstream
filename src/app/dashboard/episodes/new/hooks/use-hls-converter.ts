@@ -16,6 +16,7 @@ import {
   type LogSeverity,
   type PipelineStage,
   type PipelineStageId,
+  type EngineMode,
 } from "../lib/hls";
 
 export interface UseHlsConverterOptions {
@@ -50,6 +51,7 @@ export function useHlsConverter({
   const [logs, setLogs] = useState<TranscodeLogEntry[]>([]);
   const [stages, setStages] = useState<PipelineStage[]>(INITIAL_STAGES);
   const [totalDuration, setTotalDuration] = useState(0);
+  const [engineMode, setEngineMode] = useState<EngineMode>("st");
 
   // Active stage timer ticker
   useEffect(() => {
@@ -181,7 +183,7 @@ export function useHlsConverter({
       await loadFFmpegCore((coreMsg) => {
         setStatusText(coreMsg);
         addLog("info", coreMsg);
-      });
+      }, engineMode);
 
       setEngineStatus("ready");
       updateStageStatus("init", "completed");
@@ -318,6 +320,8 @@ export function useHlsConverter({
     logs,
     stages,
     totalDuration,
+    engineMode,
+    setEngineMode,
     clearLogs,
     copyLogsToClipboard,
     handleFileSelect,
