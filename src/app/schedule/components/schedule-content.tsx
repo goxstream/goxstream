@@ -2,35 +2,63 @@
 
 import { useState, useMemo } from "react";
 import { DAYS_OF_WEEK_MAP } from "@/lib/constants";
-import { getCurrentDayOfWeek, getScheduleByDay } from "@/lib/mock-schedule";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useScheduleAnime } from "@/hooks/use-schedule-anime";
-import type { DayOfWeek, ScheduleViewMode } from "@/types/schedule";
+import type { DayOfWeek, ScheduleViewMode, ScheduleItem } from "@/types/schedule";
 import { ScheduleHeader } from "./schedule-header";
 import { DaySelectorTabs } from "./day-selector-tabs";
 import { TimelineView } from "./timeline-view";
 import { GridView } from "./grid-view";
 
+function getCurrentDayOfWeek(): DayOfWeek {
+  const dayIndex = new Date().getDay();
+  const dayMap: Record<number, DayOfWeek> = {
+    0: "sunday",
+    1: "monday",
+    2: "tuesday",
+    3: "wednesday",
+    4: "thursday",
+    5: "friday",
+    6: "saturday",
+  };
+  return dayMap[dayIndex] || "wednesday";
+}
+
 export function ScheduleContent() {
-  const { isLoading } = useScheduleAnime();
+  const { scheduleItems, isLoading } = useScheduleAnime();
   const todayDay = useMemo(() => getCurrentDayOfWeek(), []);
   const [activeDay, setActiveDay] = useState<DayOfWeek>(todayDay);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<ScheduleViewMode>("timeline");
 
-  // Calculate number of shows for each day (considering search query if typed)
+  // Calculate number of shows for each day
   const dayCounts = useMemo(() => {
     const counts = {} as Record<DayOfWeek, number>;
     DAYS_OF_WEEK_MAP.forEach((day) => {
-      counts[day.id as DayOfWeek] = getScheduleByDay(day.id as DayOfWeek, searchQuery).length;
+      const dayId = day.id as DayOfWeek;
+      const dayItems = scheduleItems.filter((item) => item.airDay === dayId);
+      counts[dayId] = dayItems.length;
     });
     return counts;
-  }, [searchQuery]);
+  }, [scheduleItems]);
 
   // Current items for selected day & filter
   const currentItems = useMemo(() => {
-    return getScheduleByDay(activeDay, searchQuery);
-  }, [activeDay, searchQuery]);
+    let items = scheduleItems.filter((item) => item.airDay === activeDay);
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      items = items.filter(
+        (item) =>
+          item.title.toLowerCase().includes(q) ||
+          (item.japaneseTitle && item.japaneseTitle.toLowerCase().includes(q)) ||
+          item.genres.some((g) => g.toLowerCase().includes(q)) ||
+          item.studio.toLowerCase().includes(q)
+      );
+    }
+
+    return items.sort((a, b) => a.airTime.localeCompare(b.airTime));
+  }, [scheduleItems, activeDay, searchQuery]);
 
   const activeDayInfo = DAYS_OF_WEEK_MAP.find((d) => d.id === activeDay);
 

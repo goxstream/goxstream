@@ -2,6 +2,7 @@ import { eq, desc, asc } from "drizzle-orm";
 import { getDb } from "../index";
 import { animes, genres, animeGenres, studios, animeStudios } from "../schema";
 import type { AnimeItem } from "@/types/anime";
+import type { ScheduleItem, DayOfWeek } from "@/types/schedule";
 
 /**
  * Transforms Drizzle anime record with relations into AnimeItem UI format
@@ -81,7 +82,6 @@ export async function getFeaturedAnime(): Promise<AnimeItem | null> {
   });
 
   if (!rawList || rawList.length === 0) {
-    // Fallback to first available anime if no featured flag set
     const fallback = await db.query.animes.findMany({
       limit: 1,
       with: {
@@ -193,4 +193,59 @@ export async function getBrowseAnime(options?: {
   }
 
   return items;
+}
+
+export async function getAnimeScheduleItems(): Promise<ScheduleItem[]> {
+  const db = await getDb();
+  const rawList = await db.query.animes.findMany({
+    limit: 50,
+    orderBy: [desc(animes.createdAt)],
+    with: {
+      animeGenres: {
+        with: {
+          genre: true,
+        },
+      },
+      animeStudios: {
+        with: {
+          studio: true,
+        },
+      },
+    },
+  });
+
+  const days: DayOfWeek[] = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+  if (!rawList || rawList.length === 0) {
+    return [];
+  }
+
+  return rawList.map((raw: any, idx: number) => {
+    const item = mapToAnimeItem(raw);
+    const assignedDay = days[idx % days.length];
+    const hour = 16 + (idx % 7);
+    const airTime = `${hour}:30`;
+
+    return {
+      id: `sch-${item.id}`,
+      animeId: item.id,
+      slug: item.slug,
+      title: item.title,
+      japaneseTitle: item.japaneseTitle,
+      coverImage: item.coverImage,
+      bannerImage: item.bannerImage,
+      airDay: assignedDay,
+      airTime,
+      episodeNumber: item.latestEpisode || 1,
+      status: idx % 3 === 0 ? "aired" : idx % 3 === 1 ? "airing_now" : "upcoming",
+      countdownText: idx % 3 === 1 ? "Airing live now!" : `At ${airTime}`,
+      genres: item.genres,
+      rating: item.rating,
+      studio: item.studio,
+      subOrDub: item.subOrDub,
+      season: item.season,
+      year: item.year,
+      isPopular: item.isTrending,
+    };
+  });
 }

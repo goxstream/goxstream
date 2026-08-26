@@ -1,17 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LATEST_EPISODES, TRENDING_ANIME } from "@/lib/mock-anime";
-import type { EpisodeItem, AnimeItem } from "@/types/anime";
+import type { ScheduleItem } from "@/types/schedule";
 
 export interface ScheduleApiResponse {
-  latestEpisodes?: EpisodeItem[];
-  trendingAnime?: AnimeItem[];
+  scheduleItems?: ScheduleItem[];
 }
 
 export function useScheduleAnime() {
-  const [latestEpisodes, setLatestEpisodes] = useState<EpisodeItem[]>([]);
-  const [trendingAnime, setTrendingAnime] = useState<AnimeItem[]>([]);
+  const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,21 +19,12 @@ export function useScheduleAnime() {
       .then((res) => res.json() as Promise<ScheduleApiResponse>)
       .then((data) => {
         if (!isMounted) return;
-        if (data.latestEpisodes && data.latestEpisodes.length > 0) {
-          setLatestEpisodes(data.latestEpisodes);
-        } else {
-          setLatestEpisodes(LATEST_EPISODES);
-        }
-        if (data.trendingAnime && data.trendingAnime.length > 0) {
-          setTrendingAnime(data.trendingAnime);
-        } else {
-          setTrendingAnime(TRENDING_ANIME);
+        if (data.scheduleItems) {
+          setScheduleItems(data.scheduleItems);
         }
       })
       .catch(() => {
-        if (!isMounted) return;
-        setLatestEpisodes(LATEST_EPISODES);
-        setTrendingAnime(TRENDING_ANIME);
+        // Fallback if empty
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);
@@ -48,8 +36,7 @@ export function useScheduleAnime() {
   }, []);
 
   return {
-    latestEpisodes,
-    trendingAnime,
+    scheduleItems,
     isLoading,
   };
 }
