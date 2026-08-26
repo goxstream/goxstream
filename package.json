@@ -23,7 +23,10 @@
 		"db:generate:d1": "DB_CONNECTION=d1 drizzle-kit generate",
 		"db:generate:pg": "DB_CONNECTION=postgres drizzle-kit generate",
 		"db:studio:d1": "DB_CONNECTION=d1 drizzle-kit studio",
-		"db:studio:pg": "DB_CONNECTION=postgres drizzle-kit studio"
+		"db:studio:pg": "DB_CONNECTION=postgres drizzle-kit studio",
+		"db:push": "tsx scripts/db-push/index.ts",
+		"db:push:d1": "wrangler d1 migrations apply goxstream --local --migrations-dir ./drizzle/d1",
+		"db:push:pg": "DB_CONNECTION=postgres drizzle-kit push"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.7.0",

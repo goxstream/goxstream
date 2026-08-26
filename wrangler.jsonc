@@ -55,7 +55,8 @@
 		{
 			"binding": "DB",
 			"database_name": "goxstream",
-			"database_id": "93a28981-ac5e-4381-a3aa-18d98b9bf5ca"
+			"database_id": "93a28981-ac5e-4381-a3aa-18d98b9bf5ca",
+			"migrations_dir": "drizzle/d1"
 		}
 	],
 	"r2_buckets": [
