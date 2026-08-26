@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useHlsConverter } from "../hooks/use-hls-converter";
+import { isFFmpegMultiThreaded } from "../lib/hls";
 import { ConversionLogDrawer } from "./conversion-log-drawer";
 import { PipelineStageBar } from "./pipeline-stage-bar";
 
@@ -112,7 +113,7 @@ export function HlsConverterWidget({
               className="text-[10px] bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-1"
             >
               <Cpu className="size-3" />
-              WASM Engine Ready
+              {isFFmpegMultiThreaded() ? "WASM MT Core Ready (Multi-Threaded)" : "WASM ST Core Ready (Single-Threaded)"}
             </Badge>
           )}
         </div>

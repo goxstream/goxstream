@@ -5,10 +5,11 @@ import { toBlobURL } from "@ffmpeg/util";
 
 let ffmpegInstance: FFmpeg | null = null;
 let loadPromise: Promise<FFmpeg> | null = null;
+let isMultiThreadedMode = false;
 
 /**
  * Manually initialize `@ffmpeg/ffmpeg` WebAssembly Core on-demand.
- * Includes in-flight promise deduplication and fallback CDN to prevent race conditions & load failures.
+ * Supports Multi-Threaded Core (@ffmpeg/core-mt) with automatic single-thread fallback.
  */
 export async function loadFFmpegCore(
   onProgress?: (msg: string) => void
@@ -33,34 +34,58 @@ export async function loadFFmpegCore(
 
   // 3. Initiate single load promise
   loadPromise = (async () => {
-    if (onProgress) onProgress("Loading FFmpeg WebAssembly core binaries...");
+    const supportsMultiThread =
+      typeof window !== "undefined" &&
+      typeof SharedArrayBuffer !== "undefined" &&
+      window.crossOriginIsolated;
 
-    const primaryCDN = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+    const mtCDN = "https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/umd";
+    const stCDN = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
     const fallbackCDN = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd";
 
+    if (supportsMultiThread) {
+      try {
+        if (onProgress) onProgress("Loading FFmpeg Multi-Threaded WASM core (@ffmpeg/core-mt)...");
+        await instance.load({
+          coreURL: await toBlobURL(`${mtCDN}/ffmpeg-core.js`, "text/javascript"),
+          wasmURL: await toBlobURL(`${mtCDN}/ffmpeg-core.wasm`, "application/wasm"),
+          workerURL: await toBlobURL(`${mtCDN}/ffmpeg-core.worker.js`, "text/javascript"),
+        });
+
+        isMultiThreadedMode = true;
+        if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully.");
+        return instance;
+      } catch (mtErr: any) {
+        if (onProgress) onProgress("Multi-threaded load failed. Falling back to Single-Threaded Core...");
+      }
+    }
+
+    // Single-Threaded fallback / default
     try {
+      if (onProgress) onProgress("Loading FFmpeg Single-Threaded WASM core (@ffmpeg/core)...");
       await instance.load({
-        coreURL: await toBlobURL(`${primaryCDN}/ffmpeg-core.js`, "text/javascript"),
-        wasmURL: await toBlobURL(`${primaryCDN}/ffmpeg-core.wasm`, "application/wasm"),
+        coreURL: await toBlobURL(`${stCDN}/ffmpeg-core.js`, "text/javascript"),
+        wasmURL: await toBlobURL(`${stCDN}/ffmpeg-core.wasm`, "application/wasm"),
       });
 
-      if (onProgress) onProgress("FFmpeg WASM Core loaded successfully.");
+      isMultiThreadedMode = false;
+      if (onProgress) onProgress("FFmpeg Single-Threaded WASM Core loaded successfully.");
       return instance;
-    } catch (primaryErr: any) {
-      // Retrying with fallback CDN if primary fails
+    } catch (stErr: any) {
       try {
-        if (onProgress) onProgress("Primary CDN failed. Retrying with fallback CDN (jsDelivr)...");
+        if (onProgress) onProgress("Retrying with jsDelivr CDN fallback...");
         await instance.load({
           coreURL: await toBlobURL(`${fallbackCDN}/ffmpeg-core.js`, "text/javascript"),
           wasmURL: await toBlobURL(`${fallbackCDN}/ffmpeg-core.wasm`, "application/wasm"),
         });
 
+        isMultiThreadedMode = false;
         if (onProgress) onProgress("FFmpeg WASM Core loaded successfully via fallback CDN.");
         return instance;
       } catch (fallbackErr: any) {
         loadPromise = null;
         throw new Error(
-          `Failed to load FFmpeg WASM Core: ${primaryErr?.message || fallbackErr?.message || "Network error fetching WASM core"}`
+          `Failed to load FFmpeg WASM Core: ${stErr?.message || fallbackErr?.message || "Network error fetching WASM core"}`
         );
       }
     }
@@ -74,6 +99,13 @@ export async function loadFFmpegCore(
  */
 export function isFFmpegCoreLoaded(): boolean {
   return ffmpegInstance !== null && ffmpegInstance.loaded;
+}
+
+/**
+ * Check if current loaded engine is operating in multi-threaded mode.
+ */
+export function isFFmpegMultiThreaded(): boolean {
+  return isMultiThreadedMode;
 }
 
 /**
