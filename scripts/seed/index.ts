@@ -8,6 +8,10 @@ import { runSeedPG } from "./seed-pg";
  * - Otherwise: runs Cloudflare D1 (SQLite) seeder.
  */
 async function main() {
+  try {
+    process.loadEnvFile();
+  } catch {}
+
   const connectionType = (process.env.DB_CONNECTION || "").toLowerCase();
   const dbUrl = process.env.DB_URL || process.env.DATABASE_URL;
 

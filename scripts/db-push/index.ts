@@ -7,6 +7,10 @@ import { execSync } from "node:child_process";
  * - If absent: Applies local D1 migrations to Wrangler/Miniflare D1 binding.
  */
 function runDbPush() {
+  try {
+    process.loadEnvFile();
+  } catch {}
+
   const connectionType = (process.env.DB_CONNECTION || "").toLowerCase();
   const dbUrl = process.env.DB_URL || process.env.DATABASE_URL;
   const isRemote =
