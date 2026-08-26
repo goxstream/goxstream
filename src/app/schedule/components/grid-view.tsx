@@ -31,6 +31,7 @@ export function GridView({ items, dayLabel }: GridViewProps) {
       {items.map((item) => {
         const isAiringNow = item.status === "airing_now";
         const isUpcoming = item.status === "upcoming";
+        const isGradient = item.coverImage && item.coverImage.startsWith("linear-gradient");
 
         return (
           <div
@@ -42,21 +43,34 @@ export function GridView({ items, dayLabel }: GridViewProps) {
               href={`/anime/${item.slug}`}
               className="relative aspect-16/9 overflow-hidden bg-muted"
             >
-              <div
-                className="absolute inset-0 transition-transform duration-300 group-hover:scale-105"
-                style={getImageStyle(item.coverImage)}
-              />
+              {isGradient ? (
+                <div
+                  className="absolute inset-0 transition-transform duration-300 group-hover:scale-105"
+                  style={getImageStyle(item.coverImage)}
+                />
+              ) : (
+                <img
+                  src={item.coverImage || ""}
+                  alt={item.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.opacity = "0";
+                  }}
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
               {/* Time pill top-left */}
-              <div className="absolute top-2 left-2 flex items-center gap-1.5">
+              <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
                 <Badge className="bg-black/75 text-white font-mono text-[11px] border-0">
                   {item.airTime} {TIMEZONE_CONFIG.defaultShortLabel}
                 </Badge>
               </div>
 
               {/* Status pill top-right */}
-              <div className="absolute top-2 right-2">
+              <div className="absolute top-2 right-2 z-10">
                 {isAiringNow ? (
                   <Badge className="bg-emerald-500 text-white font-bold text-[10px] gap-1 animate-pulse">
                     <Radio className="w-3 h-3" />
@@ -70,7 +84,7 @@ export function GridView({ items, dayLabel }: GridViewProps) {
               </div>
 
               {/* Hover play icon */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 z-10">
                 <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-md">
                   <Play className="w-5 h-5 fill-current ml-0.5" />
                 </div>

@@ -32,6 +32,7 @@ export function TimelineView({ items, dayLabel }: TimelineViewProps) {
         const isAiringNow = item.status === "airing_now";
         const isUpcoming = item.status === "upcoming";
         const isAired = item.status === "aired";
+        const isGradient = item.coverImage && item.coverImage.startsWith("linear-gradient");
 
         return (
           <div key={item.id} className="relative group">
@@ -55,21 +56,34 @@ export function TimelineView({ items, dayLabel }: TimelineViewProps) {
                   href={`/anime/${item.slug}`}
                   className="relative shrink-0 w-24 sm:w-28 aspect-2/3 rounded-lg overflow-hidden border border-border/40 group/cover bg-muted"
                 >
-                  <div
-                    className="absolute inset-0 transition-transform duration-300 group-hover/cover:scale-105"
-                    style={getImageStyle(item.coverImage)}
-                  />
+                  {isGradient ? (
+                    <div
+                      className="absolute inset-0 transition-transform duration-300 group-hover/cover:scale-105"
+                      style={getImageStyle(item.coverImage)}
+                    />
+                  ) : (
+                    <img
+                      src={item.coverImage || ""}
+                      alt={item.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 size-full object-cover transition-transform duration-300 group-hover/cover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.opacity = "0";
+                      }}
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   
                   {/* Episode pill */}
-                  <div className="absolute top-1.5 left-1.5">
+                  <div className="absolute top-1.5 left-1.5 z-10">
                     <Badge className="bg-black/70 text-white text-[10px] px-1.5 py-0.5 border-0 font-medium">
                       Ep {item.episodeNumber}
                     </Badge>
                   </div>
 
                   {/* Play icon hover overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/cover:opacity-100 transition-opacity bg-black/40">
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/cover:opacity-100 transition-opacity bg-black/40 z-10">
                     <Play className="w-6 h-6 text-white fill-white" />
                   </div>
                 </Link>

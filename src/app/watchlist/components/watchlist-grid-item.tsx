@@ -30,14 +30,29 @@ export function WatchlistGridItem({
     100,
     (item.currentEpisode / (item.totalEpisodes || 1)) * 100
   );
+  const isGradient = item.anime.coverImage && item.anime.coverImage.startsWith("linear-gradient");
 
   return (
     <div className="group rounded-xl border border-border/60 bg-card overflow-hidden hover:border-primary/40 transition-all flex flex-col justify-between shadow-xs">
-      <div
-        className="relative h-44 w-full overflow-hidden bg-muted"
-        style={getImageStyle(item.anime.coverImage)}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-black/30 to-black/10" />
+      <div className="relative h-44 w-full overflow-hidden bg-muted">
+        {isGradient ? (
+          <div
+            className="absolute inset-0 size-full"
+            style={getImageStyle(item.anime.coverImage)}
+          />
+        ) : (
+          <img
+            src={item.anime.coverImage || ""}
+            alt={item.anime.title}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 size-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.opacity = "0";
+            }}
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-black/30 to-black/10 z-0" />
 
         <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10">
           <Badge
@@ -57,7 +72,7 @@ export function WatchlistGridItem({
 
         <Link
           href={`/anime/${item.anime.slug}`}
-          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 backdrop-blur-xs transition-opacity z-0"
+          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 backdrop-blur-xs transition-opacity z-10"
         >
           <div className="size-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg transform group-hover:scale-105 transition-transform">
             <Play className="size-5 fill-primary-foreground ml-0.5" />

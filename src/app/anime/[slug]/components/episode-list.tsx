@@ -157,6 +157,8 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {filteredEpisodes.map((ep) => {
                 const isLatest = ep.episodeNumber === latestEpNumber;
+                const isGradient = ep.thumbnail && ep.thumbnail.startsWith("linear-gradient");
+
                 return (
                   <Link
                     key={ep.id}
@@ -165,10 +167,23 @@ export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
                   >
                     {/* Thumbnail Poster */}
                     <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                      <div
-                        className="w-full h-full transition-transform duration-300 group-hover:scale-105"
-                        style={getImageStyle(ep.thumbnail)}
-                      />
+                      {isGradient ? (
+                        <div
+                          className="w-full h-full transition-transform duration-300 group-hover:scale-105"
+                          style={getImageStyle(ep.thumbnail)}
+                        />
+                      ) : (
+                        <img
+                          src={ep.thumbnail || ""}
+                          alt={ep.episodeTitle}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.opacity = "0";
+                          }}
+                        />
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                       {/* Play Button Overlay */}

@@ -13,14 +13,30 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ user }: ProfileHeaderProps) {
+  const isBannerGradient = user.bannerUrl && user.bannerUrl.startsWith("linear-gradient");
+
   return (
     <div className="relative rounded-2xl overflow-hidden border border-border/60 bg-card shadow-xs">
       {/* Banner */}
-      <div
-        className="h-44 sm:h-56 w-full relative bg-muted"
-        style={getImageStyle(user.bannerUrl)}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
+      <div className="h-44 sm:h-56 w-full relative bg-muted overflow-hidden">
+        {isBannerGradient ? (
+          <div
+            className="absolute inset-0 size-full"
+            style={getImageStyle(user.bannerUrl)}
+          />
+        ) : (
+          <img
+            src={user.bannerUrl || ""}
+            alt={user.displayName}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 size-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.opacity = "0";
+            }}
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent z-10" />
       </div>
 
       {/* Profile Details Overlay Container */}

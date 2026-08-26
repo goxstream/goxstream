@@ -36,16 +36,21 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
     }
   };
 
-  const backdropStyle = getImageStyle(anime.bannerImage || anime.coverImage);
-  const posterStyle = getImageStyle(anime.coverImage);
+  const isPosterGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
 
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-card/30">
       {/* Background Banner Backdrop with Ambient Glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-35 dark:opacity-25">
-        <div
-          className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full blur-3xl opacity-70"
-          style={backdropStyle}
+        <img
+          src={anime.bannerImage || anime.coverImage || ""}
+          alt={anime.title}
+          loading="eager"
+          decoding="async"
+          className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full blur-3xl opacity-70 object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.opacity = "0";
+          }}
         />
         <div
           className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-background via-background/80 to-transparent"
@@ -72,15 +77,28 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr] gap-8 items-start">
           {/* Poster Image Card */}
           <div className="relative group mx-auto md:mx-0 w-full max-w-[260px] md:max-w-none aspect-[2/3] rounded-xl overflow-hidden shadow-md border border-border/80 bg-muted">
-            <div
-              className="w-full h-full transition-transform duration-500 group-hover:scale-105"
-              style={posterStyle}
-            />
+            {isPosterGradient ? (
+              <div
+                className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+                style={getImageStyle(anime.coverImage)}
+              />
+            ) : (
+              <img
+                src={anime.coverImage || ""}
+                alt={anime.title}
+                loading="eager"
+                decoding="async"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.opacity = "0";
+                }}
+              />
+            )}
             {/* Overlay Gradient on Poster */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
 
             {/* Poster Badges */}
-            <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
               <Badge className="bg-amber-500 text-amber-950 border-amber-400 font-bold px-2 py-0.5 text-xs shadow-xs flex items-center gap-1">
                 <Star className="size-3 fill-amber-950" />
                 {anime.rating ? anime.rating.toFixed(2) : "N/A"}
@@ -90,7 +108,7 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
               </Badge>
             </div>
 
-            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white/90 font-medium">
+            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white/90 font-medium z-10">
               <span>{anime.subOrDub}</span>
               <span className="bg-primary/90 text-primary-foreground px-2 py-0.5 rounded text-[11px] font-semibold">
                 {anime.status}

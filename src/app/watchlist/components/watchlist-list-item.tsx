@@ -17,13 +17,30 @@ export function WatchlistListItem({
   onToggleFavorite,
   onRemove,
 }: WatchlistListItemProps) {
+  const isGradient = item.anime.coverImage && item.anime.coverImage.startsWith("linear-gradient");
+
   return (
     <div className="p-3 rounded-xl border border-border/60 bg-card hover:border-primary/40 transition-colors flex items-center justify-between gap-4 shadow-xs">
       <div className="flex items-center gap-3 min-w-0">
-        <div
-          className="size-14 rounded-lg shrink-0 overflow-hidden relative bg-muted"
-          style={getImageStyle(item.anime.coverImage)}
-        />
+        <div className="size-14 rounded-lg shrink-0 overflow-hidden relative bg-muted">
+          {isGradient ? (
+            <div
+              className="absolute inset-0 size-full"
+              style={getImageStyle(item.anime.coverImage)}
+            />
+          ) : (
+            <img
+              src={item.anime.coverImage || ""}
+              alt={item.anime.title}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 size-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.opacity = "0";
+              }}
+            />
+          )}
+        </div>
         <div className="flex flex-col min-w-0">
           <Link
             href={`/anime/${item.anime.slug}`}

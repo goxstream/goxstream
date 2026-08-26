@@ -14,22 +14,38 @@ interface HistoryTimelineItemProps {
 }
 
 export function HistoryTimelineItem({ item, onRemove }: HistoryTimelineItemProps) {
+  const isGradient = item.animeCover && item.animeCover.startsWith("linear-gradient");
+
   return (
     <div className="group p-4 rounded-xl border border-border/60 bg-card hover:border-primary/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
       <div className="flex items-start sm:items-center gap-4 min-w-0 flex-1">
-        <div
-          className="h-20 w-32 rounded-lg shrink-0 overflow-hidden relative shadow-xs flex items-center justify-center text-white bg-muted"
-          style={getImageStyle(item.animeCover)}
-        >
-          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
+        <div className="h-20 w-32 rounded-lg shrink-0 overflow-hidden relative shadow-xs flex items-center justify-center text-white bg-muted">
+          {isGradient ? (
+            <div
+              className="absolute inset-0 size-full"
+              style={getImageStyle(item.animeCover)}
+            />
+          ) : (
+            <img
+              src={item.animeCover || ""}
+              alt={item.animeTitle}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 size-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.opacity = "0";
+              }}
+            />
+          )}
+          <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors z-10" />
           <Link
             href={`/anime/${item.animeSlug}/${item.episodeNumber}`}
-            className="size-9 rounded-full bg-primary/90 hover:scale-110 transition-transform flex items-center justify-center text-primary-foreground relative z-10 shadow-md"
+            className="size-9 rounded-full bg-primary/90 hover:scale-110 transition-transform flex items-center justify-center text-primary-foreground relative z-20 shadow-md"
           >
             <Play className="size-4 fill-primary-foreground ml-0.5" />
           </Link>
 
-          <div className="absolute bottom-1 right-1 bg-black/80 backdrop-blur-xs text-[9px] px-1.5 py-0.5 rounded font-mono font-bold text-white z-10">
+          <div className="absolute bottom-1 right-1 bg-black/80 backdrop-blur-xs text-[9px] px-1.5 py-0.5 rounded font-mono font-bold text-white z-20">
             {item.progressPercent}%
           </div>
         </div>
