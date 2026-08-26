@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Play, Sparkles, Calendar, Compass, Tv } from "lucide-react";
+import { Sparkles, Calendar, Compass, Tv } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { LogoBrand } from "@/components/logo-brand";
 import { MobileNav } from "@/components/mobile-nav";
 import { SearchDialog } from "@/components/search-dialog";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -24,19 +25,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 gap-4">
         {/* Brand Logo */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="size-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-xs shadow-primary/20 group-hover:scale-105 transition-transform">
-              <Play className="size-4 fill-primary-foreground stroke-primary-foreground ml-0.5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-lg leading-none tracking-tight text-foreground">
-                Gox<span className="text-primary">Stream</span>
-              </span>
-              <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
-                Anime Platform
-              </span>
-            </div>
-          </Link>
+          <LogoBrand href="/" size="md" />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
