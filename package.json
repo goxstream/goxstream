@@ -29,7 +29,8 @@
 		"db:push:pg": "DB_CONNECTION=postgres drizzle-kit push",
 		"db:seed": "tsx scripts/seed/index.ts",
 		"db:seed:d1": "tsx scripts/seed/seed-d1.ts",
-		"db:seed:pg": "tsx scripts/seed/seed-pg.ts"
+		"db:seed:pg": "tsx scripts/seed/seed-pg.ts",
+		"db:seed:all": "tsx scripts/seed/export-all.ts"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.7.0",

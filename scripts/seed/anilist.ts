@@ -1,5 +1,5 @@
 /**
- * AniList GraphQL API Fetcher (with Pagination & Rate-Limit Handling)
+ * AniList GraphQL API Fetcher (with API Key Auto-Detection, Pagination & Rate-Limit Handling)
  */
 
 export interface AniListMedia {
@@ -85,6 +85,25 @@ export async function fetchPopularAnime(count = 50): Promise<AniListMedia[]> {
   const pagesNeeded = Math.ceil(count / perPage);
   const allMedia: AniListMedia[] = [];
 
+  // Auto-detect API Token / Key from environment variables
+  const apiToken = process.env.ANILIST_API_TOKEN || process.env.ANILIST_API_KEY;
+  const isAuthenticated = Boolean(apiToken);
+
+  const requestHeaders: Record<string, string> = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  };
+
+  if (isAuthenticated && apiToken) {
+    requestHeaders["Authorization"] = `Bearer ${apiToken}`;
+    console.log("[Scraper] Mode: Authenticated (API Key detected, higher rate limits).");
+  } else {
+    console.log("[Scraper] Mode: Public Access (No API Key detected, using polite rate limits).");
+  }
+
+  // Adjust delay: 100ms when authenticated, 350ms when public
+  const delayBetweenPages = isAuthenticated ? 100 : 350;
+
   console.log(`[Scraper] Starting fetch for ${count} anime across ${pagesNeeded} page(s)...`);
 
   for (let page = 1; page <= pagesNeeded; page++) {
@@ -95,10 +114,7 @@ export async function fetchPopularAnime(count = 50): Promise<AniListMedia[]> {
 
     const response = await fetch(ANILIST_GRAPHQL_URL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+      headers: requestHeaders,
       body: JSON.stringify({
         query: POPULAR_ANIME_QUERY,
         variables: {
@@ -128,9 +144,8 @@ export async function fetchPopularAnime(count = 50): Promise<AniListMedia[]> {
     const hasNext = json.data?.Page?.pageInfo?.hasNextPage;
     if (!hasNext) break;
 
-    // Polite delay (350ms) to stay within public rate limits (max 90 req/min)
     if (page < pagesNeeded) {
-      await sleep(350);
+      await sleep(delayBetweenPages);
     }
   }
 

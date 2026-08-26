@@ -32,7 +32,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
     "BEGIN;",
     "",
     "-- Clear existing tables in correct dependency order",
-    'TRUNCATE TABLE "anime_genres", "anime_studios", "schedules", "trending_stats", "subtitle_tracks", "audio_tracks", "stream_sources", "server_nodes", "episodes", "animes", "genres", "studios" CASCADE;',
+    'TRUNCATE TABLE "watch_histories", "watchlists", "anime_genres", "anime_studios", "schedules", "trending_stats", "subtitle_tracks", "audio_tracks", "stream_sources", "server_nodes", "episodes", "animes", "genres", "studios" CASCADE;',
     "",
   ];
 
