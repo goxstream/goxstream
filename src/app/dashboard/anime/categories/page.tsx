@@ -2,16 +2,18 @@
 
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CategoriesHeader } from "./components/categories-header";
 import { CategoriesStats } from "./components/categories-stats";
 import { CategoriesTable } from "./components/categories-table";
 import { GenresGrid } from "./components/genres-grid";
 import { CategoryAddSheet } from "./components/category-add-sheet";
-import { MOCK_CATEGORIES, MOCK_GENRES } from "./constants";
+import { useDashboardCategories } from "@/hooks/use-dashboard-categories";
+import { MOCK_GENRES } from "./constants";
 import type { CategoryItem, GenreItem, FormatCategoryCode, GenreGroup } from "./types";
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState<CategoryItem[]>(MOCK_CATEGORIES);
+  const { categories, isLoading, setCategories } = useDashboardCategories();
   const [genres, setGenres] = useState<GenreItem[]>(MOCK_GENRES);
 
   // Sheet State
@@ -89,7 +91,16 @@ export default function CategoriesPage() {
       <CategoriesHeader onOpenAddSheet={handleOpenAddSheet} />
 
       {/* Stats Cards */}
-      <CategoriesStats categories={categories} genres={genres} />
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+        </div>
+      ) : (
+        <CategoriesStats categories={categories} genres={genres} />
+      )}
 
       {/* Tabs Layout for Categories Format vs Genre Taxonomy */}
       <Tabs defaultValue="categories" className="w-full">
@@ -103,12 +114,16 @@ export default function CategoriesPage() {
         </TabsList>
 
         <TabsContent value="categories" className="focus-visible:outline-none">
-          <CategoriesTable
-            categories={categories}
-            onToggleStatus={handleToggleCategoryStatus}
-            onDeleteCategory={handleDeleteCategory}
-            onEditCategory={() => {}}
-          />
+          {isLoading ? (
+            <Skeleton className="h-64 w-full rounded-xl bg-card border border-border/60" />
+          ) : (
+            <CategoriesTable
+              categories={categories}
+              onToggleStatus={handleToggleCategoryStatus}
+              onDeleteCategory={handleDeleteCategory}
+              onEditCategory={() => {}}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="genres" className="focus-visible:outline-none">

@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SeasonsHeader } from "./components/seasons-header";
 import { SeasonsStats } from "./components/seasons-stats";
 import { SeasonsMatrix } from "./components/seasons-matrix";
 import { SeasonsTable } from "./components/seasons-table";
 import { SeasonAddSheet } from "./components/season-add-sheet";
-import { MOCK_SEASONS, MOCK_BROADCAST_ANIME } from "./constants";
+import { useDashboardSeasons } from "@/hooks/use-dashboard-seasons";
+import { MOCK_BROADCAST_ANIME } from "./constants";
 import type { SeasonItem, BroadcastSlotAnime, SeasonQuarter } from "./types";
 
 export default function SeasonsPage() {
-  const [seasons, setSeasons] = useState<SeasonItem[]>(MOCK_SEASONS);
+  const { seasons, isLoading, setSeasons } = useDashboardSeasons();
   const [animeSlots, setAnimeSlots] = useState<BroadcastSlotAnime[]>(MOCK_BROADCAST_ANIME);
   const [selectedYear, setSelectedYear] = useState<number>(2026);
   const [selectedQuarter, setSelectedQuarter] = useState<SeasonQuarter>("SUMMER");
@@ -67,7 +69,16 @@ export default function SeasonsPage() {
       />
 
       {/* Stats Cards */}
-      <SeasonsStats animeList={animeSlots} seasonName={activeSeasonName} />
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+        </div>
+      ) : (
+        <SeasonsStats animeList={animeSlots} seasonName={activeSeasonName} />
+      )}
 
       {/* Day-by-Day Broadcast Matrix */}
       <SeasonsMatrix animeList={animeSlots} />
@@ -75,13 +86,17 @@ export default function SeasonsPage() {
       {/* All Seasons Overview Table */}
       <div className="flex flex-col gap-3 pt-4 border-t border-border/60">
         <h2 className="text-lg font-bold text-foreground">Season Master Directory</h2>
-        <SeasonsTable
-          seasons={seasons}
-          onToggleStatus={handleToggleSeasonStatus}
-          onSetCurrent={handleSetCurrentSeason}
-          onDeleteSeason={handleDeleteSeason}
-          onEditSeason={() => {}}
-        />
+        {isLoading ? (
+          <Skeleton className="h-64 w-full rounded-xl bg-card border border-border/60" />
+        ) : (
+          <SeasonsTable
+            seasons={seasons}
+            onToggleStatus={handleToggleSeasonStatus}
+            onSetCurrent={handleSetCurrentSeason}
+            onDeleteSeason={handleDeleteSeason}
+            onEditSeason={() => {}}
+          />
+        )}
       </div>
 
       {/* Add Season Slide-over Sheet */}

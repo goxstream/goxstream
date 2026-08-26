@@ -1,62 +1,47 @@
-/**
- * Storage Adapter Module
- * Isolates Cloudflare R2 and S3-compatible object storage APIs.
- * 
- * Priority / Override Rule:
- * 1. Custom Env Overrides (S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY_ID): Override CF bindings directly.
- * 2. Default CF Binding (env.EPISODES_BUCKET / env.R2_BUCKET): Native R2 bucket on Cloudflare Workers.
- * 3. Local/Mock Mode: Development fallback CDN URL generator.
- */
+import type { StorageAdapter, StorageUploadResult } from "./types";
+import { r2StorageAdapter } from "./r2";
+import { s3StorageAdapter } from "./s3";
 
-export interface UploadResult {
-  url: string;
-  key: string;
-  sizeBytes: number;
+/**
+ * Storage Adapter Facade Resolver
+ * Follows "Cloudflare-first, Not Cloudflare-locked" principles:
+ * 1. Checks explicit STORAGE_CONNECTION=s3 or S3 credentials override.
+ * 2. Defaults to Cloudflare R2 (env.MEDIA) for Cloudflare Workers / Miniflare.
+ * 3. Falls back gracefully to S3 / Local Buffer Storage for Node.js / VPS.
+ */
+export function resolveStorageAdapter(): StorageAdapter {
+  const connection = process.env.STORAGE_CONNECTION?.toLowerCase();
+  const hasS3Config = Boolean(
+    process.env.S3_BUCKET_NAME ||
+    process.env.S3_ACCESS_KEY_ID ||
+    process.env.AWS_ACCESS_KEY_ID ||
+    process.env.S3_ENDPOINT
+  );
+
+  if (connection === "s3" || hasS3Config) {
+    return s3StorageAdapter;
+  }
+
+  return r2StorageAdapter;
 }
 
-export async function uploadToStorage(
-  filePath: string,
-  data: Uint8Array | ArrayBuffer,
-  contentType: string,
-  cfEnv?: any
-): Promise<UploadResult> {
-  const bytes = new Uint8Array(data);
-  const sizeBytes = bytes.byteLength;
+export async function uploadMediaFile(
+  arg1: string | File | Blob | Uint8Array | ArrayBuffer,
+  arg2: string | File | Blob | Uint8Array | ArrayBuffer,
+  contentType?: string
+): Promise<StorageUploadResult> {
+  const adapter = resolveStorageAdapter();
+  return adapter.uploadFile(arg1, arg2, contentType);
+}
 
-  // 1. Check Explicit Custom S3 Environment Variables Override
-  const s3Endpoint = process.env.S3_ENDPOINT;
-  const s3Bucket = process.env.S3_BUCKET;
-  const publicCdnUrl = process.env.PUBLIC_CDN_URL || "https://cdn.goxstream.tv";
+export const uploadToStorage = uploadMediaFile;
 
-  if (s3Endpoint && s3Bucket) {
-    // S3 Custom Override Active
-    const cdnUrl = `${publicCdnUrl.replace(/\/$/, "")}/${filePath.replace(/^\//, "")}`;
-    return {
-      url: cdnUrl,
-      key: filePath,
-      sizeBytes,
-    };
-  }
+export async function deleteMediaFile(key: string): Promise<void> {
+  const adapter = resolveStorageAdapter();
+  return adapter.deleteFile(key);
+}
 
-  // 2. Default Cloudflare R2 Binding
-  const r2Bucket = cfEnv?.R2 || cfEnv?.EPISODES_BUCKET || cfEnv?.R2_BUCKET;
-  if (r2Bucket && typeof r2Bucket.put === "function") {
-    await r2Bucket.put(filePath, bytes, {
-      httpMetadata: { contentType },
-    });
-    const cdnUrl = `${publicCdnUrl.replace(/\/$/, "")}/${filePath.replace(/^\//, "")}`;
-    return {
-      url: cdnUrl,
-      key: filePath,
-      sizeBytes,
-    };
-  }
-
-  // 3. Local Development / Fallback Storage URL
-  const cdnUrl = `${publicCdnUrl.replace(/\/$/, "")}/${filePath.replace(/^\//, "")}`;
-  return {
-    url: cdnUrl,
-    key: filePath,
-    sizeBytes,
-  };
+export async function getMediaFileUrl(key: string): Promise<string> {
+  const adapter = resolveStorageAdapter();
+  return adapter.getFileUrl(key);
 }
