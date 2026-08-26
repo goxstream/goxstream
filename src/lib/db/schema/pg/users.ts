@@ -7,10 +7,16 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   displayName: text("display_name").notNull(),
+  avatarUrl: text("avatar_url"),
+  bannerUrl: text("banner_url"),
+  bio: text("bio"),
   role: text("role").notNull().$default(() => "user"),
   status: text("status").notNull().$default(() => "active"),
   membershipTier: text("membership_tier").notNull().$default(() => "free"),
   createdAt: timestamp("created_at")
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: timestamp("updated_at")
     .notNull()
     .$defaultFn(() => new Date()),
   lastActiveAt: timestamp("last_active_at"),
@@ -27,6 +33,8 @@ export const userSettings = pgTable("user_settings", {
   preferredAudio: text("preferred_audio").notNull().$default(() => "japanese"),
   newEpisodeAlerts: boolean("new_episode_alerts").notNull().$default(() => true),
   watchlistUpdates: boolean("watchlist_updates").notNull().$default(() => true),
+  marketingEmails: boolean("marketing_emails").notNull().$default(() => false),
+  publicWatchlist: boolean("public_watchlist").notNull().$default(() => true),
 });
 
 export const usersRelations = relations(users, ({ one }) => ({

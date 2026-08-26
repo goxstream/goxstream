@@ -12,14 +12,26 @@ export const episodes = sqliteTable("episodes", {
   durationSeconds: integer("duration_seconds").notNull().$default(() => 1440),
   thumbnail: text("thumbnail"),
   airDate: integer("air_date", { mode: "timestamp" }),
+  status: text("status").notNull().$default(() => "published"),
+  viewsCount: integer("views_count").notNull().$default(() => 0),
+  isVip: integer("is_vip", { mode: "boolean" }).notNull().$default(() => false),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
 });
 
 export const serverNodes = sqliteTable("server_nodes", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
+  region: text("region"),
+  provider: text("provider"),
+  endpoint: text("endpoint"),
   quality: text("quality").notNull().$default(() => "1080p"),
   priority: integer("priority").notNull().$default(() => 1),
   status: text("status").notNull().$default(() => "online"),
+  healthStatus: text("health_status").notNull().$default(() => "online"),
+  latencyMs: integer("latency_ms").notNull().$default(() => 0),
+  isPrimary: integer("is_primary", { mode: "boolean" }).notNull().$default(() => false),
 });
 
 export const streamSources = sqliteTable("stream_sources", {
@@ -30,9 +42,15 @@ export const streamSources = sqliteTable("stream_sources", {
   serverNodeId: text("server_node_id")
     .notNull()
     .references(() => serverNodes.id, { onDelete: "cascade" }),
+  serverName: text("server_name"),
   streamUrl: text("stream_url").notNull(),
   format: text("format").notNull().$default(() => "hls"),
   quality: text("quality").notNull().$default(() => "1080p"),
+  url1080p: text("url_1080p"),
+  url720p: text("url_720p"),
+  url480p: text("url_480p"),
+  url360p: text("url_360p"),
+  isPrimary: integer("is_primary", { mode: "boolean" }).notNull().$default(() => false),
 });
 
 export const subtitleTracks = sqliteTable("subtitle_tracks", {
@@ -43,6 +61,7 @@ export const subtitleTracks = sqliteTable("subtitle_tracks", {
   label: text("label").notNull(),
   languageCode: text("language_code").notNull(),
   fileUrl: text("file_url").notNull(),
+  format: text("format").notNull().$default(() => "vtt"),
   isDefault: integer("is_default", { mode: "boolean" }).notNull().$default(() => false),
 });
 
@@ -54,6 +73,7 @@ export const audioTracks = sqliteTable("audio_tracks", {
   label: text("label").notNull(),
   languageCode: text("language_code").notNull(),
   audioUrl: text("audio_url").notNull(),
+  type: text("type").notNull().$default(() => "original"),
   isDefault: integer("is_default", { mode: "boolean" }).notNull().$default(() => false),
 });
 

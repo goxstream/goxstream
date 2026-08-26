@@ -7,10 +7,16 @@ export const users = sqliteTable("users", {
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   displayName: text("display_name").notNull(),
+  avatarUrl: text("avatar_url"),
+  bannerUrl: text("banner_url"),
+  bio: text("bio"),
   role: text("role").notNull().$default(() => "user"),
   status: text("status").notNull().$default(() => "active"),
   membershipTier: text("membership_tier").notNull().$default(() => "free"),
   createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
   lastActiveAt: integer("last_active_at", { mode: "timestamp" }),
@@ -27,6 +33,8 @@ export const userSettings = sqliteTable("user_settings", {
   preferredAudio: text("preferred_audio").notNull().$default(() => "japanese"),
   newEpisodeAlerts: integer("new_episode_alerts", { mode: "boolean" }).notNull().$default(() => true),
   watchlistUpdates: integer("watchlist_updates", { mode: "boolean" }).notNull().$default(() => true),
+  marketingEmails: integer("marketing_emails", { mode: "boolean" }).notNull().$default(() => false),
+  publicWatchlist: integer("public_watchlist", { mode: "boolean" }).notNull().$default(() => true),
 });
 
 export const usersRelations = relations(users, ({ one }) => ({

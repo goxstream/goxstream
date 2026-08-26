@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { users } from "./users";
 import { animes } from "./anime";
@@ -13,7 +13,13 @@ export const watchlists = sqliteTable("watchlists", {
     .notNull()
     .references(() => animes.id, { onDelete: "cascade" }),
   status: text("status").notNull().$default(() => "plan_to_watch"),
+  isFavorite: integer("is_favorite", { mode: "boolean" }).notNull().$default(() => false),
+  currentEpisode: integer("current_episode").notNull().$default(() => 0),
+  userRating: real("user_rating"),
   createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
 });
@@ -29,6 +35,9 @@ export const watchHistories = sqliteTable("watch_histories", {
   episodeId: text("episode_id")
     .notNull()
     .references(() => episodes.id, { onDelete: "cascade" }),
+  episodeNumber: integer("episode_number"),
+  progressPercent: real("progress_percent").notNull().$default(() => 0),
+  durationSeconds: integer("duration_seconds").notNull().$default(() => 0),
   progressSeconds: integer("progress_seconds").notNull().$default(() => 0),
   lastWatchedAt: integer("last_watched_at", { mode: "timestamp" })
     .notNull()

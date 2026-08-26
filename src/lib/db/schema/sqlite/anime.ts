@@ -14,11 +14,16 @@ export const animes = sqliteTable("animes", {
   status: text("status").notNull().$default(() => "Ongoing"),
   seasonName: text("season_name"),
   seasonYear: integer("season_year"),
+  episodesCount: integer("episodes_count").notNull().$default(() => 0),
+  durationPerEp: text("duration_per_ep"),
   rating: real("rating").$default(() => 0),
   isFeatured: integer("is_featured", { mode: "boolean" }).notNull().$default(() => false),
   isTrending: integer("is_trending", { mode: "boolean" }).notNull().$default(() => false),
   subOrDub: text("sub_or_dub").notNull().$default(() => "SUB"),
   createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
 });
@@ -68,6 +73,8 @@ export const schedules = sqliteTable("schedules", {
     .references(() => animes.id, { onDelete: "cascade" }),
   releaseDay: text("release_day").notNull(),
   releaseTime: text("release_time").notNull(),
+  episodeNumber: integer("episode_number"),
+  status: text("status").notNull().$default(() => "upcoming"),
   timezone: text("timezone").notNull().$default(() => "UTC"),
 });
 
@@ -75,9 +82,17 @@ export const trendingStats = sqliteTable("trending_stats", {
   animeId: text("anime_id")
     .primaryKey()
     .references(() => animes.id, { onDelete: "cascade" }),
+  rank: integer("rank").notNull().$default(() => 0),
+  previousRank: integer("previous_rank").notNull().$default(() => 0),
   viewsToday: integer("views_today").notNull().$default(() => 0),
   viewsThisWeek: integer("views_this_week").notNull().$default(() => 0),
-  rank: integer("rank").notNull().$default(() => 0),
+  weeklyViews: integer("weekly_views").notNull().$default(() => 0),
+  monthlyViews: integer("monthly_views").notNull().$default(() => 0),
+  totalViews: integer("total_views").notNull().$default(() => 0),
+  trendScore: real("trend_score").notNull().$default(() => 0),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .$defaultFn(() => new Date()),
 });
 
 export const animesRelations = relations(animes, ({ many, one }) => ({

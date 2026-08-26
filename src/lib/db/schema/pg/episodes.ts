@@ -12,14 +12,26 @@ export const episodes = pgTable("episodes", {
   durationSeconds: integer("duration_seconds").notNull().$default(() => 1440),
   thumbnail: text("thumbnail"),
   airDate: timestamp("air_date"),
+  status: text("status").notNull().$default(() => "published"),
+  viewsCount: integer("views_count").notNull().$default(() => 0),
+  isVip: boolean("is_vip").notNull().$default(() => false),
+  createdAt: timestamp("created_at")
+    .notNull()
+    .$defaultFn(() => new Date()),
 });
 
 export const serverNodes = pgTable("server_nodes", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
+  region: text("region"),
+  provider: text("provider"),
+  endpoint: text("endpoint"),
   quality: text("quality").notNull().$default(() => "1080p"),
   priority: integer("priority").notNull().$default(() => 1),
   status: text("status").notNull().$default(() => "online"),
+  healthStatus: text("health_status").notNull().$default(() => "online"),
+  latencyMs: integer("latency_ms").notNull().$default(() => 0),
+  isPrimary: boolean("is_primary").notNull().$default(() => false),
 });
 
 export const streamSources = pgTable("stream_sources", {
@@ -30,9 +42,15 @@ export const streamSources = pgTable("stream_sources", {
   serverNodeId: text("server_node_id")
     .notNull()
     .references(() => serverNodes.id, { onDelete: "cascade" }),
+  serverName: text("server_name"),
   streamUrl: text("stream_url").notNull(),
   format: text("format").notNull().$default(() => "hls"),
   quality: text("quality").notNull().$default(() => "1080p"),
+  url1080p: text("url_1080p"),
+  url720p: text("url_720p"),
+  url480p: text("url_480p"),
+  url360p: text("url_360p"),
+  isPrimary: boolean("is_primary").notNull().$default(() => false),
 });
 
 export const subtitleTracks = pgTable("subtitle_tracks", {
@@ -43,6 +61,7 @@ export const subtitleTracks = pgTable("subtitle_tracks", {
   label: text("label").notNull(),
   languageCode: text("language_code").notNull(),
   fileUrl: text("file_url").notNull(),
+  format: text("format").notNull().$default(() => "vtt"),
   isDefault: boolean("is_default").notNull().$default(() => false),
 });
 
@@ -54,6 +73,7 @@ export const audioTracks = pgTable("audio_tracks", {
   label: text("label").notNull(),
   languageCode: text("language_code").notNull(),
   audioUrl: text("audio_url").notNull(),
+  type: text("type").notNull().$default(() => "original"),
   isDefault: boolean("is_default").notNull().$default(() => false),
 });
 
