@@ -91,7 +91,7 @@ export function TrendingHero({ topAnime }: TrendingHeroProps) {
             <Button
               nativeButton={false}
               render={
-                <Link href={`/anime/${topAnime.slug}`}>
+                <Link href={`/anime/${topAnime.slug}/episode-${topAnime.latestEpisode || 1}`}>
                   <Play className="size-4 fill-current mr-2" />
                   Watch Episode {topAnime.latestEpisode || 1}
                 </Link>

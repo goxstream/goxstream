@@ -250,7 +250,7 @@ export function TrendingItemCard({
         <Button
           nativeButton={false}
           render={
-            <Link href={`/anime/${anime.slug}`}>
+            <Link href={`/anime/${anime.slug}/episode-${anime.latestEpisode || 1}`}>
               <Play className="size-3.5 mr-1.5 fill-current" />
               Watch
             </Link>

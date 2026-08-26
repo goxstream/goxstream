@@ -102,7 +102,7 @@ export function BrowseGrid({
           {items.map((anime) => (
             <Link
               key={anime.id}
-              href={`#watch-${anime.slug}`}
+              href={`/anime/${anime.slug}`}
               className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-card border border-border/70 hover:border-primary/60 transition-all duration-200"
             >
               <div className="flex items-center gap-4 flex-1 min-w-0">

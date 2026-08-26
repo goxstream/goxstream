@@ -10,7 +10,7 @@ interface EpisodeCardProps {
 export function EpisodeCard({ episode }: EpisodeCardProps) {
   return (
     <Link
-      href={`#watch-${episode.animeSlug}-ep${episode.episodeNumber}`}
+      href={`/anime/${episode.animeSlug}/episode-${episode.episodeNumber}`}
       className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-3.5 rounded-xl bg-card border border-border/80 hover:border-primary/50 hover:bg-muted/40 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {/* Episode Thumbnail */}

@@ -43,7 +43,7 @@ export function HeroSection() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto pt-2">
               <Link
-                href="#watch"
+                href={`/anime/${FEATURED_ANIME.slug}/episode-${FEATURED_ANIME.latestEpisode || 1}`}
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",
@@ -55,7 +55,7 @@ export function HeroSection() {
               </Link>
 
               <Link
-                href="#trending"
+                href="/trending"
                 className={buttonVariants({
                   variant: "outline",
                   size: "lg",
@@ -109,7 +109,7 @@ export function HeroSection() {
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <Link
-                    href={`#watch-${FEATURED_ANIME.slug}`}
+                    href={`/anime/${FEATURED_ANIME.slug}/episode-${FEATURED_ANIME.latestEpisode || 1}`}
                     className="size-16 rounded-full bg-primary/95 text-primary-foreground flex items-center justify-center border border-primary-foreground/20 group-hover:scale-110 transition-transform duration-300"
                     aria-label={`Watch ${FEATURED_ANIME.title}`}
                   >
