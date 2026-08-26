@@ -4,3 +4,5 @@ export * from "./ffmpeg-init";
 export * from "./ffmpeg-convert";
 export * from "./hls-downloader";
 export * from "./hls-uploader";
+export * from "./network-speed";
+

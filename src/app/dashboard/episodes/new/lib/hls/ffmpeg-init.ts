@@ -2,6 +2,7 @@
 
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { toBlobURL } from "@ffmpeg/util";
+import { getEstimatedDownlinkMbps, calculateDynamicTimeoutMs } from "./network-speed";
 
 let ffmpegInstance: FFmpeg | null = null;
 let loadPromise: Promise<FFmpeg> | null = null;
@@ -10,8 +11,8 @@ let isMultiThreadedMode = false;
 const CORE_VERSION = "0.12.10";
 const MT_PRIMARY_CDN = `https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@${CORE_VERSION}/dist/umd`;
 const MT_FALLBACK_CDN = `https://unpkg.com/@ffmpeg/core-mt@${CORE_VERSION}/dist/umd`;
-const ST_PRIMARY_CDN = `https://cdn.jsdelivr.net/npm/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
-const ST_FALLBACK_CDN = `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
+const LOCAL_MT_PATH = "/ffmpeg/core-mt";
+const LOCAL_ST_PATH = "/ffmpeg/core";
 
 /**
  * Helper to race a promise against a timeout.
@@ -29,7 +30,7 @@ function timeoutPromise<T>(promise: Promise<T>, ms: number, errorMessage: string
  * Helper to fetch and instantiate Multi-Threaded FFmpeg core inside the timeout boundary.
  */
 async function loadMTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: string) => void) {
-  if (onProgress) onProgress(`Fetching multi-threaded WASM core binaries from CDN...`);
+  if (onProgress) onProgress(`Fetching multi-threaded WASM core binaries from ${cdnBase}...`);
   const coreURL = await toBlobURL(`${cdnBase}/ffmpeg-core.js`, "text/javascript");
   const wasmURL = await toBlobURL(`${cdnBase}/ffmpeg-core.wasm`, "application/wasm");
   const workerURL = await toBlobURL(`${cdnBase}/ffmpeg-core.worker.js`, "text/javascript");
@@ -42,7 +43,7 @@ async function loadMTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: 
  * Helper to fetch and instantiate Single-Threaded FFmpeg core inside the timeout boundary.
  */
 async function loadSTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: string) => void) {
-  if (onProgress) onProgress(`Fetching single-threaded WASM core binaries...`);
+  if (onProgress) onProgress(`Fetching single-threaded WASM core binaries from ${cdnBase}...`);
   const coreURL = await toBlobURL(`${cdnBase}/ffmpeg-core.js`, "text/javascript");
   const wasmURL = await toBlobURL(`${cdnBase}/ffmpeg-core.wasm`, "application/wasm");
 
@@ -52,7 +53,7 @@ async function loadSTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: 
 
 /**
  * Manually initialize `@ffmpeg/ffmpeg` WebAssembly Core on-demand.
- * Supports Multi-Threaded Core (@ffmpeg/core-mt) with strict timeout boundaries, CDN retries, and single-thread fallback.
+ * Features dynamic network-adaptive timeouts and 4-tier fallback ending in Local Server Assets (/ffmpeg/...).
  */
 export async function loadFFmpegCore(
   onProgress?: (msg: string) => void
@@ -77,74 +78,76 @@ export async function loadFFmpegCore(
 
   // 3. Initiate single load promise
   loadPromise = (async () => {
+    // Measure active network bandwidth
+    const mbps = await getEstimatedDownlinkMbps();
+    const mtTimeoutMs = calculateDynamicTimeoutMs(33, mbps);
+
+    if (onProgress) {
+      onProgress(`Network bandwidth: ~${mbps.toFixed(1)} Mbps (Adaptive MT CDN timeout budget: ${(mtTimeoutMs / 1000).toFixed(0)}s)`);
+    }
+
     const supportsMultiThread =
       typeof window !== "undefined" &&
       typeof SharedArrayBuffer !== "undefined" &&
       window.crossOriginIsolated;
 
     if (supportsMultiThread) {
-      // 3a. Try Primary Multi-Threaded CDN (jsDelivr) with 8s timeout
+      // Tier 1: Primary Multi-Threaded CDN (jsDelivr) with dynamic bandwidth timeout
       try {
-        if (onProgress) onProgress("Loading FFmpeg Multi-Threaded WASM core (@ffmpeg/core-mt)...");
+        if (onProgress) onProgress("Loading Multi-Threaded WASM core via jsDelivr CDN...");
         await timeoutPromise(
           loadMTCore(instance, MT_PRIMARY_CDN, onProgress),
-          8000,
-          "Primary multi-threaded core load timeout (8s limit)"
+          mtTimeoutMs,
+          `Primary MT CDN load timeout (${(mtTimeoutMs / 1000).toFixed(0)}s budget)`
         );
 
         isMultiThreadedMode = true;
-        if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully.");
+        if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully (jsDelivr).");
         return instance;
       } catch (mtPrimaryErr: any) {
-        // 3b. Try Fallback Multi-Threaded CDN (unpkg) with 8s timeout
+        // Tier 2: Fallback Multi-Threaded CDN (unpkg)
         try {
-          if (onProgress) onProgress(`Primary MT CDN failed (${mtPrimaryErr?.message}). Retrying with unpkg...`);
+          if (onProgress) onProgress(`jsDelivr MT failed (${mtPrimaryErr?.message}). Retrying unpkg CDN...`);
           await timeoutPromise(
             loadMTCore(instance, MT_FALLBACK_CDN, onProgress),
-            8000,
-            "Fallback multi-threaded core load timeout (8s limit)"
+            mtTimeoutMs,
+            `Fallback MT CDN load timeout (${(mtTimeoutMs / 1000).toFixed(0)}s budget)`
           );
 
           isMultiThreadedMode = true;
-          if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully via fallback CDN.");
+          if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully via unpkg.");
           return instance;
         } catch (mtFallbackErr: any) {
-          if (onProgress) onProgress("Multi-Threaded CDN load failed/timed out. Falling back to Single-Threaded Core...");
+          if (onProgress) onProgress("Public MT CDNs failed/timed out. Switching to Local Server Multi-Threaded Assets...");
         }
+      }
+
+      // Tier 3: Local Server Multi-Threaded Assets (/ffmpeg/core-mt/) - Ultimate MT Fallback
+      try {
+        if (onProgress) onProgress("Loading Multi-Threaded WASM core from Local Server Assets (/ffmpeg/core-mt)...");
+        await loadMTCore(instance, LOCAL_MT_PATH, onProgress);
+
+        isMultiThreadedMode = true;
+        if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully from Local Server.");
+        return instance;
+      } catch (localMtErr: any) {
+        if (onProgress) onProgress("Local MT Core load failed. Falling back to Local Single-Threaded Core...");
       }
     }
 
-    // 4a. Try Primary Single-Threaded CDN (jsDelivr) with 15s timeout
+    // Tier 4: Local Server Single-Threaded Assets (/ffmpeg/core/) - Ultimate Guaranteed Fallback
     try {
-      if (onProgress) onProgress("Loading FFmpeg Single-Threaded WASM core (@ffmpeg/core)...");
-      await timeoutPromise(
-        loadSTCore(instance, ST_PRIMARY_CDN, onProgress),
-        15000,
-        "Single-threaded core load timeout"
-      );
+      if (onProgress) onProgress("Loading Single-Threaded WASM core from Local Server Assets (/ffmpeg/core)...");
+      await loadSTCore(instance, LOCAL_ST_PATH, onProgress);
 
       isMultiThreadedMode = false;
-      if (onProgress) onProgress("FFmpeg Single-Threaded WASM Core loaded successfully.");
+      if (onProgress) onProgress("FFmpeg Single-Threaded WASM Core loaded successfully from Local Server.");
       return instance;
-    } catch (stPrimaryErr: any) {
-      // 4b. Try Fallback Single-Threaded CDN (unpkg)
-      try {
-        if (onProgress) onProgress("Retrying Single-Threaded core with unpkg fallback CDN...");
-        await timeoutPromise(
-          loadSTCore(instance, ST_FALLBACK_CDN, onProgress),
-          15000,
-          "Single-threaded fallback core load timeout"
-        );
-
-        isMultiThreadedMode = false;
-        if (onProgress) onProgress("FFmpeg WASM Core loaded successfully via fallback CDN.");
-        return instance;
-      } catch (stFallbackErr: any) {
-        loadPromise = null;
-        throw new Error(
-          `Failed to load FFmpeg WASM Core: ${stPrimaryErr?.message || stFallbackErr?.message || "Network error fetching WASM core"}`
-        );
-      }
+    } catch (localStErr: any) {
+      loadPromise = null;
+      throw new Error(
+        `Failed to load FFmpeg WASM Core from all tiers: ${localStErr?.message || "Engine load failed"}`
+      );
     }
   })();
 
