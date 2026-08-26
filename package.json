@@ -20,6 +20,8 @@
 		"test:e2e:report": "playwright show-report",
 		"test:e2e:visual": "playwright test --grep @visual",
 		"test:e2e:update-snapshots": "playwright test --update-snapshots",
+		"test:unit": "vitest run",
+		"test:unit:watch": "vitest",
 		"db:generate:d1": "DB_CONNECTION=d1 drizzle-kit generate",
 		"db:generate:pg": "DB_CONNECTION=postgres drizzle-kit generate",
 		"db:studio:d1": "DB_CONNECTION=d1 drizzle-kit studio",
@@ -83,6 +85,7 @@
 		"tailwindcss": "^4",
 		"tsx": "^4.23.12",
 		"typescript": "^5.7.4",
+		"vitest": "^4.1.11",
 		"wrangler": "^4.125.0"
 	}
 }
