@@ -42,7 +42,26 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	"kv_namespaces": [
+		{
+			"binding": "KV",
+			"id": "6ff3ff4ae7d54091910f3a6d3fb34f0c"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "goxstream",
+			"database_id": "93a28981-ac5e-4381-a3aa-18d98b9bf5ca"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "R2",
+			"bucket_name": "goxstream"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
