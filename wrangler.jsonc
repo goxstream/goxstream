@@ -10,6 +10,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "goxstream",
 	"keep_names": false,
+	"keep_vars": true,
 	"main": ".open-next/worker.js",
 	"compatibility_date": "2026-08-20",
 	"compatibility_flags": [
