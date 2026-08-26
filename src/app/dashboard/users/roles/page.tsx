@@ -1,36 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useRolesAndAccess } from "./hooks/use-roles-and-access";
 import { RolesHeader } from "./components/roles-header";
 import { RoleCardsGrid } from "./components/role-cards-grid";
 import { PermissionsMatrixTable } from "./components/permissions-matrix-table";
 import { TeamMembersList } from "./components/team-members-list";
-import { MOCK_ROLES, PERMISSION_ITEMS, MOCK_TEAM_MEMBERS } from "./constants";
-import type { RoleDefinition } from "./types";
+import { RoleFormDialog } from "./components/role-form-dialog";
+import { InviteStaffDialog } from "./components/invite-staff-dialog";
+import { PERMISSION_ITEMS } from "./constants";
 
 export default function RolesAndAccessPage() {
-  const [roles, setRoles] = useState<RoleDefinition[]>(MOCK_ROLES);
-  const [selectedRoleSlug, setSelectedRoleSlug] = useState<string>("super_admin");
-
-  const handleTogglePermission = (roleSlug: string, permKey: string) => {
-    setRoles((prevRoles) =>
-      prevRoles.map((role) => {
-        if (role.slug === roleSlug) {
-          const hasPerm = role.permissions.includes(permKey);
-          const nextPerms = hasPerm
-            ? role.permissions.filter((k) => k !== permKey)
-            : [...role.permissions, permKey];
-
-          return { ...role, permissions: nextPerms };
-        }
-        return role;
-      })
-    );
-  };
+  const {
+    roles,
+    teamMembers,
+    selectedRoleSlug,
+    setSelectedRoleSlug,
+    isRoleModalOpen,
+    setIsRoleModalOpen,
+    isInviteModalOpen,
+    setIsInviteModalOpen,
+    handleTogglePermission,
+    handleAddRole,
+    handleInviteStaff,
+  } = useRolesAndAccess();
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <RolesHeader />
+      <RolesHeader
+        onOpenCreateRole={() => setIsRoleModalOpen(true)}
+        onOpenInviteStaff={() => setIsInviteModalOpen(true)}
+      />
       <RoleCardsGrid
         roles={roles}
         selectedRoleSlug={selectedRoleSlug}
@@ -42,7 +41,18 @@ export default function RolesAndAccessPage() {
         selectedRoleSlug={selectedRoleSlug}
         onTogglePermission={handleTogglePermission}
       />
-      <TeamMembersList members={MOCK_TEAM_MEMBERS} roles={roles} />
+      <TeamMembersList members={teamMembers} roles={roles} />
+      <RoleFormDialog
+        isOpen={isRoleModalOpen}
+        onOpenChange={setIsRoleModalOpen}
+        onSaveRole={handleAddRole}
+      />
+      <InviteStaffDialog
+        isOpen={isInviteModalOpen}
+        onOpenChange={setIsInviteModalOpen}
+        roles={roles}
+        onInviteStaff={handleInviteStaff}
+      />
     </div>
   );
 }

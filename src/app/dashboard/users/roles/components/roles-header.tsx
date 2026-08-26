@@ -3,7 +3,12 @@
 import { ShieldPlus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function RolesHeader() {
+interface RolesHeaderProps {
+  onOpenCreateRole: () => void;
+  onOpenInviteStaff: () => void;
+}
+
+export function RolesHeader({ onOpenCreateRole, onOpenInviteStaff }: RolesHeaderProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -13,11 +18,20 @@ export function RolesHeader() {
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" className="h-9 gap-1.5 border-border/60 text-xs">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onOpenCreateRole}
+          className="h-9 gap-1.5 border-border/60 text-xs"
+        >
           <ShieldPlus className="size-4" />
           <span>Create Custom Role</span>
         </Button>
-        <Button size="sm" className="h-9 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs">
+        <Button
+          size="sm"
+          onClick={onOpenInviteStaff}
+          className="h-9 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs"
+        >
           <UserPlus className="size-4" />
           <span>Invite Staff</span>
         </Button>

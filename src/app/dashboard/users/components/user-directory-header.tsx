@@ -3,7 +3,11 @@
 import { UserPlus, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function UserDirectoryHeader() {
+interface UserDirectoryHeaderProps {
+  onAddUser: () => void;
+}
+
+export function UserDirectoryHeader({ onAddUser }: UserDirectoryHeaderProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -17,7 +21,7 @@ export function UserDirectoryHeader() {
           <Download className="size-4" />
           <span>Export CSV</span>
         </Button>
-        <Button size="sm" className="h-9 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button size="sm" onClick={onAddUser} className="h-9 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90">
           <UserPlus className="size-4" />
           <span>Add Member</span>
         </Button>

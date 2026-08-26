@@ -4,13 +4,20 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import type { ReportedComment } from "../types";
 
 interface ModerationActionModalProps {
   report: ReportedComment | null;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirmAction: (reportId: string, actionType: "delete" | "mute" | "dismiss", duration?: string) => void;
+  onConfirmAction: (
+    reportId: string,
+    actionType: "delete" | "mute" | "dismiss",
+    duration?: string,
+    moderatorNote?: string
+  ) => void;
 }
 
 export function ModerationActionModal({
@@ -20,6 +27,7 @@ export function ModerationActionModal({
   onConfirmAction,
 }: ModerationActionModalProps) {
   const [muteDuration, setMuteDuration] = useState("24h");
+  const [moderatorNote, setModeratorNote] = useState("");
 
   if (!report) return null;
 
@@ -43,7 +51,7 @@ export function ModerationActionModal({
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-medium text-foreground">Select Sanction Duration for Mute:</label>
+            <Label className="font-medium text-foreground">Sanction Duration for Mute:</Label>
             <Select value={muteDuration} onValueChange={(val) => setMuteDuration(val ?? "24h")}>
               <SelectTrigger className="h-9 border-border/60 text-xs">
                 <SelectValue placeholder="Duration" />
@@ -55,6 +63,16 @@ export function ModerationActionModal({
               </SelectContent>
             </Select>
           </div>
+
+          <div className="flex flex-col gap-2">
+            <Label className="font-medium text-foreground">Moderator Internal Note (Optional):</Label>
+            <Textarea
+              placeholder="Provide reason or context for audit log..."
+              value={moderatorNote}
+              onChange={(e) => setModeratorNote(e.target.value)}
+              className="text-xs border-border/60 min-h-[70px]"
+            />
+          </div>
         </div>
 
         <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
@@ -62,7 +80,7 @@ export function ModerationActionModal({
             variant="ghost"
             size="sm"
             onClick={() => {
-              onConfirmAction(report.id, "dismiss");
+              onConfirmAction(report.id, "dismiss", undefined, moderatorNote);
               onOpenChange(false);
             }}
             className="h-9 text-xs"
@@ -73,7 +91,7 @@ export function ModerationActionModal({
             variant="destructive"
             size="sm"
             onClick={() => {
-              onConfirmAction(report.id, "mute", muteDuration);
+              onConfirmAction(report.id, "mute", muteDuration, moderatorNote);
               onOpenChange(false);
             }}
             className="h-9 text-xs gap-1.5"

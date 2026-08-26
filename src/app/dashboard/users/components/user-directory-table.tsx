@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Eye, ShieldAlert, KeyRound, Crown } from "lucide-react";
+import { MoreHorizontal, Eye, ShieldAlert, KeyRound, Crown, Edit } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -25,12 +25,14 @@ import type { UserAccount } from "../types";
 interface UserDirectoryTableProps {
   users: UserAccount[];
   onSelectUser: (user: UserAccount) => void;
+  onEditUser: (user: UserAccount) => void;
   onToggleStatus: (userId: string) => void;
 }
 
 export function UserDirectoryTable({
   users,
   onSelectUser,
+  onEditUser,
   onToggleStatus,
 }: UserDirectoryTableProps) {
   const getRoleBadge = (role: UserAccount["role"]) => {
@@ -168,6 +170,13 @@ export function UserDirectoryTable({
                       >
                         <Eye className="size-3.5" />
                         <span>View Details</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-xs gap-2 cursor-pointer"
+                        onClick={() => onEditUser(user)}
+                      >
+                        <Edit className="size-3.5" />
+                        <span>Edit Profile</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className="text-xs gap-2 cursor-pointer"
