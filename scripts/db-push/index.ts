@@ -9,6 +9,10 @@ import { execSync } from "node:child_process";
 function runDbPush() {
   const connectionType = (process.env.DB_CONNECTION || "").toLowerCase();
   const dbUrl = process.env.DB_URL || process.env.DATABASE_URL;
+  const isRemote =
+    process.env.DB_REMOTE === "true" ||
+    process.argv.includes("--remote") ||
+    process.argv.includes("-r");
 
   const isPostgres =
     connectionType === "postgres" ||
@@ -28,11 +32,13 @@ function runDbPush() {
       },
     });
   } else {
+    const targetFlag = isRemote ? "--remote" : "--local";
+    const targetText = isRemote ? "remote Cloudflare D1 database" : "local Cloudflare D1 binding";
     console.log("---------------------------------------------------------");
     console.log("[DB PUSH] No custom DB URL detected.");
-    console.log("[DB PUSH] Applying migrations to local Cloudflare D1 binding...");
+    console.log(`[DB PUSH] Applying migrations to ${targetText}...`);
     console.log("---------------------------------------------------------");
-    execSync("npx wrangler d1 migrations apply goxstream --local", {
+    execSync(`npx wrangler d1 migrations apply goxstream ${targetFlag}`, {
       stdio: "inherit",
       env: process.env,
     });

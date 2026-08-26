@@ -1,18 +1,21 @@
+"use client";
+
 import Link from "next/link";
 import { Play, Sparkles, Star, Zap, ShieldCheck, ArrowRight, Flame } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import DecryptedText from "@/components/DecryptedText";
-import { FEATURED_ANIME as FALLBACK_FEATURED } from "@/lib/mock-anime";
 import { getImageStyle } from "@/lib/utils";
+import { useFeaturedAnime } from "@/hooks/use-featured-anime";
 import type { AnimeItem } from "@/types/anime";
 
 interface HeroSectionProps {
-  featuredAnime?: AnimeItem | null;
+  initialFeaturedAnime?: AnimeItem | null;
 }
 
-export function HeroSection({ featuredAnime }: HeroSectionProps) {
-  const anime = featuredAnime || FALLBACK_FEATURED;
+export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
+  const { featuredAnime: activeAnime, isLoading } = useFeaturedAnime(initialFeaturedAnime);
 
   return (
     <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24 bg-background border-b border-border/60">
@@ -51,7 +54,7 @@ export function HeroSection({ featuredAnime }: HeroSectionProps) {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto pt-2">
               <Link
-                href={`/anime/${anime.slug}/1`}
+                href={`/anime/${activeAnime.slug}/1`}
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",
@@ -91,73 +94,79 @@ export function HeroSection({ featuredAnime }: HeroSectionProps) {
 
           {/* Hero Right Visual: Featured Anime Hero Card */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-md rounded-2xl overflow-hidden bg-card border border-border/80 group">
-              {/* Featured Poster Visual */}
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
-                <div
-                  className="absolute inset-0 size-full transition-transform duration-700 group-hover:scale-105"
-                  style={getImageStyle(anime.bannerImage || anime.coverImage)}
-                />
+            {isLoading ? (
+              <div className="w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden bg-card border border-border/80 p-4 space-y-4">
+                <Skeleton className="size-full rounded-xl" />
+              </div>
+            ) : (
+              <div className="relative w-full max-w-md rounded-2xl overflow-hidden bg-card border border-border/80 group">
+                {/* Featured Poster Visual */}
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
+                  <div
+                    className="absolute inset-0 size-full transition-transform duration-700 group-hover:scale-105"
+                    style={getImageStyle(activeAnime.bannerImage || activeAnime.coverImage)}
+                  />
 
-                {/* Gradient Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
+                  {/* Gradient Overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
 
-                {/* Top Badges */}
-                <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-                  <Badge className="bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1">
-                    #1 FEATURED SIMULCAST
-                  </Badge>
+                  {/* Top Badges */}
+                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+                    <Badge className="bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1">
+                      #1 FEATURED SIMULCAST
+                    </Badge>
 
-                  <Badge className="bg-black/75 text-amber-400 backdrop-blur-md border border-amber-500/30 text-xs font-bold px-2.5 py-1 flex items-center gap-1">
-                    <Star className="size-3.5 fill-amber-400 stroke-amber-400" />
-                    {anime.rating ? anime.rating.toFixed(1) : "N/A"}
-                  </Badge>
-                </div>
-
-                {/* Play Button Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <Link
-                    href={`/anime/${anime.slug}/1`}
-                    className="size-16 rounded-full bg-primary/95 text-primary-foreground flex items-center justify-center border border-primary-foreground/20 group-hover:scale-110 transition-transform duration-300"
-                    aria-label={`Watch ${anime.title}`}
-                  >
-                    <Play className="size-8 fill-primary-foreground stroke-primary-foreground ml-1" />
-                  </Link>
-                </div>
-
-                {/* Anime Meta Details Banner at Bottom */}
-                <div className="absolute bottom-0 inset-x-0 p-5 flex flex-col gap-2 z-10 bg-card/90 backdrop-blur-md border-t border-border/60">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                      {anime.season} {anime.year}
-                    </span>
-                    <span className="text-xs text-muted-foreground">•</span>
-                    <span className="text-xs text-muted-foreground font-medium">
-                      Ep {anime.latestEpisode || anime.episodesCount} Released
-                    </span>
+                    <Badge className="bg-black/75 text-amber-400 backdrop-blur-md border border-amber-500/30 text-xs font-bold px-2.5 py-1 flex items-center gap-1">
+                      <Star className="size-3.5 fill-amber-400 stroke-amber-400" />
+                      {activeAnime.rating ? activeAnime.rating.toFixed(1) : "N/A"}
+                    </Badge>
                   </div>
 
-                  <h2 className="text-lg font-bold text-foreground line-clamp-1">
-                    {anime.title}
-                  </h2>
+                  {/* Play Button Overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <Link
+                      href={`/anime/${activeAnime.slug}/1`}
+                      className="size-16 rounded-full bg-primary/95 text-primary-foreground flex items-center justify-center border border-primary-foreground/20 group-hover:scale-110 transition-transform duration-300"
+                      aria-label={`Watch ${activeAnime.title}`}
+                    >
+                      <Play className="size-8 fill-primary-foreground stroke-primary-foreground ml-1" />
+                    </Link>
+                  </div>
 
-                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                    {anime.synopsis}
-                  </p>
-
-                  <div className="flex items-center gap-2 pt-1">
-                    {anime.genres.slice(0, 3).map((genre) => (
-                      <span
-                        key={genre}
-                        className="px-2 py-0.5 rounded bg-muted text-[10px] font-semibold text-muted-foreground"
-                      >
-                        {genre}
+                  {/* Anime Meta Details Banner at Bottom */}
+                  <div className="absolute bottom-0 inset-x-0 p-5 flex flex-col gap-2 z-10 bg-card/90 backdrop-blur-md border-t border-border/60">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-primary uppercase tracking-wider">
+                        {activeAnime.season} {activeAnime.year}
                       </span>
-                    ))}
+                      <span className="text-xs text-muted-foreground">•</span>
+                      <span className="text-xs text-muted-foreground font-medium">
+                        Ep {activeAnime.latestEpisode || activeAnime.episodesCount} Released
+                      </span>
+                    </div>
+
+                    <h2 className="text-lg font-bold text-foreground line-clamp-1">
+                      {activeAnime.title}
+                    </h2>
+
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      {activeAnime.synopsis}
+                    </p>
+
+                    <div className="flex items-center gap-2 pt-1">
+                      {activeAnime.genres.slice(0, 3).map((genre) => (
+                        <span
+                          key={genre}
+                          className="px-2 py-0.5 rounded bg-muted text-[10px] font-semibold text-muted-foreground"
+                        >
+                          {genre}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

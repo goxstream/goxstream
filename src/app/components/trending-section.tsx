@@ -4,25 +4,24 @@ import { useState } from "react";
 import Link from "next/link";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AnimeCard } from "@/components/anime-card";
-import { TRENDING_ANIME as FALLBACK_TRENDING, GENRES_LIST as FALLBACK_GENRES } from "@/lib/mock-anime";
+import { useTrendingAnime } from "@/hooks/use-trending-anime";
 import type { AnimeItem } from "@/types/anime";
 
 interface TrendingSectionProps {
-  trendingAnime?: AnimeItem[];
-  genresList?: string[];
+  initialTrending?: AnimeItem[];
+  initialGenres?: string[];
 }
 
-export function TrendingSection({ trendingAnime, genresList }: TrendingSectionProps) {
+export function TrendingSection({ initialTrending, initialGenres }: TrendingSectionProps) {
   const [selectedGenre, setSelectedGenre] = useState("All");
-
-  const animeList = trendingAnime && trendingAnime.length > 0 ? trendingAnime : FALLBACK_TRENDING;
-  const genres = genresList && genresList.length > 0 ? ["All", ...genresList] : FALLBACK_GENRES;
+  const { trendingAnime, genresList, isLoading } = useTrendingAnime(initialTrending, initialGenres);
 
   const filteredAnime =
     selectedGenre === "All"
-      ? animeList
-      : animeList.filter((item) =>
+      ? trendingAnime
+      : trendingAnime.filter((item) =>
           item.genres.some((g) => g.toLowerCase() === selectedGenre.toLowerCase())
         );
 
@@ -53,41 +52,75 @@ export function TrendingSection({ trendingAnime, genresList }: TrendingSectionPr
           </Link>
         </div>
 
-        {/* Genre Filter Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none">
-          {genres.slice(0, 10).map((genre) => {
-            const isActive = selectedGenre.toLowerCase() === genre.toLowerCase();
-            return (
-              <button
-                key={genre}
-                onClick={() => setSelectedGenre(genre)}
-                className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
-                  isActive
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
-                }`}
-              >
-                {genre}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Anime Cards Grid */}
-        {filteredAnime.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-            {filteredAnime.map((anime) => (
-              <AnimeCard key={anime.id} anime={anime} />
-            ))}
-          </div>
+        {/* In-Component Skeleton Loader */}
+        {isLoading ? (
+          <TrendingSectionSkeleton />
         ) : (
-          <div className="p-12 text-center rounded-xl bg-card border border-border">
-            <p className="text-sm text-muted-foreground">
-              No trending anime found in the "{selectedGenre}" category right now.
-            </p>
-          </div>
+          <>
+            {/* Genre Filter Tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none">
+              {genresList.slice(0, 10).map((genre) => {
+                const isActive = selectedGenre.toLowerCase() === genre.toLowerCase();
+                return (
+                  <button
+                    key={genre}
+                    onClick={() => setSelectedGenre(genre)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                    }`}
+                  >
+                    {genre}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Anime Cards Grid */}
+            {filteredAnime.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                {filteredAnime.map((anime) => (
+                  <AnimeCard key={anime.id} anime={anime} />
+                ))}
+              </div>
+            ) : (
+              <div className="p-12 text-center rounded-xl bg-card border border-border">
+                <p className="text-sm text-muted-foreground">
+                  No trending anime found in the "{selectedGenre}" category right now.
+                </p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
+  );
+}
+
+/**
+ * In-Component Skeleton for Trending Section
+ */
+function TrendingSectionSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Genre Pills Skeleton */}
+      <div className="flex items-center gap-2 overflow-hidden pb-3">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton key={i} className="h-7 w-20 rounded-full flex-shrink-0" />
+        ))}
+      </div>
+
+      {/* Grid Cards Skeleton */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <div key={i} className="space-y-3">
+            <Skeleton className="aspect-[3/4] w-full rounded-xl" />
+            <Skeleton className="h-4 w-4/5 rounded" />
+            <Skeleton className="h-3 w-1/2 rounded" />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
