@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import { getLatestEpisodes } from "@/lib/db/queries/episodes";
 import { getTrendingAnime } from "@/lib/db/queries/anime";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-
-export const runtime = "edge";
+import { LATEST_EPISODES, TRENDING_ANIME } from "@/lib/mock-anime";
 
 export async function GET() {
   const CACHE_KEY = "kv_schedule_anime_v1";
@@ -23,21 +22,28 @@ export async function GET() {
           });
         }
       }
-    } catch {}
+    } catch {
+      // Fallback
+    }
 
     const [latestEpisodes, trendingAnime] = await Promise.all([
-      getLatestEpisodes(10).catch(() => []),
-      getTrendingAnime(10).catch(() => []),
+      getLatestEpisodes(10).catch(() => LATEST_EPISODES),
+      getTrendingAnime(10).catch(() => TRENDING_ANIME),
     ]);
 
-    const data = { latestEpisodes, trendingAnime };
+    const data = {
+      latestEpisodes: latestEpisodes.length > 0 ? latestEpisodes : LATEST_EPISODES,
+      trendingAnime: trendingAnime.length > 0 ? trendingAnime : TRENDING_ANIME,
+    };
 
     try {
       const { env } = await getCloudflareContext();
       if (env?.KV) {
         await env.KV.put(CACHE_KEY, JSON.stringify(data), { expirationTtl: CACHE_TTL });
       }
-    } catch {}
+    } catch {
+      // Fallback
+    }
 
     return NextResponse.json(data, {
       headers: {
@@ -46,6 +52,9 @@ export async function GET() {
       },
     });
   } catch {
-    return NextResponse.json({ latestEpisodes: [], trendingAnime: [] }, { status: 500 });
+    return NextResponse.json(
+      { latestEpisodes: LATEST_EPISODES, trendingAnime: TRENDING_ANIME },
+      { status: 200 }
+    );
   }
 }

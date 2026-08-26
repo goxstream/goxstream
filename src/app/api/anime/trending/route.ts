@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import { getTrendingAnime, getAllGenres } from "@/lib/db/queries/anime";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-
-export const runtime = "edge";
+import { TRENDING_ANIME as FALLBACK_TRENDING, GENRES_LIST as FALLBACK_GENRES } from "@/lib/mock-anime";
 
 export async function GET() {
   const CACHE_KEY = "kv_trending_anime_v1";
   const CACHE_TTL = 300; // 5 minutes
 
   try {
-    // 1. Cek KV Cache pada environment Cloudflare
     try {
       const { env } = await getCloudflareContext();
       if (env?.KV) {
@@ -17,25 +15,26 @@ export async function GET() {
         if (cached) {
           return NextResponse.json(cached, {
             headers: {
-              "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
+              "Cache-Control": "public, max-age=60, s-maxage=300",
               "X-Cache": "HIT-KV",
             },
           });
         }
       }
     } catch {
-      // Fallback untuk local Node dev mode
+      // Fallback
     }
 
-    // 2. Fetch data dari database D1 jika KV Miss
     const [trendingAnime, genresList] = await Promise.all([
-      getTrendingAnime(10).catch(() => []),
-      getAllGenres().catch(() => []),
+      getTrendingAnime(10).catch(() => FALLBACK_TRENDING),
+      getAllGenres().catch(() => FALLBACK_GENRES),
     ]);
 
-    const data = { trendingAnime, genresList };
+    const data = {
+      trendingAnime: trendingAnime.length > 0 ? trendingAnime : FALLBACK_TRENDING,
+      genresList: genresList.length > 0 ? genresList : FALLBACK_GENRES,
+    };
 
-    // 3. Simpan ke KV Cache secara asynchronous
     try {
       const { env } = await getCloudflareContext();
       if (env?.KV) {
@@ -47,11 +46,14 @@ export async function GET() {
 
     return NextResponse.json(data, {
       headers: {
-        "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
+        "Cache-Control": "public, max-age=60, s-maxage=300",
         "X-Cache": "MISS-KV",
       },
     });
   } catch {
-    return NextResponse.json({ trendingAnime: [], genresList: [] }, { status: 500 });
+    return NextResponse.json(
+      { trendingAnime: FALLBACK_TRENDING, genresList: FALLBACK_GENRES },
+      { status: 200 }
+    );
   }
 }

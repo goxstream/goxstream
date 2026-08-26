@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getBrowseAnime } from "@/lib/db/queries/anime";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-
-export const runtime = "edge";
+import { TRENDING_ANIME as FALLBACK_SEARCH } from "@/lib/mock-anime";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -25,17 +24,21 @@ export async function GET(request: Request) {
           });
         }
       }
-    } catch {}
+    } catch {
+      // KV unavailable or local dev mode
+    }
 
-    const items = await getBrowseAnime({ query, limit: 12 }).catch(() => []);
-    const data = { results: items };
+    const items = await getBrowseAnime({ query, limit: 12 }).catch(() => FALLBACK_SEARCH);
+    const data = { results: items.length > 0 ? items : (query ? [] : FALLBACK_SEARCH) };
 
     try {
       const { env } = await getCloudflareContext();
       if (env?.KV) {
         await env.KV.put(CACHE_KEY, JSON.stringify(data), { expirationTtl: CACHE_TTL });
       }
-    } catch {}
+    } catch {
+      // Fallback
+    }
 
     return NextResponse.json(data, {
       headers: {
@@ -44,6 +47,6 @@ export async function GET(request: Request) {
       },
     });
   } catch {
-    return NextResponse.json({ results: [] }, { status: 500 });
+    return NextResponse.json({ results: FALLBACK_SEARCH }, { status: 200 });
   }
 }

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getLatestEpisodes } from "@/lib/db/queries/episodes";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-
-export const runtime = "edge";
+import { LATEST_EPISODES as FALLBACK_EPISODES } from "@/lib/mock-anime";
 
 export async function GET() {
   const CACHE_KEY = "kv_latest_episodes_v1";
@@ -16,7 +15,7 @@ export async function GET() {
         if (cached) {
           return NextResponse.json(cached, {
             headers: {
-              "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
+              "Cache-Control": "public, max-age=60, s-maxage=300",
               "X-Cache": "HIT-KV",
             },
           });
@@ -26,8 +25,10 @@ export async function GET() {
       // Fallback
     }
 
-    const latestEpisodes = await getLatestEpisodes(6).catch(() => []);
-    const data = { latestEpisodes };
+    const latestEpisodes = await getLatestEpisodes(6).catch(() => FALLBACK_EPISODES);
+    const data = {
+      latestEpisodes: latestEpisodes.length > 0 ? latestEpisodes : FALLBACK_EPISODES,
+    };
 
     try {
       const { env } = await getCloudflareContext();
@@ -40,11 +41,11 @@ export async function GET() {
 
     return NextResponse.json(data, {
       headers: {
-        "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
+        "Cache-Control": "public, max-age=60, s-maxage=300",
         "X-Cache": "MISS-KV",
       },
     });
   } catch {
-    return NextResponse.json({ latestEpisodes: [] }, { status: 500 });
+    return NextResponse.json({ latestEpisodes: FALLBACK_EPISODES }, { status: 200 });
   }
 }

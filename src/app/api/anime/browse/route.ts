@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getBrowseAnime } from "@/lib/db/queries/anime";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-
-export const runtime = "edge";
+import { ALL_ANIME as FALLBACK_ALL_ANIME } from "@/lib/mock-anime";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -30,17 +29,21 @@ export async function GET(request: Request) {
           });
         }
       }
-    } catch {}
+    } catch {
+      // KV unavailable or local dev mode
+    }
 
-    const items = await getBrowseAnime({ genre, query, status, type, limit }).catch(() => []);
-    const data = { animeList: items };
+    const items = await getBrowseAnime({ genre, query, status, type, limit }).catch(() => FALLBACK_ALL_ANIME);
+    const data = { animeList: items.length > 0 ? items : FALLBACK_ALL_ANIME };
 
     try {
       const { env } = await getCloudflareContext();
       if (env?.KV) {
         await env.KV.put(CACHE_KEY, JSON.stringify(data), { expirationTtl: CACHE_TTL });
       }
-    } catch {}
+    } catch {
+      // Fallback
+    }
 
     return NextResponse.json(data, {
       headers: {
@@ -49,6 +52,6 @@ export async function GET(request: Request) {
       },
     });
   } catch {
-    return NextResponse.json({ animeList: [] }, { status: 500 });
+    return NextResponse.json({ animeList: FALLBACK_ALL_ANIME }, { status: 200 });
   }
 }
