@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Syne } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
+
+const fontBrand = Syne({
+	subsets: ["latin"],
+	weight: ["700", "800"],
+	variable: "--font-brand",
+});
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -36,7 +42,7 @@ export default function RootLayout({
 			<head>
 				<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 			</head>
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground transition-colors duration-200`}>
+			<body className={`${geistSans.variable} ${geistMono.variable} ${fontBrand.variable} antialiased bg-background text-foreground transition-colors duration-200`}>
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"

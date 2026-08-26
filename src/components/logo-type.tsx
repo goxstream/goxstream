@@ -16,12 +16,12 @@ export function LogoType({ size = "md", className }: LogoTypeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center font-bold leading-none select-none py-0.5 px-1",
+        "inline-flex items-center font-brand font-extrabold leading-none select-none py-0.5 px-1",
         SIZE_CLASSES[size],
         className
       )}
     >
-      <span className="text-primary">Gox</span>
+      <span className="text-brand">Gox</span>
       <span className="text-foreground transition-colors">Stream</span>
     </span>
   );
