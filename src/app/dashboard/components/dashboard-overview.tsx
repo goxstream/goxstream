@@ -32,11 +32,13 @@ import {
 } from "@/components/ui/table";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { useIsMounted } from "../hooks/use-mounted";
+import { useDashboardStats } from "@/hooks/use-dashboard-stats";
 import { TRAFFIC_CHART_CONFIG } from "../constants";
 import { TRAFFIC_DATA, RECENT_ACTIVITIES } from "../lib/mock-data";
 
 export function DashboardOverview() {
   const mounted = useIsMounted();
+  const { stats, isLoading } = useDashboardStats();
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
@@ -80,10 +82,16 @@ export function DashboardOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-extrabold font-brand tracking-tight">1,248</div>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24 rounded" />
+            ) : (
+              <div className="text-2xl font-extrabold font-brand tracking-tight">
+                {stats.totalAnime.toLocaleString()}
+              </div>
+            )}
             <div className="flex items-center gap-1.5 text-xs text-emerald-500 mt-1 font-medium">
               <TrendingUp className="size-3.5" />
-              <span>+14 titles this month</span>
+              <span>+{stats.monthlyGrowthPercent}% this month</span>
             </div>
           </CardContent>
         </Card>
@@ -99,7 +107,13 @@ export function DashboardOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-extrabold font-brand tracking-tight">8,920</div>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24 rounded" />
+            ) : (
+              <div className="text-2xl font-extrabold font-brand tracking-tight">
+                {stats.totalEpisodes.toLocaleString()}
+              </div>
+            )}
             <div className="flex items-center gap-1.5 text-xs text-emerald-500 mt-1 font-medium">
               <TrendingUp className="size-3.5" />
               <span>+142 episode uploads</span>
@@ -118,7 +132,13 @@ export function DashboardOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-extrabold font-brand tracking-tight">12,500</div>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24 rounded" />
+            ) : (
+              <div className="text-2xl font-extrabold font-brand tracking-tight">
+                {stats.activeStreams.toLocaleString()}
+              </div>
+            )}
             <div className="flex items-center gap-1.5 text-xs text-emerald-500 mt-1 font-medium">
               <TrendingUp className="size-3.5" />
               <span>+18.4% peak usage</span>
@@ -137,7 +157,13 @@ export function DashboardOverview() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-extrabold font-brand tracking-tight">38.6 Gbps</div>
+            {isLoading ? (
+              <Skeleton className="h-8 w-24 rounded" />
+            ) : (
+              <div className="text-2xl font-extrabold font-brand tracking-tight">
+                {stats.bandwidthUsageGb} Gbps
+              </div>
+            )}
             <div className="flex items-center gap-1.5 text-xs text-amber-500 mt-1 font-medium">
               <TrendingDown className="size-3.5" />
               <span>Normal operating capacity</span>
@@ -162,7 +188,7 @@ export function DashboardOverview() {
             </Badge>
           </CardHeader>
           <CardContent className="pt-2">
-            {mounted ? (
+            {mounted && !isLoading ? (
               <ChartContainer config={TRAFFIC_CHART_CONFIG} className="h-72 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={TRAFFIC_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -256,39 +282,51 @@ export function DashboardOverview() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {RECENT_ACTIVITIES.map((act) => (
-                <TableRow key={act.id} className="border-border/60">
-                  <TableCell className="pl-6">
-                    <div className="flex items-center gap-2.5">
-                      <Avatar className="size-7 rounded-md border border-border/60">
-                        <AvatarImage src={act.user.avatar} alt={act.user.name} />
-                        <AvatarFallback className="rounded-md bg-brand/10 text-brand text-[10px] font-bold">
-                          {act.user.name.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-semibold leading-tight">{act.user.name}</span>
-                        <span className="text-[10px] text-muted-foreground">{act.user.email}</span>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-xs font-medium">{act.action}</TableCell>
-                  <TableCell className="text-xs text-muted-foreground">{act.target}</TableCell>
-                  <TableCell className="text-xs text-muted-foreground/70">{act.timestamp}</TableCell>
-                  <TableCell className="text-right pr-6">
-                    <Badge
-                      variant="outline"
-                      className={
-                        act.status === "completed"
-                          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[10px]"
-                          : "border-amber-500/30 bg-amber-500/10 text-amber-400 text-[10px]"
-                      }
-                    >
-                      {act.status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {isLoading
+                ? Array.from({ length: 4 }).map((_, i) => (
+                    <TableRow key={i} className="border-border/60">
+                      <TableCell className="pl-6">
+                        <Skeleton className="h-6 w-32 rounded" />
+                      </TableCell>
+                      <TableCell><Skeleton className="h-4 w-28 rounded" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-24 rounded" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-16 rounded" /></TableCell>
+                      <TableCell className="pr-6 text-right"><Skeleton className="h-5 w-16 rounded ml-auto" /></TableCell>
+                    </TableRow>
+                  ))
+                : RECENT_ACTIVITIES.map((act) => (
+                    <TableRow key={act.id} className="border-border/60">
+                      <TableCell className="pl-6">
+                        <div className="flex items-center gap-2.5">
+                          <Avatar className="size-7 rounded-md border border-border/60">
+                            <AvatarImage src={act.user.avatar} alt={act.user.name} />
+                            <AvatarFallback className="rounded-md bg-brand/10 text-brand text-[10px] font-bold">
+                              {act.user.name.slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <span className="text-xs font-semibold leading-tight">{act.user.name}</span>
+                            <span className="text-[10px] text-muted-foreground">{act.user.email}</span>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-xs font-medium">{act.action}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{act.target}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground/70">{act.timestamp}</TableCell>
+                      <TableCell className="text-right pr-6">
+                        <Badge
+                          variant="outline"
+                          className={
+                            act.status === "completed"
+                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-[10px]"
+                              : "border-amber-500/30 bg-amber-500/10 text-amber-400 text-[10px]"
+                          }
+                        >
+                          {act.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </CardContent>
