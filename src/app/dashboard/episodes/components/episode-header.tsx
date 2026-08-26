@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, PlaySquare, ArrowUpRight } from "lucide-react";
+import { Plus, PlaySquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function EpisodeHeader() {
@@ -18,12 +18,6 @@ export function EpisodeHeader() {
       </div>
 
       <div className="flex items-center gap-3">
-        <Link href="/dashboard/episodes/servers">
-          <Button variant="outline" size="sm" className="gap-2">
-            Server Health
-            <ArrowUpRight className="size-4" />
-          </Button>
-        </Link>
         <Link href="/dashboard/episodes/new">
           <Button size="sm" className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
             <Plus className="size-4" />
