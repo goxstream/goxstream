@@ -97,7 +97,7 @@ export function PipelineStageBar({
                 )}
                 {isRunning && (
                   <Badge className="bg-primary text-primary-foreground text-[9px] h-4 px-1 font-mono animate-pulse">
-                    {formatDuration(stage.durationSeconds || 0)} ⏳
+                    {formatDuration(stage.durationSeconds || 0)}
                   </Badge>
                 )}
               </div>

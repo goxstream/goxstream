@@ -286,7 +286,7 @@ export function HlsConverterWidget({
           ) : status === "complete" ? (
             <>
               <CheckCircle2 className="size-3.5" />
-              Upload Complete ✓
+              Upload Complete
             </>
           ) : (
             <>
