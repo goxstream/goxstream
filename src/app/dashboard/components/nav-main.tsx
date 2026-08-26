@@ -69,24 +69,30 @@ export function NavMain({ items }: NavMainProps) {
               className="group/collapsible"
             >
               <SidebarMenuItem>
-                <CollapsibleTrigger className="w-full text-left">
-                  <SidebarMenuButton tooltip={item.title} isActive={item.isActive} className="w-full justify-between">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <Icon className="size-4 shrink-0" />
-                      <span className="truncate">{item.title}</span>
-                    </div>
-                    <div className="flex items-center gap-1 ml-auto shrink-0">
-                      {item.badge && (
-                        <Badge
-                          variant="secondary"
-                          className="text-[10px] h-5 px-1.5 font-medium bg-brand/10 text-brand border-brand/20"
-                        >
-                          {item.badge}
-                        </Badge>
-                      )}
-                      <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-muted-foreground" />
-                    </div>
-                  </SidebarMenuButton>
+                <CollapsibleTrigger
+                  render={
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      isActive={item.isActive}
+                      className="w-full justify-between"
+                    />
+                  }
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Icon className="size-4 shrink-0" />
+                    <span className="truncate">{item.title}</span>
+                  </div>
+                  <div className="flex items-center gap-1 ml-auto shrink-0">
+                    {item.badge && (
+                      <Badge
+                        variant="secondary"
+                        className="text-[10px] h-5 px-1.5 font-medium bg-brand/10 text-brand border-brand/20"
+                      >
+                        {item.badge}
+                      </Badge>
+                    )}
+                    <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-muted-foreground" />
+                  </div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub className="mr-0 border-l border-border/60 pl-2">
