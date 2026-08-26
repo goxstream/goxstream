@@ -26,7 +26,10 @@
 		"db:studio:pg": "DB_CONNECTION=postgres drizzle-kit studio",
 		"db:push": "tsx scripts/db-push/index.ts",
 		"db:push:d1": "wrangler d1 migrations apply goxstream --local --migrations-dir ./drizzle/d1",
-		"db:push:pg": "DB_CONNECTION=postgres drizzle-kit push"
+		"db:push:pg": "DB_CONNECTION=postgres drizzle-kit push",
+		"db:seed": "tsx scripts/seed/index.ts",
+		"db:seed:d1": "tsx scripts/seed/seed-d1.ts",
+		"db:seed:pg": "tsx scripts/seed/seed-pg.ts"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.7.0",
