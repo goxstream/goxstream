@@ -29,16 +29,10 @@ export const NAV_MAIN_DATA: NavItem[] = [
     ],
   },
   {
-    title: "Episode Studio",
+    title: "Episodes",
     url: "/dashboard/episodes",
     icon: PlaySquare,
     badge: "8,920",
-    items: [
-      { title: "Episode Manager", url: "/dashboard/episodes" },
-      { title: "Add Episode", url: "/dashboard/episodes/new" },
-      { title: "Video Server Sources", url: "/dashboard/episodes/servers" },
-      { title: "Subtitles & Audio", url: "/dashboard/episodes/subtitles" },
-    ],
   },
   {
     title: "User Management",
