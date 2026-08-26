@@ -19,7 +19,11 @@
 		"test:e2e:debug": "playwright test --debug",
 		"test:e2e:report": "playwright show-report",
 		"test:e2e:visual": "playwright test --grep @visual",
-		"test:e2e:update-snapshots": "playwright test --update-snapshots"
+		"test:e2e:update-snapshots": "playwright test --update-snapshots",
+		"db:generate:d1": "DB_CONNECTION=d1 drizzle-kit generate",
+		"db:generate:pg": "DB_CONNECTION=postgres drizzle-kit generate",
+		"db:studio:d1": "DB_CONNECTION=d1 drizzle-kit studio",
+		"db:studio:pg": "DB_CONNECTION=postgres drizzle-kit studio"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.7.0",
@@ -41,6 +45,7 @@
 		"motion": "^12.43.0",
 		"next": "16.2.11",
 		"next-themes": "^0.4.6",
+		"postgres": "^3.4.9",
 		"react": "^19.1.7",
 		"react-day-picker": "^10.0.1",
 		"react-dom": "^19.1.7",
