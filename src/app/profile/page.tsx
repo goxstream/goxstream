@@ -1,4 +1,7 @@
 import { Metadata } from "next";
+import { SiteHeader } from "@/components/site-header";
+import { UserHubNav } from "@/components/user-hub-nav";
+import { SiteFooter } from "@/components/site-footer";
 import { ProfileHeader } from "./components/profile-header";
 import { ProfileStats } from "./components/profile-stats";
 import { ProfileActivity } from "./components/profile-activity";
@@ -15,17 +18,17 @@ export default function ProfilePage() {
   const history = MOCK_WATCH_HISTORY;
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Profile Header */}
-        <ProfileHeader user={user} />
-
-        {/* Analytics & Stats */}
-        <ProfileStats stats={user.stats} />
-
-        {/* Activity & Favorites */}
-        <ProfileActivity watchlist={watchlist} history={history} />
-      </div>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <SiteHeader />
+      <UserHubNav />
+      <main className="flex-1 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+          <ProfileHeader user={user} />
+          <ProfileStats stats={user.stats} />
+          <ProfileActivity watchlist={watchlist} history={history} />
+        </div>
+      </main>
+      <SiteFooter />
     </div>
   );
 }
