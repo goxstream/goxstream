@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { X, Save, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimeEditFormContent } from "./edit/anime-edit-form-content";
-import type { AnimeItem } from "./types";
+import type { AnimeItem } from "../types";
 
 interface AnimeInlineEditFormProps {
   anime: AnimeItem;

@@ -10,6 +10,7 @@ import {
   TableHead,
 } from "@/components/ui/table";
 import { AnimeTableRow } from "./table/anime-table-row";
+import { AnimeCardMobile } from "./table/anime-card-mobile";
 import type { AnimeItem } from "../types";
 
 interface AnimeTableProps {
@@ -44,35 +45,50 @@ export function AnimeTable({
   }
 
   return (
-    <div className="rounded-lg border border-border/60 bg-card/40 overflow-hidden shadow-xs">
-      <Table className="table-fixed w-full">
-        <TableHeader className="bg-muted/30">
-          <TableRow className="border-border/60 hover:bg-transparent">
-            <TableHead className="w-10 text-center"></TableHead>
-            <TableHead className="w-[30%] text-xs font-semibold">Title & Poster</TableHead>
-            <TableHead className="w-[14%] text-xs font-semibold">Status</TableHead>
-            <TableHead className="w-[12%] text-xs font-semibold">Format</TableHead>
-            <TableHead className="w-[13%] text-xs font-semibold">Season</TableHead>
-            <TableHead className="w-[17%] text-xs font-semibold">Genres</TableHead>
-            <TableHead className="w-[10%] text-xs font-semibold">Rating</TableHead>
-            <TableHead className="w-12 text-right pr-4">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
+    <div>
+      {/* Mobile Card List View (< md) */}
+      <div className="md:hidden space-y-2.5">
+        {animeList.map((anime) => (
+          <AnimeCardMobile
+            key={anime.id}
+            anime={anime}
+            onOpenMobileEdit={onOpenMobileEdit}
+            onDeleteAnime={onDeleteAnime}
+          />
+        ))}
+      </div>
 
-        <TableBody className="divide-y divide-border/60">
-          {animeList.map((anime) => (
-            <AnimeTableRow
-              key={anime.id}
-              anime={anime}
-              isExpanded={expandedId === anime.id}
-              onToggleExpand={toggleExpand}
-              onOpenMobileEdit={onOpenMobileEdit}
-              onUpdateAnime={onUpdateAnime}
-              onDeleteAnime={onDeleteAnime}
-            />
-          ))}
-        </TableBody>
-      </Table>
+      {/* Desktop Data Table View (≥ md) */}
+      <div className="hidden md:block rounded-lg border border-border/60 bg-card/40 overflow-hidden shadow-xs">
+        <Table className="table-fixed w-full">
+          <TableHeader className="bg-muted/30">
+            <TableRow className="border-border/60 hover:bg-transparent">
+              <TableHead className="w-10 text-center"></TableHead>
+              <TableHead className="w-[30%] text-xs font-semibold">Title & Poster</TableHead>
+              <TableHead className="w-[14%] text-xs font-semibold">Status</TableHead>
+              <TableHead className="w-[12%] text-xs font-semibold">Format</TableHead>
+              <TableHead className="w-[13%] text-xs font-semibold">Season</TableHead>
+              <TableHead className="w-[17%] text-xs font-semibold">Genres</TableHead>
+              <TableHead className="w-[10%] text-xs font-semibold">Rating</TableHead>
+              <TableHead className="w-12 text-right pr-4">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody className="divide-y divide-border/60">
+            {animeList.map((anime) => (
+              <AnimeTableRow
+                key={anime.id}
+                anime={anime}
+                isExpanded={expandedId === anime.id}
+                onToggleExpand={toggleExpand}
+                onOpenMobileEdit={onOpenMobileEdit}
+                onUpdateAnime={onUpdateAnime}
+                onDeleteAnime={onDeleteAnime}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
