@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { EyeIcon, EyeOffIcon, KeyRoundIcon, MailIcon, ArrowLeftIcon } from "lucide-react"
+import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,10 +27,11 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 import { Skeleton } from "@/components/ui/skeleton"
-import { DiscordIcon, GoogleIcon } from "@/components/brand-icons"
+
+import type { LoginMethod } from "../types"
 
 export function LoginForm() {
-  const [loginMethod, setLoginMethod] = useState<"password" | "magic-link">("password")
+  const [loginMethod, setLoginMethod] = useState<LoginMethod>("password")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [otpSent, setOtpSent] = useState(false)
@@ -67,11 +69,11 @@ export function LoginForm() {
         {/* Social Authentication */}
         <div className="grid grid-cols-2 gap-3">
           <Button variant="outline" type="button" className="w-full">
-            <GoogleIcon data-icon="inline-start" className="size-4" />
+            <SiGoogle data-icon="inline-start" className="size-4" />
             Google
           </Button>
           <Button variant="outline" type="button" className="w-full">
-            <DiscordIcon data-icon="inline-start" className="size-4 text-[#5865F2]" />
+            <SiDiscord data-icon="inline-start" className="size-4 text-[#5865F2]" />
             Discord
           </Button>
         </div>

@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { EyeIcon, EyeOffIcon, ArrowLeftIcon, CheckIcon } from "lucide-react"
+import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,7 +23,8 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Skeleton } from "@/components/ui/skeleton"
-import { DiscordIcon, GoogleIcon } from "@/components/brand-icons"
+
+import { getPasswordStrength } from "../lib/password-strength"
 
 export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -30,15 +32,6 @@ export function SignupForm() {
   const [agreed, setAgreed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
-
-  // Simple Password Strength Calculator
-  const getPasswordStrength = (pwd: string) => {
-    if (!pwd) return { score: 0, label: "", color: "bg-muted" }
-    if (pwd.length < 6) return { score: 1, label: "Weak", color: "bg-destructive" }
-    if (pwd.length < 10 || !/\d/.test(pwd))
-      return { score: 2, label: "Medium", color: "bg-amber-500" }
-    return { score: 3, label: "Strong", color: "bg-primary" }
-  }
 
   const strength = getPasswordStrength(password)
 
@@ -98,11 +91,11 @@ export function SignupForm() {
         {/* Social Registration */}
         <div className="grid grid-cols-2 gap-3">
           <Button variant="outline" type="button" className="w-full">
-            <GoogleIcon data-icon="inline-start" className="size-4" />
+            <SiGoogle data-icon="inline-start" className="size-4" />
             Google
           </Button>
           <Button variant="outline" type="button" className="w-full">
-            <DiscordIcon data-icon="inline-start" className="size-4 text-[#5865F2]" />
+            <SiDiscord data-icon="inline-start" className="size-4 text-[#5865F2]" />
             Discord
           </Button>
         </div>
