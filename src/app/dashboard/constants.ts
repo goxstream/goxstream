@@ -24,7 +24,6 @@ export const NAV_MAIN_DATA: NavItem[] = [
     badge: "1,248",
     items: [
       { title: "All Anime List", url: "/dashboard/anime" },
-      { title: "Add New Anime", url: "/dashboard/anime/new", badge: "New" },
       { title: "Categories & Genres", url: "/dashboard/anime/categories" },
       { title: "Season Schedule", url: "/dashboard/anime/seasons" },
     ],
