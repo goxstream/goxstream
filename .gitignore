@@ -14,6 +14,8 @@
 /coverage
 /playwright-report/
 /test-results/
+*-snapshots/
+
 
 
 # next.js

@@ -15,7 +15,9 @@
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",
 		"test:e2e:debug": "playwright test --debug",
-		"test:e2e:report": "playwright show-report"
+		"test:e2e:report": "playwright show-report",
+		"test:e2e:visual": "playwright test --grep @visual",
+		"test:e2e:update-snapshots": "playwright test --update-snapshots"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.7.0",
