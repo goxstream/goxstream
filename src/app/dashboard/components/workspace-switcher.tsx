@@ -52,27 +52,24 @@ export function WorkspaceSwitcher({ workspaces }: WorkspaceSwitcherProps) {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group cursor-pointer"
-            >
-              {state === "collapsed" ? (
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary/10 text-sidebar-primary transition-transform group-hover:scale-105">
-                  <Logo size={22} />
-                </div>
-              ) : (
-                <div className="flex items-center justify-between w-full min-w-0 pr-1">
-                  <LogoBrand variant="horizontal" size="sm" className="px-0 py-0" />
-                  <div className="flex items-center gap-1 ml-auto">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-brand/10 text-brand border border-brand/20">
-                      {activeWorkspace.plan}
-                    </span>
-                    <ChevronsUpDown className="size-4 text-muted-foreground shrink-0" />
-                  </div>
-                </div>
-              )}
-            </SidebarMenuButton>
+          <DropdownMenuTrigger
+            render={
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group cursor-pointer w-full"
+              />
+            }
+          >
+            {state === "collapsed" ? (
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary/10 text-sidebar-primary transition-transform group-hover:scale-105">
+                <Logo size={22} />
+              </div>
+            ) : (
+              <div className="flex items-center justify-between w-full min-w-0 pr-0.5">
+                <LogoBrand variant="horizontal" size="sm" className="px-0 py-0" />
+                <ChevronsUpDown className="size-4 text-muted-foreground shrink-0 ml-auto" />
+              </div>
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg border-border/60"

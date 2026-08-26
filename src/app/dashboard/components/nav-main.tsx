@@ -28,7 +28,7 @@ interface NavMainProps {
 export function NavMain({ items }: NavMainProps) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
+      <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 px-2 py-1.5">
         Management & Studio
       </SidebarGroupLabel>
       <SidebarMenu>
@@ -43,13 +43,16 @@ export function NavMain({ items }: NavMainProps) {
                   render={<Link href={item.url} />}
                   tooltip={item.title}
                   isActive={item.isActive}
+                  className="w-full justify-between"
                 >
-                  <Icon className="size-4" />
-                  <span>{item.title}</span>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Icon className="size-4 shrink-0" />
+                    <span className="truncate">{item.title}</span>
+                  </div>
                   {item.badge && (
                     <Badge
                       variant="secondary"
-                      className="ml-auto text-[10px] h-5 px-1.5 font-medium bg-brand/10 text-brand border-brand/20"
+                      className="ml-auto text-[10px] h-5 px-1.5 font-medium bg-brand/10 text-brand border-brand/20 shrink-0"
                     >
                       {item.badge}
                     </Badge>
@@ -66,11 +69,13 @@ export function NavMain({ items }: NavMainProps) {
               className="group/collapsible"
             >
               <SidebarMenuItem>
-                <CollapsibleTrigger>
-                  <SidebarMenuButton tooltip={item.title} isActive={item.isActive}>
-                    <Icon className="size-4" />
-                    <span>{item.title}</span>
-                    <div className="flex items-center gap-1 ml-auto">
+                <CollapsibleTrigger className="w-full text-left">
+                  <SidebarMenuButton tooltip={item.title} isActive={item.isActive} className="w-full justify-between">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Icon className="size-4 shrink-0" />
+                      <span className="truncate">{item.title}</span>
+                    </div>
+                    <div className="flex items-center gap-1 ml-auto shrink-0">
                       {item.badge && (
                         <Badge
                           variant="secondary"
@@ -84,15 +89,18 @@ export function NavMain({ items }: NavMainProps) {
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <SidebarMenuSub>
+                  <SidebarMenuSub className="mr-0 border-l border-border/60 pl-2">
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton render={<Link href={subItem.url} />}>
-                          <span>{subItem.title}</span>
+                        <SidebarMenuSubButton
+                          render={<Link href={subItem.url} />}
+                          className="w-full justify-between"
+                        >
+                          <span className="truncate">{subItem.title}</span>
                           {subItem.badge && (
                             <Badge
                               variant="outline"
-                              className="ml-auto text-[9px] h-4 px-1 text-muted-foreground border-border/60"
+                              className="ml-auto text-[9px] h-4 px-1 text-muted-foreground border-border/60 shrink-0"
                             >
                               {subItem.badge}
                             </Badge>
