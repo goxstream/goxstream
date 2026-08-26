@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { registerUserAccount } from "@/lib/db/queries/users";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,18 +15,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Username, email, and password are required" }, { status: 400 });
     }
 
-    const db = await getDb();
-    const newId = `usr-${Date.now()}`;
-
-    await db.insert(users).values({
-      id: newId,
+    const newId = await registerUserAccount({
       username,
       email,
-      passwordHash: password, // In production, hash with bcrypt/scrypt
-      displayName: displayName || username,
-      role: "user",
-      status: "active",
-      membershipTier: "free",
+      passwordHash: password,
+      displayName,
     });
 
     return NextResponse.json({

@@ -25,40 +25,13 @@ import {
 } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMounted } from "../hooks/use-mounted";
+import { useDashboardHeader } from "../hooks/use-dashboard-header";
 import { NOTIFICATIONS_DATA } from "../lib/mock-data";
 
 export function DashboardHeader() {
   const { theme, setTheme } = useTheme();
   const mounted = useIsMounted();
-  const [notificationsOpen, setNotificationsOpen] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState({
-    name: "Alex Rivera",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-  });
-
-  React.useEffect(() => {
-    let isMounted = true;
-    async function fetchMe() {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = (await res.json()) as { user?: any };
-          if (isMounted && data.user) {
-            setCurrentUser({
-              name: data.user.displayName,
-              avatar: data.user.avatarUrl,
-            });
-          }
-        }
-      } catch {
-        // Fallback
-      }
-    }
-    fetchMe();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const { currentUser, notificationsOpen, setNotificationsOpen } = useDashboardHeader();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border/60 bg-background/95 px-4 backdrop-blur-md transition-all">

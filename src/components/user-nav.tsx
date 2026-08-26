@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   User,
@@ -20,49 +19,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-
-interface ActiveUser {
-  displayName: string;
-  username: string;
-  avatarUrl: string;
-  isVip: boolean;
-}
-
-const DEFAULT_USER: ActiveUser = {
-  displayName: "Alex Rivera",
-  username: "alex_otaku",
-  avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-  isVip: true,
-};
+import { useUserNav } from "@/hooks/use-user-nav";
 
 export function UserNav() {
-  const [user, setUser] = useState<ActiveUser>(DEFAULT_USER);
-
-  useEffect(() => {
-    let isMounted = true;
-    async function fetchMe() {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = (await res.json()) as { user?: any };
-          if (isMounted && data.user) {
-            setUser({
-              displayName: data.user.displayName,
-              username: data.user.username,
-              avatarUrl: data.user.avatarUrl,
-              isVip: Boolean(data.user.isVip),
-            });
-          }
-        }
-      } catch {
-        // Fallback
-      }
-    }
-    fetchMe();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const { user } = useUserNav();
 
   return (
     <DropdownMenu>
