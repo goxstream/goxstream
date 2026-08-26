@@ -32,6 +32,9 @@ Online anime streaming platform built with:
 8. **Isolate infrastructure APIs.** Cloudflare-specific APIs must not leak into general application code.
 9. **Maintain portability.** Keep the application reasonably deployable on both Cloudflare Workers and Node.js/VPS.
 10. **Verify uncertain behavior.** Check official documentation rather than guessing framework/library APIs.
+11. **Do not manually edit `src/components/ui/`.** This directory is strictly managed by shadcn CLI. Modify styles globally via `src/app/globals.css` or pass `className` props from parent components.
+12. **Restrained design aesthetic.** Avoid heavy shadows (`shadow-2xl`, `shadow-xl`, `shadow-lg`, colored glow effects). Elevate elements with clean border outlines (`border-border/60`) or subtle shadows (`shadow-xs` / `shadow-sm`). Standardize radii to `rounded-md` / `rounded-lg` / `rounded-xl`.
+13. **Workspace & artifact discipline.** Never write or leave temporary markdown (`.md`) plan files inside the project workspace folder. Save implementation plans exclusively in the system artifact directory (`<appDataDir>/brain/<conversation-id>/`).
 
 ## Project Structure
 

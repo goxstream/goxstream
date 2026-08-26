@@ -50,7 +50,7 @@ export function SearchDialog() {
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden bg-card border-border shadow-2xl rounded-xl">
+        <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden bg-card border-border shadow-xs rounded-xl">
           <DialogHeader className="sr-only">
             <DialogTitle>Search Anime Catalog</DialogTitle>
           </DialogHeader>
@@ -76,7 +76,7 @@ export function SearchDialog() {
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className="size-9 rounded-md flex items-center justify-center shrink-0 text-white font-bold text-xs shadow-sm"
+                        className="size-9 rounded-md flex items-center justify-center shrink-0 text-white font-bold text-xs"
                         style={{ background: anime.coverImage }}
                       >
                         <Play className="size-4 fill-white" />

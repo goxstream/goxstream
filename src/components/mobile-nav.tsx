@@ -51,7 +51,7 @@ export function MobileNav({ navItems }: MobileNavProps) {
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-2.5 group"
               >
-                <div className="size-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-sm shadow-primary/20 group-hover:scale-105 transition-transform">
+                <div className="size-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground group-hover:scale-105 transition-transform">
                   <Play className="size-4 fill-primary-foreground stroke-primary-foreground" />
                 </div>
                 <span className="font-bold text-xl tracking-tight text-foreground">
@@ -86,7 +86,7 @@ export function MobileNav({ navItems }: MobileNavProps) {
             className={buttonVariants({
               variant: "default",
               size: "lg",
-              className: "w-full h-11 rounded-lg font-semibold shadow-sm justify-center",
+              className: "w-full h-11 rounded-lg font-semibold justify-center",
             })}
           >
             Start Watching Free

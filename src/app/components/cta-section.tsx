@@ -6,10 +6,7 @@ export function CtaSection() {
   return (
     <section id="watch" className="py-16 md:py-20 bg-background border-t border-border/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl bg-card border border-border p-8 sm:p-12 md:p-16 text-center flex flex-col items-center gap-6 shadow-2xl">
-          {/* Subtle Background Radial Accent */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-
+        <div className="relative overflow-hidden rounded-2xl bg-card border border-border p-8 sm:p-12 md:p-16 text-center flex flex-col items-center gap-6">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/25 text-primary text-xs font-semibold">
             <Sparkles className="size-3.5" />
@@ -34,7 +31,7 @@ export function CtaSection() {
               className={buttonVariants({
                 variant: "default",
                 size: "lg",
-                className: "h-12 px-8 rounded-xl font-bold text-base shadow-lg shadow-primary/25 justify-center",
+                className: "h-12 px-8 rounded-xl font-bold text-base justify-center",
               })}
             >
               <Play className="mr-2 size-5 fill-primary-foreground stroke-primary-foreground" />

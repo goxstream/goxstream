@@ -49,7 +49,7 @@ export function FeaturesSection() {
             return (
               <div
                 key={idx}
-                className="p-6 rounded-2xl bg-card border border-border/80 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 flex flex-col gap-4"
+                className="p-6 rounded-xl bg-card border border-border/80 hover:border-primary/60 hover:bg-muted/30 transition-colors duration-200 flex flex-col gap-4"
               >
                 <div className="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <Icon className="size-6" />

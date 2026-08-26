@@ -23,7 +23,7 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
 
           {/* Hover Play Button Overlay */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
-            <div className="size-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md">
+            <div className="size-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center border border-primary-foreground/20">
               <Play className="size-4 fill-primary-foreground stroke-primary-foreground ml-0.5" />
             </div>
           </div>

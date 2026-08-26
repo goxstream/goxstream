@@ -10,7 +10,7 @@ export function SiteFooter() {
           {/* Brand Info */}
           <div className="space-y-4 md:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="size-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground shadow-sm shadow-primary/20">
+              <div className="size-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
                 <Play className="size-4 fill-primary-foreground stroke-primary-foreground ml-0.5" />
               </div>
               <span className="font-bold text-lg tracking-tight text-foreground">

@@ -7,10 +7,7 @@ import { FEATURED_ANIME } from "@/lib/mock-anime";
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24 bg-background border-b border-border/40">
-      {/* Background Subtle Gradient & Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] bg-primary/10 rounded-full blur-3xl pointer-events-none -z-10" />
-
+    <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24 bg-background border-b border-border/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Hero Left Content */}
@@ -50,7 +47,7 @@ export function HeroSection() {
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",
-                  className: "h-12 px-6 rounded-xl font-bold text-base shadow-lg shadow-primary/25 justify-center",
+                  className: "h-12 px-6 rounded-xl font-bold text-base justify-center",
                 })}
               >
                 <Play className="mr-2 size-5 fill-primary-foreground stroke-primary-foreground" />
@@ -86,7 +83,7 @@ export function HeroSection() {
 
           {/* Hero Right Visual: Featured Anime Hero Card */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-md rounded-2xl overflow-hidden bg-card border border-border/80 shadow-2xl shadow-black/40 group">
+            <div className="relative w-full max-w-md rounded-2xl overflow-hidden bg-card border border-border/80 group">
               {/* Featured Poster Visual */}
               <div className="relative aspect-[4/5] w-full overflow-hidden">
                 <div
@@ -99,7 +96,7 @@ export function HeroSection() {
 
                 {/* Top Badges */}
                 <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-                  <Badge className="bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1 shadow-md">
+                  <Badge className="bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1">
                     #1 FEATURED SIMULCAST
                   </Badge>
 
@@ -113,7 +110,7 @@ export function HeroSection() {
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <Link
                     href={`#watch-${FEATURED_ANIME.slug}`}
-                    className="size-16 rounded-full bg-primary/95 text-primary-foreground flex items-center justify-center shadow-xl shadow-primary/40 group-hover:scale-110 transition-transform duration-300"
+                    className="size-16 rounded-full bg-primary/95 text-primary-foreground flex items-center justify-center border border-primary-foreground/20 group-hover:scale-110 transition-transform duration-300"
                     aria-label={`Watch ${FEATURED_ANIME.title}`}
                   >
                     <Play className="size-8 fill-primary-foreground stroke-primary-foreground ml-1" />

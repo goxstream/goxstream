@@ -12,7 +12,7 @@ export function AnimeCard({ anime }: AnimeCardProps) {
   return (
     <Link
       href={`#watch-${anime.slug}`}
-      className="group flex flex-col rounded-xl overflow-hidden bg-card border border-border/80 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group flex flex-col rounded-xl overflow-hidden bg-card border border-border/80 hover:border-primary/60 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       {/* Poster Artwork Area */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
@@ -36,11 +36,11 @@ export function AnimeCard({ anime }: AnimeCardProps) {
 
         {/* Top Badges */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-10">
-          <Badge className="bg-background/85 text-foreground backdrop-blur-md border border-border/60 text-[10px] font-bold tracking-wide px-2 py-0.5 shadow-sm">
+          <Badge className="bg-background/85 text-foreground backdrop-blur-md border border-border/60 text-[10px] font-bold tracking-wide px-2 py-0.5">
             {anime.subOrDub}
           </Badge>
 
-          <Badge className="bg-black/70 text-amber-400 backdrop-blur-md border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 flex items-center gap-1 shadow-sm">
+          <Badge className="bg-black/70 text-amber-400 backdrop-blur-md border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 flex items-center gap-1">
             <Star className="size-3 fill-amber-400 stroke-amber-400" />
             {anime.rating.toFixed(1)}
           </Badge>
@@ -48,7 +48,7 @@ export function AnimeCard({ anime }: AnimeCardProps) {
 
         {/* Hover Overlay with Play Icon */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 backdrop-blur-[2px]">
-          <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/30 transform scale-75 group-hover:scale-100 transition-transform duration-300">
+          <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center border border-primary-foreground/20 transform scale-75 group-hover:scale-100 transition-transform duration-300">
             <Play className="size-6 fill-primary-foreground stroke-primary-foreground ml-0.5" />
           </div>
         </div>
