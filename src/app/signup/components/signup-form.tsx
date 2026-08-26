@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { EyeIcon, EyeOffIcon, ArrowLeftIcon, CheckIcon } from "lucide-react"
+import { EyeIcon, EyeOffIcon, ArrowLeftIcon, CheckIcon, XIcon } from "lucide-react"
 import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
 
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -157,9 +157,13 @@ export function SignupForm() {
                   </button>
                 </div>
 
-                {/* Password Strength Indicator */}
+                {/* Password Strength Meter & Interactive Requirements Checklist */}
                 {password && (
-                  <div className="flex flex-col gap-1 mt-1.5">
+                  <div className="flex flex-col gap-2 mt-2 rounded-lg bg-muted/40 p-3 border border-border/40 text-xs">
+                    <div className="flex items-center justify-between font-medium">
+                      <span>Password Strength</span>
+                      <span className="text-muted-foreground">{strength.label}</span>
+                    </div>
                     <div className="flex gap-1 h-1.5 w-full">
                       <div
                         className={`flex-1 rounded-full transition-colors ${
@@ -176,10 +180,32 @@ export function SignupForm() {
                           strength.score >= 3 ? strength.color : "bg-muted"
                         }`}
                       />
+                      <div
+                        className={`flex-1 rounded-full transition-colors ${
+                          strength.score >= 4 ? strength.color : "bg-muted"
+                        }`}
+                      />
                     </div>
-                    <span className="text-[11px] text-muted-foreground text-right font-medium">
-                      Strength: {strength.label}
-                    </span>
+
+                    <ul className="flex flex-col gap-1 mt-1 text-[11px]">
+                      {strength.requirements.map((req) => (
+                        <li
+                          key={req.id}
+                          className={`flex items-center gap-1.5 transition-colors ${
+                            req.met
+                              ? "text-emerald-500 font-medium"
+                              : "text-muted-foreground opacity-75"
+                          }`}
+                        >
+                          {req.met ? (
+                            <CheckIcon data-icon="inline-start" className="size-3 shrink-0" />
+                          ) : (
+                            <XIcon data-icon="inline-start" className="size-3 shrink-0" />
+                          )}
+                          <span>{req.label}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </Field>
