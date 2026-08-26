@@ -18,16 +18,18 @@ export async function transcodeVideoToHls(
   onProgressCallback?: (p: TranscodeProgress) => void,
   onLogCallback?: (entry: TranscodeLogEntry) => void
 ): Promise<HlsTranscodeResult> {
+  let currentStageId: "init" | "1080p" | "720p" | "480p" | "upload" = "init";
+
   const ffmpeg = await loadFFmpegCore((msg) => {
     if (onProgressCallback) {
-      onProgressCallback({ progress: 10, message: msg });
+      onProgressCallback({ progress: 10, message: msg, stageId: "init" });
     }
   });
 
   const inputName = "input_" + Date.now() + ".mp4";
 
   if (onProgressCallback) {
-    onProgressCallback({ progress: 15, message: `Mounting ${file.name} into WASM VFS...` });
+    onProgressCallback({ progress: 15, message: `Mounting ${file.name} into WASM VFS...`, stageId: "init" });
   }
 
   // 1. Write input video file to FFmpeg Virtual File System
@@ -50,11 +52,12 @@ export async function transcodeVideoToHls(
   };
 
   const progressHandler = ({ progress }: { progress: number }) => {
-    const percentage = Math.min(Math.max(Math.round(progress * 100), 20), 85);
+    const percentage = Math.min(Math.max(Math.round(progress * 100), 0), 100);
     if (onProgressCallback) {
       onProgressCallback({
         progress: percentage,
-        message: `Encoding multi-resolution HLS renditions (${percentage}%)...`,
+        message: `Encoding rendition (${percentage}%)...`,
+        stageId: currentStageId,
       });
     }
   };
@@ -64,8 +67,9 @@ export async function transcodeVideoToHls(
 
   try {
     // 2. Rendition 1: 1080p Master Rendition (Stream Copy / Full HD)
+    currentStageId = "1080p";
     if (onProgressCallback) {
-      onProgressCallback({ progress: 25, message: "Generating 1080p Full HD stream rendition..." });
+      onProgressCallback({ progress: 25, message: "Generating 1080p Full HD stream rendition...", stageId: "1080p" });
     }
     await ffmpeg.exec([
       "-i", inputName,
@@ -90,8 +94,9 @@ export async function transcodeVideoToHls(
     await ffmpeg.deleteFile("1080p.m3u8");
 
     // 3. Rendition 2: 720p HD Rendition (Ultrafast preset)
+    currentStageId = "720p";
     if (onProgressCallback) {
-      onProgressCallback({ progress: 50, message: "Generating 720p HD scaled stream rendition..." });
+      onProgressCallback({ progress: 50, message: "Generating 720p HD scaled stream rendition...", stageId: "720p" });
     }
     await ffmpeg.exec([
       "-i", inputName,
@@ -118,8 +123,9 @@ export async function transcodeVideoToHls(
     await ffmpeg.deleteFile("720p.m3u8");
 
     // 4. Rendition 3: 480p SD Rendition (Ultrafast preset)
+    currentStageId = "480p";
     if (onProgressCallback) {
-      onProgressCallback({ progress: 75, message: "Generating 480p SD scaled stream rendition..." });
+      onProgressCallback({ progress: 75, message: "Generating 480p SD scaled stream rendition...", stageId: "480p" });
     }
     await ffmpeg.exec([
       "-i", inputName,

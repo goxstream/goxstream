@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useHlsConverter } from "../hooks/use-hls-converter";
 import { ConversionLogDrawer } from "./conversion-log-drawer";
+import { PipelineStageBar } from "./pipeline-stage-bar";
 
 interface HlsConverterWidgetProps {
   animeSlug?: string;
@@ -40,6 +41,8 @@ export function HlsConverterWidget({
     progress,
     statusText,
     logs,
+    stages,
+    totalDuration,
     clearLogs,
     copyLogsToClipboard,
     handleFileSelect,
@@ -219,6 +222,14 @@ export function HlsConverterWidget({
           <AlertCircle className="size-4 shrink-0" />
           <span>{statusText}</span>
         </div>
+      )}
+
+      {/* Cloudflare-Style Fluid Segmented Build Pipeline Bar */}
+      {(status !== "idle" || stages.some((s) => s.status !== "pending")) && (
+        <PipelineStageBar
+          stages={stages}
+          totalDurationSeconds={totalDuration}
+        />
       )}
 
       {/* Conversion Log Terminal History Drawer */}

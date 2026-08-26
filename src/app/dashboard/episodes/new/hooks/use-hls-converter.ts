@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   validateVideoFile,
   loadFFmpegCore,
@@ -14,6 +14,8 @@ import {
   type VideoValidationResult,
   type TranscodeLogEntry,
   type LogSeverity,
+  type PipelineStage,
+  type PipelineStageId,
 } from "../lib/hls";
 
 export interface UseHlsConverterOptions {
@@ -21,6 +23,14 @@ export interface UseHlsConverterOptions {
   episodeNumber?: string;
   onUrlGenerated?: (url: string) => void;
 }
+
+const INITIAL_STAGES: PipelineStage[] = [
+  { id: "init", label: "Init & Verify", status: "pending" },
+  { id: "1080p", label: "1080p Stream", status: "pending" },
+  { id: "720p", label: "720p HD Scale", status: "pending" },
+  { id: "480p", label: "480p SD Scale", status: "pending" },
+  { id: "upload", label: "Upload CDN", status: "pending" },
+];
 
 export function useHlsConverter({
   animeSlug = "solo-leveling-season-2",
@@ -38,6 +48,49 @@ export function useHlsConverter({
   const [generatedUrl, setGeneratedUrl] = useState("");
   const [hlsResult, setHlsResult] = useState<HlsTranscodeResult | null>(null);
   const [logs, setLogs] = useState<TranscodeLogEntry[]>([]);
+  const [stages, setStages] = useState<PipelineStage[]>(INITIAL_STAGES);
+  const [totalDuration, setTotalDuration] = useState(0);
+
+  // Active stage timer ticker
+  useEffect(() => {
+    const isPipelineActive = status === "converting" || status === "uploading" || engineStatus === "loading";
+    if (!isPipelineActive) return;
+
+    const timer = setInterval(() => {
+      setTotalDuration((prev) => prev + 1);
+      setStages((prevStages) =>
+        prevStages.map((stg) => {
+          if (stg.status === "running") {
+            return {
+              ...stg,
+              durationSeconds: (stg.durationSeconds || 0) + 1,
+            };
+          }
+          return stg;
+        })
+      );
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [status, engineStatus]);
+
+  const updateStageStatus = useCallback(
+    (stageId: PipelineStageId, newStatus: "running" | "completed" | "error") => {
+      setStages((prevStages) =>
+        prevStages.map((stg) => {
+          if (stg.id === stageId) {
+            return { ...stg, status: newStatus };
+          }
+          // When moving to a new running stage, complete any previous running stage
+          if (newStatus === "running" && stg.status === "running" && stg.id !== stageId) {
+            return { ...stg, status: "completed" };
+          }
+          return stg;
+        })
+      );
+    },
+    []
+  );
 
   const addLog = useCallback((type: LogSeverity, message: string) => {
     const timestamp = new Date().toLocaleTimeString("en-US", { hour12: false });
@@ -79,10 +132,16 @@ export function useHlsConverter({
       setSelectedFile(null);
       setValidationResult(null);
       setStatus("idle");
+      setStages(INITIAL_STAGES);
+      setTotalDuration(0);
       return;
     }
 
     setSelectedFile(file);
+    setStages(INITIAL_STAGES);
+    setTotalDuration(0);
+    updateStageStatus("init", "running");
+
     const initMsg = "Validating MP4 format & 1080p resolution...";
     setStatusText(initMsg);
     addLog("info", `File selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
@@ -92,17 +151,19 @@ export function useHlsConverter({
 
     if (!valResult.isValid) {
       setStatus("error");
+      updateStageStatus("init", "error");
       const err = valResult.errorMessage || "Validation failed.";
       setStatusText(err);
       addLog("error", `Validation error: ${err}`);
     } else {
       setStatus("ready");
+      updateStageStatus("init", "completed");
       setProgress(0);
       const readyMsg = `Verified MP4 ${valResult.resolution}: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
       setStatusText(readyMsg);
       addLog("success", readyMsg);
     }
-  }, [addLog]);
+  }, [addLog, updateStageStatus]);
 
   /**
    * Action: Manual Engine Initialization
@@ -112,6 +173,7 @@ export function useHlsConverter({
 
     try {
       setEngineStatus("loading");
+      updateStageStatus("init", "running");
       const msg = "Initializing FFmpeg WebAssembly Core engine on-demand...";
       setStatusText(msg);
       addLog("info", msg);
@@ -122,16 +184,18 @@ export function useHlsConverter({
       });
 
       setEngineStatus("ready");
+      updateStageStatus("init", "completed");
       const readyMsg = "FFmpeg WASM Core Engine ready.";
       setStatusText(readyMsg);
       addLog("success", readyMsg);
     } catch (err: any) {
       setEngineStatus("error");
+      updateStageStatus("init", "error");
       const errMsg = `Engine load failed: ${err?.message || "Unknown error"}`;
       setStatusText(errMsg);
       addLog("error", errMsg);
     }
-  }, [engineStatus, addLog]);
+  }, [engineStatus, addLog, updateStageStatus]);
 
   /**
    * Action 1: Multi-Resolution Video Transcode to HLS (1080p, 720p, 480p)
@@ -152,13 +216,18 @@ export function useHlsConverter({
 
       const result = await transcodeVideoToHls(
         selectedFile,
-        ({ progress, message }) => {
+        ({ progress, message, stageId }) => {
           setProgress(progress);
           setStatusText(message);
-          addLog("info", `[Progress ${progress}%] ${message}`);
+          if (stageId) {
+            updateStageStatus(stageId, "running");
+          }
         },
         appendFfmpegLog
       );
+
+      // Complete 480p stage
+      updateStageStatus("480p", "completed");
 
       setHlsResult(result);
       setStatus("converted");
@@ -171,7 +240,7 @@ export function useHlsConverter({
       setStatusText(errMsg);
       addLog("error", errMsg);
     }
-  }, [selectedFile, validationResult, initEngine, addLog, appendFfmpegLog]);
+  }, [selectedFile, validationResult, initEngine, addLog, appendFfmpegLog, updateStageStatus]);
 
   /**
    * Action 2 (Optional): Download Multi-Resolution HLS Package (.zip)
@@ -204,6 +273,7 @@ export function useHlsConverter({
 
     try {
       setStatus("uploading");
+      updateStageStatus("upload", "running");
       setProgress(10);
       addLog("info", "Starting upload of multi-resolution HLS package to CDN storage...");
 
@@ -214,12 +284,12 @@ export function useHlsConverter({
         onProgress: (prog, msg) => {
           setProgress(prog);
           setStatusText(msg);
-          addLog("info", `[Upload ${prog}%] ${msg}`);
         },
       });
 
       setProgress(100);
       setStatus("complete");
+      updateStageStatus("upload", "completed");
       setGeneratedUrl(result.url);
       const successMsg = "Multi-resolution HLS package successfully uploaded to CDN Storage!";
       setStatusText(successMsg);
@@ -230,11 +300,12 @@ export function useHlsConverter({
       }
     } catch (err: any) {
       setStatus("error");
+      updateStageStatus("upload", "error");
       const errMsg = `Upload error: ${err?.message || "Network upload failed"}`;
       setStatusText(errMsg);
       addLog("error", errMsg);
     }
-  }, [selectedFile, hlsResult, animeSlug, episodeNumber, onUrlGenerated, addLog]);
+  }, [selectedFile, hlsResult, animeSlug, episodeNumber, onUrlGenerated, addLog, updateStageStatus]);
 
   return {
     selectedFile,
@@ -245,6 +316,8 @@ export function useHlsConverter({
     statusText,
     generatedUrl,
     logs,
+    stages,
+    totalDuration,
     clearLogs,
     copyLogsToClipboard,
     handleFileSelect,

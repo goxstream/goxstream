@@ -7,9 +7,22 @@ export interface TranscodeLogEntry {
   message: string;
 }
 
+export type StageStatus = "pending" | "running" | "completed" | "error";
+export type PipelineStageId = "init" | "1080p" | "720p" | "480p" | "upload";
+
+export interface PipelineStage {
+  id: PipelineStageId;
+  label: string;
+  status: StageStatus;
+  durationSeconds?: number;
+  timestamp?: string;
+  progressPercent?: number;
+}
+
 export interface TranscodeProgress {
   progress: number;
   message: string;
+  stageId?: PipelineStageId;
 }
 
 export interface HlsVariantRendition {
