@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFo
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field";
-import { NativeSelect } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { SeasonQuarter } from "../types";
 
 interface SeasonAddSheetProps {
@@ -44,29 +44,31 @@ export function SeasonAddSheet({
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="year">Release Year</FieldLabel>
-              <NativeSelect
-                id="year"
-                value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
-              >
-                <option value={2027}>2027</option>
-                <option value={2026}>2026</option>
-                <option value={2025}>2025</option>
-              </NativeSelect>
+              <Select value={String(year)} onValueChange={(val) => val && setYear(Number(val))}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select year" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="2027">2027</SelectItem>
+                  <SelectItem value="2026">2026</SelectItem>
+                  <SelectItem value="2025">2025</SelectItem>
+                </SelectContent>
+              </Select>
             </Field>
 
             <Field>
               <FieldLabel htmlFor="quarter">Season Quarter</FieldLabel>
-              <NativeSelect
-                id="quarter"
-                value={quarter}
-                onChange={(e) => setQuarter(e.target.value as SeasonQuarter)}
-              >
-                <option value="WINTER">Winter (Q1: Jan - Mar)</option>
-                <option value="SPRING">Spring (Q2: Apr - Jun)</option>
-                <option value="SUMMER">Summer (Q3: Jul - Sep)</option>
-                <option value="FALL">Fall (Q4: Oct - Dec)</option>
-              </NativeSelect>
+              <Select value={quarter} onValueChange={(val) => val && setQuarter(val as SeasonQuarter)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select quarter" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="WINTER">Winter (Q1: Jan - Mar)</SelectItem>
+                  <SelectItem value="SPRING">Spring (Q2: Apr - Jun)</SelectItem>
+                  <SelectItem value="SUMMER">Summer (Q3: Jul - Sep)</SelectItem>
+                  <SelectItem value="FALL">Fall (Q4: Oct - Dec)</SelectItem>
+                </SelectContent>
+              </Select>
             </Field>
 
             <Field>

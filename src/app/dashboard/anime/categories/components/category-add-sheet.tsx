@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field";
-import { NativeSelect } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { FormatCategoryCode, GenreGroup } from "../types";
 
 interface CategoryAddSheetProps {
@@ -78,32 +78,34 @@ export function CategoryAddSheet({
             {type === "category" ? (
               <Field>
                 <FieldLabel htmlFor="code">Format Code</FieldLabel>
-                <NativeSelect
-                  id="code"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value as FormatCategoryCode)}
-                >
-                  <option value="TV">TV Series</option>
-                  <option value="MOVIE">Movie</option>
-                  <option value="OVA">OVA</option>
-                  <option value="ONA">ONA</option>
-                  <option value="SPECIAL">Special</option>
-                  <option value="MUSIC">Music</option>
-                </NativeSelect>
+                <Select value={code} onValueChange={(val) => val && setCode(val as FormatCategoryCode)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select format code" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="TV">TV Series</SelectItem>
+                    <SelectItem value="MOVIE">Movie</SelectItem>
+                    <SelectItem value="OVA">OVA</SelectItem>
+                    <SelectItem value="ONA">ONA</SelectItem>
+                    <SelectItem value="SPECIAL">Special</SelectItem>
+                    <SelectItem value="MUSIC">Music</SelectItem>
+                  </SelectContent>
+                </Select>
               </Field>
             ) : (
               <Field>
                 <FieldLabel htmlFor="group">Genre Group</FieldLabel>
-                <NativeSelect
-                  id="group"
-                  value={group}
-                  onChange={(e) => setGroup(e.target.value as GenreGroup)}
-                >
-                  <option value="Main Genre">Main Genre</option>
-                  <option value="Demographic">Demographic</option>
-                  <option value="Theme">Theme</option>
-                  <option value="Explicit">Explicit</option>
-                </NativeSelect>
+                <Select value={group} onValueChange={(val) => val && setGroup(val as GenreGroup)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select genre group" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Main Genre">Main Genre</SelectItem>
+                    <SelectItem value="Demographic">Demographic</SelectItem>
+                    <SelectItem value="Theme">Theme</SelectItem>
+                    <SelectItem value="Explicit">Explicit</SelectItem>
+                  </SelectContent>
+                </Select>
               </Field>
             )}
 

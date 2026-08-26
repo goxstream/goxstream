@@ -2,7 +2,7 @@
 
 import { CalendarDays, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NativeSelect } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { SeasonQuarter } from "../types";
 
 interface SeasonsHeaderProps {
@@ -34,27 +34,29 @@ export function SeasonsHeader({
 
       <div className="flex items-center gap-3">
         {/* Season Pickers */}
-        <div className="flex items-center gap-2 bg-card/60 p-1.5 rounded-lg border border-border/60">
-          <NativeSelect
-            value={selectedYear}
-            onChange={(e) => onYearChange(Number(e.target.value))}
-            className="h-8 text-xs font-semibold rounded-md border-0 bg-transparent"
-          >
-            <option value={2026}>2026</option>
-            <option value={2025}>2025</option>
-            <option value={2024}>2024</option>
-          </NativeSelect>
+        <div className="flex items-center gap-2">
+          <Select value={String(selectedYear)} onValueChange={(val) => val && onYearChange(Number(val))}>
+            <SelectTrigger className="h-8 text-xs font-semibold rounded-lg w-[90px]">
+              <SelectValue placeholder="Year" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="2026" className="text-xs">2026</SelectItem>
+              <SelectItem value="2025" className="text-xs">2025</SelectItem>
+              <SelectItem value="2024" className="text-xs">2024</SelectItem>
+            </SelectContent>
+          </Select>
 
-          <NativeSelect
-            value={selectedQuarter}
-            onChange={(e) => onQuarterChange(e.target.value as SeasonQuarter)}
-            className="h-8 text-xs font-semibold rounded-md border-0 bg-transparent"
-          >
-            <option value="WINTER">Winter (Q1)</option>
-            <option value="SPRING">Spring (Q2)</option>
-            <option value="SUMMER">Summer (Q3)</option>
-            <option value="FALL">Fall (Q4)</option>
-          </NativeSelect>
+          <Select value={selectedQuarter} onValueChange={(val) => val && onQuarterChange(val as SeasonQuarter)}>
+            <SelectTrigger className="h-8 text-xs font-semibold rounded-lg w-[125px]">
+              <SelectValue placeholder="Quarter" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="WINTER" className="text-xs">Winter (Q1)</SelectItem>
+              <SelectItem value="SPRING" className="text-xs">Spring (Q2)</SelectItem>
+              <SelectItem value="SUMMER" className="text-xs">Summer (Q3)</SelectItem>
+              <SelectItem value="FALL" className="text-xs">Fall (Q4)</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <Button

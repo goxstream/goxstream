@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { NativeSelect } from "@/components/ui/native-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { GenreItem, GenreGroup } from "../types";
 
 interface GenresGridProps {
@@ -61,17 +61,18 @@ export function GenresGrid({
           <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
             Filter Group:
           </span>
-          <NativeSelect
-            value={groupFilter}
-            onChange={(e) => setGroupFilter(e.target.value)}
-            className="h-9 w-40 text-xs rounded-lg"
-          >
-            {GROUPS.map((grp) => (
-              <option key={grp} value={grp}>
-                {grp === "all" ? "All Groups" : grp}
-              </option>
-            ))}
-          </NativeSelect>
+          <Select value={groupFilter} onValueChange={(val) => val && setGroupFilter(val)}>
+            <SelectTrigger className="h-9 w-40 text-xs rounded-lg">
+              <SelectValue placeholder="Filter Group" />
+            </SelectTrigger>
+            <SelectContent>
+              {GROUPS.map((grp) => (
+                <SelectItem key={grp} value={grp} className="text-xs">
+                  {grp === "all" ? "All Groups" : grp}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
