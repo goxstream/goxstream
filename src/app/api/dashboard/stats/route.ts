@@ -1,23 +1,13 @@
 import { NextResponse } from "next/server";
+import { getDashboardStats } from "@/lib/db/queries/dashboard";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
 
-const DEFAULT_STATS = {
-  totalAnime: 1240,
-  totalEpisodes: 18920,
-  totalUsers: 45210,
-  activeStreams: 3420,
-  bandwidthUsageGb: 842.5,
-  cpuLoadPercent: 18.4,
-  storageUsedGb: 1420.8,
-  monthlyGrowthPercent: 14.8,
-};
-
 export async function GET() {
-  const CACHE_KEY = "kv_dashboard_stats_v1";
+  const CACHE_KEY = "kv_dashboard_stats_v2";
   const CACHE_TTL = 300;
 
   try {
-    const cached = await getCacheItem<{ stats: typeof DEFAULT_STATS }>(CACHE_KEY);
+    const cached = await getCacheItem<{ stats: Awaited<ReturnType<typeof getDashboardStats>> }>(CACHE_KEY);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -27,7 +17,8 @@ export async function GET() {
       });
     }
 
-    const data = { stats: DEFAULT_STATS };
+    const realStats = await getDashboardStats();
+    const data = { stats: realStats };
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json(data, {
@@ -37,6 +28,7 @@ export async function GET() {
       },
     });
   } catch {
-    return NextResponse.json({ stats: DEFAULT_STATS }, { status: 200 });
+    const realStats = await getDashboardStats();
+    return NextResponse.json({ stats: realStats }, { status: 200 });
   }
 }

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
+import { getDashboardRoles } from "@/lib/db/queries/dashboard";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { MOCK_ROLES } from "@/app/dashboard/users/roles/constants";
 
 export async function GET() {
-  const CACHE_KEY = "kv_dashboard_roles_v1";
+  const CACHE_KEY = "kv_dashboard_roles_v2";
   const CACHE_TTL = 300;
 
   try {
-    const cached = await getCacheItem<{ roles: typeof MOCK_ROLES }>(CACHE_KEY);
+    const cached = await getCacheItem<{ roles: Awaited<ReturnType<typeof getDashboardRoles>> }>(CACHE_KEY);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -17,7 +17,8 @@ export async function GET() {
       });
     }
 
-    const data = { roles: MOCK_ROLES };
+    const realRoles = await getDashboardRoles();
+    const data = { roles: realRoles };
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json(data, {
@@ -27,6 +28,7 @@ export async function GET() {
       },
     });
   } catch {
-    return NextResponse.json({ roles: MOCK_ROLES }, { status: 200 });
+    const realRoles = await getDashboardRoles();
+    return NextResponse.json({ roles: realRoles }, { status: 200 });
   }
 }

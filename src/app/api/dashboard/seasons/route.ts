@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
+import { getDashboardSeasons } from "@/lib/db/queries/dashboard";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { MOCK_SEASONS } from "@/app/dashboard/anime/seasons/constants";
 
 export async function GET() {
-  const CACHE_KEY = "kv_dashboard_seasons_v1";
+  const CACHE_KEY = "kv_dashboard_seasons_v2";
   const CACHE_TTL = 300;
 
   try {
-    const cached = await getCacheItem<{ seasons: typeof MOCK_SEASONS }>(CACHE_KEY);
+    const cached = await getCacheItem<{ seasons: Awaited<ReturnType<typeof getDashboardSeasons>> }>(CACHE_KEY);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -17,7 +17,8 @@ export async function GET() {
       });
     }
 
-    const data = { seasons: MOCK_SEASONS };
+    const realSeasons = await getDashboardSeasons();
+    const data = { seasons: realSeasons };
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json(data, {
@@ -27,6 +28,7 @@ export async function GET() {
       },
     });
   } catch {
-    return NextResponse.json({ seasons: MOCK_SEASONS }, { status: 200 });
+    const realSeasons = await getDashboardSeasons();
+    return NextResponse.json({ seasons: realSeasons }, { status: 200 });
   }
 }

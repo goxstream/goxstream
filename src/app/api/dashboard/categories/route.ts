@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
+import { getDashboardCategories } from "@/lib/db/queries/dashboard";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { MOCK_CATEGORIES } from "@/app/dashboard/anime/categories/constants";
 
 export async function GET() {
-  const CACHE_KEY = "kv_dashboard_categories_v1";
+  const CACHE_KEY = "kv_dashboard_categories_v2";
   const CACHE_TTL = 300;
 
   try {
-    const cached = await getCacheItem<{ categories: typeof MOCK_CATEGORIES }>(CACHE_KEY);
+    const cached = await getCacheItem<{ categories: Awaited<ReturnType<typeof getDashboardCategories>> }>(CACHE_KEY);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -17,7 +17,8 @@ export async function GET() {
       });
     }
 
-    const data = { categories: MOCK_CATEGORIES };
+    const realCategories = await getDashboardCategories();
+    const data = { categories: realCategories };
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json(data, {
@@ -27,6 +28,7 @@ export async function GET() {
       },
     });
   } catch {
-    return NextResponse.json({ categories: MOCK_CATEGORIES }, { status: 200 });
+    const realCategories = await getDashboardCategories();
+    return NextResponse.json({ categories: realCategories }, { status: 200 });
   }
 }
