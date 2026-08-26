@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getLatestEpisodes } from "@/lib/db/queries/episodes";
 import { getTrendingAnime } from "@/lib/db/queries/anime";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getCacheItem, setCacheItem } from "@/lib/cache";
 import { LATEST_EPISODES, TRENDING_ANIME } from "@/lib/mock-anime";
 
 export async function GET() {
@@ -9,21 +9,18 @@ export async function GET() {
   const CACHE_TTL = 300;
 
   try {
-    try {
-      const { env } = await getCloudflareContext();
-      if (env?.KV) {
-        const cached = await env.KV.get(CACHE_KEY, "json");
-        if (cached) {
-          return NextResponse.json(cached, {
-            headers: {
-              "Cache-Control": "public, max-age=60, s-maxage=300",
-              "X-Cache": "HIT-KV",
-            },
-          });
-        }
-      }
-    } catch {
-      // Fallback
+    const cached = await getCacheItem<{
+      latestEpisodes: typeof LATEST_EPISODES;
+      trendingAnime: typeof TRENDING_ANIME;
+    }>(CACHE_KEY);
+
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=300",
+          "X-Cache": "HIT-CACHE",
+        },
+      });
     }
 
     const [latestEpisodes, trendingAnime] = await Promise.all([
@@ -36,19 +33,12 @@ export async function GET() {
       trendingAnime: trendingAnime.length > 0 ? trendingAnime : TRENDING_ANIME,
     };
 
-    try {
-      const { env } = await getCloudflareContext();
-      if (env?.KV) {
-        await env.KV.put(CACHE_KEY, JSON.stringify(data), { expirationTtl: CACHE_TTL });
-      }
-    } catch {
-      // Fallback
-    }
+    await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json(data, {
       headers: {
         "Cache-Control": "public, max-age=60, s-maxage=300",
-        "X-Cache": "MISS-KV",
+        "X-Cache": "MISS-CACHE",
       },
     });
   } catch {

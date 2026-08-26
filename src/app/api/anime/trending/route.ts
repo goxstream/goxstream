@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getTrendingAnime, getAllGenres } from "@/lib/db/queries/anime";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getCacheItem, setCacheItem } from "@/lib/cache";
 import { TRENDING_ANIME as FALLBACK_TRENDING, GENRES_LIST as FALLBACK_GENRES } from "@/lib/mock-anime";
 
 export async function GET() {
@@ -8,21 +8,18 @@ export async function GET() {
   const CACHE_TTL = 300; // 5 minutes
 
   try {
-    try {
-      const { env } = await getCloudflareContext();
-      if (env?.KV) {
-        const cached = await env.KV.get(CACHE_KEY, "json");
-        if (cached) {
-          return NextResponse.json(cached, {
-            headers: {
-              "Cache-Control": "public, max-age=60, s-maxage=300",
-              "X-Cache": "HIT-KV",
-            },
-          });
-        }
-      }
-    } catch {
-      // Fallback
+    const cached = await getCacheItem<{
+      trendingAnime: typeof FALLBACK_TRENDING;
+      genresList: typeof FALLBACK_GENRES;
+    }>(CACHE_KEY);
+
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=300",
+          "X-Cache": "HIT-CACHE",
+        },
+      });
     }
 
     const [trendingAnime, genresList] = await Promise.all([
@@ -35,19 +32,12 @@ export async function GET() {
       genresList: genresList.length > 0 ? genresList : FALLBACK_GENRES,
     };
 
-    try {
-      const { env } = await getCloudflareContext();
-      if (env?.KV) {
-        await env.KV.put(CACHE_KEY, JSON.stringify(data), { expirationTtl: CACHE_TTL });
-      }
-    } catch {
-      // Fallback
-    }
+    await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json(data, {
       headers: {
         "Cache-Control": "public, max-age=60, s-maxage=300",
-        "X-Cache": "MISS-KV",
+        "X-Cache": "MISS-CACHE",
       },
     });
   } catch {

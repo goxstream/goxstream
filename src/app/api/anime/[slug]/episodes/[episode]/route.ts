@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getEpisodeWatchDetails, getEpisodesByAnimeSlug } from "@/lib/db/queries/episodes";
 import { getTrendingAnime } from "@/lib/db/queries/anime";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getCacheItem, setCacheItem } from "@/lib/cache";
 import { FEATURED_ANIME, LATEST_EPISODES, TRENDING_ANIME } from "@/lib/mock-anime";
 import type { EpisodeWatchDetails } from "@/types/anime";
 
@@ -53,21 +53,19 @@ export async function GET(
   const CACHE_TTL = 300;
 
   try {
-    try {
-      const { env } = await getCloudflareContext();
-      if (env?.KV) {
-        const cached = await env.KV.get(CACHE_KEY, "json");
-        if (cached) {
-          return NextResponse.json(cached, {
-            headers: {
-              "Cache-Control": "public, max-age=60, s-maxage=300",
-              "X-Cache": "HIT-KV",
-            },
-          });
-        }
-      }
-    } catch {
-      // Fallback
+    const cached = await getCacheItem<{
+      details: EpisodeWatchDetails;
+      episodes: typeof LATEST_EPISODES;
+      recommendations: typeof TRENDING_ANIME;
+    }>(CACHE_KEY);
+
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=300",
+          "X-Cache": "HIT-CACHE",
+        },
+      });
     }
 
     const details = await getEpisodeWatchDetails(slug, epNum).catch(() => null);
@@ -90,19 +88,12 @@ export async function GET(
 
     const data = { details, episodes, recommendations };
 
-    try {
-      const { env } = await getCloudflareContext();
-      if (env?.KV) {
-        await env.KV.put(CACHE_KEY, JSON.stringify(data), { expirationTtl: CACHE_TTL });
-      }
-    } catch {
-      // Fallback
-    }
+    await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json(data, {
       headers: {
         "Cache-Control": "public, max-age=60, s-maxage=300",
-        "X-Cache": "MISS-KV",
+        "X-Cache": "MISS-CACHE",
       },
     });
   } catch {

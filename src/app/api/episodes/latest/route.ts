@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getLatestEpisodes } from "@/lib/db/queries/episodes";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getCacheItem, setCacheItem } from "@/lib/cache";
 import { LATEST_EPISODES as FALLBACK_EPISODES } from "@/lib/mock-anime";
 
 export async function GET() {
@@ -8,21 +8,14 @@ export async function GET() {
   const CACHE_TTL = 300; // 5 minutes
 
   try {
-    try {
-      const { env } = await getCloudflareContext();
-      if (env?.KV) {
-        const cached = await env.KV.get(CACHE_KEY, "json");
-        if (cached) {
-          return NextResponse.json(cached, {
-            headers: {
-              "Cache-Control": "public, max-age=60, s-maxage=300",
-              "X-Cache": "HIT-KV",
-            },
-          });
-        }
-      }
-    } catch {
-      // Fallback
+    const cached = await getCacheItem<{ latestEpisodes: typeof FALLBACK_EPISODES }>(CACHE_KEY);
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          "Cache-Control": "public, max-age=60, s-maxage=300",
+          "X-Cache": "HIT-CACHE",
+        },
+      });
     }
 
     const latestEpisodes = await getLatestEpisodes(6).catch(() => FALLBACK_EPISODES);
@@ -30,19 +23,12 @@ export async function GET() {
       latestEpisodes: latestEpisodes.length > 0 ? latestEpisodes : FALLBACK_EPISODES,
     };
 
-    try {
-      const { env } = await getCloudflareContext();
-      if (env?.KV) {
-        await env.KV.put(CACHE_KEY, JSON.stringify(data), { expirationTtl: CACHE_TTL });
-      }
-    } catch {
-      // Fallback
-    }
+    await setCacheItem(CACHE_KEY, data, CACHE_TTL);
 
     return NextResponse.json(data, {
       headers: {
         "Cache-Control": "public, max-age=60, s-maxage=300",
-        "X-Cache": "MISS-KV",
+        "X-Cache": "MISS-CACHE",
       },
     });
   } catch {
