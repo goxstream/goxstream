@@ -9,12 +9,18 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "goxstream",
-	"workers_dev": true,
 	"main": ".open-next/worker.js",
 	"compatibility_date": "2026-08-20",
 	"compatibility_flags": [
 		"global_fetch_strictly_public",
 		"nodejs_compat"
+	],
+	"workers_dev": true,
+	"routes": [
+		{
+			"pattern": "gox.my.id",
+			"custom_domain": true
+		}
 	],
 	"assets": {
 		"binding": "ASSETS",
