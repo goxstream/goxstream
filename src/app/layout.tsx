@@ -53,6 +53,11 @@ export default function RootLayout({
 				<link rel="icon" href="/favicon.ico" sizes="any" />
 				<link rel="icon" href="/logo.svg" type="image/svg+xml" />
 				<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+				{/* Preconnect to external image CDNs for rapid DNS/TLS resolution */}
+				<link rel="preconnect" href="https://s4.anilist.co" />
+				<link rel="dns-prefetch" href="https://s4.anilist.co" />
+				<link rel="preconnect" href="https://cdn.myanimelist.net" />
+				<link rel="dns-prefetch" href="https://cdn.myanimelist.net" />
 			</head>
 			<body className={`${geistSans.variable} ${geistMono.variable} ${fontBrand.variable} antialiased bg-background text-foreground transition-colors duration-200`}>
 				<ThemeProvider

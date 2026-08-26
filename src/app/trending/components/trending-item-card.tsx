@@ -17,11 +17,10 @@ export function TrendingItemCard({
   period,
   viewMode,
 }: TrendingItemCardProps) {
-  // Primary Genre Tag (Featured Genre)
   const primaryGenre = anime.genres[0] || "Anime";
   const secondaryGenres = anime.genres.slice(1);
+  const isGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
 
-  // Compute views label based on active period
   const viewsDisplay =
     period === "weekly"
       ? `${(anime.weeklyViews / 1000000).toFixed(2)}M weekly`
@@ -29,7 +28,6 @@ export function TrendingItemCard({
       ? `${(anime.monthlyViews / 1000000).toFixed(2)}M monthly`
       : `${(anime.totalViews / 1000000).toFixed(1)}M total`;
 
-  // Compute Rank Styling
   const getRankBadgeStyle = (rank: number) => {
     if (rank === 1) {
       return "bg-amber-500 text-amber-950 border-amber-400 font-black shadow-xs";
@@ -43,7 +41,6 @@ export function TrendingItemCard({
     return "bg-muted text-foreground border-border/80 font-semibold";
   };
 
-  // Compute Rank Movement Indicator
   const renderRankChange = () => {
     if (anime.weeklyGrowth === "NEW") {
       return (
@@ -84,14 +81,27 @@ export function TrendingItemCard({
       <div className="group relative bg-card border border-border/60 rounded-xl overflow-hidden shadow-xs hover:border-primary/50 transition-all flex flex-col justify-between">
         {/* Cover Image Container */}
         <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
-          <div
-            className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
-            style={getImageStyle(anime.coverImage)}
-          />
+          {isGradient ? (
+            <div
+              className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
+              style={getImageStyle(anime.coverImage)}
+            />
+          ) : (
+            <img
+              src={anime.coverImage || ""}
+              alt={anime.title}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.opacity = "0";
+              }}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
 
           {/* Floating Rank Badge */}
-          <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+          <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10">
             <div
               className={cn(
                 "size-8 rounded-lg flex items-center justify-center text-sm border shadow-xs",
@@ -104,12 +114,12 @@ export function TrendingItemCard({
           </div>
 
           {/* Sub / Dub tag */}
-          <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-[10px] font-bold text-white uppercase">
+          <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-[10px] font-bold text-white uppercase z-10">
             {anime.subOrDub}
           </div>
 
           {/* Bottom Card Title Overlay */}
-          <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white">
+          <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white z-10">
             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-primary text-primary-foreground">
               {primaryGenre}
             </span>
@@ -182,10 +192,23 @@ export function TrendingItemCard({
           href={`/anime/${anime.slug}`}
           className="relative size-16 sm:size-20 rounded-lg overflow-hidden shrink-0 border border-border/60 shadow-xs group-hover:scale-105 transition-transform bg-muted"
         >
-          <div
-            className="absolute inset-0"
-            style={getImageStyle(anime.coverImage)}
-          />
+          {isGradient ? (
+            <div
+              className="absolute inset-0"
+              style={getImageStyle(anime.coverImage)}
+            />
+          ) : (
+            <img
+              src={anime.coverImage || ""}
+              alt={anime.title}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 size-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.opacity = "0";
+              }}
+            />
+          )}
           <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
         </Link>
 

@@ -15,6 +15,7 @@ export function TrendingHero({ topAnime }: TrendingHeroProps) {
 
   // Use primary genre as featured tag
   const primaryGenre = topAnime.genres[0] || "Featured";
+  const isGradient = topAnime.coverImage && topAnime.coverImage.startsWith("linear-gradient");
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-background to-background p-6 md:p-8 lg:p-10 shadow-sm">
@@ -118,10 +119,23 @@ export function TrendingHero({ topAnime }: TrendingHeroProps) {
         {/* Right Column: Visual Poster Card */}
         <div className="lg:col-span-4 flex justify-center lg:justify-end">
           <div className="relative group w-48 sm:w-56 md:w-64 aspect-[2/3] rounded-xl overflow-hidden shadow-lg border border-amber-500/30 bg-muted">
-            <div
-              className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
-              style={getImageStyle(topAnime.coverImage)}
-            />
+            {isGradient ? (
+              <div
+                className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
+                style={getImageStyle(topAnime.coverImage)}
+              />
+            ) : (
+              <img
+                src={topAnime.coverImage || ""}
+                alt={topAnime.title}
+                loading="eager"
+                decoding="async"
+                className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.opacity = "0";
+                }}
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
             {/* Rank Badge Floating on Poster */}

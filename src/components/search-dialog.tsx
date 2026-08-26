@@ -87,47 +87,65 @@ export function SearchDialog() {
                 </CommandEmpty>
               ) : (
                 <CommandGroup heading={query ? "Search Results" : "Popular & Trending Anime"}>
-                  {results.map((anime) => (
-                    <CommandItem
-                      key={anime.id}
-                      value={anime.title}
-                      onSelect={() => setOpen(false)}
-                      className="flex items-center justify-between p-2.5 rounded-lg cursor-pointer hover:bg-muted/80 aria-selected:bg-muted/80 transition-colors"
-                    >
-                      <Link
-                        href={`/anime/${anime.slug}`}
-                        onClick={() => setOpen(false)}
-                        className="flex items-center justify-between w-full"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="size-9 rounded-md flex items-center justify-center shrink-0 text-white font-bold text-xs"
-                            style={getImageStyle(anime.coverImage)}
-                          >
-                            <Play className="size-4 fill-white" />
-                          </div>
-                          <div className="flex flex-col text-left">
-                            <span className="font-semibold text-sm text-foreground line-clamp-1">
-                              {anime.title}
-                            </span>
-                            <span className="text-xs text-muted-foreground line-clamp-1">
-                              {anime.genres.join(" • ")} • {anime.studio}
-                            </span>
-                          </div>
-                        </div>
+                  {results.map((anime) => {
+                    const isGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
 
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">
-                            <Star className="size-3 fill-amber-500 stroke-amber-500" />
-                            {anime.rating}
-                          </span>
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground">
-                            {anime.subOrDub}
-                          </span>
-                        </div>
-                      </Link>
-                    </CommandItem>
-                  ))}
+                    return (
+                      <CommandItem
+                        key={anime.id}
+                        value={anime.title}
+                        onSelect={() => setOpen(false)}
+                        className="flex items-center justify-between p-2.5 rounded-lg cursor-pointer hover:bg-muted/80 aria-selected:bg-muted/80 transition-colors"
+                      >
+                        <Link
+                          href={`/anime/${anime.slug}`}
+                          onClick={() => setOpen(false)}
+                          className="flex items-center justify-between w-full"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="relative size-9 rounded-md overflow-hidden shrink-0 bg-muted flex items-center justify-center">
+                              {isGradient ? (
+                                <div
+                                  className="absolute inset-0 size-full"
+                                  style={getImageStyle(anime.coverImage)}
+                                />
+                              ) : (
+                                <img
+                                  src={anime.coverImage || ""}
+                                  alt={anime.title}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="absolute inset-0 size-full object-cover"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.opacity = "0";
+                                  }}
+                                />
+                              )}
+                              <Play className="relative size-3.5 fill-white text-white z-10" />
+                            </div>
+                            <div className="flex flex-col text-left">
+                              <span className="font-semibold text-sm text-foreground line-clamp-1">
+                                {anime.title}
+                              </span>
+                              <span className="text-xs text-muted-foreground line-clamp-1">
+                                {anime.genres.join(" • ")} • {anime.studio}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">
+                              <Star className="size-3 fill-amber-500 stroke-amber-500" />
+                              {anime.rating}
+                            </span>
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                              {anime.subOrDub}
+                            </span>
+                          </div>
+                        </Link>
+                      </CommandItem>
+                    );
+                  })}
                 </CommandGroup>
               )}
             </CommandList>

@@ -19,11 +19,27 @@ export function AnimeCard({ anime }: AnimeCardProps) {
     >
       {/* Poster Artwork Area */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
-        {/* Poster Artwork / Gradient */}
-        <div
-          className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
-          style={getImageStyle(anime.coverImage)}
-        />
+        {/* Poster Artwork / Gradient Fallback */}
+        {isGradient ? (
+          <div
+            className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
+            style={getImageStyle(anime.coverImage)}
+          />
+        ) : (
+          /* Native <img> Tag with Lazy Loading & Fallback */
+          <img
+            src={anime.coverImage || ""}
+            alt={anime.title}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              // Hide broken image & fallback to subtle dark gradient
+              const target = e.target as HTMLImageElement;
+              target.style.opacity = "0";
+            }}
+          />
+        )}
 
         {/* Abstract SVG Pattern overlay for gradients */}
         {isGradient && (

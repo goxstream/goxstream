@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Play, Clock, Subtitles, Mic } from "lucide-react";
-import { getImageStyle } from "@/lib/utils";
 import type { EpisodeItem } from "@/types/anime";
 
 interface EpisodeCardProps {
@@ -18,9 +17,15 @@ export function EpisodeCard({ episode }: EpisodeCardProps) {
       {/* Episode Thumbnail */}
       <div className="flex items-center gap-4 w-full sm:w-auto">
         <div className="relative aspect-video w-full sm:w-44 shrink-0 rounded-lg overflow-hidden bg-muted">
-          <div
-            className="absolute inset-0 size-full transition-transform duration-500 group-hover:scale-105"
-            style={getImageStyle(episode.thumbnail)}
+          <img
+            src={episode.thumbnail || ""}
+            alt={episode.animeTitle}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.opacity = "0";
+            }}
           />
 
           {/* Hover Play Button Overlay */}
