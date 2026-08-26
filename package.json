@@ -11,7 +11,11 @@
 		"upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
-		"generate:logo": "tsx scripts/create-logo/index.ts"
+		"generate:logo": "tsx scripts/create-logo/index.ts",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui",
+		"test:e2e:debug": "playwright test --debug",
+		"test:e2e:report": "playwright show-report"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.7.0",
@@ -42,6 +46,7 @@
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",
+		"@playwright/test": "^1.62.1",
 		"@tailwindcss/postcss": "^4",
 		"@types/node": "^20.19.43",
 		"@types/react": "^19.1.7",
