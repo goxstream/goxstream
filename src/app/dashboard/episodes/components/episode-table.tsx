@@ -203,7 +203,7 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
                       <Play className="size-4 mr-2 text-primary" />
                       Quick Preview
                     </DropdownMenuItem>
-                    <Link href={`/dashboard/episodes/new?edit=${ep.id}`}>
+                    <Link href={`/dashboard/episodes/${ep.id}/edit`}>
                       <DropdownMenuItem>
                         <Edit className="size-4 mr-2" />
                         Edit Details
