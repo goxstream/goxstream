@@ -92,7 +92,7 @@ export function AnimeAddSheet({ open, onOpenChange, onAddAnime }: AnimeAddSheetP
                 <AddSheetMediaTab coverImage={coverImage} setCoverImage={setCoverImage} bannerImage={bannerImage} setBannerImage={setBannerImage} />
               </TabsContent>
               <TabsContent value="genres" className="m-0">
-                <AddSheetGenresTab studios={studios} setStudios={setStudios} selectedGenres={selectedGenres} toggleGenre={toggleGenre} />
+                <AddSheetGenresTab studios={studios} setStudios={setStudios} selectedGenres={selectedGenres} setSelectedGenres={setSelectedGenres} />
               </TabsContent>
             </div>
 

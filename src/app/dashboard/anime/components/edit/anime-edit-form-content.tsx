@@ -85,7 +85,7 @@ export function AnimeEditFormContent({
 
           <InlineEditGenres
             selectedGenres={selectedGenres}
-            toggleGenre={toggleGenre}
+            setSelectedGenres={setSelectedGenres}
             synopsis={synopsis}
             setSynopsis={setSynopsis}
           />

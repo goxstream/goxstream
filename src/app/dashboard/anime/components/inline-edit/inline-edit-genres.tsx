@@ -1,52 +1,32 @@
 "use client";
 
-import { Check } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { ANIME_GENRES } from "../../constants";
+import { GenreMultiSelectCombobox } from "../taxonomy/genre-multiselect-combobox";
 
 interface InlineEditGenresProps {
   selectedGenres: string[];
-  toggleGenre: (genre: string) => void;
+  setSelectedGenres: (genres: string[]) => void;
   synopsis: string;
   setSynopsis: (v: string) => void;
 }
 
 export function InlineEditGenres({
   selectedGenres,
-  toggleGenre,
+  setSelectedGenres,
   synopsis,
   setSynopsis,
 }: InlineEditGenresProps) {
   return (
     <div className="space-y-3">
-      {/* Genre Badges Picker */}
       <div className="space-y-1">
         <Label className="text-[11px] font-medium">Genres</Label>
-        <div className="flex flex-wrap gap-1 p-2 bg-background/80 rounded-md border border-border/60 max-h-24 overflow-y-auto">
-          {ANIME_GENRES.map((genre) => {
-            const isSelected = selectedGenres.includes(genre);
-            return (
-              <Badge
-                key={genre}
-                variant={isSelected ? "default" : "outline"}
-                className={`cursor-pointer text-[10px] px-1.5 py-0.2 transition-colors ${
-                  isSelected
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent"
-                }`}
-                onClick={() => toggleGenre(genre)}
-              >
-                {isSelected && <Check className="h-2.5 w-2.5 mr-1" />}
-                {genre}
-              </Badge>
-            );
-          })}
-        </div>
+        <GenreMultiSelectCombobox
+          selectedGenres={selectedGenres}
+          onChange={setSelectedGenres}
+        />
       </div>
 
-      {/* Synopsis */}
       <div className="space-y-1">
         <Label className="text-[11px] font-medium">Synopsis</Label>
         <Textarea
