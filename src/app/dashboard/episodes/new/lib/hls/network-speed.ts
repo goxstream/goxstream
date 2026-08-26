@@ -13,10 +13,10 @@ export async function getEstimatedDownlinkMbps(): Promise<number> {
     return nav.connection.downlink;
   }
 
-  // 2. Micro-ping timing measurement using local worker file (~2.2 KB)
+  // 2. Micro-ping timing measurement using static lightweight public asset (~15 KB)
   try {
     const startTime = performance.now();
-    const response = await fetch("/ffmpeg/core-mt/ffmpeg-core.worker.js?t=" + Date.now(), { cache: "no-cache" });
+    const response = await fetch("/favicon.ico?t=" + Date.now(), { cache: "no-cache" });
     const blob = await response.blob();
     const durationSecs = (performance.now() - startTime) / 1000;
 
@@ -34,19 +34,15 @@ export async function getEstimatedDownlinkMbps(): Promise<number> {
 
 /**
  * Calculates dynamic timeout budget (in milliseconds) based on bandwidth and file size.
- *
- * Rules:
- * - Slow Internet (< 2-3 Mbps): Capped at 5,000ms (5s) so slow CDNs fail fast and trigger local server fallback immediately.
- * - Fast Internet (> 10 Mbps): Scaled up to 25,000ms (25s) allowing full high-speed CDN fetch.
+ * Ensures sufficient budget for downloading ~32MB WASM core binaries over public CDNs.
  */
 export function calculateDynamicTimeoutMs(fileSizeMB: number, downlinkMbps: number): number {
-  if (downlinkMbps < 3) {
-    return 5000; // 5s fast fail threshold for slow connections
-  }
-
-  const expectedSecs = (fileSizeMB * 8) / downlinkMbps;
-  const bufferSecs = 3;
+  const safeMbps = Math.max(downlinkMbps, 1);
+  const expectedSecs = (fileSizeMB * 8) / safeMbps;
+  const bufferSecs = 15;
   const totalMs = Math.ceil((expectedSecs + bufferSecs) * 1000);
 
-  return Math.min(Math.max(totalMs, 5000), 25000);
+  // Minimum budget of 45s, maximum of 90s for WASM CDN fetching
+  return Math.min(Math.max(totalMs, 45000), 90000);
 }
+
