@@ -22,11 +22,11 @@ import { Badge } from "@/components/ui/badge";
 import { useUserNav } from "@/hooks/use-user-nav";
 
 export function UserNav() {
-  const { user } = useUserNav();
+  const { user, logout } = useUserNav();
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<button className="relative rounded-full focus:outline-hidden focus:ring-2 focus:ring-primary/40" />}>
+      <DropdownMenuTrigger render={<button className="relative rounded-full focus:outline-hidden focus:ring-2 focus:ring-primary/40 cursor-pointer" />}>
         <Avatar className="size-9 border border-border/80 hover:border-primary/50 transition-colors shadow-xs">
           <AvatarImage src={user.avatarUrl} alt={user.displayName} />
           <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
@@ -86,7 +86,10 @@ export function UserNav() {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem render={<Link href="/login" className="flex items-center gap-2.5 px-2 py-1.5 text-xs font-medium text-destructive rounded-lg cursor-pointer hover:bg-destructive/10" />}>
+        <DropdownMenuItem
+          onClick={logout}
+          className="flex items-center gap-2.5 px-2 py-1.5 text-xs font-medium text-destructive rounded-lg cursor-pointer hover:bg-destructive/10 focus:text-destructive focus:bg-destructive/10"
+        >
           <LogOut className="size-4" />
           <span>Sign Out</span>
         </DropdownMenuItem>

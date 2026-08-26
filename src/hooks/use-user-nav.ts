@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 export interface ActiveUser {
   displayName: string;
@@ -18,6 +19,7 @@ export const DEFAULT_USER: ActiveUser = {
 
 export function useUserNav() {
   const [user, setUser] = useState<ActiveUser>(DEFAULT_USER);
+  const router = useRouter();
 
   useEffect(() => {
     let isMounted = true;
@@ -45,5 +47,15 @@ export function useUserNav() {
     };
   }, []);
 
-  return { user };
+  const logout = useCallback(async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (error) {
+      console.error("Logout request error:", error);
+    }
+    router.push("/login");
+    router.refresh();
+  }, [router]);
+
+  return { user, logout };
 }

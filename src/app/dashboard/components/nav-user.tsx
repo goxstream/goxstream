@@ -26,6 +26,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/use-auth";
 
 interface NavUserProps {
   user: {
@@ -38,6 +39,7 @@ interface NavUserProps {
 
 export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
+  const { logout } = useAuth();
 
   const getInitials = (name: string) => {
     return name
@@ -124,7 +126,10 @@ export function NavUser({ user }: NavUserProps) {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 text-xs cursor-pointer text-destructive focus:text-destructive">
+            <DropdownMenuItem
+              onClick={logout}
+              className="gap-2 text-xs cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+            >
               <LogOut className="size-4" />
               <span>Log out</span>
             </DropdownMenuItem>
