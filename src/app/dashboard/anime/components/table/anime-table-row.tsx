@@ -5,7 +5,7 @@ import { ChevronDown, ChevronRight, Edit2, Trash2, Star, MoreVertical, Flame } f
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AnimeStatusBadge } from "./anime-status-badge";
 import { AnimeInlineEditForm } from "../anime-inline-edit-form";
 import type { AnimeItem } from "../../types";
@@ -84,11 +84,13 @@ export function AnimeTableRow({ anime, isExpanded, onToggleExpand, onUpdateAnime
               <MoreVertical className="h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40 text-xs">
-              <DropdownMenuLabel className="text-[11px] text-muted-foreground font-normal">Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => onToggleExpand(anime.id)}>
-                <Edit2 className="h-3.5 w-3.5 mr-2 text-primary" />
-                {isExpanded ? "Close Edit" : "Inline Edit"}
-              </DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-[11px] text-muted-foreground font-normal">Actions</DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => onToggleExpand(anime.id)}>
+                  <Edit2 className="h-3.5 w-3.5 mr-2 text-primary" />
+                  {isExpanded ? "Close Edit" : "Inline Edit"}
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => onDeleteAnime(anime.id)}>
                 <Trash2 className="h-3.5 w-3.5 mr-2" />
