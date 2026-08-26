@@ -1,3 +1,12 @@
+export type LogSeverity = "info" | "ffmpeg" | "error" | "success";
+
+export interface TranscodeLogEntry {
+  id: string;
+  timestamp: string;
+  type: LogSeverity;
+  message: string;
+}
+
 export interface TranscodeProgress {
   progress: number;
   message: string;

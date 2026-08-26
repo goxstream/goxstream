@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useHlsConverter } from "../hooks/use-hls-converter";
+import { ConversionLogDrawer } from "./conversion-log-drawer";
 
 interface HlsConverterWidgetProps {
   animeSlug?: string;
@@ -38,6 +39,9 @@ export function HlsConverterWidget({
     status,
     progress,
     statusText,
+    logs,
+    clearLogs,
+    copyLogsToClipboard,
     handleFileSelect,
     initEngine,
     convertVideo,
@@ -216,6 +220,13 @@ export function HlsConverterWidget({
           <span>{statusText}</span>
         </div>
       )}
+
+      {/* Conversion Log Terminal History Drawer */}
+      <ConversionLogDrawer
+        logs={logs}
+        onClearLogs={clearLogs}
+        onCopyLogs={copyLogsToClipboard}
+      />
 
       {/* Action Button Workflow */}
       <div className="flex items-center justify-end gap-2 pt-1">

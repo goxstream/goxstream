@@ -2,14 +2,21 @@
 
 import { fetchFile } from "@ffmpeg/util";
 import { loadFFmpegCore } from "./ffmpeg-init";
-import type { TranscodeProgress, HlsTranscodeResult, HlsVariantRendition, HlsSegmentFile } from "./types";
+import type {
+  TranscodeProgress,
+  TranscodeLogEntry,
+  HlsTranscodeResult,
+  HlsVariantRendition,
+  HlsSegmentFile,
+} from "./types";
 
 /**
  * Multi-Resolution HLS Transcoder (1080p, 720p, 480p adaptive bitrate renditions).
  */
 export async function transcodeVideoToHls(
   file: File,
-  onProgressCallback?: (p: TranscodeProgress) => void
+  onProgressCallback?: (p: TranscodeProgress) => void,
+  onLogCallback?: (entry: TranscodeLogEntry) => void
 ): Promise<HlsTranscodeResult> {
   const ffmpeg = await loadFFmpegCore((msg) => {
     if (onProgressCallback) {
@@ -31,8 +38,14 @@ export async function transcodeVideoToHls(
   const segmentBlobs: HlsSegmentFile[] = [];
 
   const logHandler = ({ message }: { message: string }) => {
-    if (onProgressCallback) {
-      onProgressCallback({ progress: 45, message });
+    console.log("%c[FFmpeg WASM]", "color: #06b6d4; font-weight: bold;", message);
+    if (onLogCallback) {
+      onLogCallback({
+        id: `log-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        timestamp: new Date().toLocaleTimeString("en-US", { hour12: false }),
+        type: "ffmpeg",
+        message,
+      });
     }
   };
 
