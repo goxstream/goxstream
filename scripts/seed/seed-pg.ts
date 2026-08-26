@@ -194,39 +194,45 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
 
     console.log("[SEED PG] Inserting Animes...");
     if (bundle.animes.length > 0) {
-      await db.insert(pgSchema.animes).values(bundle.animes as any);
+      await db.insert(pgSchema.animes).values(bundle.animes as any).onConflictDoNothing();
     }
 
     console.log("[SEED PG] Inserting Genres...");
     if (bundle.genres.length > 0) {
-      await db.insert(pgSchema.genres).values(bundle.genres);
+      await db.insert(pgSchema.genres).values(bundle.genres).onConflictDoNothing();
     }
 
     console.log("[SEED PG] Inserting Studios...");
     if (bundle.studios.length > 0) {
-      await db.insert(pgSchema.studios).values(bundle.studios);
+      await db.insert(pgSchema.studios).values(bundle.studios).onConflictDoNothing();
     }
 
     console.log("[SEED PG] Inserting Anime-Genre relations...");
     if (bundle.animeGenres.length > 0) {
-      await db.insert(pgSchema.animeGenres).values(bundle.animeGenres);
+      const uniqueAnimeGenres = Array.from(
+        new Map(bundle.animeGenres.map((ag) => [`${ag.animeId}_${ag.genreId}`, ag])).values()
+      );
+      await db.insert(pgSchema.animeGenres).values(uniqueAnimeGenres).onConflictDoNothing();
     }
 
     console.log("[SEED PG] Inserting Anime-Studio relations...");
     if (bundle.animeStudios.length > 0) {
-      await db.insert(pgSchema.animeStudios).values(bundle.animeStudios);
+      const uniqueAnimeStudios = Array.from(
+        new Map(bundle.animeStudios.map((as) => [`${as.animeId}_${as.studioId}`, as])).values()
+      );
+      await db.insert(pgSchema.animeStudios).values(uniqueAnimeStudios).onConflictDoNothing();
     }
 
     console.log("[SEED PG] Inserting Server Nodes...");
     if (bundle.serverNodes.length > 0) {
-      await db.insert(pgSchema.serverNodes).values(bundle.serverNodes);
+      await db.insert(pgSchema.serverNodes).values(bundle.serverNodes).onConflictDoNothing();
     }
 
     console.log("[SEED PG] Inserting Episodes...");
     if (bundle.episodes.length > 0) {
       for (let i = 0; i < bundle.episodes.length; i += 50) {
         const chunk = bundle.episodes.slice(i, i + 50);
-        await db.insert(pgSchema.episodes).values(chunk);
+        await db.insert(pgSchema.episodes).values(chunk).onConflictDoNothing();
       }
     }
 
@@ -234,7 +240,7 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
     if (bundle.streamSources.length > 0) {
       for (let i = 0; i < bundle.streamSources.length; i += 50) {
         const chunk = bundle.streamSources.slice(i, i + 50);
-        await db.insert(pgSchema.streamSources).values(chunk);
+        await db.insert(pgSchema.streamSources).values(chunk).onConflictDoNothing();
       }
     }
 
@@ -242,7 +248,7 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
     if (bundle.subtitleTracks.length > 0) {
       for (let i = 0; i < bundle.subtitleTracks.length; i += 50) {
         const chunk = bundle.subtitleTracks.slice(i, i + 50);
-        await db.insert(pgSchema.subtitleTracks).values(chunk);
+        await db.insert(pgSchema.subtitleTracks).values(chunk).onConflictDoNothing();
       }
     }
 
@@ -250,18 +256,18 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
     if (bundle.audioTracks.length > 0) {
       for (let i = 0; i < bundle.audioTracks.length; i += 50) {
         const chunk = bundle.audioTracks.slice(i, i + 50);
-        await db.insert(pgSchema.audioTracks).values(chunk);
+        await db.insert(pgSchema.audioTracks).values(chunk).onConflictDoNothing();
       }
     }
 
     console.log("[SEED PG] Inserting Schedules...");
     if (bundle.schedules.length > 0) {
-      await db.insert(pgSchema.schedules).values(bundle.schedules);
+      await db.insert(pgSchema.schedules).values(bundle.schedules).onConflictDoNothing();
     }
 
     console.log("[SEED PG] Inserting Trending Stats...");
     if (bundle.trendingStats.length > 0) {
-      await db.insert(pgSchema.trendingStats).values(bundle.trendingStats);
+      await db.insert(pgSchema.trendingStats).values(bundle.trendingStats).onConflictDoNothing();
     }
 
     console.log("=========================================================");
