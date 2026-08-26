@@ -205,3 +205,21 @@ export function isFFmpegMultiThreaded(): boolean {
 export function getFFmpegInstance(): FFmpeg | null {
   return ffmpegInstance;
 }
+
+/**
+ * Safely terminate and reset the FFmpeg WASM engine singleton state.
+ * Call this if a fatal WASM runtime exception occurs.
+ */
+export function terminateAndResetFFmpeg(): void {
+  if (ffmpegInstance) {
+    try {
+      ffmpegInstance.terminate();
+    } catch {
+      // Ignore cleanup error if already terminated
+    }
+  }
+  ffmpegInstance = null;
+  loadPromise = null;
+  isMultiThreadedMode = false;
+}
+

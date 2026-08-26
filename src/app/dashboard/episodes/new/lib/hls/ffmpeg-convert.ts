@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchFile } from "@ffmpeg/util";
-import { loadFFmpegCore } from "./ffmpeg-init";
+import { loadFFmpegCore, terminateAndResetFFmpeg } from "./ffmpeg-init";
 import type {
   TranscodeProgress,
   TranscodeLogEntry,
@@ -93,7 +93,7 @@ export async function transcodeVideoToHls(
     });
     await ffmpeg.deleteFile("1080p.m3u8");
 
-    // 3. Rendition 2: 720p HD Rendition (Ultrafast preset + FastDecode + Sliced Threads)
+    // 3. Rendition 2: 720p HD Rendition (Ultrafast preset + FastDecode + Single-Threaded x264 for WASM stability)
     currentStageId = "720p";
     if (onProgressCallback) {
       onProgressCallback({ progress: 50, message: "Generating 720p HD scaled stream rendition...", stageId: "720p" });
@@ -104,9 +104,8 @@ export async function transcodeVideoToHls(
       "-c:v", "libx264",
       "-preset", "ultrafast",
       "-tune", "fastdecode",
-      "-x264opts", "subme=0:me=dia:no-cabac=1:sliced-threads=1",
       "-crf", "28",
-      "-threads", "0",
+      "-threads", "1",
       "-c:a", "copy",
       "-start_number", "0",
       "-hls_time", "10",
@@ -126,7 +125,7 @@ export async function transcodeVideoToHls(
     });
     await ffmpeg.deleteFile("720p.m3u8");
 
-    // 4. Rendition 3: 480p SD Rendition (Ultrafast preset + FastDecode + Sliced Threads)
+    // 4. Rendition 3: 480p SD Rendition (Ultrafast preset + FastDecode + Single-Threaded x264 for WASM stability)
     currentStageId = "480p";
     if (onProgressCallback) {
       onProgressCallback({ progress: 75, message: "Generating 480p SD scaled stream rendition...", stageId: "480p" });
@@ -137,9 +136,8 @@ export async function transcodeVideoToHls(
       "-c:v", "libx264",
       "-preset", "ultrafast",
       "-tune", "fastdecode",
-      "-x264opts", "subme=0:me=dia:no-cabac=1:sliced-threads=1",
       "-crf", "28",
-      "-threads", "0",
+      "-threads", "1",
       "-c:a", "copy",
       "-start_number", "0",
       "-hls_time", "10",
@@ -208,6 +206,10 @@ export async function transcodeVideoToHls(
       variants,
       segmentBlobs,
     };
+  } catch (err) {
+    // Reset WASM memory instance on fatal error to prevent corrupted WASM state
+    terminateAndResetFFmpeg();
+    throw err;
   } finally {
     ffmpeg.off("log", logHandler);
     ffmpeg.off("progress", progressHandler);
