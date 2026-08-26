@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
 import { SearchDialog } from "@/components/search-dialog";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { UserNav } from "@/components/user-nav";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -81,29 +82,10 @@ export function SiteHeader() {
             Pair TV
           </Link>
 
-          {/* Sign In CTA */}
-          <Link
-            href="/login"
-            className={buttonVariants({
-              variant: "ghost",
-              size: "sm",
-              className: "hidden sm:inline-flex rounded-lg font-medium",
-            })}
-          >
-            Sign In
-          </Link>
-
-          {/* Sign Up CTA */}
-          <Link
-            href="/signup"
-            className={buttonVariants({
-              variant: "default",
-              size: "sm",
-              className: "hidden sm:inline-flex rounded-lg font-semibold shadow-xs",
-            })}
-          >
-            Sign Up
-          </Link>
+          {/* User Nav Dropdown / Account CTA */}
+          <div className="flex items-center gap-1.5 pl-1 border-l border-border/40">
+            <UserNav />
+          </div>
 
           {/* Mobile Sheet Nav */}
           <MobileNav navItems={NAV_ITEMS} />
