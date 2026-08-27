@@ -65,36 +65,22 @@ export async function scanAvailableDatabases(): Promise<DbTargetInfo[]> {
 
   // 3. D1 Remote Scan
   try {
-    const whoami = execSync("npx wrangler whoami", {
+    execSync("npx wrangler d1 execute goxstream --remote --command=\"SELECT 1\"", {
       stdio: ["ignore", "pipe", "pipe"],
-      timeout: 5000,
-      env: { ...process.env, CI: "true", WRANGLER_SEND_METRICS: "false" },
-    }).toString();
-    if (whoami.includes("Not logged in")) {
-      results.push({
-        id: "d1-remote",
-        name: "Cloudflare D1 (Remote)",
-        description: "Wrangler not logged in (run 'npx wrangler login')",
-        isAvailable: false,
-      });
-    } else {
-      execSync("npx wrangler d1 execute goxstream --remote --command=\"SELECT 1\"", {
-        stdio: ["ignore", "pipe", "pipe"],
-        timeout: 8000,
-        env: { ...process.env, CI: "true", WRANGLER_SEND_METRICS: "false" },
-      });
-      results.push({
-        id: "d1-remote",
-        name: "Cloudflare D1 (Remote)",
-        description: "Cloudflare Production D1 Instance",
-        isAvailable: true,
-      });
-    }
+      timeout: 10000,
+      env: { ...process.env, WRANGLER_SEND_METRICS: "false" },
+    });
+    results.push({
+      id: "d1-remote",
+      name: "Cloudflare D1 (Remote)",
+      description: "Cloudflare Production D1 Instance (93a28981-ac5e-4381-a3aa-18d98b9bf5ca)",
+      isAvailable: true,
+    });
   } catch (err: any) {
     results.push({
       id: "d1-remote",
       name: "Cloudflare D1 (Remote)",
-      description: "Remote D1 inaccessible or not logged in",
+      description: "Remote D1 inaccessible or not logged in (run 'npx wrangler login')",
       isAvailable: false,
       reason: err?.message || String(err),
     });
