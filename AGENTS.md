@@ -102,6 +102,7 @@ Online anime streaming platform built with:
 - **Page files compose.** `page.tsx` should primarily compose components, not contain large JSX structures or business logic.
 - Use appropriate Next.js patterns: layouts, `loading.tsx`, `error.tsx`, metadata APIs, Server Actions, Route Handlers.
   - **Loading UI MUST use Skeletons.** Every Next.js `loading.tsx` file or component loading placeholder MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
+  - **Mandatory CSR for Dynamic Data & Skeletons.** Dynamic components displaying live data with skeleton loading states MUST use Client-Side Rendering (`"use client"` with client-side data fetching/hooks) to offload execution to the client, reduce Cloudflare Workers CPU load (preventing Error 1102 CPU limit), and fetch data on-demand for the active viewport.
   - **Inline Component Skeletons Mandatory.** Skeletons MUST be integrated directly inline inside the target component (e.g., `<EpisodeCard isLoading={true} />`). Standalone skeleton functions or separate skeleton files for sections/pages are strictly prohibited.
     ```tsx
     // Inline Skeleton Pattern combining shadcn UI primitives (Card, Skeleton)

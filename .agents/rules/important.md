@@ -11,8 +11,9 @@ These rules apply to all code changes in this repository.
 - Use **Simple Icons** for brand/service/company icons where available.
 - Do NOT use emojis in application UI or source code unless explicitly required.
 - Do NOT introduce arbitrary icon libraries when Lucide or Simple Icons is appropriate.
-- **Next.js Loading States**:
+- **Next.js Loading States & Rendering**:
   - All loading pages (`loading.tsx`) and component loading placeholders MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
+  - **Mandatory CSR for Dynamic Data & Skeletons**: Dynamic components displaying live data with skeleton loading states MUST use Client-Side Rendering (`"use client"` with client-side data fetching/hooks) to offload execution to the client, reduce Cloudflare Workers CPU load (preventing Error 1102 CPU limit), and fetch data on-demand for the active viewport.
   - **Inline Component Skeletons Mandatory**: Skeletons MUST be integrated directly inline inside the target component (e.g., via `isLoading` prop inside `<EpisodeCard isLoading={true} />`). Separate skeleton functions (e.g., `LatestEpisodesSectionSkeleton`) or standalone section/page skeleton files are strictly prohibited.
     ```tsx
     // Correct: Inline Skeleton inside target component combining shadcn UI primitives (Card, Skeleton)
