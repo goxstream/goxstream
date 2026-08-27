@@ -1,3 +1,0 @@
-[submodule "reference"]
-	path = reference
-	url = https://github.com/ffmpegwasm/ffmpeg.wasm.git
