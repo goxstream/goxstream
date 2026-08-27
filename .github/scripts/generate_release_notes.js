@@ -24,8 +24,8 @@ async function run() {
   // 1. Get commit history since last tag
   let commitLog = '';
   try {
-    // Try to get the tag before the current one (which is HEAD)
-    const lastTag = execSync('git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git describe --tags --abbrev=0 HEAD~1 2>/dev/null').toString().trim();
+    // Try to get the previous version tag matching v* before the current HEAD
+    const lastTag = execSync('git describe --tags --abbrev=0 --match "v*" HEAD^ 2>/dev/null || git describe --tags --abbrev=0 --match "v*" HEAD~1 2>/dev/null').toString().trim();
     console.log(`Generating changelog since tag: ${lastTag}`);
     commitLog = execSync(`git log ${lastTag}..HEAD --oneline`).toString().trim();
   } catch (error) {
