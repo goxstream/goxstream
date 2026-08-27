@@ -42,6 +42,7 @@
 		"@ffmpeg/ffmpeg": "^0.12.15",
 		"@ffmpeg/util": "^0.12.2",
 		"@icons-pack/react-simple-icons": "^13.15.1",
+		"@neondatabase/serverless": "^1.1.0",
 		"@opennextjs/cloudflare": "^1.19.9",
 		"@shadcn/react": "^0.3.0",
 		"@vidstack/react": "^0.6.15",
