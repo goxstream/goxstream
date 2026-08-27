@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { AnimeCard } from "@/components/anime-card";
 import { useBrowseFilters } from "../hooks/use-browse-filters";
 import { BrowseFilters } from "./browse-filters";
 import { BrowseGrid } from "./browse-grid";
@@ -18,11 +18,7 @@ export function BrowseClientPage() {
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="space-y-3">
-                <Skeleton className="aspect-[3/4] w-full rounded-xl" />
-                <Skeleton className="h-4 w-4/5 rounded" />
-                <Skeleton className="h-3 w-1/2 rounded" />
-              </div>
+              <AnimeCard key={i} isLoading={true} />
             ))}
           </div>
         ) : (

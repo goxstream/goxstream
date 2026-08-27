@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AnimeCard } from "@/components/anime-card";
 import { TrendingHero } from "./trending-hero";
 import { TrendingTabs } from "./trending-tabs";
 import { TrendingGenreFilter } from "./trending-genre-filter";
@@ -47,15 +48,9 @@ export function TrendingClientPage() {
               <Skeleton key={i} className="h-7 w-20 rounded-full shrink-0" />
             ))}
           </div>
-          <div className="space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border/70">
-                <Skeleton className="size-16 rounded-lg shrink-0" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-1/3 rounded" />
-                  <Skeleton className="h-3 w-1/4 rounded" />
-                </div>
-              </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <AnimeCard key={i} isLoading={true} />
             ))}
           </div>
         </div>

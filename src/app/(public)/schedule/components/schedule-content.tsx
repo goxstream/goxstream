@@ -2,9 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { DAYS_OF_WEEK_MAP } from "@/lib/constants";
-import { Skeleton } from "@/components/ui/skeleton";
+import { EpisodeCard } from "@/components/episode-card";
 import { useScheduleAnime } from "@/hooks/use-schedule-anime";
-import type { DayOfWeek, ScheduleViewMode, ScheduleItem } from "@/types/schedule";
+import type { DayOfWeek, ScheduleViewMode } from "@/types/schedule";
 import { ScheduleHeader } from "./schedule-header";
 import { DaySelectorTabs } from "./day-selector-tabs";
 import { TimelineView } from "./timeline-view";
@@ -84,16 +84,9 @@ export function ScheduleContent() {
 
       {/* In-Component Skeleton Loader or Schedule Views */}
       {isLoading ? (
-        <div className="space-y-4 py-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 py-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border/60">
-              <Skeleton className="h-6 w-20 rounded" />
-              <Skeleton className="size-14 rounded-lg shrink-0" />
-              <div className="space-y-2 flex-1">
-                <Skeleton className="h-4 w-1/3 rounded" />
-                <Skeleton className="h-3 w-1/4 rounded" />
-              </div>
-            </div>
+            <EpisodeCard key={i} isLoading={true} />
           ))}
         </div>
       ) : (
