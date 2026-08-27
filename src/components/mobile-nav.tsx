@@ -67,14 +67,18 @@ export function MobileNav({ navItems }: MobileNavProps) {
         <Menu className="size-5 text-foreground" />
       </SheetTrigger>
 
-      <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-background border-border p-6 flex flex-col justify-between">
-        <div className="space-y-6">
+      <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-background border-border p-0 flex flex-col justify-between overflow-hidden">
+        {/* Hamburger Header (Fixed / Top) */}
+        <div className="px-6 pt-6 pb-4 shrink-0 border-b border-border/40">
           <SheetHeader className="p-0 text-left">
             <SheetTitle>
               <LogoBrand href="/" size="lg" />
             </SheetTitle>
           </SheetHeader>
+        </div>
 
+        {/* Hamburger Body (Scrollable Main Content) */}
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4">
           {/* User Header Info if Logged In */}
           {user && (
             <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border/60">
@@ -103,7 +107,7 @@ export function MobileNav({ navItems }: MobileNavProps) {
             </div>
           )}
 
-          <nav className="flex flex-col gap-1.5 pt-2">
+          <nav className="flex flex-col gap-1.5">
             {navItems.map((item) => {
               const Icon = (item.iconName && ICON_MAP[item.iconName]) || Tv;
               return (
@@ -184,8 +188,8 @@ export function MobileNav({ navItems }: MobileNavProps) {
           </nav>
         </div>
 
-        {/* Drawer Bottom Actions */}
-        <div className="space-y-3 pt-6 border-t border-border">
+        {/* Hamburger Footer (Fixed / Bottom) */}
+        <div className="p-6 pt-4 shrink-0 border-t border-border bg-background space-y-3">
           {isLoading ? (
             <Skeleton className="h-11 w-full rounded-lg" />
           ) : user ? (
