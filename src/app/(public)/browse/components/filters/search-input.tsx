@@ -3,10 +3,7 @@
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-export interface SearchInputProps {
-  query: string;
-  onQueryChange: (q: string) => void;
-}
+import type { SearchInputProps } from "../../types";
 
 export function SearchInput({ query, onQueryChange }: SearchInputProps) {
   return (

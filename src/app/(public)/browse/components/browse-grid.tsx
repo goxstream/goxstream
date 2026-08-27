@@ -8,14 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
-export interface BrowseGridProps {
-  items: AnimeItem[];
-  totalResults: number;
-  totalAnimeCount: number;
-  viewMode: "grid" | "list";
-  onViewModeChange: (mode: "grid" | "list") => void;
-  onResetFilters: () => void;
-}
+import type { BrowseGridProps } from "../types";
 
 export function BrowseGrid({
   items,

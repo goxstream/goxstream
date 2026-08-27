@@ -4,24 +4,7 @@ import { X, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export interface ActiveFiltersBarProps {
-  query: string;
-  genre: string;
-  status: string;
-  format: string;
-  audio: string;
-  season: string;
-  year: string;
-  activeFiltersCount: number;
-  onQueryChange: (q: string) => void;
-  onGenreChange: (g: string) => void;
-  onStatusChange: (s: string) => void;
-  onFormatChange: (f: string) => void;
-  onAudioChange: (a: string) => void;
-  onSeasonChange: (s: string) => void;
-  onYearChange: (y: string) => void;
-  onResetFilters: () => void;
-}
+import type { ActiveFiltersBarProps } from "../../types";
 
 export function ActiveFiltersBar({
   query,

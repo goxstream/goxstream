@@ -4,13 +4,7 @@ import { useState } from "react";
 import { SlidersHorizontal, Filter, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { BaseFilterCombobox } from "./base-filter-combobox";
 import {
   Sheet,
   SheetContent,
@@ -26,23 +20,7 @@ import {
   ANIME_YEARS,
   SORT_OPTIONS,
 } from "@/lib/constants";
-
-export interface MobileFilterDrawerProps {
-  status: string;
-  onStatusChange: (s: string) => void;
-  format: string;
-  onFormatChange: (f: string) => void;
-  audio: string;
-  onAudioChange: (a: string) => void;
-  season: string;
-  onSeasonChange: (s: string) => void;
-  year: string;
-  onYearChange: (y: string) => void;
-  sort: string;
-  onSortChange: (s: string) => void;
-  onResetFilters: () => void;
-  activeFiltersCount: number;
-}
+import type { MobileFilterDrawerProps } from "../../types";
 
 export function MobileFilterDrawer({
   status,
@@ -89,25 +67,21 @@ export function MobileFilterDrawer({
             </SheetTitle>
           </SheetHeader>
 
-          {/* Mobile Filter Dropdowns using shadcn Select */}
+          {/* Mobile Filter Dropdowns using Base UI Combobox */}
           <div className="space-y-4">
             {/* Status */}
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Status
               </label>
-              <Select value={status} onValueChange={(val) => val && onStatusChange(val)}>
-                <SelectTrigger className="w-full h-10 text-sm bg-card rounded-lg border-border">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent className="z-50 bg-popover">
-                  {ANIME_STATUSES.map((st) => (
-                    <SelectItem key={st} value={st}>
-                      {st}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BaseFilterCombobox
+                label=""
+                value={status}
+                onValueChange={onStatusChange}
+                options={ANIME_STATUSES}
+                className="w-full h-10 text-sm"
+                contentClassName="z-[70]"
+              />
             </div>
 
             {/* Format */}
@@ -115,18 +89,14 @@ export function MobileFilterDrawer({
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Format / Type
               </label>
-              <Select value={format} onValueChange={(val) => val && onFormatChange(val)}>
-                <SelectTrigger className="w-full h-10 text-sm bg-card rounded-lg border-border">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent className="z-50 bg-popover">
-                  {ANIME_FORMATS.map((fmt) => (
-                    <SelectItem key={fmt} value={fmt}>
-                      {fmt}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BaseFilterCombobox
+                label=""
+                value={format}
+                onValueChange={onFormatChange}
+                options={ANIME_FORMATS}
+                className="w-full h-10 text-sm"
+                contentClassName="z-[70]"
+              />
             </div>
 
             {/* Audio */}
@@ -134,18 +104,14 @@ export function MobileFilterDrawer({
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Sub / Dub Audio
               </label>
-              <Select value={audio} onValueChange={(val) => val && onAudioChange(val)}>
-                <SelectTrigger className="w-full h-10 text-sm bg-card rounded-lg border-border">
-                  <SelectValue placeholder="Audio" />
-                </SelectTrigger>
-                <SelectContent className="z-50 bg-popover">
-                  {ANIME_AUDIO_OPTIONS.map((aud) => (
-                    <SelectItem key={aud} value={aud}>
-                      {aud}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BaseFilterCombobox
+                label=""
+                value={audio}
+                onValueChange={onAudioChange}
+                options={ANIME_AUDIO_OPTIONS}
+                className="w-full h-10 text-sm"
+                contentClassName="z-[70]"
+              />
             </div>
 
             {/* Season */}
@@ -153,18 +119,14 @@ export function MobileFilterDrawer({
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Season
               </label>
-              <Select value={season} onValueChange={(val) => val && onSeasonChange(val)}>
-                <SelectTrigger className="w-full h-10 text-sm bg-card rounded-lg border-border">
-                  <SelectValue placeholder="Season" />
-                </SelectTrigger>
-                <SelectContent className="z-50 bg-popover">
-                  {ANIME_SEASONS.map((sn) => (
-                    <SelectItem key={sn} value={sn}>
-                      {sn}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BaseFilterCombobox
+                label=""
+                value={season}
+                onValueChange={onSeasonChange}
+                options={ANIME_SEASONS}
+                className="w-full h-10 text-sm"
+                contentClassName="z-[70]"
+              />
             </div>
 
             {/* Year */}
@@ -172,18 +134,14 @@ export function MobileFilterDrawer({
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Release Year
               </label>
-              <Select value={year} onValueChange={(val) => val && onYearChange(val)}>
-                <SelectTrigger className="w-full h-10 text-sm bg-card rounded-lg border-border">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent className="z-50 bg-popover">
-                  {ANIME_YEARS.map((yr) => (
-                    <SelectItem key={yr} value={yr}>
-                      {yr}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BaseFilterCombobox
+                label=""
+                value={year}
+                onValueChange={onYearChange}
+                options={ANIME_YEARS}
+                className="w-full h-10 text-sm"
+                contentClassName="z-[70]"
+              />
             </div>
 
             {/* Sort By */}
@@ -191,18 +149,14 @@ export function MobileFilterDrawer({
               <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Sort Results By
               </label>
-              <Select value={sort} onValueChange={(val) => val && onSortChange(val)}>
-                <SelectTrigger className="w-full h-10 text-sm bg-card rounded-lg border-border">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent className="z-50 bg-popover">
-                  {SORT_OPTIONS.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BaseFilterCombobox
+                label=""
+                value={sort}
+                onValueChange={onSortChange}
+                options={SORT_OPTIONS}
+                className="w-full h-10 text-sm"
+                contentClassName="z-[70]"
+              />
             </div>
           </div>
         </div>

@@ -5,27 +5,7 @@ import { GenreRibbon } from "./filters/genre-ribbon";
 import { FilterSelectStrip } from "./filters/filter-select-strip";
 import { ActiveFiltersBar } from "./filters/active-filters-bar";
 import { MobileFilterDrawer } from "./filters/mobile-filter-drawer";
-
-export interface BrowseFiltersProps {
-  query: string;
-  onQueryChange: (q: string) => void;
-  genre: string;
-  onGenreChange: (g: string) => void;
-  status: string;
-  onStatusChange: (s: string) => void;
-  format: string;
-  onFormatChange: (f: string) => void;
-  audio: string;
-  onAudioChange: (a: string) => void;
-  season: string;
-  onSeasonChange: (s: string) => void;
-  year: string;
-  onYearChange: (y: string) => void;
-  sort: string;
-  onSortChange: (s: string) => void;
-  onResetFilters: () => void;
-  activeFiltersCount: number;
-}
+import type { BrowseFiltersProps } from "../types";
 
 export function BrowseFilters(props: BrowseFiltersProps) {
   return (

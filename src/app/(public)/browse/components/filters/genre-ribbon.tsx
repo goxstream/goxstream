@@ -2,10 +2,7 @@
 
 import { ANIME_GENRES } from "@/lib/constants";
 
-export interface GenreRibbonProps {
-  selectedGenre: string;
-  onGenreChange: (genre: string) => void;
-}
+import type { GenreRibbonProps } from "../../types";
 
 export function GenreRibbon({ selectedGenre, onGenreChange }: GenreRibbonProps) {
   return (

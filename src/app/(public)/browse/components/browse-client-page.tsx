@@ -1,10 +1,9 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBrowseAnime } from "@/hooks/use-browse-anime";
-import { BrowseHeader } from "./browse-header";
 import { BrowseFilters } from "./browse-filters";
 import { BrowseGrid } from "./browse-grid";
 import { BrowsePagination } from "./browse-pagination";
@@ -150,16 +149,9 @@ export function BrowseClientPage() {
     return fetchedList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [fetchedList, currentPage]);
 
-  // Scroll to top of grid on page change
-  useEffect(() => {
-    window.scrollTo({ top: 200, behavior: "smooth" });
-  }, [currentPage]);
-
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <BrowseHeader />
-
-      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
         <BrowseFilters
           query={query}
           onQueryChange={handleQueryChange}
