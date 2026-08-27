@@ -17,7 +17,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-RUN pnpm build
+RUN --mount=type=cache,id=nextcache,target=/app/.next/cache pnpm build
 
 # 3. Production runner stage
 FROM base AS runner
