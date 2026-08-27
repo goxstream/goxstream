@@ -65,6 +65,13 @@
 			"binding": "R2",
 			"bucket_name": "goxstream"
 		}
+	],
+	"hyperdrive": [
+		{
+			"binding": "HYPERDRIVE",
+			"id": "0b8648bc20f348fe843bb8e3a0fa373f",
+			"localConnectionString": "postgresql://postgres:postgres@127.0.0.1:5432/goxstream"
+		}
 	]
 	/**
 	 * Smart Placement
