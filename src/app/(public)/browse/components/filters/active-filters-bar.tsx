@@ -3,6 +3,7 @@
 import { X, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { parseActiveGenres, removeGenreFromSelection } from "../../lib/filter-utils";
 import type { ActiveFiltersBarProps } from "../../types";
 
 export function ActiveFiltersBar({
@@ -25,19 +26,11 @@ export function ActiveFiltersBar({
 }: ActiveFiltersBarProps) {
   if (activeFiltersCount === 0) return null;
 
-  // Extract individual active genres array
-  const activeGenres =
-    genre && genre !== "All"
-      ? genre.split(",").map((g) => g.trim()).filter(Boolean)
-      : [];
+  const activeGenres = parseActiveGenres(genre);
 
-  const removeSingleGenre = (targetGenre: string) => {
-    const updated = activeGenres.filter((g) => g !== targetGenre);
-    if (updated.length === 0) {
-      onGenreChange("All");
-    } else {
-      onGenreChange(updated.join(","));
-    }
+  const handleRemoveGenre = (targetGenre: string) => {
+    const nextGenreValue = removeGenreFromSelection(genre, targetGenre);
+    onGenreChange(nextGenreValue);
   };
 
   return (
@@ -71,7 +64,7 @@ export function ActiveFiltersBar({
           <span>Genre: {singleGenre}</span>
           <button
             type="button"
-            onClick={() => removeSingleGenre(singleGenre)}
+            onClick={() => handleRemoveGenre(singleGenre)}
             className="hover:opacity-75"
             aria-label={`Remove ${singleGenre} genre filter`}
           >
