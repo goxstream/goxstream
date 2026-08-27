@@ -149,18 +149,27 @@ pnpm user-admin help
 
 ```
 scripts/user-admin/
-├── README.md               # Dedicated CLI documentation
-├── package.json            # Scope script as ESM module
-├── index.tsx               # Entry point (meow flag parser + Ink render)
-├── db-scanner.ts           # Auto-detection for DB targets
-├── db-adapter.ts           # Multi-target CRUD database access layer
-├── types.ts                # Shared TypeScript definitions
-└── ui/                     # React Ink UI Components
-    ├── App.tsx             # Root TUI Container & State Machine
-    ├── Header.tsx          # ASCII Banner Component
-    ├── DatabaseSelector.tsx# DB Target Selection Component
-    ├── UserTable.tsx       # CLI Table Renderer
-    ├── UserSearch.tsx      # Real-time Filterable Search Component
-    ├── UserForm.tsx        # Step-by-step Input Form
-    └── HelpView.tsx        # Styled Help View Component
+├── README.md                 # Dedicated CLI documentation
+├── package.json              # Scoped ESM config
+├── index.tsx                 # Lean CLI entrypoint (~40 lines)
+├── db-scanner.ts             # Target detection scanner (~70 lines)
+├── types.ts                  # Shared TypeScript definitions (~35 lines)
+├── db/                       # Database Adapters (< 90 lines each)
+│   ├── d1-adapter.ts         # D1 SQLite query execution
+│   ├── pg-adapter.ts         # PostgreSQL Drizzle ORM operations
+│   └── index.ts              # Unified DB access facade
+├── cli/                      # Non-Interactive CLI Handlers (< 80 lines each)
+│   └── handlers.ts           # Non-interactive CLI command handlers
+└── ui/                       # React Ink UI Components (< 80 lines each)
+    ├── App.tsx               # Root TUI Router & State Engine
+    ├── Header.tsx            # Header Banner Component
+    ├── DatabaseSelector.tsx  # DB Target Selection Component
+    ├── UserTable.tsx         # CLI Table Renderer
+    ├── UserSearch.tsx        # Real-time Single User Search
+    ├── UserMultiSelect.tsx   # Interactive Multi-Select Checklist
+    ├── UserForm.tsx          # Step-by-step Input Form
+    ├── HelpView.tsx          # CLI Documentation View
+    └── views/                # Modular Sub-Views
+        ├── MenuView.tsx      # Main Menu View
+        └── DeleteConfirmModal.tsx # Delete Confirmation Modal
 ```

@@ -9,8 +9,10 @@ import { UserSearch } from "./UserSearch";
 import { UserMultiSelect } from "./UserMultiSelect";
 import { UserForm } from "./UserForm";
 import { HelpView } from "./HelpView";
+import { MenuView } from "./views/MenuView";
+import { DeleteConfirmModal } from "./views/DeleteConfirmModal";
 import { scanAvailableDatabases } from "../db-scanner";
-import { listUsers, createUser, updateUser, deleteUsersBatch } from "../db-adapter";
+import { listUsers, createUser, updateUser, deleteUsersBatch } from "../db";
 import type { DbTargetInfo, DbTarget, UserItem, CreateUserInput } from "../types";
 
 interface AppProps {
@@ -31,7 +33,7 @@ type ViewState =
   | "DELETE_CONFIRM"
   | "HELP";
 
-export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialFlags }) => {
+export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
   const { exit } = useApp();
   const [dbTargets, setDbTargets] = useState<DbTargetInfo[]>([]);
   const [selectedDb, setSelectedDb] = useState<DbTarget | undefined>(initialTarget);
@@ -39,7 +41,7 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
   const [users, setUsers] = useState<UserItem[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<UserItem[]>([]);
-  const [message, setMessage] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
+  const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -47,21 +49,13 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
       const scanned = await scanAvailableDatabases();
       setDbTargets(scanned);
 
-      if (initialTarget) {
-        const found = scanned.find((t) => t.id === initialTarget && t.isAvailable);
-        if (found) {
-          setSelectedDb(initialTarget);
-          if (initialAction === "help") {
-            setView("HELP");
-          } else if (initialAction === "list") {
-            loadUsers(initialTarget);
-          } else if (initialAction === "create") {
-            setView("CREATE");
-          } else {
-            setView("MENU");
-          }
-          return;
-        }
+      if (initialTarget && scanned.some((t) => t.id === initialTarget && t.isAvailable)) {
+        setSelectedDb(initialTarget);
+        if (initialAction === "help") setView("HELP");
+        else if (initialAction === "list") loadUsers(initialTarget);
+        else if (initialAction === "create") setView("CREATE");
+        else setView("MENU");
+        return;
       }
 
       const available = scanned.filter((t) => t.isAvailable);
@@ -72,15 +66,13 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
         setView("SELECT_DB");
       }
     }
-
     initScan();
   }, []);
 
   const loadUsers = async (target: DbTarget) => {
     setLoading(true);
     try {
-      const data = await listUsers(target);
-      setUsers(data);
+      setUsers(await listUsers(target));
       setView("LIST");
     } catch (err: any) {
       setMessage({ text: err.message || String(err), type: "error" });
@@ -90,128 +82,70 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
     }
   };
 
-  const handleSelectDb = (target: DbTarget) => {
-    setSelectedDb(target);
-    if (initialAction === "list") {
-      loadUsers(target);
-    } else if (initialAction === "create") {
-      setView("CREATE");
-    } else if (initialAction === "help") {
-      setView("HELP");
-    } else {
-      setView("MENU");
-    }
-  };
-
   const handleMenuSelect = async (item: { value: string }) => {
     setMessage(null);
-    if (item.value === "list") {
-      if (selectedDb) await loadUsers(selectedDb);
-    } else if (item.value === "create") {
-      setView("CREATE");
-    } else if (item.value === "edit") {
-      if (selectedDb) {
-        setLoading(true);
-        try {
-          const list = await listUsers(selectedDb);
-          setUsers(list);
-          setView("EDIT_SEARCH");
-        } catch (err: any) {
-          setMessage({ text: err.message, type: "error" });
-        } finally {
-          setLoading(false);
-        }
+    if (!selectedDb) return;
+    if (item.value === "list") await loadUsers(selectedDb);
+    else if (item.value === "create") setView("CREATE");
+    else if (item.value === "change_db") setView("SELECT_DB");
+    else if (item.value === "help") setView("HELP");
+    else if (item.value === "exit") exit();
+    else if (item.value === "edit" || item.value === "delete") {
+      setLoading(true);
+      try {
+        setUsers(await listUsers(selectedDb));
+        setView(item.value === "edit" ? "EDIT_SEARCH" : "DELETE_SEARCH");
+      } catch (err: any) {
+        setMessage({ text: err.message, type: "error" });
+      } finally {
+        setLoading(false);
       }
-    } else if (item.value === "delete") {
-      if (selectedDb) {
-        setLoading(true);
-        try {
-          const list = await listUsers(selectedDb);
-          setUsers(list);
-          setView("DELETE_SEARCH");
-        } catch (err: any) {
-          setMessage({ text: err.message, type: "error" });
-        } finally {
-          setLoading(false);
-        }
-      }
-    } else if (item.value === "change_db") {
-      setView("SELECT_DB");
-    } else if (item.value === "help") {
-      setView("HELP");
-    } else if (item.value === "exit") {
-      exit();
     }
   };
 
-  const handleCreateSubmit = async (data: CreateUserInput) => {
+  const handleCreate = async (data: CreateUserInput) => {
     if (!selectedDb) return;
     setLoading(true);
     try {
       const created = await createUser(selectedDb, data);
-      setMessage({
-        text: `Successfully created user '${created.username}' (ID: ${created.id})`,
-        type: "success",
-      });
-      setView("MENU");
+      setMessage({ text: `Created user '${created.username}' (${created.id})`, type: "success" });
     } catch (err: any) {
-      setMessage({ text: `Failed to create user: ${err.message}`, type: "error" });
-      setView("MENU");
+      setMessage({ text: err.message, type: "error" });
     } finally {
       setLoading(false);
+      setView("MENU");
     }
   };
 
-  const handleEditSubmit = async (data: CreateUserInput) => {
+  const handleEdit = async (data: CreateUserInput) => {
     if (!selectedDb || !selectedUser) return;
     setLoading(true);
     try {
       const updated = await updateUser(selectedDb, selectedUser.id, data);
-      setMessage({
-        text: `Successfully updated user '${updated.username}' (ID: ${updated.id})`,
-        type: "success",
-      });
-      setSelectedUser(null);
-      setView("MENU");
+      setMessage({ text: `Updated user '${updated.username}' (${updated.id})`, type: "success" });
     } catch (err: any) {
-      setMessage({ text: `Failed to update user: ${err.message}`, type: "error" });
-      setView("MENU");
+      setMessage({ text: err.message, type: "error" });
     } finally {
+      setSelectedUser(null);
       setLoading(false);
+      setView("MENU");
     }
   };
 
-  const handleDeleteConfirm = async () => {
+  const handleDelete = async () => {
     if (!selectedDb || selectedUsers.length === 0) return;
     setLoading(true);
     try {
-      const count = await deleteUsersBatch(
-        selectedDb,
-        selectedUsers.map((u) => u.id)
-      );
-      setMessage({
-        text: `Successfully deleted ${count} user(s) permanently`,
-        type: "success",
-      });
-      setSelectedUsers([]);
-      setView("MENU");
+      const count = await deleteUsersBatch(selectedDb, selectedUsers.map((u) => u.id));
+      setMessage({ text: `Deleted ${count} user(s) permanently`, type: "success" });
     } catch (err: any) {
-      setMessage({ text: `Failed to delete users: ${err.message}`, type: "error" });
-      setView("MENU");
+      setMessage({ text: err.message, type: "error" });
     } finally {
+      setSelectedUsers([]);
       setLoading(false);
+      setView("MENU");
     }
   };
-
-  const menuItems = [
-    { label: "List All Users", value: "list" },
-    { label: "Create New User", value: "create" },
-    { label: "Search & Edit User", value: "edit" },
-    { label: "Search & Delete Users (Multi-select)", value: "delete" },
-    { label: "Switch Database Connection", value: "change_db" },
-    { label: "Help & Command Options", value: "help" },
-    { label: "Exit", value: "exit" },
-  ];
 
   return (
     <Box flexDirection="column" padding={1}>
@@ -219,68 +153,43 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
 
       {message && (
         <Box marginY={1}>
-          <Text
-            bold
-            color={
-              message.type === "success"
-                ? "green"
-                : message.type === "error"
-                ? "red"
-                : "yellow"
-            }
-          >
-            {message.type === "success" ? "[SUCCESS] " : message.type === "error" ? "[ERROR] " : "[INFO] "}
+          <Text bold color={message.type === "success" ? "green" : "red"}>
+            {message.type === "success" ? "[SUCCESS] " : "[ERROR] "}
             {message.text}
           </Text>
         </Box>
       )}
 
-      {view === "SCANNING_DB" && (
+      {(view === "SCANNING_DB" || loading) && (
         <Box marginY={1}>
           <Text color="cyan">
-            <Spinner type="dots" /> Scanning environment database targets...
+            <Spinner type="dots" /> {view === "SCANNING_DB" ? "Scanning environment..." : "Executing operation..."}
           </Text>
         </Box>
       )}
 
-      {view === "SELECT_DB" && (
-        <DatabaseSelector targets={dbTargets} onSelect={handleSelectDb} />
+      {!loading && view === "SELECT_DB" && (
+        <DatabaseSelector
+          targets={dbTargets}
+          onSelect={(t) => {
+            setSelectedDb(t);
+            setView("MENU");
+          }}
+        />
       )}
 
-      {loading && view !== "SCANNING_DB" && (
-        <Box marginY={1}>
-          <Text color="yellow">
-            <Spinner type="dots" /> Executing database operation...
-          </Text>
-        </Box>
-      )}
-
-      {!loading && view === "MENU" && (
-        <Box flexDirection="column" marginY={1}>
-          <Text bold color="green">
-            Main Action Menu:
-          </Text>
-          <Box marginTop={1}>
-            <SelectInput items={menuItems} onSelect={handleMenuSelect} />
-          </Box>
-        </Box>
-      )}
+      {!loading && view === "MENU" && <MenuView onSelect={handleMenuSelect} />}
 
       {!loading && view === "LIST" && (
         <Box flexDirection="column">
           <UserTable users={users} title={`Users in ${selectedDb?.toUpperCase()}`} />
           <Box marginTop={1}>
-            <SelectInput
-              items={[{ label: "Back to Main Menu", value: "back" }]}
-              onSelect={() => setView("MENU")}
-            />
+            <SelectInput items={[{ label: "Back to Main Menu", value: "back" }]} onSelect={() => setView("MENU")} />
           </Box>
         </Box>
       )}
 
-      {!loading && view === "CREATE" && (
-        <UserForm onSubmit={handleCreateSubmit} onCancel={() => setView("MENU")} />
-      )}
+      {!loading && view === "CREATE" && <UserForm onSubmit={handleCreate} onCancel={() => setView("MENU")} />}
 
       {!loading && view === "EDIT_SEARCH" && (
         <UserSearch
@@ -295,20 +204,15 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
       )}
 
       {!loading && view === "EDIT_FORM" && selectedUser && (
-        <UserForm
-          initialValues={selectedUser}
-          isEdit={true}
-          onSubmit={handleEditSubmit}
-          onCancel={() => setView("MENU")}
-        />
+        <UserForm initialValues={selectedUser} isEdit onSubmit={handleEdit} onCancel={() => setView("MENU")} />
       )}
 
       {!loading && view === "DELETE_SEARCH" && (
         <UserMultiSelect
           users={users}
           actionLabel="Delete"
-          onSubmit={(selected) => {
-            setSelectedUsers(selected);
+          onSubmit={(sel) => {
+            setSelectedUsers(sel);
             setView("DELETE_CONFIRM");
           }}
           onCancel={() => setView("MENU")}
@@ -316,43 +220,14 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
       )}
 
       {!loading && view === "DELETE_CONFIRM" && selectedUsers.length > 0 && (
-        <Box flexDirection="column" marginY={1} borderStyle="double" borderColor="red" padding={1}>
-          <Text bold color="red">
-            CONFIRM DELETE {selectedUsers.length} USER(S) PERMANENTLY:
-          </Text>
-          <Box marginY={1} flexDirection="column">
-            {selectedUsers.map((u) => (
-              <Text key={u.id} color="yellow">
-                - [{u.role.toUpperCase()}] {u.username} ({u.email}) — ID: {u.id}
-              </Text>
-            ))}
-          </Box>
-          <Box marginTop={1}>
-            <SelectInput
-              items={[
-                { label: `YES, Permanently Delete ${selectedUsers.length} User(s)`, value: "confirm" },
-                { label: "Cancel & Go Back", value: "cancel" },
-              ]}
-              onSelect={(item) => {
-                if (item.value === "confirm") {
-                  handleDeleteConfirm();
-                } else {
-                  setView("MENU");
-                }
-              }}
-            />
-          </Box>
-        </Box>
+        <DeleteConfirmModal selectedUsers={selectedUsers} onConfirm={handleDelete} onCancel={() => setView("MENU")} />
       )}
 
       {view === "HELP" && (
         <Box flexDirection="column">
           <HelpView />
           <Box marginTop={1}>
-            <SelectInput
-              items={[{ label: "Back to Main Menu", value: "back" }]}
-              onSelect={() => setView("MENU")}
-            />
+            <SelectInput items={[{ label: "Back to Main Menu", value: "back" }]} onSelect={() => setView("MENU")} />
           </Box>
         </Box>
       )}
