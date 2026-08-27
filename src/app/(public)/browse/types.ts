@@ -14,6 +14,13 @@ export interface BaseFilterComboboxProps {
   contentClassName?: string;
 }
 
+export interface BaseGenreMultiSelectComboboxProps {
+  value: string;
+  onValueChange: (value: string) => void;
+  className?: string;
+  contentClassName?: string;
+}
+
 export interface SearchInputProps {
   query: string;
   onQueryChange: (q: string) => void;
@@ -28,6 +35,8 @@ export interface GenreRibbonProps {
 export interface FilterSelectStripProps {
   query: string;
   onQueryChange: (q: string) => void;
+  genre: string;
+  onGenreChange: (g: string) => void;
   status: string;
   onStatusChange: (s: string) => void;
   format: string;
@@ -45,6 +54,8 @@ export interface FilterSelectStripProps {
 }
 
 export interface MobileFilterDrawerProps {
+  genre: string;
+  onGenreChange: (g: string) => void;
   status: string;
   onStatusChange: (s: string) => void;
   format: string;

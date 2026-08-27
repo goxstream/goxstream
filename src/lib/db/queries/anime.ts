@@ -169,10 +169,12 @@ export async function getBrowseAnime(options?: {
   let items: AnimeItem[] = rawList.map(mapToAnimeItem);
 
   if (options?.genre && options.genre !== "All") {
-    const genreLower = options.genre.toLowerCase();
-    items = items.filter((item: AnimeItem) =>
-      item.genres.some((g: string) => g.toLowerCase() === genreLower)
-    );
+    const selectedGenres = options.genre.split(",").map((g) => g.trim().toLowerCase()).filter(Boolean);
+    if (selectedGenres.length > 0) {
+      items = items.filter((item: AnimeItem) =>
+        item.genres.some((g: string) => selectedGenres.includes(g.toLowerCase()))
+      );
+    }
   }
 
   if (options?.query) {

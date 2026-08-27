@@ -1,9 +1,8 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { SearchInput } from "./search-input";
 import { BaseFilterCombobox } from "./base-filter-combobox";
+import { BaseGenreMultiSelectCombobox } from "./base-genre-multiselect-combobox";
 import {
   ANIME_STATUSES,
   ANIME_FORMATS,
@@ -17,6 +16,8 @@ import type { FilterSelectStripProps } from "../../types";
 export function FilterSelectStrip({
   query,
   onQueryChange,
+  genre,
+  onGenreChange,
   status,
   onStatusChange,
   format,
@@ -29,8 +30,6 @@ export function FilterSelectStrip({
   onYearChange,
   sort,
   onSortChange,
-  onResetFilters,
-  activeFiltersCount,
 }: FilterSelectStripProps) {
   // Season options formatted for combobox display
   const seasonOptions = ANIME_SEASONS.map((sn) => ({
@@ -106,21 +105,11 @@ export function FilterSelectStrip({
           options={yearOptions}
         />
 
-        {/* Column 4: Reset Filter Action Button */}
-        <div className="w-full flex flex-col gap-1.5 justify-end">
-          {activeFiltersCount > 0 ? (
-            <Button
-              variant="outline"
-              onClick={onResetFilters}
-              className="h-10 text-xs font-semibold rounded-xl border-destructive/30 text-destructive hover:bg-destructive/10 flex items-center justify-center gap-2 transition-colors w-full"
-            >
-              <RotateCcw className="size-3.5" />
-              Reset All ({activeFiltersCount})
-            </Button>
-          ) : (
-            <div className="h-10 w-full" aria-hidden="true" />
-          )}
-        </div>
+        {/* Column 4: Genres Multi-Select Combobox */}
+        <BaseGenreMultiSelectCombobox
+          value={genre}
+          onValueChange={onGenreChange}
+        />
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { SlidersHorizontal, Filter, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BaseFilterCombobox } from "./base-filter-combobox";
+import { BaseGenreMultiSelectCombobox } from "./base-genre-multiselect-combobox";
 import {
   Sheet,
   SheetContent,
@@ -23,6 +24,8 @@ import {
 import type { MobileFilterDrawerProps } from "../../types";
 
 export function MobileFilterDrawer({
+  genre,
+  onGenreChange,
   status,
   onStatusChange,
   format,
@@ -69,6 +72,12 @@ export function MobileFilterDrawer({
 
           {/* Mobile Filter Dropdowns using Base UI Combobox */}
           <div className="space-y-4">
+            <BaseGenreMultiSelectCombobox
+              value={genre}
+              onValueChange={onGenreChange}
+              contentClassName="z-[70]"
+            />
+
             <BaseFilterCombobox
               label="Status"
               value={status}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import {
   Combobox,
   ComboboxInput,
@@ -21,6 +21,7 @@ export function BaseFilterCombobox({
   contentClassName,
 }: BaseFilterComboboxProps) {
   const [query, setQuery] = useState("");
+  const inputContainerRef = useRef<HTMLDivElement>(null);
 
   // Normalize options array to uniform ComboboxOption format
   const normalizedOptions = useMemo<ComboboxOption[]>(() => {
@@ -67,20 +68,23 @@ export function BaseFilterCombobox({
           }
         }}
       >
-        <ComboboxInput
-          value={query}
-          onInput={(e: React.FormEvent<HTMLInputElement>) => {
-            setQuery(e.currentTarget.value);
-          }}
-          placeholder={currentOption.label || label}
-          showTrigger
-          className={cn(
-            "w-full h-10 text-xs font-medium bg-card rounded-xl border border-border/80 shadow-xs focus-within:border-primary/50 transition-colors",
-            className
-          )}
-        />
+        <div ref={inputContainerRef} className="w-full relative">
+          <ComboboxInput
+            value={query}
+            onInput={(e: React.FormEvent<HTMLInputElement>) => {
+              setQuery(e.currentTarget.value);
+            }}
+            placeholder={currentOption.label || label}
+            showTrigger
+            className={cn(
+              "w-full h-10 text-xs font-medium bg-card rounded-xl border border-border/80 shadow-xs focus-within:border-primary/50 transition-colors",
+              className
+            )}
+          />
+        </div>
 
         <ComboboxContent
+          anchor={inputContainerRef}
           sideOffset={6}
           align="start"
           className={cn(
