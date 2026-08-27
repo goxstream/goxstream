@@ -14,7 +14,6 @@
 		"cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
 		"generate:logo": "tsx scripts/create-logo/index.ts",
 		"user-admin": "tsx scripts/user-admin/index.tsx",
-		"create:super-admin": "tsx scripts/user-admin/index.tsx create --role=super_admin",
 		"setup:ffmpeg": "tsx scripts/setup-ffmpeg/index.ts",
 		"test:e2e": "playwright test",
 		"test:e2e:ui": "playwright test --ui",

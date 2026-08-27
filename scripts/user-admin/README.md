@@ -31,10 +31,10 @@ pnpm user-admin
 ```
 The CLI will automatically scan for available databases and present an interactive menu to list, create, edit, or delete users.
 
-### 2. Super Admin Alias
-To quickly create a Super Admin user:
+### 2. Direct Flag Mode
+To quickly create a Super Admin user directly:
 ```bash
-pnpm create:super-admin
+pnpm user-admin create --username=admin --email=admin@goxstream.com --password=AdminPassword123! --role=super_admin
 ```
 
 ---
