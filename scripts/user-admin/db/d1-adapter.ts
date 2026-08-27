@@ -54,14 +54,21 @@ export async function createD1User(target: DbTarget, input: CreateUserInput): Pr
   const membershipTier = input.membershipTier || (role === "super_admin" ? "vip_pro" : "free");
   const nowMs = Date.now();
 
-  runD1Query(
-    flag,
-    `INSERT INTO users (id, username, email, password_hash, display_name, role, status, membership_tier, created_at, updated_at, last_active_at) VALUES (${sqlEscape(
-      userId
-    )}, ${sqlEscape(input.username)}, ${sqlEscape(input.email)}, ${sqlEscape(passwordHash)}, ${sqlEscape(
-      displayName
-    )}, ${sqlEscape(role)}, ${sqlEscape(status)}, ${sqlEscape(membershipTier)}, ${nowMs}, ${nowMs}, ${nowMs})`
-  );
+  try {
+    runD1Query(
+      flag,
+      `INSERT INTO users (id, username, email, password_hash, display_name, role, status, membership_tier, created_at, updated_at, last_active_at) VALUES (${sqlEscape(
+        userId
+      )}, ${sqlEscape(input.username)}, ${sqlEscape(input.email)}, ${sqlEscape(passwordHash)}, ${sqlEscape(
+        displayName
+      )}, ${sqlEscape(role)}, ${sqlEscape(status)}, ${sqlEscape(membershipTier)}, ${nowMs}, ${nowMs}, ${nowMs})`
+    );
+  } catch (err: any) {
+    if (err.message?.includes("UNIQUE constraint failed") || err.message?.includes("already exists")) {
+      throw new Error(`User creation failed: Username '${input.username}' or Email '${input.email}' already exists in database.`);
+    }
+    throw err;
+  }
 
   try {
     runD1Query(
