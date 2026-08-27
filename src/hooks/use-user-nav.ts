@@ -2,23 +2,21 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import type { Role } from "@/lib/auth/permissions";
 
 export interface ActiveUser {
+  id: string;
   displayName: string;
   username: string;
-  avatarUrl: string;
+  email?: string;
+  avatarUrl?: string | null;
+  role: Role;
   isVip: boolean;
 }
 
-export const DEFAULT_USER: ActiveUser = {
-  displayName: "Alex Rivera",
-  username: "alex_otaku",
-  avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-  isVip: true,
-};
-
 export function useUserNav() {
-  const [user, setUser] = useState<ActiveUser>(DEFAULT_USER);
+  const [user, setUser] = useState<ActiveUser | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,17 +26,32 @@ export function useUserNav() {
         const res = await fetch("/api/auth/me");
         if (res.ok) {
           const data = (await res.json()) as { user?: any };
-          if (isMounted && data.user) {
-            setUser({
-              displayName: data.user.displayName,
-              username: data.user.username,
-              avatarUrl: data.user.avatarUrl,
-              isVip: Boolean(data.user.isVip),
-            });
+          if (isMounted) {
+            if (data.user) {
+              setUser({
+                id: data.user.id,
+                displayName: data.user.displayName || data.user.username,
+                username: data.user.username,
+                email: data.user.email,
+                avatarUrl: data.user.avatarUrl,
+                role: (data.user.role as Role) || "user",
+                isVip: data.user.membershipTier === "vip_pro" || Boolean(data.user.isVip),
+              });
+            } else {
+              setUser(null);
+            }
           }
+        } else if (isMounted) {
+          setUser(null);
         }
       } catch {
-        // Fallback
+        if (isMounted) {
+          setUser(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     }
     fetchMe();
@@ -53,9 +66,11 @@ export function useUserNav() {
     } catch (error) {
       console.error("Logout request error:", error);
     }
+    setUser(null);
     router.push("/login");
     router.refresh();
   }, [router]);
 
-  return { user, logout };
+  return { user, isLoading, logout };
 }
+

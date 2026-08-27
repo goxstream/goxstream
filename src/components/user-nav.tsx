@@ -8,6 +8,9 @@ import {
   Settings,
   LogOut,
   Crown,
+  LayoutDashboard,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,16 +22,53 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useUserNav } from "@/hooks/use-user-nav";
 
 export function UserNav() {
-  const { user, logout } = useUserNav();
+  const { user, isLoading, logout } = useUserNav();
+
+  if (isLoading) {
+    return <Skeleton className="size-9 rounded-full" />;
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center gap-2">
+        <Link
+          href="/login"
+          className={buttonVariants({
+            variant: "ghost",
+            size: "sm",
+            className: "text-xs font-medium rounded-lg px-3 gap-1.5 text-muted-foreground hover:text-foreground",
+          })}
+        >
+          <LogIn className="size-3.5" />
+          <span>Sign In</span>
+        </Link>
+        <Link
+          href="/signup"
+          className={buttonVariants({
+            variant: "default",
+            size: "sm",
+            className: "text-xs font-semibold rounded-lg px-3 gap-1.5 shadow-xs",
+          })}
+        >
+          <UserPlus className="size-3.5" />
+          <span>Create Account</span>
+        </Link>
+      </div>
+    );
+  }
+
+  const isStaff = user.role && user.role !== "user";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={<button className="relative rounded-full focus:outline-hidden focus:ring-2 focus:ring-primary/40 cursor-pointer" />}>
         <Avatar className="size-9 border border-border/80 hover:border-primary/50 transition-colors shadow-xs">
-          <AvatarImage src={user.avatarUrl} alt={user.displayName} />
+          <AvatarImage src={user.avatarUrl || undefined} alt={user.displayName} />
           <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
             {user.displayName.substring(0, 2).toUpperCase()}
           </AvatarFallback>
@@ -37,7 +77,7 @@ export function UserNav() {
       <DropdownMenuContent className="w-56 align-end side-bottom bg-popover/95 backdrop-blur-md border border-border/80 shadow-md rounded-xl p-1.5" sideOffset={8}>
         <div className="flex items-center gap-2.5 p-2">
           <Avatar className="size-10 border border-border/60">
-            <AvatarImage src={user.avatarUrl} alt={user.displayName} />
+            <AvatarImage src={user.avatarUrl || undefined} alt={user.displayName} />
             <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
               {user.displayName.substring(0, 2).toUpperCase()}
             </AvatarFallback>
@@ -63,6 +103,13 @@ export function UserNav() {
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
+          {isStaff && (
+            <DropdownMenuItem render={<Link href="/dashboard" className="flex items-center gap-2.5 px-2 py-1.5 text-xs font-semibold text-primary rounded-lg cursor-pointer hover:bg-primary/10" />}>
+              <LayoutDashboard className="size-4 text-primary" />
+              <span>Admin Dashboard</span>
+            </DropdownMenuItem>
+          )}
+
           <DropdownMenuItem render={<Link href="/profile" className="flex items-center gap-2.5 px-2 py-1.5 text-xs font-medium rounded-lg cursor-pointer hover:bg-muted/70" />}>
             <User className="size-4 text-muted-foreground" />
             <span>Profile Overview</span>
@@ -97,3 +144,4 @@ export function UserNav() {
     </DropdownMenu>
   );
 }
+

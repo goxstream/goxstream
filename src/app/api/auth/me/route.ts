@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { getActiveUserSession } from "@/lib/db/queries/users";
+import { getCurrentUser } from "@/lib/auth/session";
 
 export async function GET() {
-  const user = await getActiveUserSession();
+  const user = await getCurrentUser();
   return NextResponse.json({ user });
 }
+

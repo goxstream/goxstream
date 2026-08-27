@@ -15,6 +15,13 @@
       "when": 1787747486521,
       "tag": "0001_fine_turbo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787794166150,
+      "tag": "0002_wooden_scrambler",
+      "breakpoints": true
     }
   ]
 }
