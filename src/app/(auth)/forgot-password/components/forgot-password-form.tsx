@@ -47,14 +47,14 @@ export function ForgotPasswordForm() {
         <CardFooter className="flex flex-col gap-3 pb-6">
           <Button
             variant="outline"
-            className="w-full"
+            className="w-full cursor-pointer"
             onClick={() => setIsSent(false)}
           >
             Resend Email
           </Button>
           <Link
             href="/login"
-            className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
             <ArrowLeftIcon data-icon="inline-start" className="size-3" />
             Back to Sign In
@@ -69,7 +69,7 @@ export function ForgotPasswordForm() {
       <CardHeader className="text-center">
         <Link
           href="/login"
-          className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-2 transition-colors self-center"
+          className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-2 transition-colors self-center cursor-pointer"
         >
           <ArrowLeftIcon data-icon="inline-start" className="size-3" />
           Back to Sign In
@@ -103,7 +103,7 @@ export function ForgotPasswordForm() {
                 />
               </Field>
 
-              <Button type="submit" className="w-full mt-2">
+              <Button type="submit" className="w-full mt-2 cursor-pointer">
                 <SendIcon data-icon="inline-start" className="size-4" />
                 Send Reset Link
               </Button>
@@ -115,11 +115,12 @@ export function ForgotPasswordForm() {
       <CardFooter className="flex justify-center border-t border-border/40 py-4">
         <p className="text-xs text-muted-foreground text-center">
           Remember your password?{" "}
-          <Link href="/login" className="font-semibold text-primary hover:underline">
+          <Link href="/login" className="font-semibold text-primary hover:underline cursor-pointer">
             Sign In
           </Link>
         </p>
       </CardFooter>
+
     </Card>
   )
 }

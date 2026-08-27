@@ -102,7 +102,7 @@ export function SignupForm() {
       <CardHeader className="text-center">
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-2 transition-colors self-center"
+          className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-2 transition-colors self-center cursor-pointer"
         >
           <ArrowLeftIcon data-icon="inline-start" className="size-3" />
           Back to Home
@@ -119,11 +119,11 @@ export function SignupForm() {
       <CardContent className="flex flex-col gap-5">
         {/* Social Registration */}
         <div className="grid grid-cols-2 gap-3">
-          <Button variant="outline" type="button" className="w-full">
+          <Button variant="outline" type="button" className="w-full cursor-pointer">
             <SiGoogle data-icon="inline-start" className="size-4" />
             Google
           </Button>
-          <Button variant="outline" type="button" className="w-full">
+          <Button variant="outline" type="button" className="w-full cursor-pointer">
             <SiDiscord data-icon="inline-start" className="size-4 text-[#5865F2]" />
             Discord
           </Button>
@@ -186,7 +186,7 @@ export function SignupForm() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground cursor-pointer"
                   >
                     {showPassword ? (
                       <EyeOffIcon className="size-4" />
@@ -257,20 +257,21 @@ export function SignupForm() {
                   checked={agreed}
                   onCheckedChange={(checked) => setAgreed(!!checked)}
                   required
+                  className="cursor-pointer"
                 />
-                <FieldLabel htmlFor="terms" className="text-xs font-normal text-muted-foreground leading-normal">
+                <FieldLabel htmlFor="terms" className="text-xs font-normal text-muted-foreground leading-normal cursor-pointer">
                   I agree to the{" "}
-                  <Link href="#" className="text-primary underline">
+                  <Link href="#" className="text-primary underline cursor-pointer">
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="#" className="text-primary underline">
+                  <Link href="#" className="text-primary underline cursor-pointer">
                     Privacy Policy
                   </Link>
                 </FieldLabel>
               </Field>
 
-              <Button type="submit" disabled={!agreed} className="w-full mt-2">
+              <Button type="submit" disabled={!agreed} className="w-full mt-2 cursor-pointer">
                 Create Account
               </Button>
             </FieldGroup>
@@ -281,11 +282,12 @@ export function SignupForm() {
       <CardFooter className="flex justify-center border-t border-border/40 py-4">
         <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-primary hover:underline">
+          <Link href="/login" className="font-semibold text-primary hover:underline cursor-pointer">
             Sign In
           </Link>
         </p>
       </CardFooter>
+
     </Card>
   )
 }

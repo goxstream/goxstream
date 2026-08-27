@@ -93,7 +93,7 @@ export function LoginForm() {
       <CardHeader className="text-center">
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-2 transition-colors self-center"
+          className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-2 transition-colors self-center cursor-pointer"
         >
           <ArrowLeftIcon data-icon="inline-start" className="size-3" />
           Back to Home
@@ -110,11 +110,11 @@ export function LoginForm() {
       <CardContent className="flex flex-col gap-5">
         {/* Social Authentication */}
         <div className="grid grid-cols-2 gap-3">
-          <Button variant="outline" type="button" className="w-full">
+          <Button variant="outline" type="button" className="w-full cursor-pointer">
             <SiGoogle data-icon="inline-start" className="size-4" />
             Google
           </Button>
-          <Button variant="outline" type="button" className="w-full">
+          <Button variant="outline" type="button" className="w-full cursor-pointer">
             <SiDiscord data-icon="inline-start" className="size-4 text-[#5865F2]" />
             Discord
           </Button>
@@ -138,9 +138,9 @@ export function LoginForm() {
               setOtpSent(false)
               setError(null)
             }}
-            className={`flex-1 rounded-md py-1.5 transition-all ${
+            className={`flex-1 rounded-md py-1.5 transition-all cursor-pointer ${
               loginMethod === "password"
-                ? "bg-background text-foreground shadow-xs"
+                ? "bg-background text-foreground shadow-xs font-semibold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -152,9 +152,9 @@ export function LoginForm() {
               setLoginMethod("magic-link")
               setError(null)
             }}
-            className={`flex-1 rounded-md py-1.5 transition-all ${
+            className={`flex-1 rounded-md py-1.5 transition-all cursor-pointer ${
               loginMethod === "magic-link"
-                ? "bg-background text-foreground shadow-xs"
+                ? "bg-background text-foreground shadow-xs font-semibold"
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -194,7 +194,7 @@ export function LoginForm() {
                     <FieldLabel htmlFor="password">Password</FieldLabel>
                     <Link
                       href="/forgot-password"
-                      className="text-xs text-primary hover:underline"
+                      className="text-xs text-primary hover:underline cursor-pointer"
                     >
                       Forgot password?
                     </Link>
@@ -211,7 +211,7 @@ export function LoginForm() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
+                      className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground cursor-pointer"
                     >
                       {showPassword ? (
                         <EyeOffIcon className="size-4" />
@@ -260,7 +260,7 @@ export function LoginForm() {
                 </>
               )}
 
-              <Button type="submit" className="w-full mt-2">
+              <Button type="submit" className="w-full mt-2 cursor-pointer">
                 {loginMethod === "password" ? (
                   "Sign In"
                 ) : otpSent ? (
@@ -280,11 +280,12 @@ export function LoginForm() {
       <CardFooter className="flex justify-center border-t border-border/40 py-4">
         <p className="text-sm text-muted-foreground">
           Don't have an account?{" "}
-          <Link href="/signup" className="font-semibold text-primary hover:underline">
+          <Link href="/signup" className="font-semibold text-primary hover:underline cursor-pointer">
             Sign Up Now
           </Link>
         </p>
       </CardFooter>
+
     </Card>
   )
 }
