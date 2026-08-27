@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { EyeIcon, EyeOffIcon, KeyRoundIcon, MailIcon, ArrowLeftIcon, AlertCircleIcon } from "lucide-react"
 import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
 
@@ -35,7 +35,6 @@ import type { LoginMethod } from "../types"
 
 export function LoginForm() {
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   const [loginMethod, setLoginMethod] = useState<LoginMethod>("password")
   const [emailOrUsername, setEmailOrUsername] = useState("")
@@ -76,9 +75,11 @@ export function LoginForm() {
         return
       }
 
-      const redirectUrl = searchParams.get("redirect") || "/"
+      const redirectUrl =
+        (typeof window !== "undefined"
+          ? new URLSearchParams(window.location.search).get("redirect")
+          : null) || "/"
       router.push(redirectUrl)
-      router.refresh()
     } catch {
       setError("Connection error. Please try again.")
       setIsLoading(false)

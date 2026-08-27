@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value;
 
-  const isAuthRoute = pathname === "/login" || pathname === "/register";
+  const isAuthRoute = pathname === "/login" || pathname === "/signup";
   const isDashboardRoute = pathname.startsWith("/dashboard");
   const isUserAreaRoute =
     pathname.startsWith("/profile") ||
@@ -25,7 +25,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // 2. Redirect already authenticated users away from guest auth routes (/login, /register)
+  // 2. Redirect already authenticated users away from guest auth routes (/login, /signup)
   if (sessionToken && isAuthRoute) {
     const homeUrl = new URL("/", request.url);
     return NextResponse.redirect(homeUrl);
@@ -45,6 +45,6 @@ export const config = {
     "/history/:path*",
     "/settings/:path*",
     "/login",
-    "/register",
+    "/signup",
   ],
 };
