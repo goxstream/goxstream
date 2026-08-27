@@ -1,0 +1,74 @@
+name: goxstream
+
+services:
+  # Next.js Application Service (Node.js 24 LTS + pnpm)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: goxstream-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - DB_CONNECTION=${DB_CONNECTION:-postgres}
+      - DB_URL=${DB_URL:-postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@goxstream-postgres:5432/${POSTGRES_DB:-goxstream}}
+      - CACHE_CONNECTION=${CACHE_CONNECTION:-redis}
+      - REDIS_URL=${REDIS_URL:-redis://goxstream-redis:6379}
+      - REDIS_HOST=${REDIS_HOST:-goxstream-redis}
+    depends_on:
+      goxstream-postgres:
+        condition: service_healthy
+      goxstream-redis:
+        condition: service_healthy
+    networks:
+      - goxstream-network
+
+  # Database Service (PostgreSQL 18 - Private Internal Only)
+  goxstream-postgres:
+    image: postgres:18-alpine
+    container_name: goxstream-postgres
+    restart: unless-stopped
+    # Port tidak di-expose ke host luar agar hanya diakses via jaringan internal Docker
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-goxstream}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-goxstream}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - goxstream-network
+
+  # Redis Cache Service (Private Internal Only)
+  goxstream-redis:
+    image: redis:alpine
+    container_name: goxstream-redis
+    restart: unless-stopped
+    # Port tidak di-expose ke host luar agar hanya diakses via jaringan internal Docker
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - goxstream-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  goxstream-network:
+    driver: bridge

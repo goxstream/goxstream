@@ -1,0 +1,29 @@
+# Node modules & build outputs
+node_modules
+.next
+.open-next
+.wrangler
+out
+build
+dist
+temp
+test-results
+playwright-report
+
+# Logs & debug files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Git & IDE
+.git
+.gitignore
+.vscode
+.idea
+
+# Environment files (sensitive)
+.env
+.env*.local
+.dev.vars
