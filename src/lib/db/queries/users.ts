@@ -112,7 +112,7 @@ export async function registerUserAccount(data: {
   displayName?: string;
 }) {
   const db = await getDb();
-  const newId = `usr-${Date.now()}`;
+  const newId = crypto.randomUUID();
   await db.insert(users).values({
     id: newId,
     username: data.username,

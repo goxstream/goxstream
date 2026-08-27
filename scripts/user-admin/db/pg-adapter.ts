@@ -54,8 +54,7 @@ export async function listPgUsers(searchFilter?: string): Promise<UserItem[]> {
 
 export async function createPgUser(input: CreateUserInput): Promise<UserItem> {
   const { client, db } = getPgDb();
-  const userId =
-    input.id || `usr_${input.role || "user"}_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
+  const userId = input.id || crypto.randomUUID();
   const passwordHash = await hashPassword(input.password);
   const displayName = input.displayName || input.username;
   const role = input.role || "user";

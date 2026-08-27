@@ -46,8 +46,7 @@ export async function listD1Users(target: DbTarget, searchFilter?: string): Prom
 
 export async function createD1User(target: DbTarget, input: CreateUserInput): Promise<UserItem> {
   const flag = target === "d1-remote" ? "--remote" : "--local";
-  const userId =
-    input.id || `usr_${input.role || "user"}_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
+  const userId = input.id || crypto.randomUUID();
   const passwordHash = await hashPassword(input.password);
   const displayName = input.displayName || input.username;
   const role = input.role || "user";
