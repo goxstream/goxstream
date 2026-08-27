@@ -8,7 +8,7 @@ RUN corepack enable && corepack prepare pnpm@11 --activate
 # 1. Install dependencies stage
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* ./
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
 
 # 2. Build stage
 FROM base AS builder
