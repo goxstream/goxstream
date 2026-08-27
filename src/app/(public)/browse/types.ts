@@ -27,10 +27,7 @@ export interface SearchInputProps {
   className?: string;
 }
 
-export interface GenreRibbonProps {
-  selectedGenre: string;
-  onGenreChange: (genre: string) => void;
-}
+
 
 export interface FilterSelectStripProps {
   query: string;
