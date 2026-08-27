@@ -67,7 +67,7 @@ export function MobileNav({ navItems }: MobileNavProps) {
         <Menu className="size-5 text-foreground" />
       </SheetTrigger>
 
-      <SheetContent side="right" className="w-[300px] sm:w-[360px] bg-background border-border p-0 flex flex-col justify-between overflow-hidden">
+      <SheetContent side="right" className="w-[85vw] max-w-[360px] sm:w-[360px] h-dvh max-h-dvh inset-y-0 right-0 bg-background border-border p-0 flex flex-col justify-between overflow-hidden">
         {/* Hamburger Header (Fixed / Top) */}
         <div className="px-6 pt-6 pb-4 shrink-0 border-b border-border/40">
           <SheetHeader className="p-0 text-left">
