@@ -5,9 +5,10 @@ const connectionType = (process.env.DB_CONNECTION || "").toLowerCase();
 const dbUrl = process.env.DB_URL || process.env.DATABASE_URL;
 
 export const isPostgresEnv =
-  connectionType === "postgres" ||
-  connectionType === "postgresql" ||
-  Boolean(dbUrl);
+  connectionType !== "d1" &&
+  (connectionType === "postgres" ||
+    connectionType === "postgresql" ||
+    (!connectionType && Boolean(dbUrl)));
 
 const activeSchema: typeof sqliteSchema = isPostgresEnv
   ? (pgSchema as any)
