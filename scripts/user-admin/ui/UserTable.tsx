@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Text } from "ink";
 import Table from "cli-table3";
+import { formatUserRow } from "../lib/formatters";
 import type { UserItem } from "../types";
 
 interface UserTableProps {
@@ -30,23 +31,7 @@ export const UserTable: React.FC<UserTableProps> = ({ users, title }) => {
   });
 
   users.forEach((u) => {
-    const roleColor =
-      u.role === "super_admin"
-        ? "\x1b[35m"
-        : u.role === "admin"
-        ? "\x1b[33m"
-        : "\x1b[32m";
-
-    const statusColor = u.status === "active" ? "\x1b[32m" : "\x1b[31m";
-
-    table.push([
-      u.id,
-      u.username,
-      u.email,
-      `${roleColor}${u.role}\x1b[0m`,
-      `${statusColor}${u.status}\x1b[0m`,
-      u.membershipTier || "free",
-    ]);
+    table.push(formatUserRow(u));
   });
 
   return (

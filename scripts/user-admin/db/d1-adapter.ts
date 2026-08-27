@@ -1,5 +1,6 @@
 import { execSync } from "node:child_process";
 import { hashPassword } from "@/lib/auth/password";
+import { sqlEscape } from "../lib/sql-helpers";
 import type { DbTarget, UserItem, CreateUserInput, UpdateUserInput } from "../types";
 
 function runD1Query(flag: "--local" | "--remote", sqlCommand: string): any[] {
@@ -19,12 +20,6 @@ function runD1Query(flag: "--local" | "--remote", sqlCommand: string): any[] {
   } catch (err: any) {
     throw new Error(`D1 Query Error: ${err.message || String(err)}`);
   }
-}
-
-function sqlEscape(val: string | number | null | undefined): string {
-  if (val === null || val === undefined) return "NULL";
-  if (typeof val === "number") return String(val);
-  return `'${String(val).replace(/'/g, "''")}'`;
 }
 
 export async function listD1Users(target: DbTarget, searchFilter?: string): Promise<UserItem[]> {
