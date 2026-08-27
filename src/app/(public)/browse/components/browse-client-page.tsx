@@ -45,6 +45,23 @@ export function BrowseClientPage() {
     type: format,
   });
 
+  // Strict Client-Side Multi-Genre AND (&&) Filtering
+  const selectedGenreList = useMemo(() => {
+    if (!genre || genre === "All") return [];
+    return genre.split(",").map((g) => g.trim().toLowerCase()).filter(Boolean);
+  }, [genre]);
+
+  const filteredAnimeList = useMemo(() => {
+    if (selectedGenreList.length <= 1) return fetchedList;
+
+    // Strict AND (&&) filtering: anime must match EVERY selected genre
+    return fetchedList.filter((anime) =>
+      selectedGenreList.every((sg) =>
+        anime.genres.some((ag) => ag.toLowerCase() === sg)
+      )
+    );
+  }, [fetchedList, selectedGenreList]);
+
   // Sync state to URL search parameters
   const updateUrlParams = useCallback(
     (newParams: Record<string, string>) => {
@@ -131,7 +148,10 @@ export function BrowseClientPage() {
   const activeFiltersCount = useMemo(() => {
     let count = 0;
     if (query) count++;
-    if (genre !== "All") count++;
+    if (genre !== "All" && genre) {
+      const genresArr = genre.split(",").map((g) => g.trim()).filter(Boolean);
+      count += genresArr.length;
+    }
     if (status !== "All") count++;
     if (format !== "All") count++;
     if (audio !== "All") count++;
@@ -141,13 +161,13 @@ export function BrowseClientPage() {
   }, [query, genre, status, format, audio, season, year]);
 
   // Pagination Slicing
-  const totalResults = fetchedList.length;
+  const totalResults = filteredAnimeList.length;
   const totalPages = Math.ceil(totalResults / ITEMS_PER_PAGE);
 
   const paginatedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return fetchedList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [fetchedList, currentPage]);
+    return filteredAnimeList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredAnimeList, currentPage]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
