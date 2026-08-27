@@ -10,7 +10,6 @@ import {
   ComboboxEmpty,
 } from "@/components/ui/combobox";
 import { cn } from "@/lib/utils";
-
 import type { BaseFilterComboboxProps, ComboboxOption } from "../../types";
 
 export function BaseFilterCombobox({
@@ -40,7 +39,7 @@ export function BaseFilterCombobox({
     );
   }, [normalizedOptions, value]);
 
-  // Filter options based on user input
+  // Filter options based on user input query
   const filteredOptions = useMemo(() => {
     if (!query.trim()) return normalizedOptions;
     const lowerQuery = query.toLowerCase();
@@ -52,12 +51,13 @@ export function BaseFilterCombobox({
   }, [normalizedOptions, query]);
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="w-full flex flex-col gap-1.5">
       {label && (
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider shrink-0">
-          {label}:
-        </span>
+        <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+          {label}
+        </label>
       )}
+
       <Combobox
         value={currentOption}
         onValueChange={(selected: ComboboxOption | null) => {
@@ -75,28 +75,35 @@ export function BaseFilterCombobox({
           placeholder={currentOption.label || label}
           showTrigger
           className={cn(
-            "h-9 min-w-28 text-xs font-medium bg-card rounded-lg border-border/80",
+            "w-full h-10 text-xs font-medium bg-card rounded-xl border border-border/80 shadow-xs focus-within:border-primary/50 transition-colors",
             className
           )}
         />
+
         <ComboboxContent
           sideOffset={6}
           align="start"
-          className={cn("z-50 min-w-36 bg-popover border-border/60 shadow-md", contentClassName)}
+          className={cn(
+            "z-50 w-(--anchor-width) min-w-(--anchor-width) max-w-(--anchor-width) bg-popover border border-border/60 shadow-md rounded-xl p-1",
+            contentClassName
+          )}
         >
-          <ComboboxList>
-            <ComboboxEmpty className="text-xs py-2 px-3 text-center text-muted-foreground">
-              Option not found
-            </ComboboxEmpty>
-            {filteredOptions.map((opt) => (
-              <ComboboxItem
-                key={opt.value}
-                value={opt}
-                className="text-xs cursor-pointer hover:bg-accent hover:text-accent-foreground"
-              >
-                {opt.label}
-              </ComboboxItem>
-            ))}
+          <ComboboxList className="max-h-56 no-scrollbar">
+            {filteredOptions.length === 0 ? (
+              <ComboboxEmpty className="text-xs py-3 px-2 text-center text-muted-foreground">
+                No option found
+              </ComboboxEmpty>
+            ) : (
+              filteredOptions.map((opt) => (
+                <ComboboxItem
+                  key={opt.value}
+                  value={opt}
+                  className="text-xs py-2 px-2.5 rounded-lg cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-primary/10 data-[selected=true]:text-primary font-medium"
+                >
+                  {opt.label}
+                </ComboboxItem>
+              ))
+            )}
           </ComboboxList>
         </ComboboxContent>
       </Combobox>

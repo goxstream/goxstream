@@ -27,76 +27,63 @@ export function FilterSelectStrip({
 }: FilterSelectStripProps) {
   // Season options formatted for combobox display
   const seasonOptions = ANIME_SEASONS.map((sn) => ({
-    label: sn === "All" ? "Season: All" : sn,
+    label: sn === "All" ? "All Seasons" : sn,
     value: sn,
   }));
 
   // Year options formatted for combobox display
   const yearOptions = ANIME_YEARS.map((yr) => ({
-    label: yr === "All" ? "Year: All" : yr,
+    label: yr === "All" ? "All Years" : yr,
     value: yr,
   }));
 
   return (
-    <div className="space-y-3">
-      {/* Primary Desktop Filter Dropdowns using Base UI Combobox */}
-      <div className="hidden lg:flex items-center gap-3 flex-wrap">
-        {/* Status */}
+    <div className="w-full">
+      {/* Responsive Grid Layout for Desktop Dropdowns (4 columns on lg screens) */}
+      <div className="hidden lg:grid grid-cols-4 gap-4 w-full items-end">
+        {/* Row 1: Primary Filters */}
         <BaseFilterCombobox
           label="Status"
           value={status}
           onValueChange={onStatusChange}
           options={ANIME_STATUSES}
-          className="min-w-28"
         />
 
-        {/* Type / Format */}
         <BaseFilterCombobox
-          label="Type"
+          label="Format / Type"
           value={format}
           onValueChange={onFormatChange}
           options={ANIME_FORMATS}
-          className="min-w-24"
         />
 
-        {/* Audio */}
         <BaseFilterCombobox
-          label="Audio"
+          label="Sub / Dub Audio"
           value={audio}
           onValueChange={onAudioChange}
           options={ANIME_AUDIO_OPTIONS}
-          className="min-w-28"
         />
 
-        {/* Sort By */}
         <BaseFilterCombobox
-          label="Sort"
+          label="Sort Results By"
           value={sort}
           onValueChange={onSortChange}
           options={SORT_OPTIONS}
-          className="min-w-36"
         />
 
-        {/* Season & Year Secondary Options */}
-        <div className="flex items-center gap-2 border-l border-border/60 pl-3">
-          {/* Season */}
-          <BaseFilterCombobox
-            label=""
-            value={season}
-            onValueChange={onSeasonChange}
-            options={seasonOptions}
-            className="min-w-28 bg-muted/40"
-          />
+        {/* Row 2: Season & Year */}
+        <BaseFilterCombobox
+          label="Season"
+          value={season}
+          onValueChange={onSeasonChange}
+          options={seasonOptions}
+        />
 
-          {/* Year */}
-          <BaseFilterCombobox
-            label=""
-            value={year}
-            onValueChange={onYearChange}
-            options={yearOptions}
-            className="min-w-24 bg-muted/40"
-          />
-        </div>
+        <BaseFilterCombobox
+          label="Release Year"
+          value={year}
+          onValueChange={onYearChange}
+          options={yearOptions}
+        />
       </div>
     </div>
   );

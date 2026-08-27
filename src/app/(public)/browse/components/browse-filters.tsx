@@ -9,25 +9,10 @@ import type { BrowseFiltersProps } from "../types";
 
 export function BrowseFilters(props: BrowseFiltersProps) {
   return (
-    <div className="space-y-4">
-      {/* Search Input, Desktop Select Strip & Mobile Filter Drawer */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+    <div className="space-y-5">
+      {/* Top Search Bar & Mobile Filter Drawer */}
+      <div className="flex items-center gap-3">
         <SearchInput query={props.query} onQueryChange={props.onQueryChange} />
-
-        <FilterSelectStrip
-          status={props.status}
-          onStatusChange={props.onStatusChange}
-          format={props.format}
-          onFormatChange={props.onFormatChange}
-          audio={props.audio}
-          onAudioChange={props.onAudioChange}
-          season={props.season}
-          onSeasonChange={props.onSeasonChange}
-          year={props.year}
-          onYearChange={props.onYearChange}
-          sort={props.sort}
-          onSortChange={props.onSortChange}
-        />
 
         <MobileFilterDrawer
           status={props.status}
@@ -46,6 +31,22 @@ export function BrowseFilters(props: BrowseFiltersProps) {
           activeFiltersCount={props.activeFiltersCount}
         />
       </div>
+
+      {/* Desktop Filter Strip - Structured 4-Column Grid */}
+      <FilterSelectStrip
+        status={props.status}
+        onStatusChange={props.onStatusChange}
+        format={props.format}
+        onFormatChange={props.onFormatChange}
+        audio={props.audio}
+        onAudioChange={props.onAudioChange}
+        season={props.season}
+        onSeasonChange={props.onSeasonChange}
+        year={props.year}
+        onYearChange={props.onYearChange}
+        sort={props.sort}
+        onSortChange={props.onSortChange}
+      />
 
       {/* Genre Pills Selection Ribbon */}
       <GenreRibbon
