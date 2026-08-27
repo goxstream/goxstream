@@ -27,9 +27,9 @@ services:
     networks:
       - goxstream-network
 
-  # Database Service (PostgreSQL 18 - Private Internal Only)
+  # Database Service (PostgreSQL - Private Internal Only)
   goxstream-postgres:
-    image: postgres:18-alpine
+    image: postgres:alpine
     container_name: goxstream-postgres
     restart: unless-stopped
     # Port tidak di-expose ke host luar agar hanya diakses via jaringan internal Docker
@@ -40,7 +40,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-goxstream}"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 5s
       retries: 5
