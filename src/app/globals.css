@@ -50,6 +50,15 @@
 	--radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@utility bg-grid-pattern {
+  background-image: radial-gradient(rgba(120, 120, 120, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@utility glow-effect {
+  box-shadow: 0 0 50px -10px var(--color-primary);
+}
+
 :root {
 	--background: oklch(0.975 0 0);
 	--foreground: oklch(0.145 0 0);

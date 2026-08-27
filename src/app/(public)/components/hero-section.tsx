@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Play, Sparkles, Star, Zap, ShieldCheck, ArrowRight, Flame } from "lucide-react";
+import { Play, Sparkles, Zap, ShieldCheck, ArrowRight, Flame } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import DecryptedText from "@/components/DecryptedText";
-import { getImageStyle } from "@/lib/utils";
 import { useFeaturedAnime } from "@/hooks/use-featured-anime";
 import type { AnimeItem } from "@/types/anime";
 
@@ -15,174 +13,71 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
-  const { featuredAnime: activeAnime, isLoading } = useFeaturedAnime(initialFeaturedAnime);
-  const heroImageSrc = activeAnime?.bannerImage || activeAnime?.coverImage || "";
-  const isGradient = heroImageSrc.startsWith("linear-gradient");
+  const { featuredAnime: activeAnime } = useFeaturedAnime(initialFeaturedAnime);
 
   return (
-    <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24 bg-background border-b border-border/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Hero Left Content */}
-          <div className="lg:col-span-7 flex flex-col items-start gap-6 text-left">
-            {/* Eyebrow Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/25 text-primary text-xs font-semibold">
-              <Sparkles className="size-3.5" />
-              <span>Simulcast Stream Engine • 1080p 60FPS</span>
-            </div>
+    <section className="relative flex flex-col items-center justify-center min-h-[580px] py-16 px-4 sm:px-6 border rounded-3xl overflow-hidden mx-auto w-full max-w-[1400px] bg-card text-card-foreground border-border/60 bg-grid-pattern shadow-xl">
+      {/* Background Ambient Glow */}
+      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-primary/15 blur-[120px] rounded-full pointer-events-none" />
 
-            {/* Main Hero Headline with React Bits DecryptedText */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-[1.1]">
-              Discover & Stream Your Favorite{" "}
-              <span className="text-primary block mt-1">
-                <DecryptedText
-                  text="Anime Worlds"
-                  animateOn="view"
-                  speed={40}
-                  maxIterations={8}
-                  sequential={true}
-                  revealDirection="start"
-                  className="text-primary font-black"
-                />
-              </span>
-            </h1>
+      {/* Pill Badge */}
+      <Badge variant="outline" className="gap-2 mb-8 animate-pulse">
+        <Sparkles className="size-3.5" />
+        <span>Simulcast Stream Engine • 1080p 60FPS</span>
+      </Badge>
 
-            {/* Description */}
-            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-              Stream thousands of subbed and dubbed anime series with zero ad interruptions,
-              lightning-fast bufferless playback, and instant simulcast releases straight from Japan.
-            </p>
+      {/* Main Title */}
+      <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight max-w-5xl text-center leading-[1.1] px-4">
+        Discover & Stream Your Favorite <br />
+        <span className="bg-gradient-to-r from-primary via-emerald-400 to-teal-400 bg-clip-text text-transparent">
+          <DecryptedText
+            text="Anime Worlds"
+            animateOn="view"
+            speed={40}
+            maxIterations={8}
+            sequential={true}
+            revealDirection="start"
+            className="bg-gradient-to-r from-primary via-emerald-400 to-teal-400 bg-clip-text text-transparent font-black"
+          />
+        </span>
+      </h1>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto pt-2">
-              <Link
-                href={`/anime/${activeAnime?.slug || "featured"}/1`}
-                className={buttonVariants({
-                  variant: "default",
-                  size: "lg",
-                  className: "h-12 px-6 rounded-xl font-bold text-base justify-center",
-                })}
-              >
-                <Play className="mr-2 size-5 fill-primary-foreground stroke-primary-foreground" />
-                Start Watching Now
-              </Link>
+      {/* Description */}
+      <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl text-center px-4 leading-relaxed">
+        Stream thousands of subbed and dubbed anime series with zero ad interruptions,
+        lightning-fast bufferless playback, and instant simulcast releases straight from Japan.
+      </p>
 
-              <Link
-                href="#trending"
-                className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
-                  className: "h-12 px-6 rounded-xl font-semibold text-base justify-center",
-                })}
-              >
-                Explore Trending Library
-                <ArrowRight className="ml-2 size-4 text-muted-foreground" />
-              </Link>
-            </div>
+      {/* CTA Buttons */}
+      <div className="flex flex-wrap items-center justify-center gap-4 mt-8 px-4">
+        <Link
+          href={`/anime/${activeAnime?.slug || "featured"}/1`}
+          className={buttonVariants({ size: "lg", className: "font-semibold shadow-md gap-2" })}
+        >
+          <Play className="size-4 fill-primary-foreground stroke-primary-foreground" />
+          Start Watching Now
+        </Link>
+        <Link
+          href="#trending"
+          className={buttonVariants({ variant: "outline", size: "lg", className: "font-medium gap-2" })}
+        >
+          Explore Trending Library <ArrowRight className="size-4 text-muted-foreground" />
+        </Link>
+      </div>
 
-            {/* Key Platform Badges */}
-            <div className="flex flex-wrap items-center gap-6 pt-4 text-xs font-medium text-muted-foreground border-t border-border/60 w-full">
-              <span className="flex items-center gap-2">
-                <Zap className="size-4 text-primary" /> Instant 5m Simulcast
-              </span>
-              <span className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-primary" /> 100% Ad-Free Experience
-              </span>
-              <span className="flex items-center gap-2">
-                <Flame className="size-4 text-amber-500" /> 10,000+ Episodes
-              </span>
-            </div>
-          </div>
-
-          {/* Hero Right Visual: Featured Anime Hero Card */}
-          <div className="lg:col-span-5 flex justify-center">
-            {isLoading || !activeAnime ? (
-              <div className="w-full max-w-md aspect-[4/5] rounded-2xl overflow-hidden bg-card border border-border/80 p-4 space-y-4">
-                <Skeleton className="size-full rounded-xl" />
-              </div>
-            ) : (
-              <div className="relative w-full max-w-md rounded-2xl overflow-hidden bg-card border border-border/80 group">
-                {/* Featured Poster Visual */}
-                <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
-                  {isGradient ? (
-                    <div
-                      className="absolute inset-0 size-full transition-transform duration-700 group-hover:scale-105"
-                      style={getImageStyle(heroImageSrc)}
-                    />
-                  ) : (
-                    <img
-                      src={heroImageSrc}
-                      alt={activeAnime.title}
-                      loading="eager"
-                      decoding="async"
-                      className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.opacity = "0";
-                      }}
-                    />
-                  )}
-
-                  {/* Gradient Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent" />
-
-                  {/* Top Badges */}
-                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-                    <Badge className="bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1">
-                      #1 FEATURED SIMULCAST
-                    </Badge>
-
-                    <Badge className="bg-black/75 text-amber-400 backdrop-blur-md border border-amber-500/30 text-xs font-bold px-2.5 py-1 flex items-center gap-1">
-                      <Star className="size-3.5 fill-amber-400 stroke-amber-400" />
-                      {activeAnime.rating ? activeAnime.rating.toFixed(1) : "N/A"}
-                    </Badge>
-                  </div>
-
-                  {/* Play Button Overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <Link
-                      href={`/anime/${activeAnime.slug}/1`}
-                      className="size-16 rounded-full bg-primary/95 text-primary-foreground flex items-center justify-center border border-primary-foreground/20 group-hover:scale-110 transition-transform duration-300"
-                      aria-label={`Watch ${activeAnime.title}`}
-                    >
-                      <Play className="size-8 fill-primary-foreground stroke-primary-foreground ml-1" />
-                    </Link>
-                  </div>
-
-                  {/* Anime Meta Details Banner at Bottom */}
-                  <div className="absolute bottom-0 inset-x-0 p-5 flex flex-col gap-2 z-10 bg-card/90 backdrop-blur-md border-t border-border/60">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                        {activeAnime.season} {activeAnime.year}
-                      </span>
-                      <span className="text-xs text-muted-foreground">•</span>
-                      <span className="text-xs text-muted-foreground font-medium">
-                        Ep {activeAnime.latestEpisode || activeAnime.episodesCount} Released
-                      </span>
-                    </div>
-
-                    <h2 className="text-lg font-bold text-foreground line-clamp-1">
-                      {activeAnime.title}
-                    </h2>
-
-                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                      {activeAnime.synopsis}
-                    </p>
-
-                    <div className="flex items-center gap-2 pt-1">
-                      {activeAnime.genres.slice(0, 3).map((genre) => (
-                        <span
-                          key={genre}
-                          className="px-2 py-0.5 rounded bg-muted text-[10px] font-semibold text-muted-foreground"
-                        >
-                          {genre}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+      {/* Highlight Stats Badges */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-8 mt-12 pt-8 border-t border-border/40 px-6 text-center text-xs text-muted-foreground w-full max-w-3xl">
+        <div className="flex items-center gap-2 justify-center">
+          <Zap className="size-4 text-primary" />
+          <span>Instant 5m Simulcast</span>
+        </div>
+        <div className="flex items-center gap-2 justify-center">
+          <ShieldCheck className="size-4 text-primary" />
+          <span>100% Ad-Free Experience</span>
+        </div>
+        <div className="col-span-2 sm:col-span-1 flex items-center gap-2 justify-center">
+          <Flame className="size-4 text-amber-500" />
+          <span>10,000+ Episodes</span>
         </div>
       </div>
     </section>
