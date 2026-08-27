@@ -1,5 +1,15 @@
 import type { AnimeItem } from "@/types/anime";
 
+export interface BrowseFilterCriteria {
+  query?: string;
+  genre?: string;
+  status?: string;
+  format?: string;
+  audio?: string;
+  season?: string;
+  year?: string;
+}
+
 /**
  * Parses comma-separated genre string into cleaned array of individual genres.
  */
@@ -25,19 +35,61 @@ export function removeGenreFromSelection(
 }
 
 /**
- * Filters anime list strictly requiring ALL selected genres (AND / && logic).
+ * Filters anime list strictly requiring ALL conditions to match (AND / && logic across all filters).
  */
-export function filterAnimeByStrictGenres(
+export function filterAnimeByStrictAll(
   items: AnimeItem[],
-  selectedGenres: string[]
+  criteria: BrowseFilterCriteria
 ): AnimeItem[] {
-  if (selectedGenres.length === 0) return items;
+  const activeGenres = parseActiveGenres(criteria.genre);
 
-  const normalizedSelected = selectedGenres.map((sg) => sg.toLowerCase());
+  return items.filter((anime) => {
+    // 1. Strict AND (&&) Multi-Genre Matching
+    if (activeGenres.length > 0) {
+      const hasAllGenres = activeGenres.every((sg) =>
+        anime.genres.some((ag) => ag.toLowerCase() === sg.toLowerCase())
+      );
+      if (!hasAllGenres) return false;
+    }
 
-  return items.filter((anime) =>
-    normalizedSelected.every((sg) =>
-      anime.genres.some((ag) => ag.toLowerCase() === sg)
-    )
-  );
+    // 2. Strict AND (&&) Search Query Matching
+    if (criteria.query && criteria.query.trim() !== "") {
+      const q = criteria.query.toLowerCase().trim();
+      const titleMatch =
+        anime.title.toLowerCase().includes(q) ||
+        (anime.japaneseTitle && anime.japaneseTitle.toLowerCase().includes(q));
+      if (!titleMatch) return false;
+    }
+
+    // 3. Strict AND (&&) Status Matching
+    if (criteria.status && criteria.status !== "All") {
+      if (anime.status.toLowerCase() !== criteria.status.toLowerCase())
+        return false;
+    }
+
+    // 4. Strict AND (&&) Format / Type Matching
+    if (criteria.format && criteria.format !== "All") {
+      if (anime.type.toLowerCase() !== criteria.format.toLowerCase())
+        return false;
+    }
+
+    // 5. Strict AND (&&) Sub/Dub Audio Matching
+    if (criteria.audio && criteria.audio !== "All") {
+      if (anime.subOrDub.toLowerCase() !== criteria.audio.toLowerCase())
+        return false;
+    }
+
+    // 6. Strict AND (&&) Season Matching
+    if (criteria.season && criteria.season !== "All") {
+      if (anime.season.toLowerCase() !== criteria.season.toLowerCase())
+        return false;
+    }
+
+    // 7. Strict AND (&&) Release Year Matching
+    if (criteria.year && criteria.year !== "All") {
+      if (String(anime.year) !== criteria.year) return false;
+    }
+
+    return true;
+  });
 }

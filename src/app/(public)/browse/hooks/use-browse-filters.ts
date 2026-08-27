@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, useMemo, useCallback } from "react";
 import { useBrowseAnime } from "@/hooks/use-browse-anime";
-import { parseActiveGenres, filterAnimeByStrictGenres } from "../lib/filter-utils";
+import { parseActiveGenres, filterAnimeByStrictAll } from "../lib/filter-utils";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -45,10 +45,18 @@ export function useBrowseFilters() {
   // Parse active genres array
   const activeGenres = useMemo(() => parseActiveGenres(genre), [genre]);
 
-  // Strict Client-Side Multi-Genre AND (&&) Filtering
+  // Strict Client-Side Multi-Criteria AND (&&) Filtering
   const filteredAnimeList = useMemo(() => {
-    return filterAnimeByStrictGenres(fetchedList, activeGenres);
-  }, [fetchedList, activeGenres]);
+    return filterAnimeByStrictAll(fetchedList, {
+      query,
+      genre,
+      status,
+      format,
+      audio,
+      season,
+      year,
+    });
+  }, [fetchedList, query, genre, status, format, audio, season, year]);
 
   // Sync state to URL search parameters
   const updateUrlParams = useCallback(
