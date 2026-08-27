@@ -15,10 +15,13 @@ async function main() {
   const connectionType = (process.env.DB_CONNECTION || "").toLowerCase();
   const dbUrl = process.env.DB_URL || process.env.DATABASE_URL;
 
+  const isD1 = connectionType === "d1";
   const isPostgres =
-    connectionType === "postgres" ||
-    connectionType === "postgresql" ||
-    Boolean(dbUrl);
+    !isD1 &&
+    (connectionType === "postgres" ||
+      connectionType === "postgresql" ||
+      connectionType === "hyperdrive" ||
+      Boolean(dbUrl));
 
   if (isPostgres) {
     console.log("[SEED DISPATCHER] PostgreSQL environment detected.");

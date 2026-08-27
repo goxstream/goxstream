@@ -18,10 +18,13 @@ function runDbPush() {
     process.argv.includes("--remote") ||
     process.argv.includes("-r");
 
+  const isD1 = connectionType === "d1";
   const isPostgres =
-    connectionType === "postgres" ||
-    connectionType === "postgresql" ||
-    Boolean(dbUrl);
+    !isD1 &&
+    (connectionType === "postgres" ||
+      connectionType === "postgresql" ||
+      connectionType === "hyperdrive" ||
+      Boolean(dbUrl));
 
   if (isPostgres) {
     console.log("---------------------------------------------------------");
