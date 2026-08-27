@@ -30,7 +30,7 @@ export function UserNav() {
   const { user, isLoading, logout } = useUserNav();
 
   if (isLoading) {
-    return <Skeleton className="size-9 rounded-full" />;
+    return <Skeleton className="size-8 sm:size-9 rounded-full shrink-0" />;
   }
 
   if (!user) {
@@ -41,36 +41,35 @@ export function UserNav() {
           className={buttonVariants({
             variant: "ghost",
             size: "sm",
-            className: "text-xs font-medium rounded-lg px-2 sm:px-3 gap-1 text-muted-foreground hover:text-foreground shrink-0",
+            className: "text-xs font-medium rounded-lg px-2 sm:px-3 gap-1 text-muted-foreground hover:text-foreground shrink-0 h-8 sm:h-9",
           })}
         >
           <LogIn className="size-3.5" />
-          <span className="hidden sm:inline">Sign In</span>
-          <span className="sm:hidden">Login</span>
+          <span className="hidden min-[380px]:inline">Sign In</span>
+          <span className="min-[380px]:hidden">Login</span>
         </Link>
         <Link
           href="/signup"
           className={buttonVariants({
             variant: "default",
             size: "sm",
-            className: "text-xs font-semibold rounded-lg px-2.5 sm:px-3 gap-1 shadow-xs shrink-0",
+            className: "text-xs font-semibold rounded-lg px-2 sm:px-3 gap-1 shadow-xs shrink-0 h-8 sm:h-9",
           })}
         >
           <UserPlus className="size-3.5" />
-          <span className="hidden sm:inline">Create Account</span>
-          <span className="sm:hidden">Join</span>
+          <span className="hidden min-[380px]:inline">Create Account</span>
+          <span className="min-[380px]:hidden">Join</span>
         </Link>
       </div>
     );
   }
 
-
   const isStaff = user.role && user.role !== "user";
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<button className="relative rounded-full focus:outline-hidden focus:ring-2 focus:ring-primary/40 cursor-pointer" />}>
-        <Avatar className="size-9 border border-border/80 hover:border-primary/50 transition-colors shadow-xs">
+      <DropdownMenuTrigger render={<button className="relative rounded-full focus:outline-hidden focus:ring-2 focus:ring-primary/40 cursor-pointer shrink-0" />}>
+        <Avatar className="size-8 sm:size-9 border border-border/80 hover:border-primary/50 transition-colors shadow-xs">
           <AvatarImage src={user.avatarUrl || undefined} alt={user.displayName} />
           <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
             {user.displayName.substring(0, 2).toUpperCase()}
@@ -78,6 +77,7 @@ export function UserNav() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 align-end side-bottom bg-popover/95 backdrop-blur-md border border-border/80 shadow-md rounded-xl p-1.5" sideOffset={8}>
+
         <div className="flex items-center gap-2.5 p-2">
           <Avatar className="size-10 border border-border/60">
             <AvatarImage src={user.avatarUrl || undefined} alt={user.displayName} />

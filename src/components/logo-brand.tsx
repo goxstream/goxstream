@@ -29,6 +29,7 @@ export interface LogoBrandProps {
   variant?: "horizontal" | "1:1";
   size?: "sm" | "md" | "lg" | "xl";
   href?: string;
+  hideTextOnMobile?: boolean;
   className?: string;
   logoClassName?: string;
   logoTypeClassName?: string;
@@ -45,6 +46,7 @@ export function LogoBrand({
   variant = "horizontal",
   size = "md",
   href,
+  hideTextOnMobile = false,
   className,
   logoClassName,
   logoTypeClassName,
@@ -55,11 +57,18 @@ export function LogoBrand({
     <>
       <Logo
         size={iconSize}
-        className={cn("transition-transform group-hover:scale-105", logoClassName)}
+        className={cn("transition-transform group-hover:scale-105 shrink-0", logoClassName)}
       />
-      <LogoType size={size} className={logoTypeClassName} />
+      <LogoType
+        size={size}
+        className={cn(
+          hideTextOnMobile && "hidden min-[380px]:inline-flex",
+          logoTypeClassName
+        )}
+      />
     </>
   );
+
 
   const containerClassName = cn(
     "group inline-flex items-center transition-colors rounded-lg",

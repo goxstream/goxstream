@@ -21,7 +21,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" className="size-9 rounded-lg border border-border/50">
+      <Button variant="ghost" size="icon" className="size-8 sm:size-9 rounded-lg border border-border/50 shrink-0">
         <Sun className="size-4 text-muted-foreground" />
         <span className="sr-only">Toggle theme</span>
       </Button>
@@ -30,11 +30,12 @@ export function ThemeToggle() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="inline-flex size-9 items-center justify-center rounded-lg border border-border/60 bg-background/50 hover:bg-muted/80 text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <DropdownMenuTrigger className="inline-flex size-8 sm:size-9 items-center justify-center rounded-lg border border-border/60 bg-background/50 hover:bg-muted/80 text-foreground transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0">
         <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
         <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-sky-400" />
         <span className="sr-only">Toggle theme</span>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent align="end" className="w-36 rounded-lg p-1 shadow-sm border border-border">
         <DropdownMenuItem
           onClick={() => setTheme("light")}

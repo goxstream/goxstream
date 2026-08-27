@@ -58,11 +58,12 @@ export function MobileNav({ navItems }: MobileNavProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden size-9 rounded-lg"
+            className="lg:hidden size-8 sm:size-9 rounded-lg shrink-0"
             aria-label="Toggle Navigation Menu"
           />
         }
       >
+
         <Menu className="size-5 text-foreground" />
       </SheetTrigger>
 
