@@ -1,7 +1,5 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { TrendingClientPage } from "./components/trending-client-page";
 import TrendingLoading from "./loading";
 
@@ -18,12 +16,8 @@ export const metadata: Metadata = {
 
 export default function TrendingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20 selection:text-primary">
-      <SiteHeader />
-      <Suspense fallback={<TrendingLoading />}>
-        <TrendingClientPage />
-      </Suspense>
-      <SiteFooter />
-    </div>
+    <Suspense fallback={<TrendingLoading />}>
+      <TrendingClientPage />
+    </Suspense>
   );
 }

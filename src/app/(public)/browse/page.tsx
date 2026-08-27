@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { BrowseClientPage } from "./components/browse-client-page";
 
 export const metadata: Metadata = {
@@ -10,11 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function BrowsePage() {
-  return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20 selection:text-primary">
-      <SiteHeader />
-      <BrowseClientPage />
-      <SiteFooter />
-    </div>
-  );
+  return <BrowseClientPage />;
 }

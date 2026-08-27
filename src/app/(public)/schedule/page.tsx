@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { ScheduleContent } from "./components/schedule-content";
 
 export const metadata: Metadata = {
@@ -14,13 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function SchedulePage() {
-  return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20 selection:text-primary">
-      <SiteHeader />
-      <main className="flex-1">
-        <ScheduleContent />
-      </main>
-      <SiteFooter />
-    </div>
-  );
+  return <ScheduleContent />;
 }
