@@ -13,6 +13,24 @@ These rules apply to all code changes in this repository.
 - Do NOT introduce arbitrary icon libraries when Lucide or Simple Icons is appropriate.
 - **Next.js Loading States**:
   - All loading pages (`loading.tsx`) and component loading placeholders MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
+  - **Inline Component Skeletons Mandatory**: Skeletons MUST be integrated directly inline inside the target component (e.g., via `isLoading` prop inside `<EpisodeCard isLoading={true} />`). Separate skeleton functions (e.g., `LatestEpisodesSectionSkeleton`) or standalone section/page skeleton files are strictly prohibited.
+    ```tsx
+    // Correct: Inline Skeleton inside target component combining shadcn UI primitives (Card, Skeleton)
+    export function EpisodeCard({ episode, isLoading }: EpisodeCardProps) {
+      if (isLoading || !episode) {
+        return (
+          <Card className="flex items-center gap-4 p-3 border-border/60">
+            <Skeleton className="aspect-video w-36 rounded-lg flex-shrink-0" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-3 w-1/3" />
+              <Skeleton className="h-4 w-4/5" />
+            </div>
+          </Card>
+        );
+      }
+      return <Card className="flex items-center gap-4 p-3 border-border/60">...</Card>;
+    }
+    ```
   - Do NOT use alternative loading elements, including but not limited to spinners, top loaders, and progress bars.
   - Do NOT use raw `animate-pulse` divs; always reuse the project's `Skeleton` component.
   - Skeletons must visually mimic the shape and structure of the expected page/component to prevent Cumulative Layout Shift (CLS).

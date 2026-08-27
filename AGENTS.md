@@ -102,6 +102,24 @@ Online anime streaming platform built with:
 - **Page files compose.** `page.tsx` should primarily compose components, not contain large JSX structures or business logic.
 - Use appropriate Next.js patterns: layouts, `loading.tsx`, `error.tsx`, metadata APIs, Server Actions, Route Handlers.
   - **Loading UI MUST use Skeletons.** Every Next.js `loading.tsx` file or component loading placeholder MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
+  - **Inline Component Skeletons Mandatory.** Skeletons MUST be integrated directly inline inside the target component (e.g., `<EpisodeCard isLoading={true} />`). Standalone skeleton functions or separate skeleton files for sections/pages are strictly prohibited.
+    ```tsx
+    // Inline Skeleton Pattern combining shadcn UI primitives (Card, Skeleton)
+    export function EpisodeCard({ episode, isLoading }: EpisodeCardProps) {
+      if (isLoading || !episode) {
+        return (
+          <Card className="flex items-center gap-4 p-3 border-border/60">
+            <Skeleton className="aspect-video w-36 rounded-lg flex-shrink-0" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-3 w-1/3" />
+              <Skeleton className="h-4 w-4/5" />
+            </div>
+          </Card>
+        );
+      }
+      return <Card className="flex items-center gap-4 p-3 border-border/60">...</Card>;
+    }
+    ```
   - **No spinners or top loaders.** The use of spinners, top loaders, progress bars, or other non-skeleton indicators is strictly prohibited.
   - **Maintain structural layout.** Skeletons must visually mimic the shape and structure of the fully loaded content to prevent Cumulative Layout Shift (CLS).
 - **Streaming and caching** where beneficial.
