@@ -3,7 +3,7 @@ import { render } from "ink";
 import meow from "meow";
 import { App } from "./ui/App";
 import { scanAvailableDatabases } from "./db-scanner";
-import { listUsers, createUser, updateUser, deleteUser } from "./db-adapter";
+import { listUsers, createUser, updateUser, deleteUser, deleteUsersBatch } from "./db-adapter";
 import type { DbTarget } from "./types";
 import Table from "cli-table3";
 
@@ -151,9 +151,10 @@ async function main() {
         console.error("Error: Missing required flag for delete (--username).");
         process.exit(1);
       }
-      await deleteUser(target, flags.username as string);
+      const rawUsernames = (flags.username as string).split(",").map((s) => s.trim()).filter(Boolean);
+      const count = await deleteUsersBatch(target, rawUsernames);
       console.log(`\n=========================================================`);
-      console.log(`SUCCESS: Deleted user '${flags.username}' from ${target.toUpperCase()}`);
+      console.log(`SUCCESS: Deleted ${count} user(s) (${rawUsernames.join(", ")}) from ${target.toUpperCase()}`);
       console.log(`=========================================================`);
       process.exit(0);
     }

@@ -92,13 +92,22 @@ Modifies user fields (role, status, display name, email, or password).
 
 ---
 
-### `delete` — Delete User
-Permanently removes user and user settings from the target database.
+### `delete` — Multi-Select & Batch Delete Users
+Permanently removes single or multiple users and their settings from the target database.
 
-- **Interactive**: Select `Search & Delete User`, choose user, and confirm prompt.
+- **Interactive Multi-Select Keyboard Controls**:
+  - `[space]`: Toggle selection for highlighted item `[x]` / `[ ]`
+  - `[a]`: Select all visible filtered items
+  - `[x]`: Unselect all items
+  - `[enter]`: Confirm selected items & open delete confirmation modal
+  - `[esc]`: Cancel and return to menu
 - **Non-Interactive**:
   ```bash
+  # Delete single user
   pnpm user-admin delete --username=admin_john --db=postgres
+
+  # Batch delete multiple users (comma-separated)
+  pnpm user-admin delete --username=user1,user2,user3 --db=postgres
   ```
 
 ---

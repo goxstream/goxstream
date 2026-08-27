@@ -6,10 +6,11 @@ import { Header } from "./Header";
 import { DatabaseSelector } from "./DatabaseSelector";
 import { UserTable } from "./UserTable";
 import { UserSearch } from "./UserSearch";
+import { UserMultiSelect } from "./UserMultiSelect";
 import { UserForm } from "./UserForm";
 import { HelpView } from "./HelpView";
 import { scanAvailableDatabases } from "../db-scanner";
-import { listUsers, createUser, updateUser, deleteUser } from "../db-adapter";
+import { listUsers, createUser, updateUser, deleteUsersBatch } from "../db-adapter";
 import type { DbTargetInfo, DbTarget, UserItem, CreateUserInput } from "../types";
 
 interface AppProps {
@@ -37,6 +38,7 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
   const [view, setView] = useState<ViewState>("SCANNING_DB");
   const [users, setUsers] = useState<UserItem[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
+  const [selectedUsers, setSelectedUsers] = useState<UserItem[]>([]);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -180,18 +182,21 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
   };
 
   const handleDeleteConfirm = async () => {
-    if (!selectedDb || !selectedUser) return;
+    if (!selectedDb || selectedUsers.length === 0) return;
     setLoading(true);
     try {
-      await deleteUser(selectedDb, selectedUser.id);
+      const count = await deleteUsersBatch(
+        selectedDb,
+        selectedUsers.map((u) => u.id)
+      );
       setMessage({
-        text: `Successfully deleted user '${selectedUser.username}' (ID: ${selectedUser.id})`,
+        text: `Successfully deleted ${count} user(s) permanently`,
         type: "success",
       });
-      setSelectedUser(null);
+      setSelectedUsers([]);
       setView("MENU");
     } catch (err: any) {
-      setMessage({ text: `Failed to delete user: ${err.message}`, type: "error" });
+      setMessage({ text: `Failed to delete users: ${err.message}`, type: "error" });
       setView("MENU");
     } finally {
       setLoading(false);
@@ -202,7 +207,7 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
     { label: "List All Users", value: "list" },
     { label: "Create New User", value: "create" },
     { label: "Search & Edit User", value: "edit" },
-    { label: "Search & Delete User", value: "delete" },
+    { label: "Search & Delete Users (Multi-select)", value: "delete" },
     { label: "Switch Database Connection", value: "change_db" },
     { label: "Help & Command Options", value: "help" },
     { label: "Exit", value: "exit" },
@@ -299,30 +304,33 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction, initialF
       )}
 
       {!loading && view === "DELETE_SEARCH" && (
-        <UserSearch
+        <UserMultiSelect
           users={users}
           actionLabel="Delete"
-          onSelectUser={(u) => {
-            setSelectedUser(u);
+          onSubmit={(selected) => {
+            setSelectedUsers(selected);
             setView("DELETE_CONFIRM");
           }}
           onCancel={() => setView("MENU")}
         />
       )}
 
-      {!loading && view === "DELETE_CONFIRM" && selectedUser && (
+      {!loading && view === "DELETE_CONFIRM" && selectedUsers.length > 0 && (
         <Box flexDirection="column" marginY={1} borderStyle="double" borderColor="red" padding={1}>
           <Text bold color="red">
-            CONFIRM DELETE USER PERMANENTLY:
+            CONFIRM DELETE {selectedUsers.length} USER(S) PERMANENTLY:
           </Text>
-          <Text>ID: {selectedUser.id}</Text>
-          <Text>Username: {selectedUser.username}</Text>
-          <Text>Email: {selectedUser.email}</Text>
-          <Text>Role: {selectedUser.role}</Text>
+          <Box marginY={1} flexDirection="column">
+            {selectedUsers.map((u) => (
+              <Text key={u.id} color="yellow">
+                - [{u.role.toUpperCase()}] {u.username} ({u.email}) — ID: {u.id}
+              </Text>
+            ))}
+          </Box>
           <Box marginTop={1}>
             <SelectInput
               items={[
-                { label: "YES, Permanently Delete User", value: "confirm" },
+                { label: `YES, Permanently Delete ${selectedUsers.length} User(s)`, value: "confirm" },
                 { label: "Cancel & Go Back", value: "cancel" },
               ]}
               onSelect={(item) => {

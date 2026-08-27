@@ -1,7 +1,7 @@
 import { execSync } from "node:child_process";
 import postgres from "postgres";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { eq, or, ilike } from "drizzle-orm";
+import { eq, or, ilike, inArray } from "drizzle-orm";
 import { users, userSettings } from "@/lib/db/schema/pg/users";
 import { hashPassword } from "@/lib/auth/password";
 import type { DbTarget, UserItem, CreateUserInput, UpdateUserInput } from "./types";
@@ -259,28 +259,40 @@ export async function updateUser(
 }
 
 export async function deleteUser(target: DbTarget, id: string): Promise<boolean> {
-  const existing = await getUserById(target, id);
-  if (!existing) {
+  const count = await deleteUsersBatch(target, [id]);
+  if (count === 0) {
     throw new Error(`User with ID or username '${id}' not found.`);
   }
+  return true;
+}
+
+export async function deleteUsersBatch(target: DbTarget, idsOrUsernames: string[]): Promise<number> {
+  if (idsOrUsernames.length === 0) return 0;
+  const allUsers = await listUsers(target);
+  const targetIds = allUsers
+    .filter((u) => idsOrUsernames.includes(u.id) || idsOrUsernames.includes(u.username))
+    .map((u) => u.id);
+
+  if (targetIds.length === 0) return 0;
 
   if (target === "postgres") {
     const { client, db } = getPgDb();
     try {
       try {
-        await db.delete(userSettings).where(eq(userSettings.userId, existing.id));
+        await db.delete(userSettings).where(inArray(userSettings.userId, targetIds));
       } catch {}
-      await db.delete(users).where(eq(users.id, existing.id));
-      return true;
+      await db.delete(users).where(inArray(users.id, targetIds));
+      return targetIds.length;
     } finally {
       await client.end();
     }
   } else {
     const flag = target === "d1-remote" ? "--remote" : "--local";
+    const inClause = targetIds.map((id) => sqlEscape(id)).join(", ");
     try {
-      runD1Query(flag, `DELETE FROM user_settings WHERE user_id = ${sqlEscape(existing.id)}`);
+      runD1Query(flag, `DELETE FROM user_settings WHERE user_id IN (${inClause})`);
     } catch {}
-    runD1Query(flag, `DELETE FROM users WHERE id = ${sqlEscape(existing.id)}`);
-    return true;
+    runD1Query(flag, `DELETE FROM users WHERE id IN (${inClause})`);
+    return targetIds.length;
   }
 }
