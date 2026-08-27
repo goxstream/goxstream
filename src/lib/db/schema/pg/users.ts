@@ -37,16 +37,37 @@ export const userSettings = pgTable("user_settings", {
   publicWatchlist: boolean("public_watchlist").notNull().$default(() => true),
 });
 
-export const usersRelations = relations(users, ({ one }) => ({
+export const sessions = pgTable("sessions", {
+  token: text("token").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at")
+    .notNull()
+    .$defaultFn(() => new Date()),
+  userAgent: text("user_agent"),
+  ipAddress: text("ip_address"),
+});
+
+export const usersRelations = relations(users, ({ one, many }) => ({
   settings: one(userSettings, {
     fields: [users.id],
     references: [userSettings.userId],
   }),
+  sessions: many(sessions),
 }));
 
 export const userSettingsRelations = relations(userSettings, ({ one }) => ({
   user: one(users, {
     fields: [userSettings.userId],
+    references: [users.id],
+  }),
+}));
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
     references: [users.id],
   }),
 }));

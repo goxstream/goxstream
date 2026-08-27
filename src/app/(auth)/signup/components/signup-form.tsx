@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { EyeIcon, EyeOffIcon, ArrowLeftIcon, CheckIcon, XIcon } from "lucide-react"
+import { EyeIcon, EyeOffIcon, ArrowLeftIcon, CheckIcon, XIcon, AlertCircleIcon } from "lucide-react"
 import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
 
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -28,22 +28,49 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { getPasswordStrength } from "../lib/password-strength"
 
 export function SignupForm() {
-  const [showPassword, setShowPassword] = useState(false)
+  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [agreed, setAgreed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const strength = getPasswordStrength(password)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!agreed) return
+
+    setError(null)
     setIsLoading(true)
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      })
+
+      const data = (await res.json()) as { success?: boolean; error?: string }
+
+      if (!res.ok || !data.success) {
+        setError(data.error || "Registration failed. Please try again.")
+        setIsLoading(false)
+        return
+      }
+
       setIsLoading(false)
       setIsSuccess(true)
-    }, 1200)
+    } catch {
+      setError("Connection error. Please try again.")
+      setIsLoading(false)
+    }
   }
 
   if (isSuccess) {
@@ -55,15 +82,15 @@ export function SignupForm() {
           </div>
           <CardTitle className="text-2xl font-bold">Registration Successful!</CardTitle>
           <CardDescription>
-            A confirmation link has been sent to your email. Please verify to start watching.
+            Your account has been created successfully. You can now start exploring GoxStream.
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-center pb-6">
           <Link
-            href="/login"
+            href="/"
             className={buttonVariants({ variant: "default", className: "w-full" })}
           >
-            Proceed to Sign In
+            Start Watching Now
           </Link>
         </CardFooter>
       </Card>
@@ -104,6 +131,13 @@ export function SignupForm() {
 
         <FieldSeparator>or register with email</FieldSeparator>
 
+        {error && (
+          <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-xs font-medium text-destructive border border-destructive/20">
+            <AlertCircleIcon className="size-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         {isLoading ? (
           <div className="flex flex-col gap-4">
             <Skeleton className="h-10 w-full rounded-md" />
@@ -120,6 +154,8 @@ export function SignupForm() {
                   id="username"
                   type="text"
                   placeholder="otaku_anime99"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </Field>
@@ -130,6 +166,8 @@ export function SignupForm() {
                   id="signup-email"
                   type="email"
                   placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>

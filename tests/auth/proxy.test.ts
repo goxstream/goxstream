@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { NextRequest } from "next/server";
-import { proxy } from "@/proxy";
+import { middleware as proxy } from "@/middleware";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/session";
 
 describe("Next.js 16 Edge Proxy Guard (proxy.ts)", () => {

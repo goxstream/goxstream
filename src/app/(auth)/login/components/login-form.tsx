@@ -2,7 +2,8 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { EyeIcon, EyeOffIcon, KeyRoundIcon, MailIcon, ArrowLeftIcon } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { EyeIcon, EyeOffIcon, KeyRoundIcon, MailIcon, ArrowLeftIcon, AlertCircleIcon } from "lucide-react"
 import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
 
 import { Button } from "@/components/ui/button"
@@ -33,20 +34,55 @@ import { Skeleton } from "@/components/ui/skeleton"
 import type { LoginMethod } from "../types"
 
 export function LoginForm() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const [loginMethod, setLoginMethod] = useState<LoginMethod>("password")
+  const [emailOrUsername, setEmailOrUsername] = useState("")
+  const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [otpSent, setOtpSent] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError(null)
     setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
-      if (loginMethod === "magic-link") {
+
+    if (loginMethod === "magic-link") {
+      setTimeout(() => {
+        setIsLoading(false)
         setOtpSent(true)
+      }, 1000)
+      return
+    }
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          usernameOrEmail: emailOrUsername,
+          password,
+        }),
+      })
+
+      const data = (await res.json()) as { success?: boolean; error?: string }
+
+      if (!res.ok || !data.success) {
+        setError(data.error || "Invalid login credentials.")
+        setIsLoading(false)
+        return
       }
-    }, 1200)
+
+      const redirectUrl = searchParams.get("redirect") || "/"
+      router.push(redirectUrl)
+      router.refresh()
+    } catch {
+      setError("Connection error. Please try again.")
+      setIsLoading(false)
+    }
   }
 
   const slotClassName =
@@ -86,6 +122,13 @@ export function LoginForm() {
 
         <FieldSeparator>or continue with</FieldSeparator>
 
+        {error && (
+          <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-xs font-medium text-destructive border border-destructive/20">
+            <AlertCircleIcon className="size-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
         {/* Dynamic Mode Switcher */}
         <div className="flex rounded-lg bg-muted/60 p-1 text-xs font-medium">
           <button
@@ -93,6 +136,7 @@ export function LoginForm() {
             onClick={() => {
               setLoginMethod("password")
               setOtpSent(false)
+              setError(null)
             }}
             className={`flex-1 rounded-md py-1.5 transition-all ${
               loginMethod === "password"
@@ -104,7 +148,10 @@ export function LoginForm() {
           </button>
           <button
             type="button"
-            onClick={() => setLoginMethod("magic-link")}
+            onClick={() => {
+              setLoginMethod("magic-link")
+              setError(null)
+            }}
             className={`flex-1 rounded-md py-1.5 transition-all ${
               loginMethod === "magic-link"
                 ? "bg-background text-foreground shadow-xs"
@@ -126,12 +173,14 @@ export function LoginForm() {
           <form onSubmit={handleSubmit}>
             <FieldGroup className="gap-4">
               <Field>
-                <FieldLabel htmlFor="email">Email Address</FieldLabel>
+                <FieldLabel htmlFor="email">Email Address or Username</FieldLabel>
                 <div className="relative">
                   <Input
                     id="email"
-                    type="email"
-                    placeholder="name@example.com"
+                    type="text"
+                    placeholder="name@example.com or username"
+                    value={emailOrUsername}
+                    onChange={(e) => setEmailOrUsername(e.target.value)}
                     required
                     className="pr-10"
                   />
@@ -155,6 +204,8 @@ export function LoginForm() {
                       id="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       required
                     />
                     <button

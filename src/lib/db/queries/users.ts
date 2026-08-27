@@ -1,10 +1,55 @@
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { getDb } from "../index";
-import { users, userSettings } from "../schema";
+import { users, userSettings, sessions } from "../schema";
 import type { InferInsertModel } from "drizzle-orm";
 import type { UserProfile } from "@/types/user";
 
 export type UserSettingsInput = Partial<InferInsertModel<typeof userSettings>>;
+
+export async function createSession(userId: string, userAgent?: string, ipAddress?: string) {
+  const db = await getDb();
+  const token = `sess_${crypto.randomUUID()}`;
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+  await db.insert(sessions).values({
+    token,
+    userId,
+    expiresAt,
+    userAgent,
+    ipAddress,
+  });
+
+  return token;
+}
+
+export async function getSessionByToken(token: string) {
+  const db = await getDb();
+  const sessionRecord = await db.query.sessions.findFirst({
+    where: eq(sessions.token, token),
+    with: {
+      user: true,
+    },
+  });
+
+  if (!sessionRecord || !sessionRecord.user) return null;
+
+  if (new Date(sessionRecord.expiresAt) <= new Date()) {
+    await db.delete(sessions).where(eq(sessions.token, token));
+    return null;
+  }
+
+  return sessionRecord;
+}
+
+export async function deleteSession(token: string) {
+  const db = await getDb();
+  await db.delete(sessions).where(eq(sessions.token, token));
+}
+
+export async function deleteUserSessions(userId: string) {
+  const db = await getDb();
+  await db.delete(sessions).where(eq(sessions.userId, userId));
+}
 
 export async function getUserById(id: string) {
   const db = await getDb();
@@ -26,6 +71,16 @@ export async function getUserByEmail(email: string) {
   });
 }
 
+export async function getUserByUsername(username: string) {
+  const db = await getDb();
+  return db.query.users.findFirst({
+    where: eq(users.username, username),
+    with: {
+      settings: true,
+    },
+  });
+}
+
 export async function updateUserSettings(userId: string, data: UserSettingsInput) {
   const db = await getDb();
   return db
@@ -41,7 +96,10 @@ export async function updateUserSettings(userId: string, data: UserSettingsInput
 export async function loginUserAccount(usernameOrEmail: string) {
   const db = await getDb();
   return db.query.users.findFirst({
-    where: eq(users.username, usernameOrEmail),
+    where: or(
+      eq(users.username, usernameOrEmail),
+      eq(users.email, usernameOrEmail)
+    ),
   });
 }
 

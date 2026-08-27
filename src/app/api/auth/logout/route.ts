@@ -1,14 +1,19 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { deleteSession } from "@/lib/db/queries/users";
 
 /**
  * Route Handler for user session termination (Logout).
- * Invalidates and deletes the session cookie from the client's browser.
+ * Invalidates and deletes the session cookie from the client's browser and database.
  */
 export async function POST() {
   try {
     const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+    if (token) {
+      await deleteSession(token);
+    }
     cookieStore.delete({
       name: SESSION_COOKIE_NAME,
       path: "/",
