@@ -1,8 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Play, Star, Tv } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
+import { VercelSpinner } from "@/components/vercel-spinner";
 import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
@@ -13,6 +17,8 @@ interface AnimeCardProps {
 }
 
 export function AnimeCard({ anime, isLoading }: AnimeCardProps) {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
   if (isLoading || !anime) {
     return (
       <Card className="flex flex-col rounded-xl overflow-hidden bg-card border border-border/80 p-0 gap-0">
@@ -36,6 +42,13 @@ export function AnimeCard({ anime, isLoading }: AnimeCardProps) {
     >
       {/* Poster Artwork Area */}
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+        {/* Vercel Spinner Overlay while image loads */}
+        {!isGradient && !isImageLoaded && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
+            <VercelSpinner size="md" />
+          </div>
+        )}
+
         {/* Poster Artwork / Gradient Fallback */}
         {isGradient ? (
           <div
@@ -49,9 +62,12 @@ export function AnimeCard({ anime, isLoading }: AnimeCardProps) {
             alt={anime.title}
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onLoad={() => setIsImageLoaded(true)}
+            className={`absolute inset-0 size-full object-cover transition-all duration-500 group-hover:scale-105 ${
+              isImageLoaded ? "opacity-100" : "opacity-0"
+            }`}
             onError={(e) => {
-              // Hide broken image & fallback to subtle dark gradient
+              setIsImageLoaded(true);
               const target = e.target as HTMLImageElement;
               target.style.opacity = "0";
             }}

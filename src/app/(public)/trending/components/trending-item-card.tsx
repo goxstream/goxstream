@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Crown, Star, Eye, ArrowUp, ArrowDown, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { VercelSpinner } from "@/components/vercel-spinner";
 import { cn, getImageStyle } from "@/lib/utils";
 import type { TrendingAnimeItem, TrendingPeriod } from "@/types/anime";
 
@@ -17,6 +19,7 @@ export function TrendingItemCard({
   period,
   viewMode,
 }: TrendingItemCardProps) {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const primaryGenre = anime.genres[0] || "Anime";
   const secondaryGenres = anime.genres.slice(1);
   const isGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
@@ -81,6 +84,11 @@ export function TrendingItemCard({
       <div className="group relative bg-card border border-border/60 rounded-xl overflow-hidden shadow-xs hover:border-primary/50 transition-all flex flex-col justify-between">
         {/* Cover Image Container */}
         <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
+          {!isGradient && !isImageLoaded && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
+              <VercelSpinner size="md" />
+            </div>
+          )}
           {isGradient ? (
             <div
               className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
@@ -92,8 +100,12 @@ export function TrendingItemCard({
               alt={anime.title}
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+              onLoad={() => setIsImageLoaded(true)}
+              className={`absolute inset-0 size-full object-cover transition-all duration-500 group-hover:scale-105 ${
+                isImageLoaded ? "opacity-100" : "opacity-0"
+              }`}
               onError={(e) => {
+                setIsImageLoaded(true);
                 (e.target as HTMLImageElement).style.opacity = "0";
               }}
             />

@@ -1,7 +1,11 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Play, Clock, Subtitles, Mic } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
+import { VercelSpinner } from "@/components/vercel-spinner";
 import type { EpisodeItem } from "@/types/anime";
 
 interface EpisodeCardProps {
@@ -10,6 +14,8 @@ interface EpisodeCardProps {
 }
 
 export function EpisodeCard({ episode, isLoading }: EpisodeCardProps) {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
   if (isLoading || !episode) {
     return (
       <Card className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-3.5 border-border/80">
@@ -34,13 +40,24 @@ export function EpisodeCard({ episode, isLoading }: EpisodeCardProps) {
       {/* Episode Thumbnail */}
       <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto min-w-0 flex-1">
         <div className="relative aspect-video w-32 sm:w-44 shrink-0 rounded-lg overflow-hidden bg-muted">
+          {/* Vercel Spinner Overlay while thumbnail loads */}
+          {!isImageLoaded && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
+              <VercelSpinner size="sm" />
+            </div>
+          )}
+
           <img
             src={episode.thumbnail || ""}
             alt={episode.animeTitle}
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onLoad={() => setIsImageLoaded(true)}
+            className={`absolute inset-0 size-full object-cover transition-all duration-500 group-hover:scale-105 ${
+              isImageLoaded ? "opacity-100" : "opacity-0"
+            }`}
             onError={(e) => {
+              setIsImageLoaded(true);
               (e.target as HTMLImageElement).style.opacity = "0";
             }}
           />

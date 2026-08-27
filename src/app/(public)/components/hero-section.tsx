@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Sparkles, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { VercelSpinner } from "@/components/vercel-spinner";
 import {
   Carousel,
   CarouselContent,
@@ -22,6 +24,7 @@ interface HeroSectionProps {
 export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
   const { api, setApi, slideItems, currentSlide, count, isLoading } =
     useHeroSlides(initialFeaturedAnime);
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   return (
     <section className="relative w-full max-w-[1400px] mx-auto rounded-3xl overflow-hidden bg-card text-card-foreground border border-border/60 shadow-xl group">
@@ -34,6 +37,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
           <CarouselContent>
             {slideItems.map((item) => {
               const isGradient = item.image.startsWith("linear-gradient");
+              const isLoaded = loadedImages[item.id] || false;
 
               return (
                 <CarouselItem key={item.id} className="relative w-full pl-0">
@@ -43,6 +47,12 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                   >
                     {/* Layer 0: Background Anime Poster/Banner & Contrast Gradients */}
                     <div className="absolute inset-0 size-full z-0 bg-muted overflow-hidden">
+                      {!isGradient && !isLoaded && (
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
+                          <VercelSpinner size="lg" />
+                        </div>
+                      )}
+
                       {isGradient ? (
                         <div
                           className="absolute inset-0 size-full"
@@ -54,8 +64,12 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                           alt={item.title}
                           loading="eager"
                           decoding="async"
-                          className="absolute inset-0 size-full object-cover object-center"
+                          onLoad={() => setLoadedImages((prev) => ({ ...prev, [item.id]: true }))}
+                          className={`absolute inset-0 size-full object-cover object-center transition-opacity duration-500 ${
+                            isLoaded ? "opacity-100" : "opacity-0"
+                          }`}
                           onError={(e) => {
+                            setLoadedImages((prev) => ({ ...prev, [item.id]: true }));
                             (e.target as HTMLImageElement).style.opacity = "0";
                           }}
                         />
