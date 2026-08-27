@@ -9,6 +9,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "goxstream",
+	"account_id": "49e86ef059f7bb2e4d4b999dc8548a9c",
 	"keep_names": false,
 	"keep_vars": true,
 	"main": ".open-next/worker.js",
