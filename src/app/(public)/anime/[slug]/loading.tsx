@@ -1,6 +1,5 @@
-import { AnimeDetailsSkeleton } from "./components/anime-skeleton";
+import { AnimeHero } from "./components/anime-hero";
 
 export default function AnimeDetailsLoading() {
-  return <AnimeDetailsSkeleton />;
+  return <AnimeHero isLoading={true} />;
 }
-

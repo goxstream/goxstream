@@ -7,7 +7,6 @@ import { AnimeHero } from "./anime-hero";
 import { AnimeMetadata } from "./anime-metadata";
 import { EpisodeList } from "./episode-list";
 import { AnimeRecommendations } from "./anime-recommendations";
-import { AnimeDetailsSkeleton } from "./anime-skeleton";
 
 interface AnimeDetailsClientProps {
   paramsPromise: Promise<{ slug: string }>;
@@ -21,20 +20,18 @@ export function AnimeDetailsClient({ paramsPromise }: AnimeDetailsClientProps) {
     notFound();
   }
 
-  if (isLoading || !anime) {
-    return <AnimeDetailsSkeleton />;
-  }
-
-  const latestEpNum = episodes.length > 0 ? Math.max(...episodes.map((e) => e.episodeNumber)) : 1;
+  const latestEpNum = episodes && episodes.length > 0 ? Math.max(...episodes.map((e) => e.episodeNumber)) : 1;
 
   return (
     <main className="flex-1">
-      <AnimeHero anime={anime} latestEpisodeNum={latestEpNum} />
+      <AnimeHero anime={anime} latestEpisodeNum={latestEpNum} isLoading={isLoading} />
 
       <div className="container mx-auto px-4">
-        <AnimeMetadata anime={anime} />
-        <EpisodeList episodes={episodes} animeSlug={anime.slug} />
-        <AnimeRecommendations recommendations={recommendations} />
+        <AnimeMetadata anime={anime} isLoading={isLoading} />
+        <EpisodeList episodes={episodes} animeSlug={anime?.slug || slug} isLoading={isLoading} />
+        {recommendations && recommendations.length > 0 && (
+          <AnimeRecommendations recommendations={recommendations} />
+        )}
       </div>
     </main>
   );

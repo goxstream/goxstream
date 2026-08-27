@@ -14,19 +14,80 @@ import {
   Check,
   ChevronRight,
 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { VercelSpinner } from "@/components/vercel-spinner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
 interface AnimeHeroProps {
-  anime: AnimeItem;
+  anime?: AnimeItem | null;
   latestEpisodeNum?: number;
+  isLoading?: boolean;
 }
 
-export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
+export function AnimeHero({ anime, latestEpisodeNum, isLoading }: AnimeHeroProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isPosterLoaded, setIsPosterLoaded] = useState(false);
+
+  if (isLoading || !anime) {
+    return (
+      <section className="relative overflow-hidden border-b border-border/60 bg-card/30">
+        <div className="container relative z-10 mx-auto px-4 py-8 md:py-12">
+          {/* Breadcrumb Navigation Skeleton */}
+          <div className="flex items-center gap-2 mb-6">
+            <Skeleton className="h-4 w-12 rounded" />
+            <Skeleton className="h-3 w-3 rounded" />
+            <Skeleton className="h-4 w-24 rounded" />
+            <Skeleton className="h-3 w-3 rounded" />
+            <Skeleton className="h-4 w-40 rounded" />
+          </div>
+
+          {/* Hero Main Content Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr] gap-8 items-start">
+            {/* Poster Image Card Skeleton */}
+            <Skeleton className="mx-auto md:mx-0 w-full max-w-[260px] md:max-w-none aspect-[2/3] rounded-xl" />
+
+            {/* Anime Meta & Actions Skeleton */}
+            <div className="flex flex-col gap-4 text-left">
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <Skeleton className="h-5 w-24 rounded-full" />
+                  <Skeleton className="h-5 w-20 rounded-full" />
+                  <Skeleton className="h-5 w-28 rounded-full" />
+                </div>
+                <Skeleton className="h-8 sm:h-9 lg:h-10 w-4/5 max-w-xl rounded-md" />
+                <Skeleton className="h-5 w-1/3 rounded-md" />
+              </div>
+
+              {/* Synopsis Skeleton */}
+              <div className="space-y-2 py-1">
+                <Skeleton className="h-4 w-full max-w-2xl rounded" />
+                <Skeleton className="h-4 w-11/12 rounded" />
+                <Skeleton className="h-4 w-3/4 rounded" />
+              </div>
+
+              {/* Quick Specs Pill Row Skeleton */}
+              <div className="flex flex-wrap items-center gap-3 py-1">
+                <Skeleton className="h-4 w-24 rounded" />
+                <Skeleton className="h-4 w-28 rounded" />
+                <Skeleton className="h-4 w-24 rounded" />
+              </div>
+
+              {/* Action Buttons Skeleton */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Skeleton className="h-11 w-44 rounded-lg" />
+                <Skeleton className="h-11 w-40 rounded-lg" />
+                <Skeleton className="h-11 w-28 rounded-lg" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -77,6 +138,12 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr] gap-8 items-start">
           {/* Poster Image Card */}
           <div className="relative group mx-auto md:mx-0 w-full max-w-[260px] md:max-w-none aspect-[2/3] rounded-xl overflow-hidden shadow-md border border-border/80 bg-muted">
+            {!isPosterGradient && !isPosterLoaded && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
+                <VercelSpinner size="md" />
+              </div>
+            )}
+
             {isPosterGradient ? (
               <div
                 className="w-full h-full transition-transform duration-500 group-hover:scale-105"
@@ -88,8 +155,12 @@ export function AnimeHero({ anime, latestEpisodeNum }: AnimeHeroProps) {
                 alt={anime.title}
                 loading="eager"
                 decoding="async"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onLoad={() => setIsPosterLoaded(true)}
+                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+                  isPosterLoaded ? "opacity-100" : "opacity-0"
+                }`}
                 onError={(e) => {
+                  setIsPosterLoaded(true);
                   (e.target as HTMLImageElement).style.opacity = "0";
                 }}
               />

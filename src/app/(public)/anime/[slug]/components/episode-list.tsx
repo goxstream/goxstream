@@ -10,6 +10,8 @@ import {
   Clock,
   Sparkles,
 } from "lucide-react";
+import { EpisodeCard } from "@/components/episode-card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,14 +21,37 @@ import { getImageStyle } from "@/lib/utils";
 import type { EpisodeItem } from "@/types/anime";
 
 interface EpisodeListProps {
-  episodes: EpisodeItem[];
-  animeSlug: string;
+  episodes?: EpisodeItem[];
+  animeSlug?: string;
+  isLoading?: boolean;
 }
 
-export function EpisodeList({ episodes, animeSlug }: EpisodeListProps) {
+export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: EpisodeListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [activeRange, setActiveRange] = useState<string>("all");
+
+  if (isLoading) {
+    return (
+      <section id="episodes" className="my-8 scroll-mt-20">
+        <Card className="border-border/60 bg-card/40 shadow-xs">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
+            <div className="space-y-1">
+              <Skeleton className="h-6 w-48 rounded" />
+              <Skeleton className="h-3 w-64 rounded" />
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <EpisodeCard key={i} isLoading={true} />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+    );
+  }
 
   // Generate Episode Ranges (e.g. 1-12, 13-24)
   const ranges = useMemo(() => {

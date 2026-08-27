@@ -14,16 +14,60 @@ import {
   CalendarDays,
   ShieldCheck,
 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { AnimeItem } from "@/types/anime";
 
 interface AnimeMetadataProps {
-  anime: AnimeItem;
+  anime?: AnimeItem | null;
+  isLoading?: boolean;
 }
 
-export function AnimeMetadata({ anime }: AnimeMetadataProps) {
+export function AnimeMetadata({ anime, isLoading }: AnimeMetadataProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  if (isLoading || !anime) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 my-8">
+        <div className="lg:col-span-2 space-y-6">
+          <Card className="border-border/60 bg-card/50 shadow-xs">
+            <CardHeader className="pb-3">
+              <Skeleton className="h-6 w-40 rounded" />
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Skeleton className="h-4 w-full rounded" />
+              <Skeleton className="h-4 w-5/6 rounded" />
+              <Skeleton className="h-4 w-4/6 rounded" />
+            </CardContent>
+          </Card>
+          <Card className="border-border/60 bg-card/50 shadow-xs">
+            <CardHeader className="pb-3">
+              <Skeleton className="h-6 w-44 rounded" />
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-2">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="h-6 w-20 rounded-full" />
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+        <Card className="border-border/60 bg-card/50 shadow-xs h-fit">
+          <CardHeader className="pb-3">
+            <Skeleton className="h-6 w-48 rounded" />
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex justify-between items-center py-1">
+                <Skeleton className="h-4 w-24 rounded" />
+                <Skeleton className="h-4 w-28 rounded" />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 my-8">
