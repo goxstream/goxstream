@@ -1,12 +1,29 @@
 import Link from "next/link";
 import { Play, Clock, Subtitles, Mic } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/components/ui/card";
 import type { EpisodeItem } from "@/types/anime";
 
 interface EpisodeCardProps {
-  episode: EpisodeItem;
+  episode?: EpisodeItem;
+  isLoading?: boolean;
 }
 
-export function EpisodeCard({ episode }: EpisodeCardProps) {
+export function EpisodeCard({ episode, isLoading }: EpisodeCardProps) {
+  if (isLoading || !episode) {
+    return (
+      <Card className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-3.5 border-border/80">
+        <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto min-w-0 flex-1">
+          <Skeleton className="aspect-video w-32 sm:w-44 shrink-0 rounded-lg" />
+          <div className="flex-1 space-y-2 py-0.5">
+            <Skeleton className="h-3 w-1/3 rounded" />
+            <Skeleton className="h-4 w-4/5 rounded" />
+            <Skeleton className="h-3 w-1/2 rounded" />
+          </div>
+        </div>
+      </Card>
+    );
+  }
   const watchUrl = `/anime/${episode.animeSlug}/${episode.episodeNumber}`;
 
   return (

@@ -1,15 +1,32 @@
 import Link from "next/link";
 import { Play, Star, Tv } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/components/ui/card";
 import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 
 interface AnimeCardProps {
-  anime: AnimeItem;
+  anime?: AnimeItem;
+  isLoading?: boolean;
   priority?: boolean;
 }
 
-export function AnimeCard({ anime }: AnimeCardProps) {
+export function AnimeCard({ anime, isLoading }: AnimeCardProps) {
+  if (isLoading || !anime) {
+    return (
+      <Card className="flex flex-col rounded-xl overflow-hidden bg-card border border-border/80 p-0 gap-0">
+        <Skeleton className="aspect-[3/4] w-full rounded-none" />
+        <div className="p-3.5 flex flex-col gap-2 bg-card">
+          <Skeleton className="h-4 w-4/5 rounded" />
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-3 w-1/2 rounded" />
+            <Skeleton className="h-3 w-1/4 rounded" />
+          </div>
+        </div>
+      </Card>
+    );
+  }
   const isGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
 
   return (

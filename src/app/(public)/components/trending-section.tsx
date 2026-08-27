@@ -54,7 +54,18 @@ export function TrendingSection({ initialTrending, initialGenres }: TrendingSect
 
         {/* In-Component Skeleton Loader */}
         {isLoading ? (
-          <TrendingSectionSkeleton />
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 overflow-hidden pb-3">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <Skeleton key={i} className="h-7 w-20 rounded-full flex-shrink-0" />
+              ))}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <AnimeCard key={i} isLoading={true} />
+              ))}
+            </div>
+          </div>
         ) : (
           <>
             {/* Genre Filter Tabs */}
@@ -95,32 +106,5 @@ export function TrendingSection({ initialTrending, initialGenres }: TrendingSect
         )}
       </div>
     </section>
-  );
-}
-
-/**
- * In-Component Skeleton for Trending Section
- */
-function TrendingSectionSkeleton() {
-  return (
-    <div className="space-y-6">
-      {/* Genre Pills Skeleton */}
-      <div className="flex items-center gap-2 overflow-hidden pb-3">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton key={i} className="h-7 w-20 rounded-full flex-shrink-0" />
-        ))}
-      </div>
-
-      {/* Grid Cards Skeleton */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="space-y-3">
-            <Skeleton className="aspect-[3/4] w-full rounded-xl" />
-            <Skeleton className="h-4 w-4/5 rounded" />
-            <Skeleton className="h-3 w-1/2 rounded" />
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }
