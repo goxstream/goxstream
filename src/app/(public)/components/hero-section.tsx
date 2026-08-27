@@ -164,7 +164,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                     <div className="absolute inset-0 size-full z-0 bg-muted overflow-hidden">
                       {isGradient ? (
                         <div
-                          className="absolute inset-0 size-full transition-transform duration-700 ease-out group-hover/card:scale-105"
+                          className="absolute inset-0 size-full"
                           style={getImageStyle(item.image)}
                         />
                       ) : (
@@ -173,7 +173,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                           alt={item.title}
                           loading="eager"
                           decoding="async"
-                          className="absolute inset-0 size-full object-cover object-center transition-transform duration-700 ease-out group-hover/card:scale-105"
+                          className="absolute inset-0 size-full object-cover object-center"
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.opacity = "0";
                           }}
