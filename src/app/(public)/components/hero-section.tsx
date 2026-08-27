@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Sparkles, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Sparkles, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -11,12 +10,9 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  type CarouselApi,
 } from "@/components/ui/carousel";
 import { getImageStyle } from "@/lib/utils";
-import { useScheduleAnime } from "@/hooks/use-schedule-anime";
-import { useFeaturedAnime } from "@/hooks/use-featured-anime";
-import { useTrendingAnime } from "@/hooks/use-trending-anime";
+import { useHeroSlides } from "@/hooks/use-hero-slides";
 import type { AnimeItem } from "@/types/anime";
 
 interface HeroSectionProps {
@@ -24,126 +20,12 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
-  const [api, setApi] = useState<CarouselApi>();
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [count, setCount] = useState(0);
-
-  const { scheduleItems, isLoading: isScheduleLoading } = useScheduleAnime();
-  const { featuredAnime } = useFeaturedAnime(initialFeaturedAnime);
-  const { trendingAnime } = useTrendingAnime();
-
-  // Combine items: prioritize today's schedule, fallback to trending & featured
-  const slideItems = useMemo(() => {
-    const items: Array<{
-      id: string;
-      slug: string;
-      title: string;
-      japaneseTitle?: string;
-      image: string;
-      badgeText: string;
-      rating?: number;
-      episodeNumber?: number;
-      airTime?: string;
-      season?: string;
-      year?: number;
-      genres: string[];
-      synopsis?: string;
-    }> = [];
-
-    // Filter today's schedule items
-    const today = new Date()
-      .toLocaleDateString("en-US", { weekday: "long" })
-      .toLowerCase();
-
-    const todayItems = scheduleItems.filter(
-      (s) => s.airDay.toLowerCase() === today || s.status === "airing_now"
-    );
-
-    const sourceSchedule = todayItems.length > 0 ? todayItems : scheduleItems;
-
-    sourceSchedule.forEach((item) => {
-      items.push({
-        id: `sched-${item.id}`,
-        slug: item.slug,
-        title: item.title,
-        japaneseTitle: item.japaneseTitle,
-        image: item.bannerImage || item.coverImage,
-        badgeText: item.status === "airing_now" ? "AIRING NOW" : `TAYANG HARI INI (${item.airTime || "WIB"})`,
-        rating: item.rating,
-        episodeNumber: item.episodeNumber,
-        airTime: item.airTime,
-        season: item.season,
-        year: item.year,
-        genres: item.genres || [],
-      });
-    });
-
-    // Add featured anime if not already in list
-    if (featuredAnime && !items.some((i) => i.slug === featuredAnime.slug)) {
-      items.push({
-        id: `feat-${featuredAnime.id}`,
-        slug: featuredAnime.slug,
-        title: featuredAnime.title,
-        japaneseTitle: featuredAnime.japaneseTitle,
-        image: featuredAnime.bannerImage || featuredAnime.coverImage,
-        badgeText: "SIMULCAST UNGGULAN",
-        rating: featuredAnime.rating,
-        episodeNumber: featuredAnime.latestEpisode || 1,
-        season: featuredAnime.season,
-        year: featuredAnime.year,
-        genres: featuredAnime.genres || [],
-        synopsis: featuredAnime.synopsis,
-      });
-    }
-
-    // Add trending items up to 6 total items
-    trendingAnime.forEach((anime) => {
-      if (items.length < 6 && !items.some((i) => i.slug === anime.slug)) {
-        items.push({
-          id: `trend-${anime.id}`,
-          slug: anime.slug,
-          title: anime.title,
-          japaneseTitle: anime.japaneseTitle,
-          image: anime.bannerImage || anime.coverImage,
-          badgeText: "TRENDING HARI INI",
-          rating: anime.rating,
-          episodeNumber: anime.latestEpisode || 1,
-          season: anime.season,
-          year: anime.year,
-          genres: anime.genres || [],
-          synopsis: anime.synopsis,
-        });
-      }
-    });
-
-    return items;
-  }, [scheduleItems, featuredAnime, trendingAnime]);
-
-  // Handle Carousel API state & auto-play
-  useEffect(() => {
-    if (!api) return;
-
-    setCount(api.scrollSnapList().length);
-    setCurrentSlide(api.selectedScrollSnap());
-
-    api.on("select", () => {
-      setCurrentSlide(api.selectedScrollSnap());
-    });
-  }, [api]);
-
-  useEffect(() => {
-    if (!api || slideItems.length <= 1) return;
-
-    const timer = setInterval(() => {
-      api.scrollNext();
-    }, 6000);
-
-    return () => clearInterval(timer);
-  }, [api, slideItems.length]);
+  const { api, setApi, slideItems, currentSlide, count, isLoading } =
+    useHeroSlides(initialFeaturedAnime);
 
   return (
     <section className="relative w-full max-w-[1400px] mx-auto rounded-3xl overflow-hidden bg-card text-card-foreground border border-border/60 shadow-xl group">
-      {isScheduleLoading && slideItems.length === 0 ? (
+      {isLoading ? (
         <div className="relative w-full min-h-[500px] sm:min-h-[580px] flex items-center justify-center p-6">
           <Skeleton className="size-full rounded-2xl" />
         </div>
@@ -155,7 +37,6 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
 
               return (
                 <CarouselItem key={item.id} className="relative w-full pl-0">
-                  {/* Clickable Full Card Link */}
                   <Link
                     href={`/anime/${item.slug}/${item.episodeNumber || 1}`}
                     className="relative block w-full min-h-[520px] sm:min-h-[600px] lg:min-h-[640px] overflow-hidden group/card"
