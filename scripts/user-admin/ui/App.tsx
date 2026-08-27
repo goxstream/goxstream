@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Text, useApp } from "ink";
 import Spinner from "ink-spinner";
 import SelectInput from "ink-select-input";
@@ -38,13 +38,32 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
   const { dbTargets, selectedDb, setSelectedDb, isScanning } = useDbScan(initialTarget);
   const userMgmt = useUserManagement();
 
-  const [view, setView] = useState<ViewState>("MENU");
+  const [view, setView] = useState<ViewState>("SCANNING_DB");
   const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<UserItem[]>([]);
 
+  useEffect(() => {
+    if (!isScanning) {
+      if (initialAction === "help") {
+        setView("HELP");
+      } else if (initialAction === "list" && selectedDb) {
+        userMgmt.loadUsers(selectedDb).then(() => setView("LIST"));
+      } else if (initialAction === "create") {
+        setView("CREATE");
+      } else if (!selectedDb) {
+        setView("SELECT_DB");
+      } else {
+        setView("MENU");
+      }
+    }
+  }, [isScanning]);
+
   const handleMenuSelect = async (item: { value: string }) => {
     userMgmt.setMessage(null);
-    if (!selectedDb) return;
+    if (!selectedDb) {
+      setView("SELECT_DB");
+      return;
+    }
     if (item.value === "list") {
       await userMgmt.loadUsers(selectedDb);
       setView("LIST");
@@ -74,18 +93,24 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
       {(isScanning || userMgmt.loading) && (
         <Box marginY={1}>
           <Text color="cyan">
-            <Spinner type="dots" /> {isScanning ? "Scanning environment..." : "Executing operation..."}
+            <Spinner type="dots" /> {isScanning ? "Scanning environment database targets..." : "Executing operation..."}
           </Text>
         </Box>
       )}
 
-      {!userMgmt.loading && view === "SELECT_DB" && (
-        <DatabaseSelector targets={dbTargets} onSelect={(t) => { setSelectedDb(t); setView("MENU"); }} />
+      {!isScanning && !userMgmt.loading && view === "SELECT_DB" && (
+        <DatabaseSelector
+          targets={dbTargets}
+          onSelect={(t) => {
+            setSelectedDb(t);
+            setView("MENU");
+          }}
+        />
       )}
 
-      {!userMgmt.loading && view === "MENU" && <MenuView onSelect={handleMenuSelect} />}
+      {!isScanning && !userMgmt.loading && view === "MENU" && <MenuView onSelect={handleMenuSelect} />}
 
-      {!userMgmt.loading && view === "LIST" && (
+      {!isScanning && !userMgmt.loading && view === "LIST" && (
         <Box flexDirection="column">
           <UserTable users={userMgmt.users} title={`Users in ${selectedDb?.toUpperCase()}`} />
           <Box marginTop={1}>
@@ -94,7 +119,7 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
         </Box>
       )}
 
-      {!userMgmt.loading && view === "CREATE" && (
+      {!isScanning && !userMgmt.loading && view === "CREATE" && (
         <UserForm
           onSubmit={async (data) => {
             if (selectedDb) await userMgmt.handleCreate(selectedDb, data);
@@ -104,16 +129,19 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
         />
       )}
 
-      {!userMgmt.loading && view === "EDIT_SEARCH" && (
+      {!isScanning && !userMgmt.loading && view === "EDIT_SEARCH" && (
         <UserSearch
           users={userMgmt.users}
           actionLabel="Edit"
-          onSelectUser={(u) => { setSelectedUser(u); setView("EDIT_FORM"); }}
+          onSelectUser={(u) => {
+            setSelectedUser(u);
+            setView("EDIT_FORM");
+          }}
           onCancel={() => setView("MENU")}
         />
       )}
 
-      {!userMgmt.loading && view === "EDIT_FORM" && selectedUser && (
+      {!isScanning && !userMgmt.loading && view === "EDIT_FORM" && selectedUser && (
         <UserForm
           initialValues={selectedUser}
           isEdit
@@ -126,16 +154,19 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
         />
       )}
 
-      {!userMgmt.loading && view === "DELETE_SEARCH" && (
+      {!isScanning && !userMgmt.loading && view === "DELETE_SEARCH" && (
         <UserMultiSelect
           users={userMgmt.users}
           actionLabel="Delete"
-          onSubmit={(sel) => { setSelectedUsers(sel); setView("DELETE_CONFIRM"); }}
+          onSubmit={(sel) => {
+            setSelectedUsers(sel);
+            setView("DELETE_CONFIRM");
+          }}
           onCancel={() => setView("MENU")}
         />
       )}
 
-      {!userMgmt.loading && view === "DELETE_CONFIRM" && selectedUsers.length > 0 && (
+      {!isScanning && !userMgmt.loading && view === "DELETE_CONFIRM" && selectedUsers.length > 0 && (
         <DeleteConfirmModal
           selectedUsers={selectedUsers}
           onConfirm={async () => {
@@ -147,7 +178,7 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
         />
       )}
 
-      {view === "HELP" && (
+      {!isScanning && !userMgmt.loading && view === "HELP" && (
         <Box flexDirection="column">
           <HelpView />
           <Box marginTop={1}>

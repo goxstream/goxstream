@@ -11,17 +11,16 @@ export function useDbScan(initialTarget?: DbTarget) {
     async function initScan() {
       const scanned = await scanAvailableDatabases();
       setDbTargets(scanned);
-      setIsScanning(false);
 
       if (initialTarget && scanned.some((t) => t.id === initialTarget && t.isAvailable)) {
         setSelectedDb(initialTarget);
-        return;
+      } else {
+        const available = scanned.filter((t) => t.isAvailable);
+        if (available.length === 1) {
+          setSelectedDb(available[0].id);
+        }
       }
-
-      const available = scanned.filter((t) => t.isAvailable);
-      if (available.length === 1) {
-        setSelectedDb(available[0].id);
-      }
+      setIsScanning(false);
     }
     initScan();
   }, [initialTarget]);
