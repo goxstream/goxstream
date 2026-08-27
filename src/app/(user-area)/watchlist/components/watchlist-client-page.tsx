@@ -37,7 +37,7 @@ export function WatchlistClientPage() {
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all gap-1.5"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg data-active:bg-primary data-active:text-primary-foreground transition-all gap-1.5 cursor-pointer"
               >
                 {tab.label}
                 <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 border-current opacity-80">
@@ -68,10 +68,11 @@ export function WatchlistClientPage() {
           </p>
           <Link
             href="/browse"
-            className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-xs font-semibold rounded-xl shadow-xs hover:bg-primary/90 transition-colors"
+            className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-xs font-semibold rounded-xl shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
           >
             Explore Browse Catalog
           </Link>
+
         </div>
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

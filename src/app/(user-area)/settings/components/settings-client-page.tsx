@@ -39,23 +39,24 @@ export function SettingsClientPage() {
 
       <Tabs defaultValue="profile" className="w-full">
         <TabsList className="bg-card border border-border/60 p-1.5 rounded-2xl w-full grid grid-cols-2 md:grid-cols-4 h-auto gap-1">
-          <TabsTrigger value="profile" className="px-3 py-2 text-xs font-semibold rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all gap-2">
+          <TabsTrigger value="profile" className="px-3 py-2 text-xs font-semibold rounded-xl data-active:bg-primary data-active:text-primary-foreground transition-all gap-2 cursor-pointer">
             <User className="size-4" />
             Profile Info
           </TabsTrigger>
-          <TabsTrigger value="player" className="px-3 py-2 text-xs font-semibold rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all gap-2">
+          <TabsTrigger value="player" className="px-3 py-2 text-xs font-semibold rounded-xl data-active:bg-primary data-active:text-primary-foreground transition-all gap-2 cursor-pointer">
             <Tv className="size-4" />
             Player Defaults
           </TabsTrigger>
-          <TabsTrigger value="security" className="px-3 py-2 text-xs font-semibold rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all gap-2">
+          <TabsTrigger value="security" className="px-3 py-2 text-xs font-semibold rounded-xl data-active:bg-primary data-active:text-primary-foreground transition-all gap-2 cursor-pointer">
             <Shield className="size-4" />
             Account Security
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="px-3 py-2 text-xs font-semibold rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all gap-2">
+          <TabsTrigger value="notifications" className="px-3 py-2 text-xs font-semibold rounded-xl data-active:bg-primary data-active:text-primary-foreground transition-all gap-2 cursor-pointer">
             <Bell className="size-4" />
             Notifications
           </TabsTrigger>
         </TabsList>
+
 
         <TabsContent value="profile" className="mt-6">
           <ProfileSettingsForm settings={settings} setSettings={setSettings} onSave={handleSave} />

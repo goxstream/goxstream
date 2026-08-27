@@ -14,50 +14,55 @@ interface ProfileHeaderProps {
 
 export function ProfileHeader({ user }: ProfileHeaderProps) {
   const isBannerGradient = user.bannerUrl && user.bannerUrl.startsWith("linear-gradient");
+  const hasBanner = Boolean(user.bannerUrl && user.bannerUrl.trim() !== "");
 
   return (
     <div className="relative rounded-2xl overflow-hidden border border-border/60 bg-card shadow-xs">
       {/* Banner */}
-      <div className="h-44 sm:h-56 w-full relative bg-muted overflow-hidden">
-        {isBannerGradient ? (
-          <div
-            className="absolute inset-0 size-full"
-            style={getImageStyle(user.bannerUrl)}
-          />
-        ) : (
-          <img
-            src={user.bannerUrl || ""}
-            alt={user.displayName}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 size-full object-cover"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.opacity = "0";
-            }}
-          />
+      <div className="h-44 sm:h-56 w-full relative bg-gradient-to-br from-emerald-950 via-slate-900 to-emerald-900 overflow-hidden">
+        {hasBanner && (
+          isBannerGradient ? (
+            <div
+              className="absolute inset-0 size-full"
+              style={getImageStyle(user.bannerUrl!)}
+            />
+          ) : (
+            <img
+              src={user.bannerUrl}
+              alt={user.displayName}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 size-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          )
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent z-10" />
       </div>
 
       {/* Profile Details Overlay Container */}
-      <div className="px-6 pb-6 pt-0 relative flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 -mt-16 sm:-mt-20">
+      <div className="px-6 pb-6 pt-0 relative z-20 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 -mt-16 sm:-mt-20">
         <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5">
           {/* Avatar */}
-          <Avatar className="size-28 sm:size-36 border-4 border-background ring-2 ring-primary/20 shadow-md">
-            <AvatarImage src={user.avatarUrl} alt={user.displayName} />
-            <AvatarFallback className="bg-primary/10 text-primary font-bold text-2xl">
-              {user.displayName.substring(0, 2).toUpperCase()}
+          <Avatar className="size-28 sm:size-36 border-4 border-background ring-2 ring-primary/20 shadow-md bg-card">
+            {user.avatarUrl ? (
+              <AvatarImage src={user.avatarUrl} alt={user.displayName} />
+            ) : null}
+            <AvatarFallback className="bg-primary/10 text-primary font-bold text-3xl">
+              {user.displayName ? user.displayName.substring(0, 2).toUpperCase() : "US"}
             </AvatarFallback>
           </Avatar>
 
           {/* User Information */}
           <div className="flex flex-col gap-1 sm:pb-2">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground drop-shadow-xs">
                 {user.displayName}
               </h1>
               {user.isVip && (
-                <Badge variant="secondary" className="px-2 py-0.5 text-xs bg-amber-500/10 text-amber-500 border border-amber-500/30 font-bold gap-1">
+                <Badge variant="secondary" className="px-2 py-0.5 text-xs bg-amber-500/10 text-amber-500 border border-amber-500/30 font-bold gap-1 shadow-2xs">
                   {user.vipTier || "VIP Member"}
                 </Badge>
               )}
@@ -90,7 +95,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
             className={buttonVariants({
               variant: "outline",
               size: "sm",
-              className: "rounded-xl font-medium gap-2 text-xs flex-1 sm:flex-none border-border/80 hover:bg-muted/70",
+              className: "rounded-xl font-medium gap-2 text-xs flex-1 sm:flex-none border-border/80 hover:bg-muted/70 cursor-pointer",
             })}
           >
             <Settings className="size-3.5" />
@@ -101,3 +106,4 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
     </div>
   );
 }
+

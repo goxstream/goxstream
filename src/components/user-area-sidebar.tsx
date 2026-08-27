@@ -36,10 +36,12 @@ export function UserAreaSidebar() {
           </div>
         ) : user ? (
           <div className="hidden md:flex items-center gap-3 p-2">
-            <Avatar className="size-11 border border-border/80 shadow-xs shrink-0">
-              <AvatarImage src={user.avatarUrl || undefined} alt={user.displayName} />
+            <Avatar className="size-11 border border-border/80 shadow-xs shrink-0 bg-card">
+              {user.avatarUrl ? (
+                <AvatarImage src={user.avatarUrl} alt={user.displayName} />
+              ) : null}
               <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
-                {user.displayName.substring(0, 2).toUpperCase()}
+                {user.displayName ? user.displayName.substring(0, 2).toUpperCase() : "US"}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col min-w-0 flex-1">
@@ -76,7 +78,7 @@ export function UserAreaSidebar() {
                 key={tab.href}
                 href={tab.href}
                 className={cn(
-                  "px-3.5 py-2.5 text-xs sm:text-sm font-medium rounded-xl flex items-center gap-3 transition-all whitespace-nowrap shrink-0 md:w-full",
+                  "px-3.5 py-2.5 text-xs sm:text-sm font-medium rounded-xl flex items-center gap-3 transition-all whitespace-nowrap shrink-0 md:w-full cursor-pointer",
                   isActive
                     ? "bg-primary/10 text-primary font-bold border-l-0 md:border-l-4 border-primary shadow-2xs md:rounded-l-xs md:rounded-r-xl"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
@@ -88,6 +90,7 @@ export function UserAreaSidebar() {
             );
           })}
         </nav>
+
       </div>
     </aside>
   );
