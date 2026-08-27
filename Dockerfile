@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install libc6-compat for native dependencies and enable Corepack for pnpm LTS
 RUN apk add --no-cache libc6-compat
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@9 --activate
 
 # 1. Install dependencies stage
 FROM base AS deps
