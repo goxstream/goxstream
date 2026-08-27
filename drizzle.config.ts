@@ -4,9 +4,10 @@ const connectionType = (process.env.DB_CONNECTION || "").toLowerCase();
 const dbUrl = process.env.DB_URL || process.env.DATABASE_URL;
 
 const isPostgres =
-  connectionType === "postgres" ||
-  connectionType === "postgresql" ||
-  Boolean(dbUrl);
+  connectionType !== "d1" &&
+  (connectionType === "postgres" ||
+    connectionType === "postgresql" ||
+    (!connectionType && Boolean(dbUrl)));
 
 export default defineConfig({
   schema: isPostgres

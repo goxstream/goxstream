@@ -15,6 +15,13 @@
       "when": 1787747473766,
       "tag": "0001_big_the_phantom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1787805402274,
+      "tag": "0002_bored_shotgun",
+      "breakpoints": true
     }
   ]
 }
