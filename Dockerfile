@@ -1,9 +1,8 @@
-# Base image with Node 24 LTS (Alpine)
-FROM node:24-alpine AS base
+# Base image with Node 24 LTS (Debian Slim - required for glibc compatibility with workerd & sharp)
+FROM node:24-slim AS base
 WORKDIR /app
 
-# Install libc6-compat for native dependencies and enable Corepack for pnpm LTS
-RUN apk add --no-cache libc6-compat
+# Enable Corepack for pnpm LTS
 RUN corepack enable && corepack prepare pnpm@11 --activate
 
 # 1. Install dependencies stage
