@@ -12,8 +12,8 @@ export interface UserProfile {
   username: string;
   displayName: string;
   email: string;
-  avatarUrl: string;
-  bannerUrl: string;
+  avatarUrl?: string;
+  bannerUrl?: string;
   bio: string;
   joinDate: string;
   isVip: boolean;
@@ -26,6 +26,7 @@ export interface UserProfile {
     favoriteGenres: { genre: string; percentage: number }[];
   };
 }
+
 
 export interface WatchlistItem {
   id: string;
