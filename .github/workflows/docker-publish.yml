@@ -3,6 +3,7 @@ name: Publish Docker Image to Docker Hub
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   build-and-push:
