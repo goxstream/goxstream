@@ -143,10 +143,6 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
 
   return (
     <section className="relative w-full max-w-[1400px] mx-auto rounded-3xl overflow-hidden bg-card text-card-foreground border border-border/60 shadow-xl group">
-      {/* Top Overlay Layer 10: Radial Grid & Ambient Glow Blur */}
-      <div className="absolute inset-0 z-10 pointer-events-none bg-grid-pattern opacity-30" />
-      <div className="absolute -top-36 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-primary/20 blur-[120px] rounded-full pointer-events-none z-10" />
-
       {isScheduleLoading && slideItems.length === 0 ? (
         <div className="relative w-full min-h-[500px] sm:min-h-[580px] flex items-center justify-center p-6">
           <Skeleton className="size-full rounded-2xl" />
@@ -164,7 +160,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                     href={`/anime/${item.slug}/${item.episodeNumber || 1}`}
                     className="relative block w-full min-h-[520px] sm:min-h-[600px] lg:min-h-[640px] overflow-hidden group/card"
                   >
-                    {/* Layer 0: Background Anime Poster/Banner */}
+                    {/* Layer 0: Background Anime Poster/Banner & Contrast Gradients */}
                     <div className="absolute inset-0 size-full z-0 bg-muted overflow-hidden">
                       {isGradient ? (
                         <div
@@ -184,10 +180,14 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                         />
                       )}
 
-                      {/* Gradient Overlays for readable text contrast */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/70 to-card/20" />
-                      <div className="absolute inset-0 bg-gradient-to-r from-card/90 via-card/40 to-transparent" />
+                      {/* Gradient Overlays for readable text contrast & ambient depth */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/65 to-card/25" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-card/90 via-card/45 to-transparent" />
                     </div>
+
+                    {/* Layer 10: Radial Grid Pattern Dots & Top Ambient Glow Blur (ON TOP of Image) */}
+                    <div className="absolute inset-0 z-10 pointer-events-none bg-grid-pattern opacity-70 mix-blend-overlay" />
+                    <div className="absolute -top-36 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-primary/30 blur-[120px] rounded-full pointer-events-none z-10" />
 
                     {/* Layer 20: Anime Information Content Overlay */}
                     <div className="relative z-20 size-full min-h-[520px] sm:min-h-[600px] lg:min-h-[640px] flex flex-col justify-end p-6 sm:p-10 lg:p-14 text-left max-w-4xl space-y-4">

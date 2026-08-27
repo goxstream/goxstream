@@ -51,7 +51,7 @@
 }
 
 @utility bg-grid-pattern {
-  background-image: radial-gradient(rgba(120, 120, 120, 0.15) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1.2px, transparent 1.2px);
   background-size: 24px 24px;
 }
 
