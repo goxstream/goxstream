@@ -33,6 +33,7 @@ ENV HOSTNAME="0.0.0.0"
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 --home /home/nextjs nextjs
+RUN chown nextjs:nodejs /app /home/nextjs
 
 # Copy built application & production dependencies with proper ownership
 COPY --chown=nextjs:nodejs --from=builder /app/public ./public
@@ -45,4 +46,4 @@ USER nextjs
 
 EXPOSE 3000
 
-CMD ["pnpm", "start"]
+CMD ["node", "node_modules/next/dist/bin/next", "start"]
