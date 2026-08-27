@@ -10,8 +10,8 @@ import type { BrowseFiltersProps } from "../types";
 export function BrowseFilters(props: BrowseFiltersProps) {
   return (
     <div className="space-y-5">
-      {/* Top Search Bar & Mobile Filter Drawer */}
-      <div className="flex items-center gap-3">
+      {/* Mobile & Tablet Header Controls (< lg) */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:hidden">
         <SearchInput query={props.query} onQueryChange={props.onQueryChange} />
 
         <MobileFilterDrawer
@@ -32,8 +32,10 @@ export function BrowseFilters(props: BrowseFiltersProps) {
         />
       </div>
 
-      {/* Desktop Filter Strip - Structured 4-Column Grid */}
+      {/* Desktop 4-Column x 2-Row Filter Grid (>= lg) */}
       <FilterSelectStrip
+        query={props.query}
+        onQueryChange={props.onQueryChange}
         status={props.status}
         onStatusChange={props.onStatusChange}
         format={props.format}
@@ -46,6 +48,8 @@ export function BrowseFilters(props: BrowseFiltersProps) {
         onYearChange={props.onYearChange}
         sort={props.sort}
         onSortChange={props.onSortChange}
+        onResetFilters={props.onResetFilters}
+        activeFiltersCount={props.activeFiltersCount}
       />
 
       {/* Genre Pills Selection Ribbon */}

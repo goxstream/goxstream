@@ -46,9 +46,9 @@ export function MobileFilterDrawer({
         render={
           <Button
             variant="outline"
-            className="lg:hidden h-11 rounded-xl flex items-center justify-center gap-2 border-border bg-card w-full sm:w-auto"
+            className="lg:hidden h-10 rounded-xl flex items-center justify-center gap-2 border-border bg-card w-full sm:w-auto text-xs font-semibold"
           >
-            <SlidersHorizontal className="size-4 text-primary" />
+            <SlidersHorizontal className="size-3.5 text-primary" />
             <span>Filters & Options</span>
             {activeFiltersCount > 0 && (
               <Badge className="ml-1 size-5 rounded-full p-0 flex items-center justify-center text-[10px] font-bold bg-primary text-primary-foreground">
@@ -69,95 +69,53 @@ export function MobileFilterDrawer({
 
           {/* Mobile Filter Dropdowns using Base UI Combobox */}
           <div className="space-y-4">
-            {/* Status */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Status
-              </label>
-              <BaseFilterCombobox
-                label=""
-                value={status}
-                onValueChange={onStatusChange}
-                options={ANIME_STATUSES}
-                className="w-full h-10 text-sm"
-                contentClassName="z-[70]"
-              />
-            </div>
+            <BaseFilterCombobox
+              label="Status"
+              value={status}
+              onValueChange={onStatusChange}
+              options={ANIME_STATUSES}
+              contentClassName="z-[70]"
+            />
 
-            {/* Format */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Format / Type
-              </label>
-              <BaseFilterCombobox
-                label=""
-                value={format}
-                onValueChange={onFormatChange}
-                options={ANIME_FORMATS}
-                className="w-full h-10 text-sm"
-                contentClassName="z-[70]"
-              />
-            </div>
+            <BaseFilterCombobox
+              label="Format / Type"
+              value={format}
+              onValueChange={onFormatChange}
+              options={ANIME_FORMATS}
+              contentClassName="z-[70]"
+            />
 
-            {/* Audio */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Sub / Dub Audio
-              </label>
-              <BaseFilterCombobox
-                label=""
-                value={audio}
-                onValueChange={onAudioChange}
-                options={ANIME_AUDIO_OPTIONS}
-                className="w-full h-10 text-sm"
-                contentClassName="z-[70]"
-              />
-            </div>
+            <BaseFilterCombobox
+              label="Sub / Dub Audio"
+              value={audio}
+              onValueChange={onAudioChange}
+              options={ANIME_AUDIO_OPTIONS}
+              contentClassName="z-[70]"
+            />
 
-            {/* Season */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Season
-              </label>
-              <BaseFilterCombobox
-                label=""
-                value={season}
-                onValueChange={onSeasonChange}
-                options={ANIME_SEASONS}
-                className="w-full h-10 text-sm"
-                contentClassName="z-[70]"
-              />
-            </div>
+            <BaseFilterCombobox
+              label="Season"
+              value={season}
+              onValueChange={onSeasonChange}
+              options={ANIME_SEASONS}
+              contentClassName="z-[70]"
+            />
 
-            {/* Year */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Release Year
-              </label>
-              <BaseFilterCombobox
-                label=""
-                value={year}
-                onValueChange={onYearChange}
-                options={ANIME_YEARS}
-                className="w-full h-10 text-sm"
-                contentClassName="z-[70]"
-              />
-            </div>
+            <BaseFilterCombobox
+              label="Release Year"
+              value={year}
+              onValueChange={onYearChange}
+              options={ANIME_YEARS}
+              contentClassName="z-[70]"
+            />
 
-            {/* Sort By */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Sort Results By
-              </label>
-              <BaseFilterCombobox
-                label=""
-                value={sort}
-                onValueChange={onSortChange}
-                options={SORT_OPTIONS}
-                className="w-full h-10 text-sm"
-                contentClassName="z-[70]"
-              />
-            </div>
+            <BaseFilterCombobox
+              label="Sort Results By"
+              value={sort}
+              onValueChange={onSortChange}
+              options={SORT_OPTIONS}
+              contentClassName="z-[70]"
+            />
           </div>
         </div>
 
@@ -168,15 +126,15 @@ export function MobileFilterDrawer({
               onResetFilters();
               setOpen(false);
             }}
-            className="w-full h-10 rounded-lg flex items-center justify-center gap-2"
+            className="w-full h-10 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold"
           >
-            <RotateCcw className="size-4" />
+            <RotateCcw className="size-3.5" />
             Reset All Filters
           </Button>
 
           <Button
             onClick={() => setOpen(false)}
-            className="w-full h-10 rounded-lg font-semibold"
+            className="w-full h-10 rounded-xl font-semibold text-xs"
           >
             Apply Filters
           </Button>

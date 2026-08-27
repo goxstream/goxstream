@@ -84,7 +84,7 @@ export function BaseFilterCombobox({
           sideOffset={6}
           align="start"
           className={cn(
-            "z-50 w-(--anchor-width) min-w-(--anchor-width) max-w-(--anchor-width) bg-popover border border-border/60 shadow-md rounded-xl p-1",
+            "!w-[var(--anchor-width)] !min-w-[var(--anchor-width)] !max-w-[var(--anchor-width)] z-50 bg-popover border border-border/60 shadow-md rounded-xl p-1",
             contentClassName
           )}
         >

@@ -17,6 +17,7 @@ export interface BaseFilterComboboxProps {
 export interface SearchInputProps {
   query: string;
   onQueryChange: (q: string) => void;
+  className?: string;
 }
 
 export interface GenreRibbonProps {
@@ -25,6 +26,8 @@ export interface GenreRibbonProps {
 }
 
 export interface FilterSelectStripProps {
+  query: string;
+  onQueryChange: (q: string) => void;
   status: string;
   onStatusChange: (s: string) => void;
   format: string;
@@ -37,6 +40,8 @@ export interface FilterSelectStripProps {
   onYearChange: (y: string) => void;
   sort: string;
   onSortChange: (s: string) => void;
+  onResetFilters: () => void;
+  activeFiltersCount: number;
 }
 
 export interface MobileFilterDrawerProps {
