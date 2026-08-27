@@ -8,11 +8,12 @@ const ST_DIR = path.join(BASE_PUBLIC_DIR, "core");
 
 const MT_CDN_BASE = `https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@${CORE_VERSION}/dist/umd`;
 const ST_CDN_BASE = `https://cdn.jsdelivr.net/npm/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
+const GITHUB_ASSETS_BASE = `https://github.com/goxstream/goxstream/releases/download/assets`;
 
 interface FileRequirement {
   dir: string;
   name: string;
-  url: string;
+  urls: string[];
   expectedMinSize: number;
 }
 
@@ -20,47 +21,72 @@ const FILES_TO_DOWNLOAD: FileRequirement[] = [
   {
     dir: MT_DIR,
     name: "ffmpeg-core.js",
-    url: `${MT_CDN_BASE}/ffmpeg-core.js`,
+    urls: [
+      `${MT_CDN_BASE}/ffmpeg-core.js`,
+      `${GITHUB_ASSETS_BASE}/ffmpeg-core-mt.js`,
+    ],
     expectedMinSize: 100_000,
   },
   {
     dir: MT_DIR,
     name: "ffmpeg-core.wasm",
-    url: `${MT_CDN_BASE}/ffmpeg-core.wasm`,
+    urls: [
+      `${MT_CDN_BASE}/ffmpeg-core.wasm`,
+      `${GITHUB_ASSETS_BASE}/ffmpeg-core-mt.wasm`,
+    ],
     expectedMinSize: 30_000_000,
   },
   {
     dir: MT_DIR,
     name: "ffmpeg-core.worker.js",
-    url: `${MT_CDN_BASE}/ffmpeg-core.worker.js`,
+    urls: [
+      `${MT_CDN_BASE}/ffmpeg-core.worker.js`,
+      `${GITHUB_ASSETS_BASE}/ffmpeg-core-mt.worker.js`,
+    ],
     expectedMinSize: 1_500,
   },
   {
     dir: ST_DIR,
     name: "ffmpeg-core.js",
-    url: `${ST_CDN_BASE}/ffmpeg-core.js`,
+    urls: [
+      `${ST_CDN_BASE}/ffmpeg-core.js`,
+      `${GITHUB_ASSETS_BASE}/ffmpeg-core-st.js`,
+    ],
     expectedMinSize: 100_000,
   },
   {
     dir: ST_DIR,
     name: "ffmpeg-core.wasm",
-    url: `${ST_CDN_BASE}/ffmpeg-core.wasm`,
+    urls: [
+      `${ST_CDN_BASE}/ffmpeg-core.wasm`,
+      `${GITHUB_ASSETS_BASE}/ffmpeg-core-st.wasm`,
+    ],
     expectedMinSize: 30_000_000,
   },
 ];
 
-async function downloadFile(url: string, destPath: string, fileName: string): Promise<void> {
-  console.log(`[FFmpeg Setup] Downloading ${fileName} from CDN...`);
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status} - Failed to fetch ${url}`);
-  }
+async function downloadFileWithFallback(urls: string[], destPath: string, fileName: string): Promise<void> {
+  let lastError: Error | null = null;
+  for (const url of urls) {
+    try {
+      console.log(`[FFmpeg Setup] Downloading ${fileName} from ${url}...`);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+      }
 
-  const arrayBuffer = await response.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  fs.writeFileSync(destPath, buffer);
-  const sizeMB = (buffer.length / (1024 * 1024)).toFixed(2);
-  console.log(`[FFmpeg Setup] Saved ${fileName} (${sizeMB} MB) to ${path.relative(process.cwd(), destPath)}`);
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      fs.writeFileSync(destPath, buffer);
+      const sizeMB = (buffer.length / (1024 * 1024)).toFixed(2);
+      console.log(`[FFmpeg Setup] Saved ${fileName} (${sizeMB} MB) to ${path.relative(process.cwd(), destPath)}`);
+      return;
+    } catch (err: any) {
+      console.warn(`[FFmpeg Setup Warning] Failed downloading ${fileName} from ${url}: ${err.message}. Trying next fallback...`);
+      lastError = err;
+    }
+  }
+  throw new Error(`[FFmpeg Setup Error] All download sources failed for ${fileName}. Last error: ${lastError?.message}`);
 }
 
 async function runSetup() {
@@ -88,7 +114,7 @@ async function runSetup() {
     }
 
     if (needsDownload) {
-      await downloadFile(item.url, destPath, `${path.basename(item.dir)}/${item.name}`);
+      await downloadFileWithFallback(item.urls, destPath, `${path.basename(item.dir)}/${item.name}`);
       downloadedCount++;
     }
   }
