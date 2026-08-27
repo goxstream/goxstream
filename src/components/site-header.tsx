@@ -74,7 +74,7 @@ export function SiteHeader() {
           </div>
 
           {/* User Nav Dropdown / Account CTA */}
-          <div className="flex items-center gap-1.5 pl-0.5 sm:pl-1 border-l border-border/40 shrink-0">
+          <div className="flex items-center gap-1.5 sm:pl-1 sm:border-l sm:border-border/40 shrink-0">
             <UserNav />
           </div>
 
