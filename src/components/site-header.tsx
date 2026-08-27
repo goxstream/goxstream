@@ -22,13 +22,13 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md transition-colors">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 gap-4">
-        {/* Brand Logo */}
-        <div className="flex items-center gap-8">
+      <div className="mx-auto flex h-16 max-w-7xl w-full items-center justify-between px-4 sm:px-6 lg:px-8 gap-2 sm:gap-4">
+        {/* Brand Logo & Main Nav */}
+        <div className="flex items-center gap-4 lg:gap-8 shrink-0">
           <LogoBrand href="/" size="md" />
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1">
             {NAV_ITEMS.map((item) => {
               const isActive = pathname === item.href;
 
@@ -37,7 +37,7 @@ export function SiteHeader() {
                   key={item.label}
                   href={item.href}
                   className={cn(
-                    "px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                    "px-3 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap",
                     isActive
                       ? "bg-primary/10 text-primary font-semibold"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
@@ -51,7 +51,7 @@ export function SiteHeader() {
         </div>
 
         {/* Header Right Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Search Trigger */}
           <SearchDialog />
 
@@ -64,7 +64,7 @@ export function SiteHeader() {
             className={buttonVariants({
               variant: "ghost",
               size: "sm",
-              className: "hidden md:inline-flex rounded-lg text-xs gap-1.5 font-medium text-muted-foreground hover:text-foreground",
+              className: "hidden lg:inline-flex rounded-lg text-xs gap-1.5 font-medium text-muted-foreground hover:text-foreground shrink-0",
             })}
           >
             <Tv className="size-3.5" />
@@ -72,7 +72,7 @@ export function SiteHeader() {
           </Link>
 
           {/* User Nav Dropdown / Account CTA */}
-          <div className="flex items-center gap-1.5 pl-1 border-l border-border/40">
+          <div className="flex items-center gap-1.5 pl-1 border-l border-border/40 shrink-0">
             <UserNav />
           </div>
 
@@ -83,3 +83,4 @@ export function SiteHeader() {
     </header>
   );
 }
+
