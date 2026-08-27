@@ -10,6 +10,7 @@ export function useMultiSelect(
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isFiltering, setIsFiltering] = useState(false);
 
   const filteredUsers = users.filter(
     (u) =>
@@ -21,8 +22,20 @@ export function useMultiSelect(
   );
 
   useInput((input, key) => {
+    if (isFiltering) {
+      if (key.return || key.tab || key.downArrow) {
+        setIsFiltering(false);
+      }
+      return;
+    }
+
     if (key.escape) {
       onCancel();
+      return;
+    }
+
+    if (key.tab || input === "/") {
+      setIsFiltering(true);
       return;
     }
 
@@ -77,5 +90,13 @@ export function useMultiSelect(
     setSelectedIndex(0);
   };
 
-  return { query, handleQueryChange, selectedIndex, selectedIds, filteredUsers };
+  return {
+    query,
+    handleQueryChange,
+    selectedIndex,
+    selectedIds,
+    filteredUsers,
+    isFiltering,
+    setIsFiltering,
+  };
 }

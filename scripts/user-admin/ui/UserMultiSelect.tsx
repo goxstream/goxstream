@@ -17,11 +17,8 @@ export const UserMultiSelect: React.FC<UserMultiSelectProps> = ({
   onSubmit,
   onCancel,
 }) => {
-  const { query, handleQueryChange, selectedIndex, selectedIds, filteredUsers } = useMultiSelect(
-    users,
-    onSubmit,
-    onCancel
-  );
+  const { query, handleQueryChange, selectedIndex, selectedIds, filteredUsers, isFiltering, setIsFiltering } =
+    useMultiSelect(users, onSubmit, onCancel);
 
   return (
     <Box flexDirection="column" marginY={1}>
@@ -30,8 +27,19 @@ export const UserMultiSelect: React.FC<UserMultiSelectProps> = ({
       </Text>
 
       <Box marginY={1}>
-        <Text color="cyan">Filter: </Text>
-        <TextInput value={query} onChange={handleQueryChange} placeholder="Type to search users..." />
+        <Text color={isFiltering ? "green" : "cyan"} bold={isFiltering}>
+          {isFiltering ? "[Typing Filter] " : "[Filter: / or Tab to Edit] "}
+        </Text>
+        {isFiltering ? (
+          <TextInput
+            value={query}
+            onChange={handleQueryChange}
+            onSubmit={() => setIsFiltering(false)}
+            placeholder="Type search query..."
+          />
+        ) : (
+          <Text color={query ? "white" : "gray"}>{query || "(No filter active)"}</Text>
+        )}
       </Box>
 
       {filteredUsers.length === 0 ? (
@@ -39,7 +47,7 @@ export const UserMultiSelect: React.FC<UserMultiSelectProps> = ({
       ) : (
         <Box flexDirection="column">
           {filteredUsers.map((u, i) => {
-            const isHighlighted = i === selectedIndex;
+            const isHighlighted = i === selectedIndex && !isFiltering;
             const isChecked = selectedIds.has(u.id);
 
             return (
@@ -62,7 +70,9 @@ export const UserMultiSelect: React.FC<UserMultiSelectProps> = ({
           Selected Count: {selectedIds.size} user(s)
         </Text>
         <Text color="gray">
-          Keybindings: [space] select/unselect | [a] select all | [x] unselect all | [enter] continue | [esc] cancel
+          {isFiltering
+            ? "Press [Enter] or [Tab] when finished typing to return to navigation"
+            : "Keybindings: [space] select/unselect | [a] select all | [x] unselect all | [/] or [Tab] filter | [enter] continue | [esc] cancel"}
         </Text>
       </Box>
     </Box>
