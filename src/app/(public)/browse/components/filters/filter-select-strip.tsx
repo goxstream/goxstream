@@ -14,7 +14,7 @@ import {
   ANIME_SEASONS,
   ANIME_YEARS,
   SORT_OPTIONS,
-} from "@/lib/mock-anime";
+} from "@/lib/constants";
 
 export interface FilterSelectStripProps {
   status: string;

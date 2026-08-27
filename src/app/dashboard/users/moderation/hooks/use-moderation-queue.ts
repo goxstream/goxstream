@@ -1,11 +1,19 @@
-import { useState } from "react";
-import { MOCK_MODERATION_QUEUE } from "../constants";
+import { useState, useEffect } from "react";
+import { useDashboardModeration } from "@/hooks/use-dashboard-moderation";
 import type { ReportedComment } from "../types";
 
 export function useModerationQueue() {
-  const [reports, setReports] = useState<ReportedComment[]>(MOCK_MODERATION_QUEUE);
+  const { reports: fetchedReports } = useDashboardModeration();
+  const [reports, setReports] = useState<ReportedComment[]>([]);
   const [selectedReport, setSelectedReport] = useState<ReportedComment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (fetchedReports) {
+      setReports(fetchedReports);
+    }
+  }, [fetchedReports]);
+
 
   const handleClearDismissed = () => {
     setReports((prev) => prev.filter((r) => r.status !== "dismissed"));

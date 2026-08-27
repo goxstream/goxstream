@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AnimeHeader } from "./components/anime-header";
 import { AnimeFilters } from "./components/anime-filters";
@@ -8,14 +8,45 @@ import { AnimeTable } from "./components/anime-table";
 import { AnimeAddSheet } from "./components/anime-add-sheet";
 import { AnimeEditSheet } from "./components/edit/anime-edit-sheet";
 import { useDashboardAnime } from "@/hooks/use-dashboard-anime";
-import { MOCK_ANIME_DATA } from "./constants";
 import type { AnimeItem, AnimeFilterState } from "./types";
 
 export default function AnimeCatalogPage() {
-  const { isLoading } = useDashboardAnime();
-  const [animeList, setAnimeList] = useState<AnimeItem[]>(MOCK_ANIME_DATA);
+  const { animeList: fetchedAnime, isLoading } = useDashboardAnime();
+  const [animeList, setAnimeList] = useState<AnimeItem[]>([]);
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false);
   const [mobileEditAnime, setMobileEditAnime] = useState<AnimeItem | null>(null);
+
+  useEffect(() => {
+    if (fetchedAnime && fetchedAnime.length > 0) {
+      const mapped: AnimeItem[] = fetchedAnime.map((item: any) => ({
+        id: item.id,
+        titleRomaji: item.title,
+        titleEnglish: item.title,
+        titleJapanese: item.japaneseTitle,
+        slug: item.slug,
+        type: item.type || "TV",
+        status: item.status || "Ongoing",
+        season: { year: item.year || 2026, season: item.season || "Spring" },
+        seasonYear: item.year || 2026,
+        episodes: item.episodesCount || 0,
+        episodesCount: item.episodesCount || 0,
+        durationPerEp: "24m",
+        coverImage: item.coverImage || "",
+        bannerImage: item.bannerImage || "",
+        synopsis: item.synopsis || "",
+        rating: item.rating || 0,
+        studios: [item.studio || "Studio"],
+        genres: item.genres || [],
+        featured: false,
+        trending: false,
+        createdAt: item.createdAt || new Date().toISOString(),
+        updatedAt: item.updatedAt || new Date().toISOString(),
+      }));
+      setAnimeList(mapped);
+    }
+  }, [fetchedAnime]);
+
+
 
   // Filter state
   const [filters, setFilters] = useState<AnimeFilterState>({

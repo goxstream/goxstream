@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FEATURED_ANIME as FALLBACK_ANIME, LATEST_EPISODES, TRENDING_ANIME } from "@/lib/mock-anime";
 import type { AnimeItem, EpisodeItem } from "@/types/anime";
 
 export interface AnimeDetailsApiResponse {
@@ -39,17 +38,12 @@ export function useAnimeDetails(slug: string) {
           setEpisodes(data.episodes || []);
           setRecommendations(data.recommendations || []);
         } else {
-          // Mock fallback
-          setAnime({ ...FALLBACK_ANIME, slug, title: slug.replace(/-/g, " ").toUpperCase() });
-          setEpisodes(LATEST_EPISODES);
-          setRecommendations(TRENDING_ANIME.slice(0, 4));
+          setNotFoundError(true);
         }
       })
       .catch(() => {
         if (!isMounted) return;
-        setAnime({ ...FALLBACK_ANIME, slug, title: slug.replace(/-/g, " ").toUpperCase() });
-        setEpisodes(LATEST_EPISODES);
-        setRecommendations(TRENDING_ANIME.slice(0, 4));
+        setNotFoundError(true);
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);

@@ -6,9 +6,10 @@ import { TrendingHero } from "./trending-hero";
 import { TrendingTabs } from "./trending-tabs";
 import { TrendingGenreFilter } from "./trending-genre-filter";
 import { TrendingItemCard } from "./trending-item-card";
-import { MOCK_TRENDING_GENRES } from "@/lib/mock-trending";
 import { useTrendingRankings } from "@/hooks/use-trending-rankings";
 import type { TrendingPeriod } from "@/types/anime";
+
+const TRENDING_GENRES = ["All", "Action", "Adventure", "Fantasy", "Sci-Fi", "Romance", "Isekai", "Slice of Life"];
 
 export function TrendingClientPage() {
   const [period, setPeriod] = useState<TrendingPeriod>("weekly");
@@ -74,10 +75,11 @@ export function TrendingClientPage() {
 
           {/* Genre Filter Chips (Multi-Genre Query Filter) */}
           <TrendingGenreFilter
-            genres={MOCK_TRENDING_GENRES}
+            genres={TRENDING_GENRES}
             selectedGenre={selectedGenre}
             onGenreSelect={setSelectedGenre}
           />
+
 
           {/* Main Leaderboard List / Grid Display */}
           {trendingAnimeList.length === 0 ? (

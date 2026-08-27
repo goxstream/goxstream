@@ -64,3 +64,33 @@ export const DAYS_OF_WEEK_MAP = [
   { id: "saturday", label: "Saturday", shortLabel: "Sat" },
   { id: "sunday", label: "Sunday", shortLabel: "Sun" },
 ] as const;
+
+export const ANIME_GENRES = [
+  "All",
+  "Action",
+  "Adventure",
+  "Comedy",
+  "Drama",
+  "Fantasy",
+  "Isekai",
+  "Mecha",
+  "Mystery",
+  "Psychological",
+  "Romance",
+  "Sci-Fi",
+  "Slice of Life",
+  "Sports",
+  "Supernatural",
+  "Thriller",
+];
+
+export const ANIME_STATUSES = ["All", "Ongoing", "Completed", "Upcoming"];
+export const ANIME_FORMATS = ["All", "TV", "Movie", "OVA", "ONA", "Special"];
+export const ANIME_AUDIO_OPTIONS = ["All", "SUB", "DUB"];
+export const ANIME_SEASONS = ["All", "Winter", "Spring", "Summer", "Fall"];
+export const ANIME_YEARS = ["All", "2026", "2025", "2024", "2023", "2022"];
+export const SORT_OPTIONS = [
+  { label: "Most Popular", value: "popular" },
+  { label: "Highest Rated", value: "rating" },
+  { label: "Recently Added", value: "newest" },
+];

@@ -14,7 +14,8 @@ import type { CategoryItem, GenreItem, FormatCategoryCode, GenreGroup } from "./
 
 export default function CategoriesPage() {
   const { categories, isLoading, setCategories } = useDashboardCategories();
-  const [genres, setGenres] = useState<GenreItem[]>(MOCK_GENRES);
+  const [genres, setGenres] = useState<GenreItem[]>([]);
+
 
   // Sheet State
   const [sheetOpen, setSheetOpen] = useState(false);

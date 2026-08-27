@@ -1,17 +1,18 @@
 "use client";
 
 import { Lock, Save, Smartphone } from "lucide-react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MOCK_USER_PROFILE } from "@/lib/mock-user";
 
 interface SecuritySettingsFormProps {
   onSave: (e: React.FormEvent) => void;
+  email?: string;
 }
 
-export function SecuritySettingsForm({ onSave }: SecuritySettingsFormProps) {
+export function SecuritySettingsForm({ onSave, email = "user@example.com" }: SecuritySettingsFormProps) {
   return (
     <form onSubmit={onSave} className="p-6 rounded-2xl border border-border/60 bg-card space-y-6 shadow-xs">
       <div>
@@ -28,11 +29,12 @@ export function SecuritySettingsForm({ onSave }: SecuritySettingsFormProps) {
         <div className="space-y-2 max-w-md">
           <Label className="text-xs font-medium">Email Address</Label>
           <Input
-            value={MOCK_USER_PROFILE.email}
+            value={email}
             disabled
             className="rounded-xl text-xs bg-muted/50 border-border/60 cursor-not-allowed opacity-80"
           />
         </div>
+
 
         <div className="pt-2 border-t border-border/40 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">

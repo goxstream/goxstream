@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TRENDING_ANIME as FALLBACK_TRENDING, GENRES_LIST as FALLBACK_GENRES } from "@/lib/mock-anime";
 import type { AnimeItem } from "@/types/anime";
 
 export interface TrendingApiResponse {
@@ -22,21 +21,13 @@ export function useTrendingAnime(initialTrending?: AnimeItem[], initialGenres?: 
       .then((res) => res.json() as Promise<TrendingApiResponse>)
       .then((data) => {
         if (!isMounted) return;
-        if (data.trendingAnime && data.trendingAnime.length > 0) {
-          setTrendingAnime(data.trendingAnime);
-        } else {
-          setTrendingAnime(FALLBACK_TRENDING);
-        }
-        if (data.genresList && data.genresList.length > 0) {
-          setGenresList(data.genresList);
-        } else {
-          setGenresList(FALLBACK_GENRES);
-        }
+        setTrendingAnime(data.trendingAnime || []);
+        setGenresList(data.genresList || []);
       })
       .catch(() => {
         if (!isMounted) return;
-        setTrendingAnime(FALLBACK_TRENDING);
-        setGenresList(FALLBACK_GENRES);
+        setTrendingAnime([]);
+        setGenresList([]);
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);
@@ -48,8 +39,8 @@ export function useTrendingAnime(initialTrending?: AnimeItem[], initialGenres?: 
   }, [initialTrending]);
 
   return {
-    trendingAnime: trendingAnime.length > 0 ? trendingAnime : FALLBACK_TRENDING,
-    genresList: genresList.length > 0 ? ["All", ...genresList] : FALLBACK_GENRES,
+    trendingAnime,
+    genresList: genresList.length > 0 ? ["All", ...genresList] : ["All"],
     isLoading,
   };
 }

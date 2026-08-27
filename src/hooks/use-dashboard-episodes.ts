@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from "react";
 import type { EpisodeItem } from "@/types/anime";
-import { LATEST_EPISODES } from "@/lib/mock-anime";
 
 export function useDashboardEpisodes() {
-  const [episodes, setEpisodes] = useState<EpisodeItem[]>(LATEST_EPISODES);
+  const [episodes, setEpisodes] = useState<EpisodeItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -16,12 +15,12 @@ export function useDashboardEpisodes() {
         const res = await fetch("/api/dashboard/episodes");
         if (res.ok) {
           const data = (await res.json()) as { episodes?: EpisodeItem[] };
-          if (isMounted && data.episodes && data.episodes.length > 0) {
-            setEpisodes(data.episodes);
+          if (isMounted) {
+            setEpisodes(data.episodes || []);
           }
         }
       } catch {
-        // Fallback
+        if (isMounted) setEpisodes([]);
       } finally {
         if (isMounted) {
           setIsLoading(false);

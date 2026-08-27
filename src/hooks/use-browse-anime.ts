@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TRENDING_ANIME as FALLBACK_BROWSE } from "@/lib/mock-anime";
 import type { AnimeItem } from "@/types/anime";
 
 export interface BrowseFilterOptions {
@@ -33,17 +32,11 @@ export function useBrowseAnime(filters?: BrowseFilterOptions, initialList?: Anim
       .then((res) => res.json() as Promise<BrowseApiResponse>)
       .then((data) => {
         if (!isMounted) return;
-        if (data.animeList && data.animeList.length > 0) {
-          setAnimeList(data.animeList);
-        } else if (!filters?.genre && !filters?.query && !filters?.status && !filters?.type) {
-          setAnimeList(FALLBACK_BROWSE);
-        } else {
-          setAnimeList([]);
-        }
+        setAnimeList(data.animeList || []);
       })
       .catch(() => {
         if (!isMounted) return;
-        setAnimeList(FALLBACK_BROWSE);
+        setAnimeList([]);
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);
@@ -55,7 +48,7 @@ export function useBrowseAnime(filters?: BrowseFilterOptions, initialList?: Anim
   }, [filters?.genre, filters?.query, filters?.status, filters?.type]);
 
   return {
-    animeList: animeList.length > 0 ? animeList : FALLBACK_BROWSE,
+    animeList,
     isLoading,
   };
 }

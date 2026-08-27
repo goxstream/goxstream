@@ -1,5 +1,12 @@
-import { Zap, ShieldCheck, Tv, Download, Sparkles, Layers, SlidersHorizontal } from "lucide-react";
-import { PLATFORM_STATS } from "@/lib/mock-anime";
+import { Zap, ShieldCheck, Tv, Download, Sparkles } from "lucide-react";
+
+const PLATFORM_STATS = [
+  { value: "1,200+", label: "Anime Titles", description: "Expansive library from classic retro to modern seasonal hits" },
+  { value: "18,000+", label: "HD Episodes", description: "Streamed in crystal-clear 1080p 60fps quality" },
+  { value: "45,000+", label: "Active Members", description: "Global community sharing reviews and watchlists" },
+  { value: "99.9%", label: "Platform Uptime", description: "Ultra-low latency streaming powered by Cloudflare Workers" },
+];
+
 
 const FEATURES = [
   {

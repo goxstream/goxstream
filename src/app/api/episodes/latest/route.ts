@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import { getLatestEpisodes } from "@/lib/db/queries/episodes";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
-import { LATEST_EPISODES as FALLBACK_EPISODES } from "@/lib/mock-anime";
 
 export async function GET() {
   const CACHE_KEY = "kv_latest_episodes_v1";
   const CACHE_TTL = 300; // 5 minutes
 
   try {
-    const cached = await getCacheItem<{ latestEpisodes: typeof FALLBACK_EPISODES }>(CACHE_KEY);
+    const cached = await getCacheItem<{ latestEpisodes: any[] }>(CACHE_KEY);
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -18,9 +17,9 @@ export async function GET() {
       });
     }
 
-    const latestEpisodes = await getLatestEpisodes(6).catch(() => FALLBACK_EPISODES);
+    const latestEpisodes = await getLatestEpisodes(6).catch(() => []);
     const data = {
-      latestEpisodes: latestEpisodes.length > 0 ? latestEpisodes : FALLBACK_EPISODES,
+      latestEpisodes,
     };
 
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);
@@ -32,6 +31,6 @@ export async function GET() {
       },
     });
   } catch {
-    return NextResponse.json({ latestEpisodes: FALLBACK_EPISODES }, { status: 200 });
+    return NextResponse.json({ latestEpisodes: [] }, { status: 200 });
   }
 }

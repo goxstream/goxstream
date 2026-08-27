@@ -13,8 +13,9 @@ import type { SeasonItem, BroadcastSlotAnime, SeasonQuarter } from "./types";
 
 export default function SeasonsPage() {
   const { seasons, isLoading, setSeasons } = useDashboardSeasons();
-  const [animeSlots, setAnimeSlots] = useState<BroadcastSlotAnime[]>(MOCK_BROADCAST_ANIME);
+  const [animeSlots, setAnimeSlots] = useState<BroadcastSlotAnime[]>([]);
   const [selectedYear, setSelectedYear] = useState<number>(2026);
+
   const [selectedQuarter, setSelectedQuarter] = useState<SeasonQuarter>("SUMMER");
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false);
 

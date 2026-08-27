@@ -1,15 +1,24 @@
-import { useState } from "react";
-import { MOCK_ROLES, MOCK_TEAM_MEMBERS } from "../constants";
+import { useState, useEffect } from "react";
+import { useDashboardRoles } from "@/hooks/use-dashboard-roles";
 import type { RoleDefinition, TeamMember } from "../types";
 
 export function useRolesAndAccess() {
-  const [roles, setRoles] = useState<RoleDefinition[]>(MOCK_ROLES);
-  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(MOCK_TEAM_MEMBERS);
+  const { roles: fetchedRoles } = useDashboardRoles();
+  const [roles, setRoles] = useState<RoleDefinition[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [selectedRoleSlug, setSelectedRoleSlug] = useState<string>("super_admin");
+
+  useEffect(() => {
+    if (fetchedRoles && fetchedRoles.length > 0) {
+      setRoles(fetchedRoles);
+      setSelectedRoleSlug(fetchedRoles[0]?.slug || "super_admin");
+    }
+  }, [fetchedRoles]);
 
   // Modal dialog states
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+
 
   const handleTogglePermission = (roleSlug: string, permKey: string) => {
     setRoles((prevRoles) =>

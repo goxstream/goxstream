@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getTrendingAnime as getMockTrending } from "@/lib/mock-trending";
 import type { TrendingAnimeItem, TrendingPeriod, AnimeItem } from "@/types/anime";
 import type { TrendingApiResponse } from "@/hooks/use-trending-anime";
 
@@ -30,22 +29,18 @@ export function useTrendingRankings(period: TrendingPeriod, genre: string) {
       .then((res) => res.json() as Promise<TrendingApiResponse>)
       .then((data) => {
         if (!isMounted) return;
-        if (data.trendingAnime && data.trendingAnime.length > 0) {
-          let list = data.trendingAnime;
-          if (genre !== "All") {
-            const gLower = genre.toLowerCase();
-            list = list.filter((item) =>
-              item.genres.some((g) => g.toLowerCase() === gLower)
-            );
-          }
-          setAnimeList(list.map((item, idx) => mapToTrendingAnimeItem(item, idx)));
-        } else {
-          setAnimeList(getMockTrending(period, genre));
+        let list = data.trendingAnime || [];
+        if (genre !== "All") {
+          const gLower = genre.toLowerCase();
+          list = list.filter((item) =>
+            item.genres.some((g) => g.toLowerCase() === gLower)
+          );
         }
+        setAnimeList(list.map((item, idx) => mapToTrendingAnimeItem(item, idx)));
       })
       .catch(() => {
         if (!isMounted) return;
-        setAnimeList(getMockTrending(period, genre));
+        setAnimeList([]);
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);

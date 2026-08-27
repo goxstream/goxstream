@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LATEST_EPISODES as FALLBACK_EPISODES } from "@/lib/mock-anime";
 import type { EpisodeItem } from "@/types/anime";
 
 export interface LatestEpisodesApiResponse {
@@ -20,15 +19,11 @@ export function useLatestEpisodes(initialEpisodes?: EpisodeItem[]) {
       .then((res) => res.json() as Promise<LatestEpisodesApiResponse>)
       .then((data) => {
         if (!isMounted) return;
-        if (data.latestEpisodes && data.latestEpisodes.length > 0) {
-          setEpisodesList(data.latestEpisodes);
-        } else {
-          setEpisodesList(FALLBACK_EPISODES);
-        }
+        setEpisodesList(data.latestEpisodes || []);
       })
       .catch(() => {
         if (!isMounted) return;
-        setEpisodesList(FALLBACK_EPISODES);
+        setEpisodesList([]);
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);
@@ -40,7 +35,7 @@ export function useLatestEpisodes(initialEpisodes?: EpisodeItem[]) {
   }, [initialEpisodes]);
 
   return {
-    episodesList: episodesList.length > 0 ? episodesList : FALLBACK_EPISODES,
+    episodesList,
     isLoading,
   };
 }

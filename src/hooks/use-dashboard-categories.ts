@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MOCK_CATEGORIES } from "@/app/dashboard/anime/categories/constants";
 import type { CategoryItem } from "@/app/dashboard/anime/categories/types";
 
 export function useDashboardCategories() {
-  const [categories, setCategories] = useState<CategoryItem[]>(MOCK_CATEGORIES);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -16,12 +15,12 @@ export function useDashboardCategories() {
         const res = await fetch("/api/dashboard/categories");
         if (res.ok) {
           const data = (await res.json()) as { categories?: CategoryItem[] };
-          if (isMounted && data.categories && data.categories.length > 0) {
-            setCategories(data.categories);
+          if (isMounted) {
+            setCategories(data.categories || []);
           }
         }
       } catch {
-        // Fallback
+        if (isMounted) setCategories([]);
       } finally {
         if (isMounted) {
           setIsLoading(false);

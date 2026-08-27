@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FEATURED_ANIME as FALLBACK_FEATURED } from "@/lib/mock-anime";
 import type { AnimeItem } from "@/types/anime";
 
 export interface FeaturedApiResponse {
@@ -20,11 +19,11 @@ export function useFeaturedAnime(initialFeaturedAnime?: AnimeItem | null) {
       .then((res) => res.json() as Promise<FeaturedApiResponse>)
       .then((data) => {
         if (!isMounted) return;
-        setAnime(data.featuredAnime || FALLBACK_FEATURED);
+        setAnime(data.featuredAnime || null);
       })
       .catch(() => {
         if (!isMounted) return;
-        setAnime(FALLBACK_FEATURED);
+        setAnime(null);
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);
@@ -36,7 +35,7 @@ export function useFeaturedAnime(initialFeaturedAnime?: AnimeItem | null) {
   }, [initialFeaturedAnime]);
 
   return {
-    featuredAnime: anime || FALLBACK_FEATURED,
+    featuredAnime: anime,
     isLoading,
   };
 }

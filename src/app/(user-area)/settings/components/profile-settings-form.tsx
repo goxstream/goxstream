@@ -6,8 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MOCK_USER_PROFILE } from "@/lib/mock-user";
 import type { UserSettings } from "@/types/user";
+
+
+
 
 interface ProfileSettingsFormProps {
   settings: UserSettings;
@@ -60,11 +62,12 @@ export function ProfileSettingsForm({
         <div className="space-y-2">
           <Label className="text-xs font-medium">Username Handle</Label>
           <Input
-            value={`@${MOCK_USER_PROFILE.username}`}
+            value={`@${settings.profile.displayName.toLowerCase().replace(/\s+/g, "_")}`}
             disabled
             className="rounded-xl text-xs bg-muted/50 border-border/60 cursor-not-allowed opacity-80"
           />
         </div>
+
       </div>
 
       <div className="space-y-2">

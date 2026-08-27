@@ -1,4 +1,3 @@
-import { MOCK_EPISODES } from "@/app/dashboard/episodes/constants";
 import { EditEpisodeForm } from "./components/edit-episode-form";
 import type { EpisodeItem } from "@/app/dashboard/episodes/types";
 
@@ -9,10 +8,10 @@ interface EditEpisodePageProps {
 export default async function EditEpisodePage({ params }: EditEpisodePageProps) {
   const { id } = await params;
 
-  // Find episode by ID from mock data or fallback to default episode
-  const episode: EpisodeItem = MOCK_EPISODES.find((ep) => ep.id === id) || {
+  const episode: EpisodeItem = {
     id,
     animeId: "a-01",
+
     animeTitle: "Solo Leveling Season 2: Arise from the Shadow",
     animeSlug: "solo-leveling-season-2",
     episodeNumber: 1,

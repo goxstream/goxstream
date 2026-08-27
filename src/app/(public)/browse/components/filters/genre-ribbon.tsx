@@ -1,6 +1,6 @@
 "use client";
 
-import { GENRES_LIST } from "@/lib/mock-anime";
+import { ANIME_GENRES } from "@/lib/constants";
 
 export interface GenreRibbonProps {
   selectedGenre: string;
@@ -10,7 +10,7 @@ export interface GenreRibbonProps {
 export function GenreRibbon({ selectedGenre, onGenreChange }: GenreRibbonProps) {
   return (
     <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar scroll-smooth">
-      {GENRES_LIST.map((g) => {
+      {ANIME_GENRES.map((g) => {
         const isSelected = selectedGenre === g || (g === "All" && selectedGenre === "All");
         return (
           <button

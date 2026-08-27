@@ -1,11 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { useDashboardUsers } from "@/hooks/use-dashboard-users";
-import { MOCK_USERS } from "../constants";
 import type { UserAccount, UserFilters, MembershipTier } from "../types";
 
 export function useUserDirectory() {
   const { users: fetchedProfiles, isLoading } = useDashboardUsers();
-  const [users, setUsers] = useState<UserAccount[]>(MOCK_USERS);
+  const [users, setUsers] = useState<UserAccount[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserAccount | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
   
@@ -14,7 +13,7 @@ export function useUserDirectory() {
   const [editingUser, setEditingUser] = useState<UserAccount | null>(null);
 
   useEffect(() => {
-    if (fetchedProfiles && fetchedProfiles.length > 0) {
+    if (fetchedProfiles) {
       const mapped: UserAccount[] = fetchedProfiles.map((p) => ({
         id: p.id,
         name: p.displayName,
@@ -37,6 +36,7 @@ export function useUserDirectory() {
       setUsers(mapped);
     }
   }, [fetchedProfiles]);
+
 
   const [filters, setFilters] = useState<UserFilters>({
     search: "",
