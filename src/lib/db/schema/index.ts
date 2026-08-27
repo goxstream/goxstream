@@ -9,5 +9,29 @@ export const isPostgresEnv =
   connectionType === "postgresql" ||
   Boolean(dbUrl);
 
-export * from "./sqlite";
+const activeSchema: typeof sqliteSchema = isPostgresEnv
+  ? (pgSchema as any)
+  : sqliteSchema;
+
+export const {
+  users,
+  userSettings,
+  sessions,
+  usersRelations,
+  userSettingsRelations,
+  sessionsRelations,
+  animes,
+  genres,
+  studios,
+  animeGenres,
+  animeStudios,
+  episodes,
+  streamSources,
+  subtitleTracks,
+  audioTracks,
+  serverNodes,
+  watchlists,
+  watchHistories,
+} = activeSchema;
+
 export { sqliteSchema, pgSchema };
