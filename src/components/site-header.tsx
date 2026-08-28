@@ -59,7 +59,7 @@ export function SiteHeader() {
           <ThemeToggle />
 
           {/* Pair TV Link (Desktop Only) */}
-          <div className="hidden lg:block">
+          <div className="hidden xl:block">
             <Link
               href="/activate"
               className={buttonVariants({

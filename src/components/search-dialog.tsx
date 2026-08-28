@@ -45,7 +45,7 @@ export function SearchDialog() {
         variant="outline"
         onClick={() => setOpen(true)}
         aria-label="Search anime catalog"
-        className="relative h-8 w-8 sm:h-9 sm:w-44 md:w-56 lg:w-72 p-0 sm:px-3 justify-center sm:justify-start rounded-lg bg-card/60 text-sm text-muted-foreground border-border/60 hover:border-border hover:bg-muted/50 shadow-none shrink-0"
+        className="relative h-8 w-8 sm:h-9 sm:w-36 md:w-44 lg:w-48 xl:w-64 p-0 sm:px-3 justify-center sm:justify-start rounded-lg bg-card/60 text-sm text-muted-foreground border-border/60 hover:border-border hover:bg-muted/50 shadow-none shrink-0"
       >
         <Search className="size-4 text-muted-foreground sm:mr-2 shrink-0" />
         <span className="hidden sm:inline-flex truncate">Search anime...</span>
