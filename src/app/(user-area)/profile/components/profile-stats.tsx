@@ -2,13 +2,50 @@
 
 import { CheckCircle2, PlayCircle, Clock, Bookmark, Sparkles } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { UserProfile } from "@/types/user";
 
 interface ProfileStatsProps {
-  stats: UserProfile["stats"];
+  stats?: UserProfile["stats"] | null;
+  isLoading?: boolean;
 }
 
-export function ProfileStats({ stats }: ProfileStatsProps) {
+export function ProfileStats({ stats, isLoading }: ProfileStatsProps) {
+  if (isLoading || !stats) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="p-4 rounded-xl border border-border/60 bg-card flex flex-col justify-between gap-3 shadow-xs"
+            >
+              <Skeleton className="size-9 rounded-lg" />
+              <div className="space-y-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-3.5 w-24" />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="p-5 rounded-xl border border-border/60 bg-card flex flex-col gap-4 shadow-xs">
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-3 w-12" />
+          </div>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-2 w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const statCards = [
     {
       label: "Anime Completed",

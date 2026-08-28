@@ -1,5 +1,6 @@
 import type { AnimeItem, EpisodeItem, EpisodeWatchDetails } from "@/types/anime";
 import type { ScheduleItem } from "@/types/schedule";
+import type { UserProfile, WatchlistItem, WatchHistoryItem } from "@/types/user";
 
 /**
  * API Response Type Contracts
@@ -57,4 +58,13 @@ export interface WatchDetailsResponse {
   details: EpisodeWatchDetails | null;
   episodes: EpisodeItem[];
   recommendations: AnimeItem[];
+}
+
+// GET /api/user/profile
+export interface UserProfileResponse {
+  profile: UserProfile | null;
+  activity: {
+    watchlist: WatchlistItem[];
+    history: WatchHistoryItem[];
+  };
 }

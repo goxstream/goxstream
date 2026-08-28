@@ -6,13 +6,35 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { getImageStyle } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { UserProfile } from "@/types/user";
 
 interface ProfileHeaderProps {
-  user: UserProfile;
+  user?: UserProfile | null;
+  isLoading?: boolean;
 }
 
-export function ProfileHeader({ user }: ProfileHeaderProps) {
+export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
+  if (isLoading || !user) {
+    return (
+      <div className="relative rounded-2xl overflow-hidden border border-border/60 bg-card shadow-xs">
+        <div className="h-44 sm:h-56 w-full relative bg-muted">
+          <Skeleton className="size-full" />
+        </div>
+        <div className="px-6 pb-6 pt-0 relative z-20 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 -mt-16 sm:-mt-20">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5">
+            <Skeleton className="size-28 sm:size-36 rounded-full border-4 border-background" />
+            <div className="flex flex-col gap-2 sm:pb-2">
+              <Skeleton className="h-8 w-48" />
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-64 mt-2" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const isBannerGradient = user.bannerUrl && user.bannerUrl.startsWith("linear-gradient");
   const hasBanner = Boolean(user.bannerUrl && user.bannerUrl.trim() !== "");
 

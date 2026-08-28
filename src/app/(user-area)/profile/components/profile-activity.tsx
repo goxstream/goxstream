@@ -6,14 +6,54 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { getImageStyle } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { WatchlistItem, WatchHistoryItem } from "@/types/user";
 
 interface ProfileActivityProps {
-  watchlist: WatchlistItem[];
-  history: WatchHistoryItem[];
+  watchlist?: WatchlistItem[];
+  history?: WatchHistoryItem[];
+  isLoading?: boolean;
 }
 
-export function ProfileActivity({ watchlist, history }: ProfileActivityProps) {
+export function ProfileActivity({ watchlist, history, isLoading }: ProfileActivityProps) {
+  if (isLoading || !watchlist || !history) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="p-5 rounded-xl border border-border/60 bg-card flex flex-col gap-4 shadow-xs">
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-5 w-36" />
+            <Skeleton className="h-4 w-20" />
+          </div>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex justify-between items-center gap-3">
+                <Skeleton className="size-12 rounded-lg" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3.5 w-1/3" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="p-5 rounded-xl border border-border/60 bg-card flex flex-col gap-4 shadow-xs">
+          <div className="flex justify-between items-center">
+            <Skeleton className="h-5 w-36" />
+            <Skeleton className="h-4 w-20" />
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-28 w-full rounded-md" />
+                <Skeleton className="h-3 w-3/4" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const favorites = watchlist.filter((w) => w.isFavorite);
   const continueWatching = history.filter((h) => h.progressPercent < 100).slice(0, 3);
 
