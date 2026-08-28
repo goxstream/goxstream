@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1787746928782,
-      "tag": "0000_tricky_nico_minoru",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1787747473766,
-      "tag": "0001_big_the_phantom",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1787805402274,
-      "tag": "0002_bored_shotgun",
+      "when": 1787882091756,
+      "tag": "0000_naive_argent",
       "breakpoints": true
     }
   ]
