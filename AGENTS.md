@@ -100,10 +100,10 @@ Online anime streaming platform built with:
   - **CSR:** Reserved for highly dynamic client UI, video player controls, client-only APIs, or rich interactivity.
   - **PPR (Partial Prerendering):** Use where a static shell combined with streamed dynamic subtrees improves Core Web Vitals. *Note: Verify OpenNext and Cloudflare Workers runtime compatibility before adopting experimental PPR features.*
 - **Page files compose.** `page.tsx` should primarily compose components, not contain large JSX structures or business logic.
-- Use appropriate Next.js patterns: layouts, `loading.tsx`, `error.tsx`, metadata APIs, Server Actions, Route Handlers.
-  - **Loading UI MUST use Skeletons.** Every Next.js `loading.tsx` file or component loading placeholder MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
+- Use appropriate Next.js patterns: layouts, `error.tsx`, metadata APIs, Server Actions, Route Handlers.
+  - **Loading UI MUST use Skeletons.** All component loading placeholders MUST use the shadcn `Skeleton` component (`@/components/ui/skeleton`).
   - **Mandatory CSR for Dynamic Data & Skeletons.** Dynamic components displaying live data with skeleton loading states MUST use Client-Side Rendering (`"use client"` with client-side data fetching/hooks) to offload execution to the client, reduce Cloudflare Workers CPU load (preventing Error 1102 CPU limit), and fetch data on-demand for the active viewport.
-  - **Inline Component Skeletons Mandatory.** Skeletons MUST be integrated directly inline inside the target component (e.g., `<EpisodeCard isLoading={true} />`). Standalone skeleton functions or separate skeleton files for sections/pages are strictly prohibited.
+  - **Inline Component Skeletons Mandatory.** Skeletons MUST be integrated directly inline inside the target component file itself (e.g., via `isLoading` prop inside `<EpisodeCard isLoading={true} />`). All separate skeleton components, functions, or files (such as `EpisodeCardSkeleton`, `episode-card-skeleton.tsx`, `LatestEpisodesSectionSkeleton`, or page/route skeleton files) are strictly prohibited. A component file MUST be the single source of truth for both its loaded state and its skeleton loading state.
     ```tsx
     // Inline Skeleton Pattern combining shadcn UI primitives (Card, Skeleton)
     export function EpisodeCard({ episode, isLoading }: EpisodeCardProps) {
