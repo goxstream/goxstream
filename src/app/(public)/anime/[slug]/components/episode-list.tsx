@@ -87,9 +87,15 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <EpisodeCard key={i} isLoading={true} />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <Card key={i} className="flex flex-col border-border/60 overflow-hidden">
+                  <Skeleton className="aspect-video w-full rounded-none" />
+                  <div className="p-2.5 space-y-1.5">
+                    <Skeleton className="h-3 w-3/4 rounded" />
+                    <Skeleton className="h-2.5 w-1/2 rounded" />
+                  </div>
+                </Card>
               ))}
             </div>
           </CardContent>
@@ -179,7 +185,7 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
             </div>
           ) : viewMode === "grid" ? (
             /* Grid View Mode */
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
               {filteredEpisodes.map((ep) => {
                 const isLatest = ep.episodeNumber === latestEpNumber;
                 const isGradient = ep.thumbnail && ep.thumbnail.startsWith("linear-gradient");
@@ -213,39 +219,39 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
 
                       {/* Play Button Overlay */}
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="size-10 rounded-full bg-primary/90 text-primary-foreground flex items-center justify-center shadow-lg">
-                          <Play className="size-5 fill-primary-foreground ml-0.5" />
+                        <div className="size-9 rounded-full bg-primary/90 text-primary-foreground flex items-center justify-center shadow-lg">
+                          <Play className="size-4 fill-primary-foreground ml-0.5" />
                         </div>
                       </div>
 
                       {/* Episode Number Badge */}
-                      <div className="absolute top-2 left-2 flex items-center gap-1">
-                        <Badge className="bg-black/70 backdrop-blur-md text-white border-white/20 text-[11px] font-bold">
+                      <div className="absolute top-1.5 left-1.5 flex items-center gap-1">
+                        <Badge className="bg-black/70 backdrop-blur-md text-white border-white/20 text-[10px] font-bold px-1.5 py-0.5">
                           EP {ep.episodeNumber}
                         </Badge>
                         {isLatest && (
-                          <Badge className="bg-emerald-500 text-white text-[10px] font-bold gap-0.5">
-                            <Sparkles className="size-2.5" /> NEW
+                          <Badge className="bg-emerald-500 text-white text-[9px] font-bold gap-0.5 px-1.5 py-0.5">
+                            <Sparkles className="size-2" /> NEW
                           </Badge>
                         )}
                       </div>
 
                       {/* Audio & Duration Badges */}
-                      <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-[11px] text-white/90 font-medium">
+                      <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between text-[10px] text-white/90 font-medium">
                         <span>{ep.isSub && ep.isDub ? "SUB & DUB" : ep.isSub ? "SUB" : "DUB"}</span>
                         <span className="flex items-center gap-1">
-                          <Clock className="size-3" />
+                          <Clock className="size-2.5" />
                           {ep.duration}
                         </span>
                       </div>
                     </div>
 
                     {/* Card Content Info */}
-                    <div className="p-3 space-y-1">
+                    <div className="p-2.5 space-y-1">
                       <h4 className="font-semibold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
                         {ep.episodeTitle}
                       </h4>
-                      <p className="text-[11px] text-muted-foreground flex items-center justify-between">
+                      <p className="text-[10px] text-muted-foreground flex items-center justify-between">
                         <span>{ep.releasedAt}</span>
                         <span className="text-primary font-medium text-[10px] group-hover:underline">
                           Watch →
