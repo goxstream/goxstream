@@ -62,7 +62,7 @@ export function SearchDialog() {
             <DialogTitle>Search Anime Catalog</DialogTitle>
           </DialogHeader>
           <Command className="bg-transparent border-0 rounded-2xl overflow-hidden p-2" shouldFilter={false}>
-            <div className="px-2 pt-1 pb-2.5 border-b border-border/60">
+            <div className="pl-2 pr-10 pt-1.5 pb-2.5 border-b border-border/60">
               <CommandInput
                 value={query}
                 onValueChange={setQuery}
