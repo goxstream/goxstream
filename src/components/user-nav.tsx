@@ -39,9 +39,9 @@ export function UserNav() {
         <Link
           href="/login"
           className={buttonVariants({
-            variant: "ghost",
+            variant: "default",
             size: "sm",
-            className: "text-xs font-medium rounded-lg px-2.5 sm:px-3 gap-1.5 text-muted-foreground hover:text-foreground shrink-0 h-8 sm:h-9",
+            className: "text-xs font-semibold rounded-lg px-3 gap-1.5 shadow-xs shrink-0 h-8 sm:h-9",
           })}
         >
           <LogIn className="size-3.5" />
@@ -50,9 +50,9 @@ export function UserNav() {
         <Link
           href="/signup"
           className={buttonVariants({
-            variant: "default",
+            variant: "outline",
             size: "sm",
-            className: "hidden xl:inline-flex text-xs font-semibold rounded-lg px-2.5 sm:px-3 gap-1.5 shadow-xs shrink-0 h-8 sm:h-9",
+            className: "hidden 2xl:inline-flex text-xs font-semibold rounded-lg px-3 gap-1.5 shrink-0 h-8 sm:h-9",
           })}
         >
           <UserPlus className="size-3.5" />

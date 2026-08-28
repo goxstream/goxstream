@@ -22,9 +22,9 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md transition-colors">
-      <div className="mx-auto flex h-16 max-w-7xl w-full items-center justify-between px-2.5 sm:px-6 lg:px-8 gap-1.5 sm:gap-4 overflow-x-clip">
+      <div className="mx-auto flex h-16 max-w-7xl w-full items-center justify-between px-2.5 sm:px-6 lg:px-8 gap-2 sm:gap-4">
         {/* Brand Logo & Main Nav */}
-        <div className="flex items-center gap-2 sm:gap-4 lg:gap-8 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4 lg:gap-6 shrink-0">
           <LogoBrand href="/" size="md" hideTextOnMobile />
 
           {/* Desktop Navigation */}
@@ -51,15 +51,15 @@ export function SiteHeader() {
         </div>
 
         {/* Header Right Actions */}
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+        <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-1 min-w-0 shrink-0">
           {/* Search Trigger */}
           <SearchDialog />
 
           {/* Theme Mode Toggle */}
           <ThemeToggle />
 
-          {/* Pair TV Link (Desktop Only) */}
-          <div className="hidden xl:block">
+          {/* Pair TV Link (Extra Large Desktop Only) */}
+          <div className="hidden 2xl:block">
             <Link
               href="/activate"
               className={buttonVariants({
