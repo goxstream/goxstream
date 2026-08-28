@@ -107,6 +107,7 @@ export interface BrowseFiltersProps {
   onSortChange: (s: string) => void;
   onResetFilters: () => void;
   activeFiltersCount: number;
+  isLoading?: boolean;
 }
 
 export interface BrowseGridProps {

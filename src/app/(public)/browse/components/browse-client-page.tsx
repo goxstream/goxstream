@@ -13,7 +13,7 @@ export function BrowseClientPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
-        <BrowseFilters {...filtersProps} />
+        <BrowseFilters {...filtersProps} isLoading={isLoading} />
 
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">

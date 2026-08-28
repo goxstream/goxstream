@@ -1,7 +1,5 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { TrendingClientPage } from "./components/trending-client-page";
-import TrendingLoading from "./loading";
 
 export const metadata: Metadata = {
   title: "Anime Trending Leaderboard | GoxStream",
@@ -15,9 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function TrendingPage() {
-  return (
-    <Suspense fallback={<TrendingLoading />}>
-      <TrendingClientPage />
-    </Suspense>
-  );
+  return <TrendingClientPage />;
 }
