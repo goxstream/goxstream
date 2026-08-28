@@ -14,12 +14,32 @@ interface AnimeCardProps {
   anime?: AnimeItem;
   isLoading?: boolean;
   priority?: boolean;
+  variant?: "grid" | "list";
 }
 
-export function AnimeCard({ anime, isLoading }: AnimeCardProps) {
+export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   if (isLoading || !anime) {
+    if (variant === "list") {
+      return (
+        <Card className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-card border border-border/70">
+          <div className="flex items-center gap-4 flex-1 w-full">
+            <Skeleton className="size-16 sm:size-20 rounded-lg shrink-0" />
+            <div className="space-y-2 flex-1 min-w-0">
+              <Skeleton className="h-5 w-2/3 rounded" />
+              <Skeleton className="h-3 w-1/3 rounded" />
+              <Skeleton className="h-3 w-1/2 rounded" />
+            </div>
+          </div>
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <Skeleton className="h-4 w-20 rounded" />
+            <Skeleton className="h-4 w-12 rounded" />
+          </div>
+        </Card>
+      );
+    }
+
     return (
       <Card className="flex flex-col rounded-xl overflow-hidden bg-card border border-border/80 p-0 gap-0">
         <Skeleton className="aspect-[3/4] w-full rounded-none" />
@@ -33,7 +53,90 @@ export function AnimeCard({ anime, isLoading }: AnimeCardProps) {
       </Card>
     );
   }
+
   const isGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
+
+  if (variant === "list") {
+    return (
+      <Link
+        href={`/anime/${anime.slug}`}
+        className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-card border border-border/70 hover:border-primary/60 transition-all duration-200"
+      >
+        <div className="flex items-center gap-4 flex-1 min-w-0">
+          {/* Thumbnail Artwork Area with VercelSpinner Overlay */}
+          <div className="relative size-16 sm:size-20 rounded-lg shrink-0 overflow-hidden bg-muted flex items-center justify-center">
+            {!isGradient && !isImageLoaded && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
+                <VercelSpinner size="sm" />
+              </div>
+            )}
+
+            {isGradient ? (
+              <div
+                className="absolute inset-0 size-full"
+                style={getImageStyle(anime.coverImage)}
+              />
+            ) : (
+              <img
+                src={anime.coverImage || ""}
+                alt={anime.title}
+                loading="lazy"
+                decoding="async"
+                onLoad={() => setIsImageLoaded(true)}
+                className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${
+                  isImageLoaded ? "opacity-100" : "opacity-0"
+                }`}
+                onError={(e) => {
+                  setIsImageLoaded(true);
+                  const target = e.target as HTMLImageElement;
+                  target.style.opacity = "0";
+                }}
+              />
+            )}
+            <Play className="relative size-6 text-white/80 fill-white/80 group-hover:scale-110 transition-transform z-10" />
+          </div>
+
+          {/* Info */}
+          <div className="space-y-1 flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-bold text-base text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                {anime.title}
+              </h3>
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                {anime.type}
+              </Badge>
+            </div>
+            {anime.japaneseTitle && (
+              <p className="text-xs text-muted-foreground/80 line-clamp-1">
+                {anime.japaneseTitle}
+              </p>
+            )}
+            <p className="text-xs text-muted-foreground line-clamp-1">
+              {anime.genres.join(" • ")}
+            </p>
+          </div>
+        </div>
+
+        {/* Stats & Actions */}
+        <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto text-xs text-muted-foreground border-t sm:border-t-0 border-border/40 pt-2 sm:pt-0">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1 font-semibold text-amber-500">
+              <Star className="size-3.5 fill-amber-500 stroke-amber-500" />
+              {anime.rating ? anime.rating.toFixed(1) : "N/A"}
+            </span>
+            <span>{anime.year}</span>
+            <span className="flex items-center gap-1">
+              <Tv className="size-3.5" />
+              {anime.episodesCount} Eps
+            </span>
+          </div>
+          <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px] font-semibold">
+            {anime.status}
+          </Badge>
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <Link
