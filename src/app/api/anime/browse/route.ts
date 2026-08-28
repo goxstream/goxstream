@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   const type = searchParams.get("type") || undefined;
   const limit = parseInt(searchParams.get("limit") || "40", 10);
 
-  const cacheKeyRaw = `kv_browse_${genre || "all"}_${query || "all"}_${status || "all"}_${type || "all"}_${limit}`;
+  const cacheKeyRaw = `cache_browse_${genre || "all"}_${query || "all"}_${status || "all"}_${type || "all"}_${limit}`;
   const CACHE_KEY = encodeURIComponent(cacheKeyRaw);
   const CACHE_TTL = 300;
 

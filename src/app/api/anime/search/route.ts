@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = (searchParams.get("q") || "").trim().toLowerCase();
 
-  const CACHE_KEY = `kv_search_${encodeURIComponent(query || "default")}`;
+  const CACHE_KEY = `cache_search_${encodeURIComponent(query || "default")}`;
   const CACHE_TTL = 300;
 
   try {
@@ -21,7 +21,10 @@ export async function GET(request: Request) {
       });
     }
 
-    const items = await getBrowseAnime({ query, limit: 12 }).catch(() => []);
+    const items = await getBrowseAnime({
+      query: query || undefined,
+      limit: query ? undefined : 20,
+    }).catch(() => []);
     const data = { results: items };
 
     await setCacheItem(CACHE_KEY, data, CACHE_TTL);

@@ -57,21 +57,20 @@ export function SearchDialog() {
 
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-2xl p-0 gap-0 overflow-hidden bg-card border-border shadow-xs rounded-xl">
+        <DialogContent className="sm:max-w-2xl w-full p-0 gap-0 overflow-hidden bg-card border border-border/80 shadow-md rounded-2xl">
           <DialogHeader className="sr-only">
             <DialogTitle>Search Anime Catalog</DialogTitle>
           </DialogHeader>
-          <Command className="bg-transparent border-0" shouldFilter={false}>
-            <div className="flex items-center px-4 border-b border-border/80">
-              <Search className="size-4 shrink-0 text-muted-foreground mr-2" />
+          <Command className="bg-transparent border-0 rounded-2xl overflow-hidden p-2" shouldFilter={false}>
+            <div className="px-2 pt-1 pb-2.5 border-b border-border/60">
               <CommandInput
                 value={query}
                 onValueChange={setQuery}
                 placeholder="Search series title, Japanese name, or studio..."
-                className="h-12 text-sm border-0 focus:ring-0 shadow-none bg-transparent"
+                className="h-10 text-sm"
               />
             </div>
-            <CommandList className="max-h-[380px] p-2 overflow-y-auto">
+            <CommandList className="max-h-[420px] p-2 overflow-y-auto">
               {isLoading ? (
                 <div className="space-y-2 p-2">
                   {Array.from({ length: 4 }).map((_, i) => (
@@ -89,7 +88,7 @@ export function SearchDialog() {
                   No anime found matching your query.
                 </CommandEmpty>
               ) : (
-                <CommandGroup heading={query ? "Search Results" : "Popular & Trending Anime"}>
+                <CommandGroup heading={query ? `Search Results (${results.length})` : "Popular & Trending Anime"}>
                   {results.map((anime) => {
                     const isGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
 

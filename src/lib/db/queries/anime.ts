@@ -1,4 +1,4 @@
-import { eq, desc, asc } from "drizzle-orm";
+import { eq, desc, asc, and, or, like, sql } from "drizzle-orm";
 import { getDb } from "../index";
 import { animes, genres, animeGenres, studios, animeStudios } from "../schema";
 import type { AnimeItem } from "@/types/anime";
@@ -147,10 +147,32 @@ export async function getBrowseAnime(options?: {
   limit?: number;
 }): Promise<AnimeItem[]> {
   const db = await getDb();
-  const limit = options?.limit || 24;
+  const conditions: any[] = [];
+
+  if (options?.query && options.query.trim() !== "") {
+    const pattern = `%${options.query.trim().toLowerCase()}%`;
+    conditions.push(
+      or(
+        like(sql`LOWER(${animes.titleEnglish})`, pattern),
+        like(sql`LOWER(${animes.titleRomaji})`, pattern),
+        like(sql`LOWER(${animes.titleJapanese})`, pattern)
+      )
+    );
+  }
+
+  if (options?.status && options.status !== "All") {
+    conditions.push(eq(animes.status, options.status));
+  }
+
+  if (options?.type && options.type !== "All") {
+    conditions.push(eq(animes.type, options.type));
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
   const rawList = await db.query.animes.findMany({
-    limit,
+    where: whereClause,
+    ...(options?.limit ? { limit: options.limit } : {}),
     orderBy: [desc(animes.createdAt)],
     with: {
       animeGenres: {
@@ -175,23 +197,6 @@ export async function getBrowseAnime(options?: {
         item.genres.some((g: string) => selectedGenres.includes(g.toLowerCase()))
       );
     }
-  }
-
-  if (options?.query) {
-    const q = options.query.toLowerCase();
-    items = items.filter(
-      (item: AnimeItem) =>
-        item.title.toLowerCase().includes(q) ||
-        (item.japaneseTitle && item.japaneseTitle.toLowerCase().includes(q))
-    );
-  }
-
-  if (options?.status) {
-    items = items.filter((item: AnimeItem) => item.status === options.status);
-  }
-
-  if (options?.type) {
-    items = items.filter((item: AnimeItem) => item.type === options.type);
   }
 
   return items;
