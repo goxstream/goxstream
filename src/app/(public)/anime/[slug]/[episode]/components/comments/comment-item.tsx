@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ThumbsUp, ThumbsDown, MessageSquare, AlertCircle, Eye, Check } from "lucide-react";
+import { ThumbsUp, ThumbsDown, MessageSquare, AlertCircle, Eye, EyeOff, Check } from "lucide-react";
 import { CommentInputForm } from "./comment-input-form";
 
 export interface CommentData {
@@ -58,16 +58,27 @@ export function CommentItem({ comment, onLike, onDislike, onReplySubmit }: Comme
             <span className="text-[10px] text-muted-foreground shrink-0">{comment.timeAgo}</span>
           </div>
 
-          {/* Comment Content (Spoiler Masked or Clean) */}
-          {comment.isSpoiler && !isSpoilerRevealed ? (
-            <button
-              type="button"
-              onClick={() => setIsSpoilerRevealed(true)}
-              className="w-full text-left p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-medium flex items-center gap-2 mb-2 group cursor-pointer"
+          {/* Comment Content (Discord / Reddit Style Blur Sensor Mask or Clean) */}
+          {comment.isSpoiler ? (
+            <div
+              onClick={() => setIsSpoilerRevealed(!isSpoilerRevealed)}
+              className="relative group cursor-pointer my-1 mb-2.5 inline-block w-full overflow-hidden rounded-lg border border-border/40 transition-colors hover:border-border"
             >
-              <Eye className="size-3.5 shrink-0 group-hover:scale-110 transition-transform" />
-              <span>Spoiler Alert — Click to reveal comment</span>
-            </button>
+              <p className={`text-xs leading-relaxed p-2.5 whitespace-pre-line transition-all duration-300 ${
+                isSpoilerRevealed
+                  ? "text-muted-foreground blur-none select-text bg-background/40"
+                  : "text-transparent bg-muted/80 backdrop-blur-md select-none blur-sm"
+              }`}>
+                {comment.text}
+              </p>
+
+              {!isSpoilerRevealed && (
+                <div className="absolute inset-0 flex items-center justify-center gap-1.5 text-xs font-semibold text-foreground/90 bg-background/50 backdrop-blur-xs transition-opacity group-hover:bg-background/40">
+                  <EyeOff className="size-3.5 text-primary shrink-0" />
+                  <span>Contains Spoiler — Click to reveal</span>
+                </div>
+              )}
+            </div>
           ) : (
             <p className="text-xs text-muted-foreground leading-relaxed mb-2.5 whitespace-pre-line">
               {comment.text}

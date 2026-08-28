@@ -10,51 +10,16 @@ interface CommentsSectionProps {
   episodeId?: string;
 }
 
-const DEMO_COMMENTS: CommentData[] = [
-  {
-    id: "c-1",
-    user: "ShadowMonarch99",
-    avatarBg: "bg-indigo-600",
-    timeAgo: "2 hours ago",
-    text: "The animation in the second half of this episode was absolutely peak! MAPPA/A-1 outdid themselves with the shading during the fight scenes.",
-    likes: 42,
-    replies: [
-      {
-        id: "c-1-1",
-        user: "SoloLevelingFan",
-        avatarBg: "bg-purple-600",
-        timeAgo: "1 hour ago",
-        text: "Totally agree! The camera rotation in 3D background was insane.",
-        likes: 12,
-      },
-    ],
-  },
-  {
-    id: "c-2",
-    user: "AnimeExplorer",
-    avatarBg: "bg-emerald-600",
-    timeAgo: "4 hours ago",
-    text: "That cliffhanger at the end is criminal! Can't wait for next week's episode.",
-    likes: 19,
-    isSpoiler: true,
-  },
-  {
-    id: "c-3",
-    user: "OtakuSensei",
-    avatarBg: "bg-rose-600",
-    timeAgo: "6 hours ago",
-    text: "The soundtrack transition right when the main theme dropped gave me chills. 10/10 episode!",
-    likes: 28,
-  },
-];
-
 export function CommentsSection({ animeId, episodeId }: CommentsSectionProps) {
-  const [comments, setComments] = useState<CommentData[]>(DEMO_COMMENTS);
+  const [comments, setComments] = useState<CommentData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch real comments from database API endpoint if episodeId is provided
   useEffect(() => {
-    if (!episodeId) return;
+    if (!episodeId) {
+      setComments([]);
+      return;
+    }
 
     let isMounted = true;
     setIsLoading(true);
@@ -62,7 +27,7 @@ export function CommentsSection({ animeId, episodeId }: CommentsSectionProps) {
     fetch(`/api/comments?episodeId=${encodeURIComponent(episodeId)}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data: any) => {
-        if (isMounted && data && Array.isArray(data.comments) && data.comments.length > 0) {
+        if (isMounted && data && Array.isArray(data.comments)) {
           // Transform DB rows to CommentData structure
           const dbCommentsMap = new Map<string, CommentData>();
           const roots: CommentData[] = [];
@@ -100,7 +65,7 @@ export function CommentsSection({ animeId, episodeId }: CommentsSectionProps) {
         }
       })
       .catch((err) => {
-        console.error("Could not fetch real comments, keeping demo data:", err);
+        console.error("Could not fetch real comments:", err);
       })
       .finally(() => {
         if (isMounted) setIsLoading(false);
@@ -263,18 +228,28 @@ export function CommentsSection({ animeId, episodeId }: CommentsSectionProps) {
       {/* Root Comment Form */}
       <CommentInputForm onSubmit={handlePostRootComment} />
 
-      {/* Nested Thread Comment List */}
-      <div className="flex flex-col gap-3.5 mt-2">
-        {comments.map((comment) => (
-          <CommentItem
-            key={comment.id}
-            comment={comment}
-            onLike={handleLikeRecursive}
-            onDislike={handleDislikeRecursive}
-            onReplySubmit={handleAddReply}
-          />
-        ))}
-      </div>
+      {/* Nested Thread Comment List or Clean Empty State */}
+      {comments.length === 0 ? (
+        <div className="text-center py-8 px-4 rounded-xl bg-muted/20 border border-dashed border-border/60 my-2">
+          <MessageSquare className="size-8 text-muted-foreground/40 mx-auto mb-2" />
+          <p className="text-xs font-bold text-foreground">No comments yet</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">
+            Be the first to share your thoughts on this episode!
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3.5 mt-2">
+          {comments.map((comment) => (
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              onLike={handleLikeRecursive}
+              onDislike={handleDislikeRecursive}
+              onReplySubmit={handleAddReply}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
