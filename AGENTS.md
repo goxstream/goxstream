@@ -217,6 +217,14 @@ pnpm deploy       # Production deployment to Cloudflare Workers
 
 Local Wrangler/Miniflare resources are development/testing resources — do not describe them as production services.
 
+## Workers CPU Optimization (10ms Free Plan Limit)
+
+To guarantee execution times stay well under the Cloudflare Workers 10ms CPU limit and prevent Error 1102:
+- **Module-Level Singleton Caching**: Instantiating connection drivers or adapters (e.g. Drizzle db in `getDb()` or Cache adapter in `resolveCacheAdapter()`) has a high CPU cost. You MUST cache these instances at the module level so they are initialized only once per isolate lifetime and reused on subsequent requests.
+- **Centralized API Response Contracts**: All public, non-sensitive API responses must utilize type contracts defined in `src/lib/api/types.ts`. Do NOT define ad-hoc interfaces or inline types inside client hooks.
+- **Pure Client-Side Frontend (No SSR/Server dynamic fetch for public routes)**: Public-facing pages (home, browse, trending, schedule, details) must serve as static HTML shells and offload dynamic data querying to client-side hooks (`"use client"` + browser fetch) to minimize edge server compute.
+- **CDN and Browser Page Caching**: Configure aggressive caching (`Cache-Control: public, max-age=3600, must-revalidate` or similar) in `next.config.ts` for static page documents so that edge servers do not need to process redundant requests.
+
 ## Database / Drizzle
 
 - Drizzle ORM for database access.
