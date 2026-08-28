@@ -5,13 +5,18 @@ import { BrowseGrid } from "./browse-grid";
 import { BrowsePagination } from "./browse-pagination";
 import { useBrowseFilters } from "../hooks/use-browse-filters";
 
-export function BrowseContent() {
-  const { filtersProps, gridProps, paginationProps, isLoading } = useBrowseFilters();
+interface BrowseContentProps {
+  isLoading?: boolean;
+}
+
+export function BrowseContent({ isLoading: forcedLoading }: BrowseContentProps = {}) {
+  const { filtersProps, gridProps, paginationProps, isLoading: hookLoading } = useBrowseFilters();
+  const loading = forcedLoading || hookLoading;
 
   return (
     <div className="space-y-8">
-      <BrowseFilters {...filtersProps} isLoading={isLoading} />
-      <BrowseGrid {...gridProps} isLoading={isLoading} />
+      <BrowseFilters {...filtersProps} isLoading={loading} />
+      <BrowseGrid {...gridProps} isLoading={loading} />
       <BrowsePagination {...paginationProps} />
     </div>
   );
