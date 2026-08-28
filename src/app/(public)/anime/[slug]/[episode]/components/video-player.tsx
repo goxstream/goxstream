@@ -43,7 +43,7 @@ export function VideoPlayer({
       {nextEpisode && (
         <div className="absolute top-4 right-4 z-20 flex items-center gap-2 pointer-events-auto">
           <Link
-            href={`/anime/${animeSlug}/episode-${nextEpisode.episodeNumber}`}
+            href={`/anime/${animeSlug}/${nextEpisode.episodeNumber}`}
             className={buttonVariants({
               variant: "default",
               size: "sm",

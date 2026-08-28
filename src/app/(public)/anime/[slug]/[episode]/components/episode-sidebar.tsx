@@ -62,7 +62,7 @@ export function EpisodeSidebar({
               return (
                 <Link
                   key={ep.id}
-                  href={`/anime/${anime.slug}/episode-${ep.episodeNumber}`}
+                  href={`/anime/${anime.slug}/${ep.episodeNumber}`}
                   className={`flex items-center justify-between p-2.5 rounded-lg border transition-all ${
                     isCurrent
                       ? "bg-primary/10 border-primary/40 text-primary font-medium shadow-xs"

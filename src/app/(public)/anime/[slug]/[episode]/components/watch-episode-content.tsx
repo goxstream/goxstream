@@ -71,7 +71,7 @@ export function WatchEpisodeContent({ paramsPromise }: WatchEpisodeContentProps)
         {isCinemaMode && (
           <div
             onClick={() => setIsCinemaMode(false)}
-            className="fixed inset-0 z-40 bg-black/90 backdrop-blur-md transition-opacity duration-300"
+            className="fixed inset-0 z-40 bg-black/95 dark:bg-black/95 backdrop-blur-md transition-opacity duration-300"
             title="Click to exit Cinema Mode"
           />
         )}
@@ -79,7 +79,7 @@ export function WatchEpisodeContent({ paramsPromise }: WatchEpisodeContentProps)
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 relative">
           <div
             className={`lg:col-span-8 flex flex-col transition-all duration-300 ${
-              isCinemaMode ? "relative z-50 ring-2 ring-primary/40 rounded-xl shadow-2xl bg-black" : ""
+              isCinemaMode ? "relative z-50 p-3 sm:p-4 rounded-2xl bg-neutral-950 text-white border border-white/10 shadow-2xl space-y-4" : ""
             }`}
           >
             <VideoPlayer
