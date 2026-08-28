@@ -24,10 +24,19 @@ export function RecommendationsCard({ recommendations }: RecommendationsCardProp
             href={`/anime/${rec.slug}`}
             className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 border border-transparent hover:border-border/60 transition-all group"
           >
-            <div
-              className="w-14 h-18 rounded-md shrink-0 bg-cover bg-center border border-border/40 group-hover:scale-105 transition-transform"
-              style={{ backgroundImage: rec.coverImage }}
-            />
+            <div className="relative w-14 h-20 rounded-md shrink-0 overflow-hidden border border-border/40 group-hover:scale-105 transition-transform bg-muted">
+              {rec.coverImage ? (
+                <img
+                  src={rec.coverImage.startsWith("url(") ? rec.coverImage.slice(5, -2) : rec.coverImage}
+                  alt={rec.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-muted flex items-center justify-center text-[10px] text-muted-foreground">
+                  No Image
+                </div>
+              )}
+            </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                 {rec.title}
