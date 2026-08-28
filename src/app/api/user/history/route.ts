@@ -4,6 +4,7 @@ import {
   getUserWatchHistory,
   recordWatchHistory,
   clearUserWatchHistory,
+  deleteHistoryItem,
 } from "@/lib/db/queries/history";
 
 export async function GET() {
@@ -36,12 +37,23 @@ export async function POST(req: NextRequest) {
 }
 
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  await clearUserWatchHistory(user.id);
+  const { searchParams } = new URL(req.url);
+  const itemId = searchParams.get("id");
+
+  if (itemId) {
+    // Delete single history item
+    await deleteHistoryItem(user.id, itemId);
+  } else {
+    // Clear all history
+    await clearUserWatchHistory(user.id);
+  }
+
   return NextResponse.json({ success: true });
 }
+

@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { AnimeItem } from "@/types/anime";
-
-export interface SearchApiResponse {
-  results?: AnimeItem[];
-}
+import type { SearchAnimeResponse } from "@/lib/api/types";
 
 export function useAnimeSearch(query: string) {
   const [results, setResults] = useState<AnimeItem[]>([]);
@@ -17,7 +14,7 @@ export function useAnimeSearch(query: string) {
 
     const timer = setTimeout(() => {
       fetch(`/api/anime/search?q=${encodeURIComponent(query)}`)
-        .then((res) => res.json() as Promise<SearchApiResponse>)
+        .then((res) => res.json() as Promise<SearchAnimeResponse>)
         .then((data) => {
           if (!isMounted) return;
           setResults(data.results || []);

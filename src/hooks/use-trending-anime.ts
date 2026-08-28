@@ -2,11 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { AnimeItem } from "@/types/anime";
-
-export interface TrendingApiResponse {
-  trendingAnime?: AnimeItem[];
-  genresList?: string[];
-}
+import type { TrendingAnimeResponse } from "@/lib/api/types";
 
 export function useTrendingAnime(initialTrending?: AnimeItem[], initialGenres?: string[]) {
   const [trendingAnime, setTrendingAnime] = useState<AnimeItem[]>(initialTrending || []);
@@ -18,7 +14,7 @@ export function useTrendingAnime(initialTrending?: AnimeItem[], initialGenres?: 
 
     let isMounted = true;
     fetch("/api/anime/trending")
-      .then((res) => res.json() as Promise<TrendingApiResponse>)
+      .then((res) => res.json() as Promise<TrendingAnimeResponse>)
       .then((data) => {
         if (!isMounted) return;
         setTrendingAnime(data.trendingAnime || []);

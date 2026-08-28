@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { EpisodeWatchDetails, EpisodeItem, AnimeItem } from "@/types/anime";
-
-export interface WatchDetailsApiResponse {
-  details?: EpisodeWatchDetails | null;
-  episodes?: EpisodeItem[];
-  recommendations?: AnimeItem[];
-}
+import type { WatchDetailsResponse } from "@/lib/api/types";
 
 export function useWatchDetails(slug: string, episodeNum: string) {
   const [details, setDetails] = useState<EpisodeWatchDetails | null>(null);
@@ -29,7 +24,7 @@ export function useWatchDetails(slug: string, episodeNum: string) {
           if (isMounted) setNotFoundError(true);
           return null;
         }
-        return res.json() as Promise<WatchDetailsApiResponse>;
+        return res.json() as Promise<WatchDetailsResponse>;
       })
       .then((data) => {
         if (!isMounted || !data) return;

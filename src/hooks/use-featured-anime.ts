@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { AnimeItem } from "@/types/anime";
-
-export interface FeaturedApiResponse {
-  featuredAnime?: AnimeItem | null;
-}
+import type { FeaturedAnimeResponse } from "@/lib/api/types";
 
 export function useFeaturedAnime(initialFeaturedAnime?: AnimeItem | null) {
   const [anime, setAnime] = useState<AnimeItem | null>(initialFeaturedAnime || null);
@@ -16,7 +13,7 @@ export function useFeaturedAnime(initialFeaturedAnime?: AnimeItem | null) {
 
     let isMounted = true;
     fetch("/api/anime/featured")
-      .then((res) => res.json() as Promise<FeaturedApiResponse>)
+      .then((res) => res.json() as Promise<FeaturedAnimeResponse>)
       .then((data) => {
         if (!isMounted) return;
         setAnime(data.featuredAnime || null);

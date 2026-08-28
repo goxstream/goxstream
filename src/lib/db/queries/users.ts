@@ -1,6 +1,7 @@
-import { eq, or } from "drizzle-orm";
+import { eq, or, desc } from "drizzle-orm";
 import { getDb } from "../index";
-import { users, userSettings, sessions, watchlists, watchHistories } from "../schema";
+import { users, userSettings, sessions, watchlists, watchHistories, animeGenres, genres } from "../schema";
+import { mapToAnimeItem } from "./anime";
 import type { InferInsertModel } from "drizzle-orm";
 import type { UserProfile } from "@/types/user";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -186,6 +187,8 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
         const totalSecondsWatched = userHistory.reduce((acc: number, h: any) => acc + (h.progressSeconds || 0), 0);
         const hoursWatched = Math.round(totalSecondsWatched / 3600);
 
+        // Compute favorite genres from watchlist anime
+        const favoriteGenres = await computeFavoriteGenres(db, userWatchlist);
 
         return {
           id: dbUser.id,
@@ -205,11 +208,7 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
             episodesWatched,
             hoursWatched,
             watchlistCount: userWatchlist.length,
-            favoriteGenres: [
-              { genre: "Action", percentage: 40 },
-              { genre: "Fantasy", percentage: 35 },
-              { genre: "Sci-Fi", percentage: 25 },
-            ],
+            favoriteGenres,
           },
         };
       }
@@ -238,3 +237,139 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
   };
 }
 
+/**
+ * Compute favorite genres from user's watchlist anime entries.
+ * Returns top genres sorted by frequency as percentages.
+ */
+async function computeFavoriteGenres(
+  db: Awaited<ReturnType<typeof getDb>>,
+  userWatchlist: { animeId: string }[],
+): Promise<{ genre: string; percentage: number }[]> {
+  if (userWatchlist.length === 0) return [];
+
+  try {
+    const animeIds = userWatchlist.map((w) => w.animeId);
+    const allAnimeGenres = await db.query.animeGenres.findMany({
+      with: { genre: true },
+    });
+
+    // Count genres for anime in the user's watchlist
+    const genreCounts = new Map<string, number>();
+    for (const ag of allAnimeGenres) {
+      if (animeIds.includes(ag.animeId) && ag.genre) {
+        const name = (ag.genre as any).name || "";
+        if (name) {
+          genreCounts.set(name, (genreCounts.get(name) || 0) + 1);
+        }
+      }
+    }
+
+    if (genreCounts.size === 0) return [];
+
+    const total = Array.from(genreCounts.values()).reduce((a, b) => a + b, 0);
+    return Array.from(genreCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([genre, count]) => ({
+        genre,
+        percentage: Math.round((count / total) * 100),
+      }));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Fetch watchlist and history data formatted for the ProfileActivity component.
+ */
+export async function getCurrentUserActivity(userId: string): Promise<{
+  watchlist: import("@/types/user").WatchlistItem[];
+  history: import("@/types/user").WatchHistoryItem[];
+}> {
+  if (!userId || userId === "guest") {
+    return { watchlist: [], history: [] };
+  }
+
+  const db = await getDb();
+
+  try {
+    // Fetch watchlist with anime + genres + studios
+    const rawWatchlist = await db.query.watchlists.findMany({
+      where: eq(watchlists.userId, userId),
+      with: {
+        anime: {
+          with: {
+            animeGenres: { with: { genre: true } },
+            animeStudios: { with: { studio: true } },
+          },
+        },
+      },
+    });
+
+    const formattedWatchlist = rawWatchlist
+      .filter((w: any) => w.anime)
+      .map((w: any) => ({
+        id: w.id,
+        anime: mapToAnimeItem(w.anime),
+        status: w.status as import("@/types/user").WatchlistStatus,
+        isFavorite: Boolean(w.isFavorite),
+        currentEpisode: w.currentEpisode || 0,
+        totalEpisodes: w.anime?.episodesCount || 0,
+        rating: w.userRating ?? undefined,
+        updatedAt: w.updatedAt
+          ? new Date(w.updatedAt).toLocaleDateString()
+          : "Recently",
+      }));
+
+    // Fetch history with anime + episode
+    const rawHistory = await db.query.watchHistories.findMany({
+      where: eq(watchHistories.userId, userId),
+      with: {
+        anime: true,
+        episode: true,
+      },
+      orderBy: [desc(watchHistories.lastWatchedAt)],
+      limit: 10,
+    });
+
+    const formattedHistory = rawHistory.map((h: any) => ({
+      id: h.id,
+      animeId: h.animeId,
+      animeSlug: h.anime?.slug || `anime-${h.animeId}`,
+      animeTitle: h.anime?.titleEnglish || h.anime?.titleRomaji || "Anime Series",
+      animeCover: h.anime?.coverImage || "",
+      episodeNumber: h.episodeNumber || 1,
+      episodeTitle: h.episode?.title || `Episode ${h.episodeNumber || 1}`,
+      progressPercent: h.progressPercent || 0,
+      durationSeconds: h.durationSeconds || 0,
+      watchedSeconds: h.progressSeconds || 0,
+      lastWatchedAt: h.lastWatchedAt
+        ? new Date(h.lastWatchedAt).toLocaleDateString()
+        : "Recently",
+    }));
+
+    return { watchlist: formattedWatchlist, history: formattedHistory };
+  } catch {
+    return { watchlist: [], history: [] };
+  }
+}
+
+/**
+ * Update user profile fields (displayName, bio, avatarUrl) in the users table.
+ */
+export async function updateUserProfile(
+  userId: string,
+  data: { displayName?: string; bio?: string; avatarUrl?: string },
+) {
+  const db = await getDb();
+  const updateData: Record<string, any> = { updatedAt: new Date() };
+  if (data.displayName !== undefined) updateData.displayName = data.displayName;
+  if (data.bio !== undefined) updateData.bio = data.bio;
+  if (data.avatarUrl !== undefined) updateData.avatarUrl = data.avatarUrl;
+
+  return db
+    .update(users)
+    .set(updateData)
+    .where(eq(users.id, userId))
+    .returning();
+}

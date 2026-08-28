@@ -41,14 +41,29 @@ export function useWatchlist() {
     };
   }, []);
 
-
   const handleStatusChange = (id: string, newStatus: WatchlistStatus) => {
+    const target = items.find((i) => i.id === id);
+    if (target) {
+      fetch("/api/user/watchlist", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ animeId: target.anime.id, status: newStatus }),
+      }).catch(() => {});
+    }
     setItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
     );
   };
 
   const handleToggleFavorite = (id: string) => {
+    const target = items.find((i) => i.id === id);
+    if (target) {
+      fetch("/api/user/watchlist", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ animeId: target.anime.id, isFavorite: !target.isFavorite }),
+      }).catch(() => {});
+    }
     setItems((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
@@ -57,6 +72,10 @@ export function useWatchlist() {
   };
 
   const handleRemove = (id: string) => {
+    const target = items.find((i) => i.id === id);
+    if (target) {
+      fetch(`/api/user/watchlist?animeId=${target.anime.id}`, { method: "DELETE" }).catch(() => {});
+    }
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 

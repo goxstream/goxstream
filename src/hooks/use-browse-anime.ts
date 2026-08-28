@@ -2,16 +2,13 @@
 
 import { useState, useEffect } from "react";
 import type { AnimeItem } from "@/types/anime";
+import type { BrowseAnimeResponse } from "@/lib/api/types";
 
 export interface BrowseFilterOptions {
   genre?: string;
   query?: string;
   status?: string;
   type?: string;
-}
-
-export interface BrowseApiResponse {
-  animeList?: AnimeItem[];
 }
 
 export function useBrowseAnime(filters?: BrowseFilterOptions, initialList?: AnimeItem[]) {
@@ -29,7 +26,7 @@ export function useBrowseAnime(filters?: BrowseFilterOptions, initialList?: Anim
     if (filters?.type && filters.type !== "All") params.set("type", filters.type);
 
     fetch(`/api/anime/browse?${params.toString()}`)
-      .then((res) => res.json() as Promise<BrowseApiResponse>)
+      .then((res) => res.json() as Promise<BrowseAnimeResponse>)
       .then((data) => {
         if (!isMounted) return;
         setAnimeList(data.animeList || []);

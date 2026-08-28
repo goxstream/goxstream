@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { TrendingAnimeItem, TrendingPeriod, AnimeItem } from "@/types/anime";
-import type { TrendingApiResponse } from "@/hooks/use-trending-anime";
+import type { TrendingAnimeResponse } from "@/lib/api/types";
 
 function mapToTrendingAnimeItem(item: AnimeItem, index: number): TrendingAnimeItem {
   return {
@@ -26,17 +26,17 @@ export function useTrendingRankings(period: TrendingPeriod, genre: string) {
     setIsLoading(true);
 
     fetch(`/api/anime/trending?period=${period}&genre=${encodeURIComponent(genre)}`)
-      .then((res) => res.json() as Promise<TrendingApiResponse>)
+      .then((res) => res.json() as Promise<TrendingAnimeResponse>)
       .then((data) => {
         if (!isMounted) return;
         let list = data.trendingAnime || [];
         if (genre !== "All") {
           const gLower = genre.toLowerCase();
-          list = list.filter((item) =>
-            item.genres.some((g) => g.toLowerCase() === gLower)
+          list = list.filter((item: AnimeItem) =>
+            item.genres.some((g: string) => g.toLowerCase() === gLower)
           );
         }
-        setAnimeList(list.map((item, idx) => mapToTrendingAnimeItem(item, idx)));
+        setAnimeList(list.map((item: AnimeItem, idx: number) => mapToTrendingAnimeItem(item, idx)));
       })
       .catch(() => {
         if (!isMounted) return;

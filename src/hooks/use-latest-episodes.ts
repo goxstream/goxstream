@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { EpisodeItem } from "@/types/anime";
-
-export interface LatestEpisodesApiResponse {
-  latestEpisodes?: EpisodeItem[];
-}
+import type { LatestEpisodesResponse } from "@/lib/api/types";
 
 export function useLatestEpisodes(initialEpisodes?: EpisodeItem[]) {
   const [episodesList, setEpisodesList] = useState<EpisodeItem[]>(initialEpisodes || []);
@@ -16,7 +13,7 @@ export function useLatestEpisodes(initialEpisodes?: EpisodeItem[]) {
 
     let isMounted = true;
     fetch("/api/episodes/latest")
-      .then((res) => res.json() as Promise<LatestEpisodesApiResponse>)
+      .then((res) => res.json() as Promise<LatestEpisodesResponse>)
       .then((data) => {
         if (!isMounted) return;
         setEpisodesList(data.latestEpisodes || []);

@@ -52,10 +52,12 @@ export function useHistory() {
 
 
   const handleRemoveItem = (id: string) => {
+    fetch(`/api/user/history?id=${id}`, { method: "DELETE" }).catch(() => {});
     setHistoryList((prev) => prev.filter((item) => item.id !== id));
   };
 
   const handleClearAll = () => {
+    fetch("/api/user/history", { method: "DELETE" }).catch(() => {});
     setHistoryList([]);
   };
 

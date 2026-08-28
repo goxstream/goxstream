@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
-import { getUserById, updateUserSettings } from "@/lib/db/queries/users";
+import { getUserById, updateUserSettings, updateUserProfile } from "@/lib/db/queries/users";
 
 export async function GET() {
   const user = await getCurrentUser();
@@ -40,6 +40,15 @@ export async function PATCH(req: NextRequest) {
   }
 
   const body = (await req.json()) as Record<string, any>;
+
+  if (body.profile) {
+    await updateUserProfile(user.id, {
+      displayName: body.profile.displayName,
+      bio: body.profile.bio,
+      avatarUrl: body.profile.avatarUrl,
+    });
+  }
+
   if (body.player || body.notifications) {
 
     await updateUserSettings(user.id, {

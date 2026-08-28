@@ -1,4 +1,4 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { getDb } from "../index";
 import { watchHistories } from "../schema";
 
@@ -49,4 +49,11 @@ export async function recordWatchHistory(data: {
 export async function clearUserWatchHistory(userId: string) {
   const db = await getDb();
   return db.delete(watchHistories).where(eq(watchHistories.userId, userId));
+}
+
+export async function deleteHistoryItem(userId: string, historyId: string) {
+  const db = await getDb();
+  return db
+    .delete(watchHistories)
+    .where(and(eq(watchHistories.id, historyId), eq(watchHistories.userId, userId)));
 }

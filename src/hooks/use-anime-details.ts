@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { AnimeItem, EpisodeItem } from "@/types/anime";
-
-export interface AnimeDetailsApiResponse {
-  anime?: AnimeItem | null;
-  episodes?: EpisodeItem[];
-  recommendations?: AnimeItem[];
-}
+import type { AnimeDetailResponse } from "@/lib/api/types";
 
 export function useAnimeDetails(slug: string) {
   const [anime, setAnime] = useState<AnimeItem | null>(null);
@@ -29,7 +24,7 @@ export function useAnimeDetails(slug: string) {
           if (isMounted) setNotFoundError(true);
           return null;
         }
-        return res.json() as Promise<AnimeDetailsApiResponse>;
+        return res.json() as Promise<AnimeDetailResponse>;
       })
       .then((data) => {
         if (!isMounted || !data) return;

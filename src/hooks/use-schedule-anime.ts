@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { ScheduleItem } from "@/types/schedule";
-
-export interface ScheduleApiResponse {
-  scheduleItems?: ScheduleItem[];
-}
+import type { ScheduleAnimeResponse } from "@/lib/api/types";
 
 export function useScheduleAnime() {
   const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
@@ -16,7 +13,7 @@ export function useScheduleAnime() {
     setIsLoading(true);
 
     fetch("/api/anime/schedule")
-      .then((res) => res.json() as Promise<ScheduleApiResponse>)
+      .then((res) => res.json() as Promise<ScheduleAnimeResponse>)
       .then((data) => {
         if (!isMounted) return;
         if (data.scheduleItems) {
