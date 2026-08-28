@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -42,6 +42,46 @@ export function EpisodeHeaderInfo({
 }: EpisodeHeaderInfoProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [reported, setReported] = useState(false);
+
+  // Initialize favorite / watchlist status from localStorage
+  useEffect(() => {
+    if (!anime?.slug || typeof window === "undefined") return;
+    try {
+      const stored = localStorage.getItem("goxstream_favorites");
+      if (stored) {
+        const favs: string[] = JSON.parse(stored);
+        if (Array.isArray(favs) && favs.includes(anime.slug)) {
+          setIsBookmarked(true);
+        }
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [anime?.slug]);
+
+  const handleToggleWatchlist = () => {
+    if (!anime?.slug) return;
+    const nextState = !isBookmarked;
+    setIsBookmarked(nextState);
+
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("goxstream_favorites");
+        let favs: string[] = stored ? JSON.parse(stored) : [];
+        if (!Array.isArray(favs)) favs = [];
+
+        if (nextState) {
+          if (!favs.includes(anime.slug)) favs.push(anime.slug);
+        } else {
+          favs = favs.filter((slug) => slug !== anime.slug);
+        }
+        localStorage.setItem("goxstream_favorites", JSON.stringify(favs));
+      } catch {
+        // Ignore localStorage write errors
+      }
+    }
+  };
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
@@ -49,6 +89,11 @@ export function EpisodeHeaderInfo({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleReportIssue = () => {
+    setReported(true);
+    setTimeout(() => setReported(false), 3000);
   };
 
   return (
@@ -91,14 +136,14 @@ export function EpisodeHeaderInfo({
         <div className="flex items-center gap-2">
           {prevEpisode ? (
             <Link
-              href={`/anime/${anime.slug}/episode-${prevEpisode.episodeNumber}`}
+              href={`/anime/${anime.slug}/${prevEpisode.episodeNumber}`}
               className={buttonVariants({
                 variant: "outline",
                 size: "sm",
                 className: "h-9 px-3 rounded-lg border-border/60 text-xs",
               })}
             >
-              <ChevronLeft className="w-4 h-4 mr-1" />
+              <ChevronLeft className="w-4 h-4 mr-1 shrink-0" />
               Previous Ep
             </Link>
           ) : (
@@ -108,14 +153,14 @@ export function EpisodeHeaderInfo({
               disabled
               className="h-9 px-3 rounded-lg border-border/60 text-xs opacity-50"
             >
-              <ChevronLeft className="w-4 h-4 mr-1" />
+              <ChevronLeft className="w-4 h-4 mr-1 shrink-0" />
               Previous Ep
             </Button>
           )}
 
           {nextEpisode ? (
             <Link
-              href={`/anime/${anime.slug}/episode-${nextEpisode.episodeNumber}`}
+              href={`/anime/${anime.slug}/${nextEpisode.episodeNumber}`}
               className={buttonVariants({
                 variant: "default",
                 size: "sm",
@@ -123,7 +168,7 @@ export function EpisodeHeaderInfo({
               })}
             >
               Next Ep
-              <ChevronRight className="w-4 h-4 ml-1" />
+              <ChevronRight className="w-4 h-4 ml-1 shrink-0" />
             </Link>
           ) : (
             <Button
@@ -133,7 +178,7 @@ export function EpisodeHeaderInfo({
               className="h-9 px-3 rounded-lg border-border/60 text-xs opacity-50"
             >
               Next Ep
-              <ChevronRight className="w-4 h-4 ml-1" />
+              <ChevronRight className="w-4 h-4 ml-1 shrink-0" />
             </Button>
           )}
         </div>
@@ -179,23 +224,23 @@ export function EpisodeHeaderInfo({
 
       {/* Action Toolbar */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Button
             variant="outline"
             size="sm"
             onClick={onToggleCinemaMode}
-            className={`h-8 text-xs rounded-lg border-border/60 ${
+            className={`h-8 text-xs rounded-lg border-border/60 w-[150px] min-w-[150px] justify-center ${
               isCinemaMode ? "bg-primary/10 text-primary border-primary/30" : ""
             }`}
           >
             {isCinemaMode ? (
               <>
-                <Sun className="w-3.5 h-3.5 mr-1.5" />
+                <Sun className="w-3.5 h-3.5 mr-1.5 shrink-0" />
                 Exit Cinema Mode
               </>
             ) : (
               <>
-                <Moon className="w-3.5 h-3.5 mr-1.5" />
+                <Moon className="w-3.5 h-3.5 mr-1.5 shrink-0" />
                 Cinema Mode
               </>
             )}
@@ -204,12 +249,12 @@ export function EpisodeHeaderInfo({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setIsBookmarked(!isBookmarked)}
-            className={`h-8 text-xs rounded-lg border-border/60 ${
+            onClick={handleToggleWatchlist}
+            className={`h-8 text-xs rounded-lg border-border/60 w-[155px] min-w-[155px] justify-center ${
               isBookmarked ? "text-amber-500 border-amber-500/30 bg-amber-500/10" : ""
             }`}
           >
-            <Bookmark className={`w-3.5 h-3.5 mr-1.5 ${isBookmarked ? "fill-amber-500" : ""}`} />
+            <Bookmark className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isBookmarked ? "fill-amber-500" : ""}`} />
             {isBookmarked ? "Watchlisted" : "Add to Watchlist"}
           </Button>
 
@@ -217,16 +262,16 @@ export function EpisodeHeaderInfo({
             variant="outline"
             size="sm"
             onClick={handleShare}
-            className="h-8 text-xs rounded-lg border-border/60"
+            className="h-8 text-xs rounded-lg border-border/60 w-[125px] min-w-[125px] justify-center"
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 mr-1.5 text-emerald-500" />
+                <Check className="w-3.5 h-3.5 mr-1.5 text-emerald-500 shrink-0" />
                 Copied Link!
               </>
             ) : (
               <>
-                <Share2 className="w-3.5 h-3.5 mr-1.5" />
+                <Share2 className="w-3.5 h-3.5 mr-1.5 shrink-0" />
                 Share
               </>
             )}
@@ -234,12 +279,24 @@ export function EpisodeHeaderInfo({
         </div>
 
         <Button
-          variant="ghost"
+          variant={reported ? "secondary" : "ghost"}
           size="sm"
-          className="h-8 text-xs text-muted-foreground hover:text-destructive rounded-lg"
+          onClick={handleReportIssue}
+          className={`h-8 text-xs rounded-lg w-[130px] min-w-[130px] justify-center ${
+            reported ? "text-emerald-500 bg-emerald-500/10" : "text-muted-foreground hover:text-destructive"
+          }`}
         >
-          <AlertCircle className="w-3.5 h-3.5 mr-1.5" />
-          Report Issue
+          {reported ? (
+            <>
+              <Check className="w-3.5 h-3.5 mr-1.5 text-emerald-500 shrink-0" />
+              Reported!
+            </>
+          ) : (
+            <>
+              <AlertCircle className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+              Report Issue
+            </>
+          )}
         </Button>
       </div>
 
