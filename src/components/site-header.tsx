@@ -73,8 +73,8 @@ export function SiteHeader() {
             </Link>
           </div>
 
-          {/* User Nav Dropdown / Account CTA */}
-          <div className="flex items-center gap-1.5 sm:pl-1 sm:border-l sm:border-border/40 shrink-0">
+          {/* User Nav Dropdown / Account CTA (Desktop Only) */}
+          <div className="hidden lg:flex items-center gap-1.5 lg:pl-1 lg:border-l lg:border-border/40 shrink-0">
             <UserNav />
           </div>
 

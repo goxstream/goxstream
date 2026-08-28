@@ -35,30 +35,28 @@ export function UserNav() {
 
   if (!user) {
     return (
-      <div className="hidden sm:flex items-center gap-1 sm:gap-2 shrink-0">
+      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
         <Link
           href="/login"
           className={buttonVariants({
             variant: "ghost",
             size: "sm",
-            className: "text-xs font-medium rounded-lg px-2 sm:px-3 gap-1 text-muted-foreground hover:text-foreground shrink-0 h-8 sm:h-9",
+            className: "text-xs font-medium rounded-lg px-2.5 sm:px-3 gap-1.5 text-muted-foreground hover:text-foreground shrink-0 h-8 sm:h-9",
           })}
         >
           <LogIn className="size-3.5" />
-          <span className="hidden min-[380px]:inline">Sign In</span>
-          <span className="min-[380px]:hidden">Login</span>
+          <span>Sign In</span>
         </Link>
         <Link
           href="/signup"
           className={buttonVariants({
             variant: "default",
             size: "sm",
-            className: "text-xs font-semibold rounded-lg px-2 sm:px-3 gap-1 shadow-xs shrink-0 h-8 sm:h-9",
+            className: "text-xs font-semibold rounded-lg px-2.5 sm:px-3 gap-1.5 shadow-xs shrink-0 h-8 sm:h-9",
           })}
         >
           <UserPlus className="size-3.5" />
-          <span className="hidden min-[380px]:inline">Create Account</span>
-          <span className="min-[380px]:hidden">Join</span>
+          <span>Create Account</span>
         </Link>
       </div>
     );
