@@ -22,10 +22,20 @@ export function TrendingGrid({
   isLoading,
 }: TrendingGridProps) {
   if (isLoading) {
+    if (viewMode === "list") {
+      return (
+        <div className="space-y-3">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <AnimeCard key={i} variant="list" isLoading={true} />
+          ))}
+        </div>
+      );
+    }
+
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
         {Array.from({ length: 10 }).map((_, i) => (
-          <AnimeCard key={i} isLoading={true} />
+          <AnimeCard key={i} variant="grid" isLoading={true} />
         ))}
       </div>
     );

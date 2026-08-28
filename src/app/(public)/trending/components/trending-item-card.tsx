@@ -202,8 +202,14 @@ export function TrendingItemCard({
         {/* Thumbnail Poster */}
         <Link
           href={`/anime/${anime.slug}`}
-          className="relative size-16 sm:size-20 rounded-lg overflow-hidden shrink-0 border border-border/60 shadow-xs group-hover:scale-105 transition-transform bg-muted"
+          className="relative size-16 sm:size-20 rounded-lg overflow-hidden shrink-0 border border-border/60 shadow-xs group-hover:scale-105 transition-transform bg-muted flex items-center justify-center"
         >
+          {!isGradient && !isImageLoaded && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
+              <VercelSpinner size="sm" />
+            </div>
+          )}
+
           {isGradient ? (
             <div
               className="absolute inset-0"
@@ -215,8 +221,12 @@ export function TrendingItemCard({
               alt={anime.title}
               loading="lazy"
               decoding="async"
-              className="absolute inset-0 size-full object-cover"
+              onLoad={() => setIsImageLoaded(true)}
+              className={`absolute inset-0 size-full object-cover transition-opacity duration-300 ${
+                isImageLoaded ? "opacity-100" : "opacity-0"
+              }`}
               onError={(e) => {
+                setIsImageLoaded(true);
                 (e.target as HTMLImageElement).style.opacity = "0";
               }}
             />
