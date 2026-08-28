@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Play,
@@ -31,6 +31,45 @@ export function AnimeHero({ anime, latestEpisodeNum, isLoading }: AnimeHeroProps
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isPosterLoaded, setIsPosterLoaded] = useState(false);
+
+  // Initialize favorite status from localStorage
+  useEffect(() => {
+    if (!anime?.slug || typeof window === "undefined") return;
+    try {
+      const stored = localStorage.getItem("goxstream_favorites");
+      if (stored) {
+        const favs: string[] = JSON.parse(stored);
+        if (Array.isArray(favs) && favs.includes(anime.slug)) {
+          setIsBookmarked(true);
+        }
+      }
+    } catch {
+      // Ignore localStorage errors in SSR/incognito
+    }
+  }, [anime?.slug]);
+
+  const handleToggleFavorite = () => {
+    if (!anime?.slug) return;
+    const nextState = !isBookmarked;
+    setIsBookmarked(nextState);
+
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("goxstream_favorites");
+        let favs: string[] = stored ? JSON.parse(stored) : [];
+        if (!Array.isArray(favs)) favs = [];
+
+        if (nextState) {
+          if (!favs.includes(anime.slug)) favs.push(anime.slug);
+        } else {
+          favs = favs.filter((slug) => slug !== anime.slug);
+        }
+        localStorage.setItem("goxstream_favorites", JSON.stringify(favs));
+      } catch {
+        // Ignore localStorage write errors
+      }
+    }
+  };
 
   if (isLoading || !anime) {
     return (
@@ -79,8 +118,8 @@ export function AnimeHero({ anime, latestEpisodeNum, isLoading }: AnimeHeroProps
               {/* Action Buttons Skeleton */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Skeleton className="h-11 w-44 rounded-lg" />
-                <Skeleton className="h-11 w-40 rounded-lg" />
-                <Skeleton className="h-11 w-28 rounded-lg" />
+                <Skeleton className="h-11 w-[165px] rounded-lg" />
+                <Skeleton className="h-11 w-[135px] rounded-lg" />
               </div>
             </div>
           </div>
@@ -252,17 +291,17 @@ export function AnimeHero({ anime, latestEpisodeNum, isLoading }: AnimeHeroProps
               <Button
                 variant={isBookmarked ? "secondary" : "outline"}
                 size="lg"
-                onClick={() => setIsBookmarked(!isBookmarked)}
-                className="font-medium gap-2 border-border/80"
+                onClick={handleToggleFavorite}
+                className="w-[165px] min-w-[165px] justify-center font-medium gap-2 border-border/80"
               >
                 {isBookmarked ? (
                   <>
-                    <BookmarkCheck className="size-4 text-emerald-500" />
+                    <BookmarkCheck className="size-4 shrink-0 text-emerald-500" />
                     <span>Favorited</span>
                   </>
                 ) : (
                   <>
-                    <Bookmark className="size-4" />
+                    <Bookmark className="size-4 shrink-0" />
                     <span>Add to Favorites</span>
                   </>
                 )}
@@ -272,16 +311,16 @@ export function AnimeHero({ anime, latestEpisodeNum, isLoading }: AnimeHeroProps
                 variant="outline"
                 size="lg"
                 onClick={handleShare}
-                className="font-medium gap-2 border-border/80"
+                className="w-[135px] min-w-[135px] justify-center font-medium gap-2 border-border/80"
               >
                 {copied ? (
                   <>
-                    <Check className="size-4 text-emerald-500" />
+                    <Check className="size-4 shrink-0 text-emerald-500" />
                     <span>Link Copied</span>
                   </>
                 ) : (
                   <>
-                    <Share2 className="size-4" />
+                    <Share2 className="size-4 shrink-0" />
                     <span>Share</span>
                   </>
                 )}
