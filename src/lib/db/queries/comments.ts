@@ -1,5 +1,5 @@
 import { getDb } from "../index";
-import { comments } from "../schema/sqlite/comments";
+import { comments } from "../schema";
 import { eq, desc } from "drizzle-orm";
 
 export async function getCommentsByEpisodeId(episodeId: string) {

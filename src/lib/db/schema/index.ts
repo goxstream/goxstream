@@ -33,6 +33,9 @@ export const {
   serverNodes,
   watchlists,
   watchHistories,
+  comments,
+  commentLikes,
+  commentReports,
 } = activeSchema;
 
 export { sqliteSchema, pgSchema };
