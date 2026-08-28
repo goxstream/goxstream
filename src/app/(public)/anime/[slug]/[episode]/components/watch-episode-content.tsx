@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWatchDetails } from "@/hooks/use-watch-details";
+import { Button } from "@/components/ui/button";
+import { Sun } from "lucide-react";
 import { EpisodeHeaderInfo } from "./episode-header-info";
 import { EpisodeSidebar } from "./episode-sidebar";
 import { EpisodeListCard } from "./sidebar/episode-list-card";
@@ -78,18 +80,38 @@ export function WatchEpisodeContent({ paramsPromise }: WatchEpisodeContentProps)
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 relative">
-          <div
-            className={`lg:col-span-8 flex flex-col transition-all duration-300 ${
-              isCinemaMode ? "relative z-50 p-3 sm:p-4 rounded-2xl bg-neutral-950 text-white border border-white/10 shadow-2xl space-y-4" : ""
-            }`}
-          >
-            <VideoPlayer
-              currentSource={activeSource}
-              title={`${anime.title} - Episode ${episode.episodeNumber}`}
-              poster={episode.thumbnail}
-              nextEpisode={nextEpisode}
-              animeSlug={anime.slug}
-            />
+          <div className="lg:col-span-8 flex flex-col gap-5">
+            {/* Elevated Cinema Theater Control Bar & Video Player Container */}
+            <div className={`transition-all duration-300 ${isCinemaMode ? "relative z-50" : ""}`}>
+              {isCinemaMode && (
+                <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-neutral-900/90 text-white border border-white/15 backdrop-blur-md mb-3 shadow-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-xs font-bold tracking-tight text-white">Cinema Theater Active</span>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setIsCinemaMode(false)}
+                    className="h-8 text-xs bg-white/10 hover:bg-white/20 text-white border-white/20 rounded-lg font-semibold gap-1.5 shadow-xs"
+                  >
+                    <Sun className="w-3.5 h-3.5" />
+                    Exit Cinema Mode
+                  </Button>
+                </div>
+              )}
+
+              <div className={isCinemaMode ? "rounded-2xl overflow-hidden shadow-2xl border border-white/20" : ""}>
+                <VideoPlayer
+                  currentSource={activeSource}
+                  title={`${anime.title} - Episode ${episode.episodeNumber}`}
+                  poster={episode.thumbnail}
+                  nextEpisode={nextEpisode}
+                  animeSlug={anime.slug}
+                />
+              </div>
+            </div>
 
             <EpisodeHeaderInfo
               anime={anime}
