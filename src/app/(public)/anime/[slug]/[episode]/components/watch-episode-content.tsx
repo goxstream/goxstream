@@ -102,7 +102,7 @@ export function WatchEpisodeContent({ paramsPromise }: WatchEpisodeContentProps)
               onToggleCinemaMode={() => setIsCinemaMode(!isCinemaMode)}
             />
 
-            <CommentsSection />
+            <CommentsSection animeId={anime.id} episodeId={episode.id} />
           </div>
 
           <div className={`lg:col-span-4 ${isCinemaMode ? "opacity-20 pointer-events-none transition-opacity" : ""}`}>

@@ -1,20 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ThumbsUp, ThumbsDown, MessageSquare, Send, MessageCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MessageSquare } from "lucide-react";
+import { CommentInputForm } from "./comments/comment-input-form";
+import { CommentItem, type CommentData } from "./comments/comment-item";
 
-interface Comment {
-  id: string;
-  user: string;
-  avatarBg: string;
-  timeAgo: string;
-  text: string;
-  likes: number;
-  isLiked?: boolean;
+interface CommentsSectionProps {
+  animeId?: string;
+  episodeId?: string;
 }
 
-const INITIAL_COMMENTS: Comment[] = [
+const DEMO_COMMENTS: CommentData[] = [
   {
     id: "c-1",
     user: "ShadowMonarch99",
@@ -22,6 +18,16 @@ const INITIAL_COMMENTS: Comment[] = [
     timeAgo: "2 hours ago",
     text: "The animation in the second half of this episode was absolutely peak! MAPPA/A-1 outdid themselves with the shading during the fight scenes.",
     likes: 42,
+    replies: [
+      {
+        id: "c-1-1",
+        user: "SoloLevelingFan",
+        avatarBg: "bg-purple-600",
+        timeAgo: "1 hour ago",
+        text: "Totally agree! The camera rotation in 3D background was insane.",
+        likes: 12,
+      },
+    ],
   },
   {
     id: "c-2",
@@ -30,6 +36,7 @@ const INITIAL_COMMENTS: Comment[] = [
     timeAgo: "4 hours ago",
     text: "That cliffhanger at the end is criminal! Can't wait for next week's episode.",
     likes: 19,
+    isSpoiler: true,
   },
   {
     id: "c-3",
@@ -41,129 +48,231 @@ const INITIAL_COMMENTS: Comment[] = [
   },
 ];
 
-export function CommentsSection() {
-  const [comments, setComments] = useState<Comment[]>(INITIAL_COMMENTS);
-  const [newCommentText, setNewCommentText] = useState("");
+export function CommentsSection({ animeId, episodeId }: CommentsSectionProps) {
+  const [comments, setComments] = useState<CommentData[]>(DEMO_COMMENTS);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handlePostComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newCommentText.trim()) return;
+  // Fetch real comments from database API endpoint if episodeId is provided
+  useEffect(() => {
+    if (!episodeId) return;
 
-    const newComment: Comment = {
+    let isMounted = true;
+    setIsLoading(true);
+
+    fetch(`/api/comments?episodeId=${encodeURIComponent(episodeId)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: any) => {
+        if (isMounted && data && Array.isArray(data.comments) && data.comments.length > 0) {
+          // Transform DB rows to CommentData structure
+          const dbCommentsMap = new Map<string, CommentData>();
+          const roots: CommentData[] = [];
+
+          data.comments.forEach((row: any) => {
+            dbCommentsMap.set(row.id, {
+              id: row.id,
+              user: row.guestName || "Otaku Fan",
+              isGuest: !row.userId,
+              avatarBg: "bg-primary",
+              timeAgo: new Date(row.createdAt).toLocaleDateString(),
+              text: row.content,
+              likes: 0,
+              isSpoiler: Boolean(row.isSpoiler),
+              replies: [],
+            });
+          });
+
+          data.comments.forEach((row: any) => {
+            const commentObj = dbCommentsMap.get(row.id);
+            if (!commentObj) return;
+
+            if (row.parentId && dbCommentsMap.has(row.parentId)) {
+              const parent = dbCommentsMap.get(row.parentId);
+              if (parent) {
+                parent.replies = parent.replies || [];
+                parent.replies.push(commentObj);
+              }
+            } else {
+              roots.push(commentObj);
+            }
+          });
+
+          setComments(roots);
+        }
+      })
+      .catch((err) => {
+        console.error("Could not fetch real comments, keeping demo data:", err);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [episodeId]);
+
+  const countTotalComments = (list: CommentData[]): number => {
+    return list.reduce((total, c) => {
+      const replyCount = c.replies ? countTotalComments(c.replies) : 0;
+      return total + 1 + replyCount;
+    }, 0);
+  };
+
+  const handlePostRootComment = async (text: string, isSpoiler: boolean, guestName: string) => {
+    const newComment: CommentData = {
       id: `c-${Date.now()}`,
-      user: "You (Guest)",
+      user: guestName,
+      isGuest: true,
       avatarBg: "bg-primary",
       timeAgo: "Just now",
-      text: newCommentText.trim(),
+      text,
       likes: 0,
+      isSpoiler,
+    };
+    setComments([newComment, ...comments]);
+
+    // Send to DB endpoint asynchronously if ids exist
+    if (animeId && episodeId) {
+      try {
+        await fetch("/api/comments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            animeId,
+            episodeId,
+            content: text,
+            isSpoiler,
+            guestName,
+          }),
+        });
+      } catch (e) {
+        console.error("Failed to post comment to DB API:", e);
+      }
+    }
+  };
+
+  const handleAddReply = async (parentId: string, text: string, isSpoiler: boolean, guestName: string) => {
+    const newReply: CommentData = {
+      id: `reply-${Date.now()}`,
+      user: guestName,
+      isGuest: true,
+      avatarBg: "bg-primary",
+      timeAgo: "Just now",
+      text,
+      likes: 0,
+      isSpoiler,
     };
 
-    setComments([newComment, ...comments]);
-    setNewCommentText("");
-  };
-
-  const handleLike = (id: string) => {
-    setComments((prev) =>
-      prev.map((c) => {
-        if (c.id === id) {
+    const addReplyRecursive = (list: CommentData[]): CommentData[] => {
+      return list.map((item) => {
+        if (item.id === parentId) {
           return {
-            ...c,
-            likes: c.isLiked ? c.likes - 1 : c.likes + 1,
-            isLiked: !c.isLiked,
+            ...item,
+            replies: [...(item.replies || []), newReply],
           };
         }
-        return c;
-      })
-    );
+        if (item.replies && item.replies.length > 0) {
+          return {
+            ...item,
+            replies: addReplyRecursive(item.replies),
+          };
+        }
+        return item;
+      });
+    };
+
+    setComments(addReplyRecursive(comments));
+
+    // Send reply to DB endpoint asynchronously if ids exist
+    if (animeId && episodeId) {
+      try {
+        await fetch("/api/comments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            animeId,
+            episodeId,
+            parentId,
+            content: text,
+            isSpoiler,
+            guestName,
+          }),
+        });
+      } catch (e) {
+        console.error("Failed to post reply to DB API:", e);
+      }
+    }
   };
 
+  const handleLikeRecursive = (id: string) => {
+    const updateLike = (list: CommentData[]): CommentData[] => {
+      return list.map((item) => {
+        if (item.id === id) {
+          const nextIsLiked = !item.isLiked;
+          return {
+            ...item,
+            likes: nextIsLiked ? item.likes + 1 : item.likes - 1,
+            isLiked: nextIsLiked,
+            isDisliked: false,
+          };
+        }
+        if (item.replies && item.replies.length > 0) {
+          return { ...item, replies: updateLike(item.replies) };
+        }
+        return item;
+      });
+    };
+    setComments(updateLike(comments));
+  };
+
+  const handleDislikeRecursive = (id: string) => {
+    const updateDislike = (list: CommentData[]): CommentData[] => {
+      return list.map((item) => {
+        if (item.id === id) {
+          const nextIsDisliked = !item.isDisliked;
+          return {
+            ...item,
+            isDisliked: nextIsDisliked,
+            isLiked: false,
+          };
+        }
+        if (item.replies && item.replies.length > 0) {
+          return { ...item, replies: updateDislike(item.replies) };
+        }
+        return item;
+      });
+    };
+    setComments(updateDislike(comments));
+  };
+
+  const totalCount = countTotalComments(comments);
+
   return (
-    <div className="flex flex-col gap-4 mt-6 p-4 md:p-6 bg-card border border-border/60 rounded-xl shadow-xs">
-      <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3">
+    <div className="flex flex-col gap-5 mt-6 p-4 md:p-6 bg-card border border-border/60 rounded-xl shadow-xs">
+      {/* Section Header */}
+      <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3.5">
         <div className="flex items-center gap-2">
-          <MessageCircle className="w-4 h-4 text-primary shrink-0" />
-          <h2 className="text-base font-bold text-foreground">Episode Discussion</h2>
+          <MessageSquare className="size-4 text-primary shrink-0" />
+          <h2 className="text-base font-bold text-foreground">Comments</h2>
         </div>
-        <span className="text-xs text-muted-foreground font-mono">
-          {comments.length} Comments
+        <span className="text-xs text-muted-foreground font-mono bg-muted/60 px-2 py-0.5 rounded-full font-semibold">
+          {totalCount} Comments
         </span>
       </div>
 
-      {/* New Comment Input Form */}
-      <form onSubmit={handlePostComment} className="flex flex-col gap-2">
-        <div className="relative">
-          <textarea
-            value={newCommentText}
-            onChange={(e) => setNewCommentText(e.target.value)}
-            placeholder="Share your thoughts about this episode..."
-            rows={3}
-            className="w-full text-xs p-3 rounded-lg bg-background border border-border/60 focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground resize-none"
-          />
-        </div>
-        <div className="flex justify-end">
-          <Button
-            type="submit"
-            size="sm"
-            disabled={!newCommentText.trim()}
-            className="h-8 text-xs rounded-lg px-4 shadow-xs"
-          >
-            <Send className="w-3.5 h-3.5 mr-1.5" />
-            Post Comment
-          </Button>
-        </div>
-      </form>
+      {/* Root Comment Form */}
+      <CommentInputForm onSubmit={handlePostRootComment} />
 
-      {/* Comment List */}
-      <div className="flex flex-col gap-4 mt-2">
+      {/* Nested Thread Comment List */}
+      <div className="flex flex-col gap-3.5 mt-2">
         {comments.map((comment) => (
-          <div
+          <CommentItem
             key={comment.id}
-            className="flex gap-3 p-3 rounded-lg bg-muted/20 border border-border/40"
-          >
-            <div
-              className={`w-8 h-8 rounded-full ${comment.avatarBg} text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs`}
-            >
-              {comment.user.charAt(0)}
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <span className="text-xs font-semibold text-foreground">
-                  {comment.user}
-                </span>
-                <span className="text-[10px] text-muted-foreground">
-                  {comment.timeAgo}
-                </span>
-              </div>
-
-              <p className="text-xs text-muted-foreground leading-relaxed mb-2">
-                {comment.text}
-              </p>
-
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => handleLike(comment.id)}
-                  className={`flex items-center gap-1 text-[11px] font-mono transition-colors ${
-                    comment.isLiked
-                      ? "text-primary font-bold"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  <ThumbsUp className="w-3.5 h-3.5" />
-                  <span>{comment.likes}</span>
-                </button>
-
-                <button className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground font-mono transition-colors">
-                  <ThumbsDown className="w-3.5 h-3.5" />
-                </button>
-
-                <button className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground font-medium transition-colors">
-                  <MessageSquare className="w-3 h-3" />
-                  Reply
-                </button>
-              </div>
-            </div>
-          </div>
+            comment={comment}
+            onLike={handleLikeRecursive}
+            onDislike={handleDislikeRecursive}
+            onReplySubmit={handleAddReply}
+          />
         ))}
       </div>
     </div>
