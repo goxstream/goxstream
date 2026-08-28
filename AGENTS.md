@@ -141,7 +141,7 @@ export default function AnimePage() {
 }
 ```
 
-Do not put large JSX, reusable hooks, database queries, or complex logic directly in page or components/**.tsx files.
+Do not put large JSX, reusable hooks, database queries, or complex logic directly in page.tsx or components/**.tsx files.
 
 ## Component Scope
 
