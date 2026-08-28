@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useWatchDetails } from "@/hooks/use-watch-details";
 import { EpisodeHeaderInfo } from "./episode-header-info";
 import { EpisodeSidebar } from "./episode-sidebar";
+import { EpisodeListCard } from "./sidebar/episode-list-card";
 import { CommentsSection } from "./comments-section";
 
 const VideoPlayer = dynamic(
@@ -101,6 +102,15 @@ export function WatchEpisodeContent({ paramsPromise }: WatchEpisodeContentProps)
               isCinemaMode={isCinemaMode}
               onToggleCinemaMode={() => setIsCinemaMode(!isCinemaMode)}
             />
+
+            {/* Mobile / Tablet Episode Selector (Placed immediately after EpisodeHeaderInfo & before Comments) */}
+            <div className="block lg:hidden mt-4">
+              <EpisodeListCard
+                anime={anime}
+                episodes={episodes}
+                currentEpisodeNumber={episode.episodeNumber}
+              />
+            </div>
 
             <CommentsSection animeId={anime.id} episodeId={episode.id} />
           </div>
