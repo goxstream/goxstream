@@ -1,25 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import {
-  Play,
-  Bookmark,
-  BookmarkCheck,
-  Share2,
-  Star,
-  Tv,
-  Calendar,
-  Sparkles,
-  Check,
-  ChevronRight,
-} from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { VercelSpinner } from "@/components/vercel-spinner";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
+import { HeroBreadcrumb } from "./hero/hero-breadcrumb";
+import { HeroPoster } from "./hero/hero-poster";
+import { HeroMeta } from "./hero/hero-meta";
+import { HeroActions } from "./hero/hero-actions";
 
 interface AnimeHeroProps {
   anime?: AnimeItem | null;
@@ -28,305 +13,40 @@ interface AnimeHeroProps {
 }
 
 export function AnimeHero({ anime, latestEpisodeNum, isLoading }: AnimeHeroProps) {
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const [isPosterLoaded, setIsPosterLoaded] = useState(false);
-
-  // Initialize favorite status from localStorage
-  useEffect(() => {
-    if (!anime?.slug || typeof window === "undefined") return;
-    try {
-      const stored = localStorage.getItem("goxstream_favorites");
-      if (stored) {
-        const favs: string[] = JSON.parse(stored);
-        if (Array.isArray(favs) && favs.includes(anime.slug)) {
-          setIsBookmarked(true);
-        }
-      }
-    } catch {
-      // Ignore localStorage errors in SSR/incognito
-    }
-  }, [anime?.slug]);
-
-  const handleToggleFavorite = () => {
-    if (!anime?.slug) return;
-    const nextState = !isBookmarked;
-    setIsBookmarked(nextState);
-
-    if (typeof window !== "undefined") {
-      try {
-        const stored = localStorage.getItem("goxstream_favorites");
-        let favs: string[] = stored ? JSON.parse(stored) : [];
-        if (!Array.isArray(favs)) favs = [];
-
-        if (nextState) {
-          if (!favs.includes(anime.slug)) favs.push(anime.slug);
-        } else {
-          favs = favs.filter((slug) => slug !== anime.slug);
-        }
-        localStorage.setItem("goxstream_favorites", JSON.stringify(favs));
-      } catch {
-        // Ignore localStorage write errors
-      }
-    }
-  };
-
-  if (isLoading || !anime) {
-    return (
-      <section className="relative overflow-hidden border-b border-border/60 bg-card/30">
-        <div className="container relative z-10 mx-auto px-4 py-8 md:py-12">
-          {/* Breadcrumb Navigation Skeleton */}
-          <div className="flex items-center gap-2 mb-6">
-            <Skeleton className="h-4 w-12 rounded" />
-            <Skeleton className="h-3 w-3 rounded" />
-            <Skeleton className="h-4 w-24 rounded" />
-            <Skeleton className="h-3 w-3 rounded" />
-            <Skeleton className="h-4 w-40 rounded" />
-          </div>
-
-          {/* Hero Main Content Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr] gap-8 items-start">
-            {/* Poster Image Card Skeleton */}
-            <Skeleton className="mx-auto md:mx-0 w-full max-w-[260px] md:max-w-none aspect-[2/3] rounded-xl" />
-
-            {/* Anime Meta & Actions Skeleton */}
-            <div className="flex flex-col gap-4 text-left">
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <Skeleton className="h-5 w-24 rounded-full" />
-                  <Skeleton className="h-5 w-20 rounded-full" />
-                  <Skeleton className="h-5 w-28 rounded-full" />
-                </div>
-                <Skeleton className="h-8 sm:h-9 lg:h-10 w-4/5 max-w-xl rounded-md" />
-                <Skeleton className="h-5 w-1/3 rounded-md" />
-              </div>
-
-              {/* Synopsis Skeleton */}
-              <div className="space-y-2 py-1">
-                <Skeleton className="h-4 w-full max-w-2xl rounded" />
-                <Skeleton className="h-4 w-11/12 rounded" />
-                <Skeleton className="h-4 w-3/4 rounded" />
-              </div>
-
-              {/* Quick Specs Pill Row Skeleton */}
-              <div className="flex flex-wrap items-center gap-3 py-1">
-                <Skeleton className="h-4 w-24 rounded" />
-                <Skeleton className="h-4 w-28 rounded" />
-                <Skeleton className="h-4 w-24 rounded" />
-              </div>
-
-              {/* Action Buttons Skeleton */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <Skeleton className="h-11 w-44 rounded-lg" />
-                <Skeleton className="h-11 w-[165px] rounded-lg" />
-                <Skeleton className="h-11 w-[135px] rounded-lg" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  const handleShare = () => {
-    if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
-
-  const isPosterGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
+  const isLoaded = !isLoading && !!anime;
 
   return (
     <section className="relative overflow-hidden border-b border-border/60 bg-card/30">
       {/* Background Banner Backdrop with Ambient Glow */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-35 dark:opacity-25">
-        <img
-          src={anime.bannerImage || anime.coverImage || ""}
-          alt={anime.title}
-          loading="eager"
-          decoding="async"
-          className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full blur-3xl opacity-70 object-cover"
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.opacity = "0";
-          }}
-        />
-        <div
-          className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-background via-background/80 to-transparent"
-        />
-      </div>
+      {isLoaded && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-35 dark:opacity-25">
+          <img
+            src={anime.bannerImage || anime.coverImage || ""}
+            alt={anime.title}
+            loading="eager"
+            decoding="async"
+            className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full blur-3xl opacity-70 object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.opacity = "0";
+            }}
+          />
+          <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-background via-background/80 to-transparent" />
+        </div>
+      )}
 
       <div className="container relative z-10 mx-auto px-4 py-8 md:py-12">
         {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-foreground transition-colors">
-            Home
-          </Link>
-          <ChevronRight className="size-3" />
-          <Link href="/browse" className="hover:text-foreground transition-colors">
-            Browse Anime
-          </Link>
-          <ChevronRight className="size-3" />
-          <span className="text-foreground font-medium truncate max-w-[200px] sm:max-w-none">
-            {anime.title}
-          </span>
-        </nav>
+        <HeroBreadcrumb title={anime?.title} isLoading={isLoading} />
 
         {/* Hero Main Content */}
         <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] lg:grid-cols-[280px_1fr] gap-8 items-start">
           {/* Poster Image Card */}
-          <div className="relative group mx-auto md:mx-0 w-full max-w-[260px] md:max-w-none aspect-[2/3] rounded-xl overflow-hidden shadow-md border border-border/80 bg-muted">
-            {!isPosterGradient && !isPosterLoaded && (
-              <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
-                <VercelSpinner size="md" />
-              </div>
-            )}
-
-            {isPosterGradient ? (
-              <div
-                className="w-full h-full transition-transform duration-500 group-hover:scale-105"
-                style={getImageStyle(anime.coverImage)}
-              />
-            ) : (
-              <img
-                src={anime.coverImage || ""}
-                alt={anime.title}
-                loading="eager"
-                decoding="async"
-                onLoad={() => setIsPosterLoaded(true)}
-                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
-                  isPosterLoaded ? "opacity-100" : "opacity-0"
-                }`}
-                onError={(e) => {
-                  setIsPosterLoaded(true);
-                  (e.target as HTMLImageElement).style.opacity = "0";
-                }}
-              />
-            )}
-            {/* Overlay Gradient on Poster */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
-
-            {/* Poster Badges */}
-            <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-              <Badge className="bg-amber-500 text-amber-950 border-amber-400 font-bold px-2 py-0.5 text-xs shadow-xs flex items-center gap-1">
-                <Star className="size-3 fill-amber-950" />
-                {anime.rating ? anime.rating.toFixed(2) : "N/A"}
-              </Badge>
-              <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20 font-medium px-2 py-0.5 text-xs">
-                {anime.type}
-              </Badge>
-            </div>
-
-            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white/90 font-medium z-10">
-              <span>{anime.subOrDub}</span>
-              <span className="bg-primary/90 text-primary-foreground px-2 py-0.5 rounded text-[11px] font-semibold">
-                {anime.status}
-              </span>
-            </div>
-          </div>
+          <HeroPoster anime={anime} isLoading={isLoading} />
 
           {/* Anime Meta & Actions */}
           <div className="flex flex-col gap-4 text-left">
-            {/* Anime Titles & Badges */}
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                {anime.isTrending && (
-                  <Badge variant="secondary" className="gap-1 border-primary/30 text-primary text-xs font-semibold">
-                    <Sparkles className="size-3" /> Trending #1
-                  </Badge>
-                )}
-                <Badge variant="outline" className="text-xs border-border/80">
-                  {anime.studio}
-                </Badge>
-                <Badge variant="outline" className="text-xs border-border/80">
-                  {anime.season} {anime.year}
-                </Badge>
-              </div>
-
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground">
-                {anime.title}
-              </h1>
-
-              {anime.japaneseTitle && (
-                <p className="text-sm sm:text-base text-muted-foreground font-medium">
-                  {anime.japaneseTitle}
-                </p>
-              )}
-            </div>
-
-            {/* Synopsis Short Preview */}
-            <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed max-w-3xl">
-              {anime.synopsis}
-            </p>
-
-            {/* Quick Specs Pill Row */}
-            <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-muted-foreground font-medium py-1">
-              <div className="flex items-center gap-1.5 text-foreground">
-                <Tv className="size-4 text-primary" />
-                <span>{anime.episodesCount} Episode{anime.episodesCount > 1 ? "s" : ""}</span>
-              </div>
-              <span className="text-border">•</span>
-              <div className="flex items-center gap-1.5 text-foreground">
-                <Calendar className="size-4 text-primary" />
-                <span>{anime.season} {anime.year}</span>
-              </div>
-              <span className="text-border">•</span>
-              <div className="flex items-center gap-1.5 text-foreground">
-                <Star className="size-4 text-amber-500 fill-amber-500" />
-                <span>{anime.rating ? anime.rating.toFixed(2) : "N/A"} Score</span>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href={`/anime/${anime.slug}/${latestEpisodeNum || 1}`}
-                className={buttonVariants({ size: "lg", className: "font-semibold shadow-xs gap-2" })}
-              >
-                <Play className="size-4 fill-primary-foreground" />
-                <span>Watch Episode {latestEpisodeNum || 1}</span>
-              </Link>
-
-              <Button
-                variant={isBookmarked ? "secondary" : "outline"}
-                size="lg"
-                onClick={handleToggleFavorite}
-                className="w-[165px] min-w-[165px] justify-center font-medium gap-2 border-border/80"
-              >
-                {isBookmarked ? (
-                  <>
-                    <BookmarkCheck className="size-4 shrink-0 text-emerald-500" />
-                    <span>Favorited</span>
-                  </>
-                ) : (
-                  <>
-                    <Bookmark className="size-4 shrink-0" />
-                    <span>Add to Favorites</span>
-                  </>
-                )}
-              </Button>
-
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={handleShare}
-                className="w-[135px] min-w-[135px] justify-center font-medium gap-2 border-border/80"
-              >
-                {copied ? (
-                  <>
-                    <Check className="size-4 shrink-0 text-emerald-500" />
-                    <span>Link Copied</span>
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="size-4 shrink-0" />
-                    <span>Share</span>
-                  </>
-                )}
-              </Button>
-            </div>
-
+            <HeroMeta anime={anime} isLoading={isLoading} />
+            <HeroActions slug={anime?.slug} latestEpisodeNum={latestEpisodeNum} isLoading={isLoading} />
           </div>
         </div>
       </div>
