@@ -2,15 +2,21 @@
 
 import Link from "next/link";
 import { Crown, Play, Star, Flame, Eye, TrendingUp, Sparkles } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { getImageStyle } from "@/lib/utils";
 import type { TrendingAnimeItem } from "@/types/anime";
 
 interface TrendingHeroProps {
-  topAnime: TrendingAnimeItem;
+  topAnime?: TrendingAnimeItem | null;
+  isLoading?: boolean;
 }
 
-export function TrendingHero({ topAnime }: TrendingHeroProps) {
+export function TrendingHero({ topAnime, isLoading }: TrendingHeroProps) {
+  if (isLoading) {
+    return <Skeleton className="w-full aspect-[21/9] sm:aspect-[25/8] rounded-2xl" />;
+  }
+
   if (!topAnime) return null;
 
   // Use primary genre as featured tag

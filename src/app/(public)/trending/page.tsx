@@ -1,25 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { TrendingHeader } from "./components/trending-header";
 import { TrendingHero } from "./components/trending-hero";
 import { TrendingTabs } from "./components/trending-tabs";
 import { TrendingGenreFilter } from "./components/trending-genre-filter";
 import { TrendingGrid } from "./components/trending-grid";
 import { useTrendingRankings } from "@/hooks/use-trending-rankings";
+import { TRENDING_GENRES } from "./constants";
 import type { TrendingPeriod } from "@/types/anime";
-
-const TRENDING_GENRES = [
-  "All",
-  "Action",
-  "Adventure",
-  "Fantasy",
-  "Sci-Fi",
-  "Romance",
-  "Isekai",
-  "Slice of Life",
-];
 
 export default function TrendingPage() {
   const [period, setPeriod] = useState<TrendingPeriod>("weekly");
@@ -35,11 +24,7 @@ export default function TrendingPage() {
       <TrendingHeader />
 
       {/* 2. Spotlight Banner Section */}
-      {isLoading ? (
-        <Skeleton className="w-full aspect-[21/9] sm:aspect-[25/8] rounded-2xl" />
-      ) : (
-        topRankedAnime && <TrendingHero topAnime={topRankedAnime} />
-      )}
+      <TrendingHero topAnime={topRankedAnime} isLoading={isLoading} />
 
       {/* 3. Period & View Switcher Tabs */}
       <TrendingTabs
