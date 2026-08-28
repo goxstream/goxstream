@@ -1,6 +1,5 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { SearchInput } from "./filters/search-input";
 import { FilterSelectStrip } from "./filters/filter-select-strip";
 import { ActiveFiltersBar } from "./filters/active-filters-bar";
@@ -8,26 +7,6 @@ import { MobileFilterDrawer } from "./filters/mobile-filter-drawer";
 import type { BrowseFiltersProps } from "../types";
 
 export function BrowseFilters(props: BrowseFiltersProps) {
-  if (props.isLoading) {
-    return (
-      <div className="space-y-4">
-        <div className="flex flex-col md:flex-row gap-3">
-          <Skeleton className="h-11 flex-1 rounded-xl" />
-          <div className="hidden lg:flex gap-2.5">
-            <Skeleton className="h-11 w-32 rounded-xl" />
-            <Skeleton className="h-11 w-32 rounded-xl" />
-            <Skeleton className="h-11 w-32 rounded-xl" />
-            <Skeleton className="h-11 w-32 rounded-xl" />
-          </div>
-        </div>
-        <div className="flex gap-2 overflow-x-auto pb-1 pt-1">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-8 w-20 shrink-0 rounded-xl" />
-          ))}
-        </div>
-      </div>
-    );
-  }
   return (
     <div className="space-y-4">
       {/* Mobile & Tablet Header Controls (< lg) */}

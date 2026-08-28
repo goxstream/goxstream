@@ -50,7 +50,7 @@ function BrowseContentInner() {
 
   return (
     <div className="space-y-8">
-      <BrowseFilters {...filtersProps} isLoading={isLoading} />
+      <BrowseFilters {...filtersProps} />
       <BrowseGrid {...gridProps} isLoading={isLoading} />
       <BrowsePagination {...paginationProps} />
     </div>
