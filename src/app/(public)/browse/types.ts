@@ -117,6 +117,7 @@ export interface BrowseGridProps {
   viewMode: "grid" | "list";
   onViewModeChange: (mode: "grid" | "list") => void;
   onResetFilters: () => void;
+  isLoading?: boolean;
 }
 
 export interface BrowsePaginationProps {

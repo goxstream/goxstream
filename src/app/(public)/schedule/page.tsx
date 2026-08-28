@@ -1,16 +1,103 @@
-import type { Metadata } from "next";
-import { ScheduleContent } from "./components/schedule-content";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Anime Release Schedule | GoxStream",
-  description:
-    "Track weekly simulcast anime episode release times in real-time with WIB (UTC+7) timezone. Never miss an episode drop on GoxStream.",
-  openGraph: {
-    title: "Anime Release Schedule | GoxStream",
-    description: "Track weekly simulcast anime episode release times in real-time.",
-  },
-};
+import { useState, useMemo } from "react";
+import { DAYS_OF_WEEK_MAP } from "@/lib/constants";
+import { EpisodeCard } from "@/components/episode-card";
+import { useScheduleAnime } from "@/hooks/use-schedule-anime";
+import type { DayOfWeek, ScheduleViewMode } from "@/types/schedule";
+import { ScheduleHeader } from "./components/schedule-header";
+import { DaySelectorTabs } from "./components/day-selector-tabs";
+import { TimelineView } from "./components/timeline-view";
+import { GridView } from "./components/grid-view";
+
+function getCurrentDayOfWeek(): DayOfWeek {
+  const dayIndex = new Date().getDay();
+  const dayMap: Record<number, DayOfWeek> = {
+    0: "sunday",
+    1: "monday",
+    2: "tuesday",
+    3: "wednesday",
+    4: "thursday",
+    5: "friday",
+    6: "saturday",
+  };
+  return dayMap[dayIndex] || "wednesday";
+}
 
 export default function SchedulePage() {
-  return <ScheduleContent />;
+  const { scheduleItems, isLoading } = useScheduleAnime();
+  const todayDay = useMemo(() => getCurrentDayOfWeek(), []);
+  const [activeDay, setActiveDay] = useState<DayOfWeek>(todayDay);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<ScheduleViewMode>("timeline");
+
+  // Calculate number of shows for each day
+  const dayCounts = useMemo(() => {
+    const counts = {} as Record<DayOfWeek, number>;
+    DAYS_OF_WEEK_MAP.forEach((day) => {
+      const dayId = day.id as DayOfWeek;
+      const dayItems = scheduleItems.filter((item) => item.airDay === dayId);
+      counts[dayId] = dayItems.length;
+    });
+    return counts;
+  }, [scheduleItems]);
+
+  // Current items for selected day & filter
+  const currentItems = useMemo(() => {
+    let items = scheduleItems.filter((item) => item.airDay === activeDay);
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      items = items.filter(
+        (item) =>
+          item.title.toLowerCase().includes(q) ||
+          (item.japaneseTitle && item.japaneseTitle.toLowerCase().includes(q)) ||
+          item.genres.some((g) => g.toLowerCase().includes(q)) ||
+          item.studio.toLowerCase().includes(q)
+      );
+    }
+
+    return items.sort((a, b) => a.airTime.localeCompare(b.airTime));
+  }, [scheduleItems, activeDay, searchQuery]);
+
+  const activeDayInfo = DAYS_OF_WEEK_MAP.find((d) => d.id === activeDay);
+
+  return (
+    <div className="container mx-auto px-4 py-6 md:py-8 space-y-6 max-w-7xl">
+      {/* 1. Header Section */}
+      <ScheduleHeader
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        activeDayLabel={activeDayInfo?.label || "Hari Ini"}
+        totalShowsCount={currentItems.length}
+      />
+
+      {/* 2. 7-Day Selector Tabs */}
+      <DaySelectorTabs
+        activeDay={activeDay}
+        todayDay={todayDay}
+        onSelectDay={setActiveDay}
+        dayCounts={dayCounts}
+      />
+
+      {/* 3. Schedule Content Display / Inline Skeleton */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 py-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <EpisodeCard key={i} isLoading={true} />
+          ))}
+        </div>
+      ) : (
+        <div className="mt-4">
+          {viewMode === "timeline" ? (
+            <TimelineView items={currentItems} dayLabel={activeDayInfo?.label || ""} />
+          ) : (
+            <GridView items={currentItems} dayLabel={activeDayInfo?.label || ""} />
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
