@@ -26,12 +26,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMounted } from "../hooks/use-mounted";
 import { useDashboardHeader } from "../hooks/use-dashboard-header";
-import { NOTIFICATIONS_DATA } from "../lib/mock-data";
+import { useDashboardOverview } from "../hooks/use-dashboard-overview";
 
 export function DashboardHeader() {
   const { theme, setTheme } = useTheme();
   const mounted = useIsMounted();
   const { currentUser, notificationsOpen, setNotificationsOpen } = useDashboardHeader();
+  const { notifications } = useDashboardOverview();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border/60 bg-background/95 px-4 backdrop-blur-md transition-all">
@@ -125,7 +126,7 @@ export function DashboardHeader() {
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold">Admin Alerts</span>
                 <Badge variant="secondary" className="text-[10px] h-4 bg-brand/10 text-brand">
-                  3 New
+                  {notifications.length} New
                 </Badge>
               </div>
               <Button variant="ghost" className="text-[11px] h-6 px-2 text-muted-foreground">
@@ -133,7 +134,7 @@ export function DashboardHeader() {
               </Button>
             </div>
             <div className="divide-y divide-border/60 max-h-72 overflow-y-auto">
-              {NOTIFICATIONS_DATA.map((n) => (
+              {notifications.map((n) => (
                 <div key={n.id} className="flex gap-3 p-3 text-xs hover:bg-accent/40 transition-colors">
                   {n.type === "success" && (
                     <CheckCircle2 className="size-4 text-emerald-400 shrink-0 mt-0.5" />

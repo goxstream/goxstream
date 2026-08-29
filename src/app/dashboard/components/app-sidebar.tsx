@@ -13,16 +13,17 @@ import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 import { NAV_MAIN_DATA, NAV_SECONDARY_DATA } from "../constants";
-import { WORKSPACES_DATA } from "../lib/mock-data";
 import { useSidebarUser } from "../hooks/use-sidebar-user";
+import { useDashboardOverview } from "../hooks/use-dashboard-overview";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { currentUser } = useSidebarUser();
+  const { workspaces } = useDashboardOverview();
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border/60" {...props}>
       <SidebarHeader className="border-b border-border/60 p-2">
-        <WorkspaceSwitcher workspaces={WORKSPACES_DATA} />
+        <WorkspaceSwitcher workspaces={workspaces} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={NAV_MAIN_DATA} />

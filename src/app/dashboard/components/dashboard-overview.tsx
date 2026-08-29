@@ -34,11 +34,13 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { useIsMounted } from "../hooks/use-mounted";
 import { useDashboardStats } from "@/hooks/use-dashboard-stats";
 import { TRAFFIC_CHART_CONFIG } from "../constants";
-import { TRAFFIC_DATA, RECENT_ACTIVITIES } from "../lib/mock-data";
+import { useDashboardOverview } from "../hooks/use-dashboard-overview";
 
 export function DashboardOverview() {
   const mounted = useIsMounted();
-  const { stats, isLoading } = useDashboardStats();
+  const { stats, isLoading: isStatsLoading } = useDashboardStats();
+  const { trafficData, recentActivities, isLoading: isOverviewLoading } = useDashboardOverview();
+  const isLoading = isStatsLoading || isOverviewLoading;
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
@@ -191,7 +193,7 @@ export function DashboardOverview() {
             {mounted && !isLoading ? (
               <ChartContainer config={TRAFFIC_CHART_CONFIG} className="h-72 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={TRAFFIC_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <AreaChart data={trafficData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                     <defs>
                       <linearGradient id="colorStreams" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#34d094" stopOpacity={0.4} />
@@ -294,7 +296,7 @@ export function DashboardOverview() {
                       <TableCell className="pr-6 text-right"><Skeleton className="h-5 w-16 rounded ml-auto" /></TableCell>
                     </TableRow>
                   ))
-                : RECENT_ACTIVITIES.map((act) => (
+                : recentActivities.map((act) => (
                     <TableRow key={act.id} className="border-border/60">
                       <TableCell className="pl-6">
                         <div className="flex items-center gap-2.5">
