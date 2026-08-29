@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { WorkspaceItem, ActivityLogItem } from "../types";
+import type { ActivityLogItem } from "../types";
 
 export interface DashboardOverviewData {
-  workspaces: WorkspaceItem[];
   trafficData: Array<{ time: string; activeStreams: number; bandwidthGbps: number }>;
   recentActivities: ActivityLogItem[];
   notifications: Array<{ id: string; title: string; description: string; time: string; type: "success" | "alert" | "info" }>;
@@ -12,7 +11,6 @@ export interface DashboardOverviewData {
 
 export function useDashboardOverview() {
   const [data, setData] = useState<DashboardOverviewData>({
-    workspaces: [],
     trafficData: [],
     recentActivities: [],
     notifications: [],
@@ -29,7 +27,6 @@ export function useDashboardOverview() {
           const resData = (await res.json()) as DashboardOverviewData;
           if (isMounted) {
             setData({
-              workspaces: resData.workspaces || [],
               trafficData: resData.trafficData || [],
               recentActivities: resData.recentActivities || [],
               notifications: resData.notifications || [],

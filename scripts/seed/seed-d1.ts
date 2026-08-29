@@ -41,7 +41,6 @@ export function generateSQLiteSQL(bundle: TransformedSeedBundle): string {
     'DELETE FROM "stream_sources";',
     'DELETE FROM "episodes";',
     'DELETE FROM "animes";',
-    'DELETE FROM "server_nodes";',
     'DELETE FROM "genres";',
     'DELETE FROM "studios";',
     "",
@@ -92,12 +91,7 @@ export function generateSQLiteSQL(bundle: TransformedSeedBundle): string {
 
   lines.push("");
 
-  // Insert Server Nodes
-  bundle.serverNodes.forEach((sn) => {
-    lines.push(
-      `INSERT OR IGNORE INTO "server_nodes" ("id", "name", "region", "provider", "endpoint", "quality", "priority", "status", "health_status", "latency_ms", "is_primary") VALUES (${sqlEscape(sn.id)}, ${sqlEscape(sn.name)}, ${sqlEscape(sn.region)}, ${sqlEscape(sn.provider)}, ${sqlEscape(sn.endpoint)}, ${sqlEscape(sn.quality)}, ${sqlNum(sn.priority)}, ${sqlEscape(sn.status)}, ${sqlEscape(sn.healthStatus)}, ${sqlNum(sn.latencyMs)}, ${sqlBool(sn.isPrimary)});`
-    );
-  });
+
 
   lines.push("");
 
@@ -113,7 +107,7 @@ export function generateSQLiteSQL(bundle: TransformedSeedBundle): string {
   // Insert Stream Sources
   bundle.streamSources.forEach((ss) => {
     lines.push(
-      `INSERT OR IGNORE INTO "stream_sources" ("id", "episode_id", "server_node_id", "server_name", "stream_url", "format", "quality", "url_1080p", "url_720p", "url_480p", "url_360p", "is_primary") VALUES (${sqlEscape(ss.id)}, ${sqlEscape(ss.episodeId)}, ${sqlEscape(ss.serverNodeId)}, ${sqlEscape(ss.serverName)}, ${sqlEscape(ss.streamUrl)}, ${sqlEscape(ss.format)}, ${sqlEscape(ss.quality)}, ${sqlEscape(ss.url1080p)}, ${sqlEscape(ss.url720p)}, ${sqlEscape(ss.url480p)}, ${sqlEscape(ss.url360p)}, ${sqlBool(ss.isPrimary)});`
+      `INSERT OR IGNORE INTO "stream_sources" ("id", "episode_id", "server_name", "stream_url", "format", "quality", "url_1080p", "url_720p", "url_480p", "url_360p", "is_primary") VALUES (${sqlEscape(ss.id)}, ${sqlEscape(ss.episodeId)}, ${sqlEscape(ss.serverName)}, ${sqlEscape(ss.streamUrl)}, ${sqlEscape(ss.format)}, ${sqlEscape(ss.quality)}, ${sqlEscape(ss.url1080p)}, ${sqlEscape(ss.url720p)}, ${sqlEscape(ss.url480p)}, ${sqlEscape(ss.url360p)}, ${sqlBool(ss.isPrimary)});`
     );
   });
 

@@ -1,12 +1,5 @@
 import type { LucideIcon } from "lucide-react";
 
-export interface WorkspaceItem {
-  id: string;
-  name: string;
-  plan: string;
-  role: string;
-}
-
 export interface NavSubItem {
   title: string;
   url: string;

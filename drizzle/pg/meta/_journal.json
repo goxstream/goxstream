@@ -8,6 +8,13 @@
       "when": 1787882093476,
       "tag": "0000_graceful_jackpot",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787991505636,
+      "tag": "0001_chief_sasquatch",
+      "breakpoints": true
     }
   ]
 }

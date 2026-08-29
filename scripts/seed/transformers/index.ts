@@ -6,7 +6,6 @@ import type {
   AnimeGenreRelation,
   AnimeStudioRelation,
   EpisodeSeedData,
-  ServerNodeSeedData,
   StreamSourceSeedData,
   SubtitleTrackSeedData,
   AudioTrackSeedData,
@@ -41,35 +40,7 @@ export function transformAniListToEntities(mediaList: AniListMedia[]): Transform
   const schedules: ScheduleSeedData[] = [];
   const trendingStats: TrendingStatSeedData[] = [];
 
-  const primaryServerNode: ServerNodeSeedData = {
-    id: "sn-primary-alpha",
-    name: "GoxStream CDN Alpha",
-    region: "Asia-East (Singapore)",
-    provider: "Cloudflare R2 CDN",
-    endpoint: "https://cdn-alpha.goxstream.com",
-    quality: "1080p",
-    priority: 1,
-    status: "online",
-    healthStatus: "online",
-    latencyMs: 18,
-    isPrimary: true,
-  };
 
-  const backupServerNode: ServerNodeSeedData = {
-    id: "sn-backup-beta",
-    name: "GoxStream CDN Beta",
-    region: "Asia-Southeast (Jakarta)",
-    provider: "FastEdge CDN",
-    endpoint: "https://cdn-beta.goxstream.com",
-    quality: "720p",
-    priority: 2,
-    status: "online",
-    healthStatus: "online",
-    latencyMs: 25,
-    isPrimary: false,
-  };
-
-  const serverNodes: ServerNodeSeedData[] = [primaryServerNode, backupServerNode];
 
   mediaList.forEach((media, idx) => {
     const anime = transformAnimeEntity(media, idx, usedAnimeSlugs);
@@ -90,7 +61,7 @@ export function transformAniListToEntities(mediaList: AniListMedia[]): Transform
       subtitleTracks: subs,
       audioTracks: audios,
       epToGenerate,
-    } = generateEpisodesAndMedia(media, anime.id, idx, primaryServerNode);
+    } = generateEpisodesAndMedia(media, anime.id, idx);
 
     episodes.push(...eps);
     streamSources.push(...streams);
@@ -115,7 +86,6 @@ export function transformAniListToEntities(mediaList: AniListMedia[]): Transform
     animeGenres,
     animeStudios,
     episodes,
-    serverNodes,
     streamSources,
     subtitleTracks,
     audioTracks,

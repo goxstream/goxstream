@@ -1,7 +1,6 @@
 import type { AniListMedia } from "../anilist";
 import type {
   EpisodeSeedData,
-  ServerNodeSeedData,
   StreamSourceSeedData,
   SubtitleTrackSeedData,
   AudioTrackSeedData,
@@ -11,8 +10,7 @@ import { SAMPLE_HLS_STREAMS } from "./utils";
 export function generateEpisodesAndMedia(
   media: AniListMedia,
   animeId: string,
-  idx: number,
-  primaryServerNode: ServerNodeSeedData
+  idx: number
 ) {
   const episodes: EpisodeSeedData[] = [];
   const streamSources: StreamSourceSeedData[] = [];
@@ -44,8 +42,7 @@ export function generateEpisodesAndMedia(
     streamSources.push({
       id: `stream-${episodeId}-primary`,
       episodeId,
-      serverNodeId: primaryServerNode.id,
-      serverName: primaryServerNode.name,
+      serverName: "Main Server",
       streamUrl,
       format: "hls",
       quality: "1080p",

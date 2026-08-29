@@ -57,24 +57,9 @@ export interface EpisodeSeedData {
   createdAt: Date;
 }
 
-export interface ServerNodeSeedData {
-  id: string;
-  name: string;
-  region: string;
-  provider: string;
-  endpoint: string;
-  quality: string;
-  priority: number;
-  status: string;
-  healthStatus: string;
-  latencyMs: number;
-  isPrimary: boolean;
-}
-
 export interface StreamSourceSeedData {
   id: string;
   episodeId: string;
-  serverNodeId: string;
   serverName: string;
   streamUrl: string;
   format: string;
@@ -136,7 +121,6 @@ export interface TransformedSeedBundle {
   animeGenres: AnimeGenreRelation[];
   animeStudios: AnimeStudioRelation[];
   episodes: EpisodeSeedData[];
-  serverNodes: ServerNodeSeedData[];
   streamSources: StreamSourceSeedData[];
   subtitleTracks: SubtitleTrackSeedData[];
   audioTracks: AudioTrackSeedData[];

@@ -14,6 +14,7 @@ export const comments = sqliteTable("comments", {
     .references(() => episodes.id, { onDelete: "cascade" }),
   userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
   guestName: text("guest_name"),
+  guestEmail: text("guest_email"),
   parentId: text("parent_id"),
   content: text("content").notNull(),
   isSpoiler: integer("is_spoiler", { mode: "boolean" }).notNull().$default(() => false),

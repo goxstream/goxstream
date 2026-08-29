@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import {
-  getDashboardWorkspacesData,
   getDashboardTrafficData,
   getDashboardRecentActivities,
   getDashboardNotifications,
@@ -22,15 +21,13 @@ export async function GET() {
       });
     }
 
-    const [workspaces, trafficData, recentActivities, notifications] = await Promise.all([
-      getDashboardWorkspacesData().catch(() => []),
+    const [trafficData, recentActivities, notifications] = await Promise.all([
       getDashboardTrafficData().catch(() => []),
       getDashboardRecentActivities().catch(() => []),
       getDashboardNotifications().catch(() => []),
     ]);
 
     const data = {
-      workspaces,
       trafficData,
       recentActivities,
       notifications,
@@ -48,7 +45,6 @@ export async function GET() {
     console.error("Dashboard overview API error:", error);
     return NextResponse.json(
       {
-        workspaces: [],
         trafficData: [],
         recentActivities: [],
         notifications: [],

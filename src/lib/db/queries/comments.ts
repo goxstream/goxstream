@@ -25,6 +25,7 @@ export async function createComment(data: {
   content: string;
   isSpoiler?: boolean;
   guestName?: string;
+  guestEmail?: string;
   userId?: string;
 }) {
   try {
@@ -38,7 +39,8 @@ export async function createComment(data: {
         parentId: data.parentId || null,
         content: data.content,
         isSpoiler: data.isSpoiler || false,
-        guestName: data.guestName || "Guest Otaku",
+        guestName: data.guestName || null,
+        guestEmail: data.guestEmail || null,
         userId: data.userId || null,
         createdAt: new Date(),
         updatedAt: new Date(),

@@ -77,19 +77,6 @@ export interface EpisodeStats {
   totalViews: number;
 }
 
-export interface ServerNode {
-  id: string;
-  name: string;
-  region: string;
-  provider: string; // e.g. "Cloudflare R2", "BunnyCDN", "MegaStream"
-  endpoint: string;
-  status: ServerHealth;
-  latencyMs: number;
-  activeConnections: number;
-  bandwidthUsageGbps: number;
-  totalCapacityGbps: number;
-  isPrimary: boolean;
-}
 
 export interface SubtitleCoverageItem {
   animeId: string;

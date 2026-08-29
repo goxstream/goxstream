@@ -1,16 +1,4 @@
-import type { WorkspaceItem, ActivityLogItem } from "@/app/dashboard/types";
-
-/**
- * Maps raw database serverNode record into WorkspaceItem format
- */
-export function mapToWorkspaceItem(sn: any): WorkspaceItem {
-  return {
-    id: sn.id,
-    name: sn.name || "GoxStream Hub",
-    plan: sn.provider || "Standard",
-    role: sn.region || "Region",
-  };
-}
+import type { ActivityLogItem } from "@/app/dashboard/types";
 
 /**
  * Helper to get a relative "time ago" string from a date
@@ -27,17 +15,19 @@ function timeAgo(date: Date): string {
 }
 
 /**
- * Maps latest episodes and comments into a unified ActivityLogItem format
+ * Maps latest episodes and comments into a unified ActivityLogItem format.
+ * Uses real uploader data from episode_uploads join and real guest email from comments.
  */
 export function mapToActivityLogItem(raw: { type: "episode" | "comment"; data: any }): ActivityLogItem {
   if (raw.type === "episode") {
     const ep = raw.data;
+    const uploader = ep.upload?.user;
     return {
       id: `act-ep-${ep.id}`,
       user: {
-        name: "System Worker",
-        email: "cron@cloudflare.worker",
-        avatar: "",
+        name: uploader?.username || uploader?.email || "Unknown",
+        email: uploader?.email || "unknown@goxstream.com",
+        avatar: uploader?.avatarUrl || "",
       },
       action: "Published Episode",
       target: `${ep.anime?.titleEnglish || ep.anime?.titleRomaji || "Anime"} Ep ${ep.number}`,
@@ -49,11 +39,11 @@ export function mapToActivityLogItem(raw: { type: "episode" | "comment"; data: a
     return {
       id: `act-comm-${c.id}`,
       user: {
-        name: c.guestName || "Guest Otaku",
-        email: c.userId ? "user@goxstream.com" : "guest@goxstream.com",
-        avatar: "",
+        name: c.user?.username || c.guestName || "Guest",
+        email: c.user?.email || c.guestEmail || "guest@goxstream.com",
+        avatar: c.user?.avatarUrl || "",
       },
-      action: "Resolved Flagged Comment",
+      action: "Posted Comment",
       target: c.content ? (c.content.length > 30 ? c.content.slice(0, 30) + "..." : c.content) : "Comment",
       timestamp: c.createdAt ? timeAgo(new Date(c.createdAt)) : "Recently",
       status: "completed",
@@ -99,20 +89,21 @@ export function mapToTrafficData(watchHistories: any[]): Array<{ time: string; a
 }
 
 /**
- * Generates dynamic notifications using real stats and latest content uploads
+ * Generates dynamic notifications using real database counts
  */
 export function generateDynamicNotifications(
   latestEpisode: any,
   commentsCount: number,
-  nodesCount: number
+  usersCount: number
 ): Array<{ id: string; title: string; description: string; time: string; type: "success" | "alert" | "info" }> {
-  const notifications: any[] = [];
+  const notifications: Array<{ id: string; title: string; description: string; time: string; type: "success" | "alert" | "info" }> = [];
 
   if (latestEpisode) {
+    const uploader = latestEpisode.upload?.user;
     notifications.push({
       id: "notif-1",
       title: "New Episode Uploaded",
-      description: `${latestEpisode.anime?.titleEnglish || latestEpisode.anime?.titleRomaji || "Anime"} Ep ${latestEpisode.number} successfully added.`,
+      description: `${latestEpisode.anime?.titleEnglish || latestEpisode.anime?.titleRomaji || "Anime"} Ep ${latestEpisode.number} uploaded by ${uploader?.username || "admin"}.`,
       time: latestEpisode.createdAt ? timeAgo(new Date(latestEpisode.createdAt)) : "Recently",
       type: "success",
     });
@@ -120,17 +111,17 @@ export function generateDynamicNotifications(
 
   notifications.push({
     id: "notif-2",
-    title: "CDN Node Status",
-    description: `Global Edge Network is active with ${nodesCount} online CDN nodes.`,
-    time: "Just now",
+    title: "Community Activity",
+    description: `${usersCount} registered users on the platform.`,
+    time: timeAgo(new Date()),
     type: "info",
   });
 
   notifications.push({
     id: "notif-3",
-    title: "User Moderation Reports",
-    description: `${commentsCount} total comments in comments moderation database.`,
-    time: "Just now",
+    title: "Comment Moderation",
+    description: `${commentsCount} total comments in moderation database.`,
+    time: timeAgo(new Date()),
     type: "alert",
   });
 

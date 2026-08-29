@@ -14,6 +14,7 @@ export const comments = pgTable("comments", {
     .references(() => episodes.id, { onDelete: "cascade" }),
   userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
   guestName: text("guest_name"),
+  guestEmail: text("guest_email"),
   parentId: text("parent_id"),
   content: text("content").notNull(),
   isSpoiler: boolean("is_spoiler").notNull().$default(() => false),

@@ -32,7 +32,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
     "BEGIN;",
     "",
     "-- Clear existing tables in correct dependency order",
-    'TRUNCATE TABLE "watch_histories", "watchlists", "anime_genres", "anime_studios", "schedules", "trending_stats", "subtitle_tracks", "audio_tracks", "stream_sources", "server_nodes", "episodes", "animes", "genres", "studios" CASCADE;',
+    'TRUNCATE TABLE "watch_histories", "watchlists", "anime_genres", "anime_studios", "schedules", "trending_stats", "subtitle_tracks", "audio_tracks", "stream_sources", "episodes", "animes", "genres", "studios" CASCADE;',
     "",
   ];
 
@@ -81,12 +81,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
 
   lines.push("");
 
-  // Insert Server Nodes
-  bundle.serverNodes.forEach((sn) => {
-    lines.push(
-      `INSERT INTO "server_nodes" ("id", "name", "region", "provider", "endpoint", "quality", "priority", "status", "health_status", "latency_ms", "is_primary") VALUES (${sqlEscape(sn.id)}, ${sqlEscape(sn.name)}, ${sqlEscape(sn.region)}, ${sqlEscape(sn.provider)}, ${sqlEscape(sn.endpoint)}, ${sqlEscape(sn.quality)}, ${sqlNum(sn.priority)}, ${sqlEscape(sn.status)}, ${sqlEscape(sn.healthStatus)}, ${sqlNum(sn.latencyMs)}, ${sqlBool(sn.isPrimary)}) ON CONFLICT ("id") DO NOTHING;`
-    );
-  });
+
 
   lines.push("");
 
@@ -102,7 +97,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Stream Sources
   bundle.streamSources.forEach((ss) => {
     lines.push(
-      `INSERT INTO "stream_sources" ("id", "episode_id", "server_node_id", "server_name", "stream_url", "format", "quality", "url_1080p", "url_720p", "url_480p", "url_360p", "is_primary") VALUES (${sqlEscape(ss.id)}, ${sqlEscape(ss.episodeId)}, ${sqlEscape(ss.serverNodeId)}, ${sqlEscape(ss.serverName)}, ${sqlEscape(ss.streamUrl)}, ${sqlEscape(ss.format)}, ${sqlEscape(ss.quality)}, ${sqlEscape(ss.url1080p)}, ${sqlEscape(ss.url720p)}, ${sqlEscape(ss.url480p)}, ${sqlEscape(ss.url360p)}, ${sqlBool(ss.isPrimary)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "stream_sources" ("id", "episode_id", "server_name", "stream_url", "format", "quality", "url_1080p", "url_720p", "url_480p", "url_360p", "is_primary") VALUES (${sqlEscape(ss.id)}, ${sqlEscape(ss.episodeId)}, ${sqlEscape(ss.serverName)}, ${sqlEscape(ss.streamUrl)}, ${sqlEscape(ss.format)}, ${sqlEscape(ss.quality)}, ${sqlEscape(ss.url1080p)}, ${sqlEscape(ss.url720p)}, ${sqlEscape(ss.url480p)}, ${sqlEscape(ss.url360p)}, ${sqlBool(ss.isPrimary)}) ON CONFLICT ("id") DO NOTHING;`
     );
   });
 
@@ -186,7 +181,6 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
     await db.delete(pgSchema.subtitleTracks);
     await db.delete(pgSchema.audioTracks);
     await db.delete(pgSchema.streamSources);
-    await db.delete(pgSchema.serverNodes);
     await db.delete(pgSchema.episodes);
     await db.delete(pgSchema.animes);
     await db.delete(pgSchema.genres);
@@ -223,10 +217,7 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
       await db.insert(pgSchema.animeStudios).values(uniqueAnimeStudios).onConflictDoNothing();
     }
 
-    console.log("[SEED PG] Inserting Server Nodes...");
-    if (bundle.serverNodes.length > 0) {
-      await db.insert(pgSchema.serverNodes).values(bundle.serverNodes).onConflictDoNothing();
-    }
+
 
     console.log("[SEED PG] Inserting Episodes...");
     if (bundle.episodes.length > 0) {

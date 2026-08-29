@@ -16,10 +16,15 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body: any = await request.json();
-    const { animeId, episodeId, parentId, content, isSpoiler, guestName, userId } = body;
+    const { animeId, episodeId, parentId, content, isSpoiler, guestName, guestEmail, userId } = body;
 
     if (!animeId || !episodeId || !content) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    // Guest comments require both name and email
+    if (!userId && (!guestName || !guestEmail)) {
+      return NextResponse.json({ error: "Guest comments require name and email" }, { status: 400 });
     }
 
     const created = await createComment({
@@ -29,6 +34,7 @@ export async function POST(request: Request) {
       content,
       isSpoiler,
       guestName,
+      guestEmail,
       userId,
     });
 

@@ -1,27 +1,12 @@
 import { desc, sql, count } from "drizzle-orm";
 import { getDb } from "../index";
-import { serverNodes, watchHistories, episodes, comments } from "../schema";
+import { watchHistories, episodes, comments, users, episodeUploads } from "../schema";
 import {
-  mapToWorkspaceItem,
   mapToActivityLogItem,
   mapToTrafficData,
   generateDynamicNotifications,
 } from "./dashboard-overview.mappers";
-import type { WorkspaceItem, ActivityLogItem } from "@/app/dashboard/types";
-
-/**
- * Fetches workspaces mapped directly from server nodes
- */
-export async function getDashboardWorkspacesData(): Promise<WorkspaceItem[]> {
-  const db = await getDb();
-  try {
-    const raw = await db.query.serverNodes.findMany({ limit: 10 });
-    return (raw || []).map(mapToWorkspaceItem);
-  } catch (error) {
-    console.error("Failed to query workspaces:", error);
-    return [];
-  }
-}
+import type { ActivityLogItem } from "@/app/dashboard/types";
 
 /**
  * Fetches recent 24-hour watch history and aggregates into traffic data
@@ -42,7 +27,9 @@ export async function getDashboardTrafficData() {
 }
 
 /**
- * Combines and maps the latest episodes and user comments into a unified activity audit log
+ * Combines and maps the latest episodes and user comments into a unified activity audit log.
+ * Episodes include uploader info from episode_uploads join.
+ * Comments include user info from users join.
  */
 export async function getDashboardRecentActivities(): Promise<ActivityLogItem[]> {
   const db = await getDb();
@@ -55,13 +42,27 @@ export async function getDashboardRecentActivities(): Promise<ActivityLogItem[]>
       },
     });
 
+    // Fetch uploader info for each episode from episode_uploads
+    const episodesWithUploaders = await Promise.all(
+      latestEpisodes.map(async (ep: any) => {
+        const upload = await db.query.episodeUploads.findFirst({
+          where: sql`episode_id = ${ep.id}`,
+          with: { user: true },
+        });
+        return { ...ep, upload };
+      })
+    );
+
     const latestComments = await db.query.comments.findMany({
       limit: 3,
       orderBy: [desc(comments.createdAt)],
+      with: {
+        user: true,
+      },
     });
 
     const combined = [
-      ...latestEpisodes.map((ep: any) => ({
+      ...episodesWithUploaders.map((ep: any) => ({
         type: "episode" as const,
         data: ep,
         date: ep.createdAt || new Date(),
@@ -83,7 +84,7 @@ export async function getDashboardRecentActivities(): Promise<ActivityLogItem[]>
 }
 
 /**
- * Aggregates alert states and latest assets into live notifications
+ * Aggregates real database counts into live notifications
  */
 export async function getDashboardNotifications() {
   const db = await getDb();
@@ -95,13 +96,23 @@ export async function getDashboardNotifications() {
       },
     });
 
+    // Fetch uploader for latest episode
+    let latestEpisodeWithUploader = latestEpisode as any;
+    if (latestEpisode) {
+      const upload = await db.query.episodeUploads.findFirst({
+        where: sql`episode_id = ${latestEpisode.id}`,
+        with: { user: true },
+      });
+      latestEpisodeWithUploader = { ...latestEpisode, upload };
+    }
+
     const [commCountRes] = await db.select({ count: count() }).from(comments);
-    const [nodeCountRes] = await db.select({ count: count() }).from(serverNodes);
+    const [usersCountRes] = await db.select({ count: count() }).from(users);
 
     return generateDynamicNotifications(
-      latestEpisode,
+      latestEpisodeWithUploader,
       commCountRes?.count || 0,
-      nodeCountRes?.count || 0
+      usersCountRes?.count || 0
     );
   } catch (error) {
     console.error("Failed to query notifications:", error);

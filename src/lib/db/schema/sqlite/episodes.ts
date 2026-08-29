@@ -20,28 +20,11 @@ export const episodes = sqliteTable("episodes", {
     .$defaultFn(() => new Date()),
 });
 
-export const serverNodes = sqliteTable("server_nodes", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  name: text("name").notNull(),
-  region: text("region"),
-  provider: text("provider"),
-  endpoint: text("endpoint"),
-  quality: text("quality").notNull().$default(() => "1080p"),
-  priority: integer("priority").notNull().$default(() => 1),
-  status: text("status").notNull().$default(() => "online"),
-  healthStatus: text("health_status").notNull().$default(() => "online"),
-  latencyMs: integer("latency_ms").notNull().$default(() => 0),
-  isPrimary: integer("is_primary", { mode: "boolean" }).notNull().$default(() => false),
-});
-
 export const streamSources = sqliteTable("stream_sources", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   episodeId: text("episode_id")
     .notNull()
     .references(() => episodes.id, { onDelete: "cascade" }),
-  serverNodeId: text("server_node_id")
-    .notNull()
-    .references(() => serverNodes.id, { onDelete: "cascade" }),
   serverName: text("server_name"),
   streamUrl: text("stream_url").notNull(),
   format: text("format").notNull().$default(() => "hls"),
@@ -87,18 +70,10 @@ export const episodesRelations = relations(episodes, ({ one, many }) => ({
   audioTracks: many(audioTracks),
 }));
 
-export const serverNodesRelations = relations(serverNodes, ({ many }) => ({
-  streamSources: many(streamSources),
-}));
-
 export const streamSourcesRelations = relations(streamSources, ({ one }) => ({
   episode: one(episodes, {
     fields: [streamSources.episodeId],
     references: [episodes.id],
-  }),
-  serverNode: one(serverNodes, {
-    fields: [streamSources.serverNodeId],
-    references: [serverNodes.id],
   }),
 }));
 
