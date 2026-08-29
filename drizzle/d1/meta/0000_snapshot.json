@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "d8570590-dedb-4ab7-b36f-16feeef39a79",
+  "id": "c7056bf3-f7ce-4ce5-abc5-fc918df50552",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "sessions": {
@@ -996,93 +996,6 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "server_nodes": {
-      "name": "server_nodes",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "region": {
-          "name": "region",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "provider": {
-          "name": "provider",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "endpoint": {
-          "name": "endpoint",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "quality": {
-          "name": "quality",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "priority": {
-          "name": "priority",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "health_status": {
-          "name": "health_status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "latency_ms": {
-          "name": "latency_ms",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "is_primary": {
-          "name": "is_primary",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
     "stream_sources": {
       "name": "stream_sources",
       "columns": {
@@ -1095,13 +1008,6 @@
         },
         "episode_id": {
           "name": "episode_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "server_node_id": {
-          "name": "server_node_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1179,19 +1085,6 @@
           "tableTo": "episodes",
           "columnsFrom": [
             "episode_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "stream_sources_server_node_id_server_nodes_id_fk": {
-          "name": "stream_sources_server_node_id_server_nodes_id_fk",
-          "tableFrom": "stream_sources",
-          "tableTo": "server_nodes",
-          "columnsFrom": [
-            "server_node_id"
           ],
           "columnsTo": [
             "id"
@@ -1672,6 +1565,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "guest_email": {
+          "name": "guest_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "parent_id": {
           "name": "parent_id",
           "type": "text",
@@ -1747,6 +1647,64 @@
             "id"
           ],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "episode_uploads": {
+      "name": "episode_uploads",
+      "columns": {
+        "episode_id": {
+          "name": "episode_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "uploaded_at": {
+          "name": "uploaded_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "episode_uploads_episode_id_episodes_id_fk": {
+          "name": "episode_uploads_episode_id_episodes_id_fk",
+          "tableFrom": "episode_uploads",
+          "tableTo": "episodes",
+          "columnsFrom": [
+            "episode_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "episode_uploads_user_id_users_id_fk": {
+          "name": "episode_uploads_user_id_users_id_fk",
+          "tableFrom": "episode_uploads",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

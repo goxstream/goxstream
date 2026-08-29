@@ -148,24 +148,9 @@ CREATE TABLE `episodes` (
 	FOREIGN KEY (`anime_id`) REFERENCES `animes`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE TABLE `server_nodes` (
-	`id` text PRIMARY KEY NOT NULL,
-	`name` text NOT NULL,
-	`region` text,
-	`provider` text,
-	`endpoint` text,
-	`quality` text NOT NULL,
-	`priority` integer NOT NULL,
-	`status` text NOT NULL,
-	`health_status` text NOT NULL,
-	`latency_ms` integer NOT NULL,
-	`is_primary` integer NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE `stream_sources` (
 	`id` text PRIMARY KEY NOT NULL,
 	`episode_id` text NOT NULL,
-	`server_node_id` text NOT NULL,
 	`server_name` text,
 	`stream_url` text NOT NULL,
 	`format` text NOT NULL,
@@ -175,8 +160,7 @@ CREATE TABLE `stream_sources` (
 	`url_480p` text,
 	`url_360p` text,
 	`is_primary` integer NOT NULL,
-	FOREIGN KEY (`episode_id`) REFERENCES `episodes`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`server_node_id`) REFERENCES `server_nodes`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`episode_id`) REFERENCES `episodes`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `subtitle_tracks` (
@@ -245,6 +229,7 @@ CREATE TABLE `comments` (
 	`episode_id` text NOT NULL,
 	`user_id` text,
 	`guest_name` text,
+	`guest_email` text,
 	`parent_id` text,
 	`content` text NOT NULL,
 	`is_spoiler` integer NOT NULL,
@@ -253,4 +238,12 @@ CREATE TABLE `comments` (
 	FOREIGN KEY (`anime_id`) REFERENCES `animes`(`id`) ON UPDATE no action ON DELETE cascade,
 	FOREIGN KEY (`episode_id`) REFERENCES `episodes`(`id`) ON UPDATE no action ON DELETE cascade,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE set null
+);
+--> statement-breakpoint
+CREATE TABLE `episode_uploads` (
+	`episode_id` text PRIMARY KEY NOT NULL,
+	`user_id` text NOT NULL,
+	`uploaded_at` integer NOT NULL,
+	FOREIGN KEY (`episode_id`) REFERENCES `episodes`(`id`) ON UPDATE no action ON DELETE cascade,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
 );

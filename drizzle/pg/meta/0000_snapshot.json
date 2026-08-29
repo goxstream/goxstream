@@ -1,5 +1,5 @@
 {
-  "id": "02252c3b-849a-4136-a390-11061b694dfd",
+  "id": "c5554f2f-cdd3-4dc6-9495-b1ae994d66ce",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -937,85 +937,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.server_nodes": {
-      "name": "server_nodes",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "region": {
-          "name": "region",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "provider": {
-          "name": "provider",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "endpoint": {
-          "name": "endpoint",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "quality": {
-          "name": "quality",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "priority": {
-          "name": "priority",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "health_status": {
-          "name": "health_status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "latency_ms": {
-          "name": "latency_ms",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "is_primary": {
-          "name": "is_primary",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.stream_sources": {
       "name": "stream_sources",
       "schema": "",
@@ -1028,12 +949,6 @@
         },
         "episode_id": {
           "name": "episode_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "server_node_id": {
-          "name": "server_node_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -1101,19 +1016,6 @@
           "tableTo": "episodes",
           "columnsFrom": [
             "episode_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "stream_sources_server_node_id_server_nodes_id_fk": {
-          "name": "stream_sources_server_node_id_server_nodes_id_fk",
-          "tableFrom": "stream_sources",
-          "tableTo": "server_nodes",
-          "columnsFrom": [
-            "server_node_id"
           ],
           "columnsTo": [
             "id"
@@ -1572,6 +1474,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "guest_email": {
+          "name": "guest_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "parent_id": {
           "name": "parent_id",
           "type": "text",
@@ -1642,6 +1550,64 @@
             "id"
           ],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.episode_uploads": {
+      "name": "episode_uploads",
+      "schema": "",
+      "columns": {
+        "episode_id": {
+          "name": "episode_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "uploaded_at": {
+          "name": "uploaded_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "episode_uploads_episode_id_episodes_id_fk": {
+          "name": "episode_uploads_episode_id_episodes_id_fk",
+          "tableFrom": "episode_uploads",
+          "tableTo": "episodes",
+          "columnsFrom": [
+            "episode_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "episode_uploads_user_id_users_id_fk": {
+          "name": "episode_uploads_user_id_users_id_fk",
+          "tableFrom": "episode_uploads",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

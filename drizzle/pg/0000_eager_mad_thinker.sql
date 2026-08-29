@@ -138,24 +138,9 @@ CREATE TABLE "episodes" (
 	"created_at" timestamp NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "server_nodes" (
-	"id" text PRIMARY KEY NOT NULL,
-	"name" text NOT NULL,
-	"region" text,
-	"provider" text,
-	"endpoint" text,
-	"quality" text NOT NULL,
-	"priority" integer NOT NULL,
-	"status" text NOT NULL,
-	"health_status" text NOT NULL,
-	"latency_ms" integer NOT NULL,
-	"is_primary" boolean NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE "stream_sources" (
 	"id" text PRIMARY KEY NOT NULL,
 	"episode_id" text NOT NULL,
-	"server_node_id" text NOT NULL,
 	"server_name" text,
 	"stream_url" text NOT NULL,
 	"format" text NOT NULL,
@@ -223,11 +208,18 @@ CREATE TABLE "comments" (
 	"episode_id" text NOT NULL,
 	"user_id" text,
 	"guest_name" text,
+	"guest_email" text,
 	"parent_id" text,
 	"content" text NOT NULL,
 	"is_spoiler" boolean NOT NULL,
 	"created_at" timestamp NOT NULL,
 	"updated_at" timestamp NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "episode_uploads" (
+	"episode_id" text PRIMARY KEY NOT NULL,
+	"user_id" text NOT NULL,
+	"uploaded_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -241,7 +233,6 @@ ALTER TABLE "trending_stats" ADD CONSTRAINT "trending_stats_anime_id_animes_id_f
 ALTER TABLE "audio_tracks" ADD CONSTRAINT "audio_tracks_episode_id_episodes_id_fk" FOREIGN KEY ("episode_id") REFERENCES "public"."episodes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "episodes" ADD CONSTRAINT "episodes_anime_id_animes_id_fk" FOREIGN KEY ("anime_id") REFERENCES "public"."animes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "stream_sources" ADD CONSTRAINT "stream_sources_episode_id_episodes_id_fk" FOREIGN KEY ("episode_id") REFERENCES "public"."episodes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "stream_sources" ADD CONSTRAINT "stream_sources_server_node_id_server_nodes_id_fk" FOREIGN KEY ("server_node_id") REFERENCES "public"."server_nodes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "subtitle_tracks" ADD CONSTRAINT "subtitle_tracks_episode_id_episodes_id_fk" FOREIGN KEY ("episode_id") REFERENCES "public"."episodes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "watch_histories" ADD CONSTRAINT "watch_histories_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "watch_histories" ADD CONSTRAINT "watch_histories_anime_id_animes_id_fk" FOREIGN KEY ("anime_id") REFERENCES "public"."animes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
@@ -254,4 +245,6 @@ ALTER TABLE "comment_reports" ADD CONSTRAINT "comment_reports_comment_id_comment
 ALTER TABLE "comment_reports" ADD CONSTRAINT "comment_reports_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "comments" ADD CONSTRAINT "comments_anime_id_animes_id_fk" FOREIGN KEY ("anime_id") REFERENCES "public"."animes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "comments" ADD CONSTRAINT "comments_episode_id_episodes_id_fk" FOREIGN KEY ("episode_id") REFERENCES "public"."episodes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "comments" ADD CONSTRAINT "comments_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
+ALTER TABLE "comments" ADD CONSTRAINT "comments_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "episode_uploads" ADD CONSTRAINT "episode_uploads_episode_id_episodes_id_fk" FOREIGN KEY ("episode_id") REFERENCES "public"."episodes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "episode_uploads" ADD CONSTRAINT "episode_uploads_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;
