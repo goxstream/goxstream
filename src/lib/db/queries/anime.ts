@@ -1,9 +1,8 @@
 import { eq, desc, asc, and, or, like, sql } from "drizzle-orm";
 import { getDb } from "../index";
-import { animes, genres, animeGenres, studios, animeStudios } from "../schema";
+import { animes, genres, trendingStats } from "../schema";
 import type { AnimeItem } from "@/types/anime";
-import type { ScheduleItem } from "@/types/schedule";
-import { generateMockSchedule, mapToAnimeItem as _mapToAnimeItem } from "./anime.mappers";
+import { mapToAnimeItem as _mapToAnimeItem } from "./anime.mappers";
 
 // Re-export mapToAnimeItem for external consumers (e.g. users.ts)
 const mapToAnimeItem = _mapToAnimeItem;
@@ -67,37 +66,47 @@ export async function getFeaturedAnime(): Promise<AnimeItem | null> {
 
 export async function getTrendingAnime(limit = 10): Promise<AnimeItem[]> {
   const db = await getDb();
-  const rawList = await db.query.animes.findMany({
-    where: eq(animes.isTrending, true),
+  
+  try {
+    const rawList = await db.query.trendingStats.findMany({
+      limit,
+      orderBy: [asc(trendingStats.rank)],
+      with: {
+        anime: {
+          with: {
+            animeGenres: {
+              with: {
+                genre: true,
+              },
+            },
+            animeStudios: {
+              with: {
+                studio: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (rawList && rawList.length > 0) {
+      return rawList.map((ts: any) => mapToAnimeItem(ts.anime));
+    }
+  } catch (error) {
+    console.error("Failed to query trending stats from database:", error);
+  }
+
+  // Fallback to top rated if trending stats query fails or is empty
+  const fallback = await db.query.animes.findMany({
     limit,
     orderBy: [desc(animes.rating)],
     with: {
-      animeGenres: {
-        with: {
-          genre: true,
-        },
-      },
-      animeStudios: {
-        with: {
-          studio: true,
-        },
-      },
+      animeGenres: { with: { genre: true } },
+      animeStudios: { with: { studio: true } },
     },
   });
-
-  if (!rawList || rawList.length === 0) {
-    const fallback = await db.query.animes.findMany({
-      limit,
-      orderBy: [desc(animes.rating)],
-      with: {
-        animeGenres: { with: { genre: true } },
-        animeStudios: { with: { studio: true } },
-      },
-    });
-    return fallback.map(mapToAnimeItem);
-  }
-
-  return rawList.map(mapToAnimeItem);
+  
+  return fallback.map(mapToAnimeItem);
 }
 
 export async function getAllGenres(): Promise<string[]> {
@@ -170,31 +179,4 @@ export async function getBrowseAnime(options?: {
   }
 
   return items;
-}
-
-export async function getAnimeScheduleItems(): Promise<ScheduleItem[]> {
-  const db = await getDb();
-  const rawList = await db.query.animes.findMany({
-    limit: 50,
-    orderBy: [desc(animes.createdAt)],
-    with: {
-      animeGenres: {
-        with: {
-          genre: true,
-        },
-      },
-      animeStudios: {
-        with: {
-          studio: true,
-        },
-      },
-    },
-  });
-
-  if (!rawList || rawList.length === 0) {
-    return [];
-  }
-
-  const animeItems = rawList.map(mapToAnimeItem);
-  return generateMockSchedule(animeItems);
 }

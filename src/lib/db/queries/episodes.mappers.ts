@@ -43,17 +43,5 @@ export function mapToStreamSources(rawSources: any[], episodeId: string): Stream
     },
   }));
 
-  // Fallback demo stream if no stream sources populated
-  if (sources.length === 0) {
-    sources.push({
-      id: `fallback-${episodeId}`,
-      serverName: "GoxStream CDN Alpha",
-      quality: "1080p",
-      url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-      type: "hls",
-      isPrimary: true,
-    });
-  }
-
   return sources;
 }

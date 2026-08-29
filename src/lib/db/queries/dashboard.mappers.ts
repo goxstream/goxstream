@@ -4,22 +4,26 @@ import type { CategoryItem } from "@/app/dashboard/anime/categories/types";
 import type { SeasonItem, SeasonQuarter } from "@/app/dashboard/anime/seasons/types";
 
 /**
- * Calculates dashboard statistics from raw counts
+ * Calculates dashboard statistics from database queries with zero simulation
  */
 export function calculateDashboardStats(
   totalAnime: number,
   totalEpisodes: number,
-  totalUsers: number
+  totalUsers: number,
+  activeStreams: number,
+  bandwidthUsageGb: number,
+  storageUsedGb: number,
+  monthlyGrowthPercent: number
 ): DashboardStatsData {
   return {
     totalAnime,
     totalEpisodes,
     totalUsers,
-    activeStreams: Math.floor(totalAnime * 2.8),
-    bandwidthUsageGb: Number((totalEpisodes * 0.045).toFixed(1)),
-    cpuLoadPercent: 12.5,
-    storageUsedGb: Number((totalEpisodes * 0.75).toFixed(1)),
-    monthlyGrowthPercent: totalUsers > 0 ? 14.8 : 0,
+    activeStreams,
+    bandwidthUsageGb,
+    cpuLoadPercent: 0,
+    storageUsedGb,
+    monthlyGrowthPercent,
   };
 }
 

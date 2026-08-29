@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAnimeScheduleItems } from "@/lib/db/queries/anime";
+import { getAnimeScheduleItems } from "@/lib/db/queries/schedule";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
 import type { ScheduleItem } from "@/types/schedule";
 

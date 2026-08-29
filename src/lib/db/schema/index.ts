@@ -36,6 +36,10 @@ export const {
   comments,
   commentLikes,
   commentReports,
+  schedules,
+  schedulesRelations,
+  trendingStats,
+  trendingStatsRelations,
 } = activeSchema;
 
 export { sqliteSchema, pgSchema };

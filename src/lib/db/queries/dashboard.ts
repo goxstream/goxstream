@@ -1,6 +1,6 @@
-import { count, eq, desc } from "drizzle-orm";
+import { count, eq, desc, sql } from "drizzle-orm";
 import { getDb } from "../index";
-import { animes, episodes, users, genres } from "../schema";
+import { animes, episodes, users, genres, sessions, watchHistories } from "../schema";
 import type { DashboardStatsData } from "@/hooks/use-dashboard-stats";
 import type { UserProfile } from "@/types/user";
 import type { CategoryItem } from "@/app/dashboard/anime/categories/types";
@@ -31,7 +31,57 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
     const totalEpisodes = episodeRes?.count || 0;
     const totalUsers = userRes?.count || 0;
 
-    return calculateDashboardStats(totalAnime, totalEpisodes, totalUsers);
+    // Active streams from active sessions
+    const [activeStreamsRes] = await db
+      .select({ count: count() })
+      .from(sessions)
+      .where(sql`expires_at > ${new Date()}`);
+    const activeStreams = activeStreamsRes?.count || 0;
+
+    // Storage used: calculate from actual video duration sum of episodes
+    const [episodesSum] = await db
+      .select({ sumDuration: sql<number>`SUM(duration_seconds)` })
+      .from(episodes);
+    const totalDurationSeconds = Number(episodesSum?.sumDuration) || 0;
+    const storageUsedGb = Number((totalDurationSeconds * 0.00043).toFixed(1)); // ~26 MB per minute
+
+    // Bandwidth used: calculate from actual progress seconds sum in watch histories
+    const [watchHistSum] = await db
+      .select({ sumProgress: sql<number>`SUM(progress_seconds)` })
+      .from(watchHistories);
+    const totalProgressSeconds = Number(watchHistSum?.sumProgress) || 0;
+    const bandwidthUsageGb = Number((totalProgressSeconds * 0.00043).toFixed(1));
+
+    // User growth: compare last 30 days registration to the previous 30 days
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+
+    const [newUsersRes] = await db
+      .select({ count: count() })
+      .from(users)
+      .where(sql`created_at >= ${thirtyDaysAgo}`);
+
+    const [oldUsersRes] = await db
+      .select({ count: count() })
+      .from(users)
+      .where(sql`created_at >= ${sixtyDaysAgo} AND created_at < ${thirtyDaysAgo}`);
+
+    const newUsersCount = newUsersRes?.count || 0;
+    const oldUsersCount = oldUsersRes?.count || 0;
+
+    const monthlyGrowthPercent = oldUsersCount > 0 
+      ? Number(((newUsersCount - oldUsersCount) / oldUsersCount * 100).toFixed(1))
+      : newUsersCount > 0 ? 100.0 : 0.0;
+
+    return calculateDashboardStats(
+      totalAnime,
+      totalEpisodes,
+      totalUsers,
+      activeStreams,
+      bandwidthUsageGb,
+      storageUsedGb,
+      monthlyGrowthPercent
+    );
   } catch {
     return {
       totalAnime: 0,
@@ -64,7 +114,6 @@ export async function getDashboardUsers(): Promise<UserProfile[]> {
 
   return [];
 }
-
 
 export async function getDashboardCategories(): Promise<CategoryItem[]> {
   const db = await getDb();
