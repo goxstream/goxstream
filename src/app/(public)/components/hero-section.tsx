@@ -80,8 +80,8 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                       )}
 
                       {/* Gradient Overlays for readable text contrast & ambient depth */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/65 to-card/25" />
-                      <div className="absolute inset-0 bg-gradient-to-r from-card/90 via-card/45 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/65 to-card/25 opacity-20 dark:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-card/90 via-card/45 to-transparent opacity-25 dark:opacity-100 transition-opacity duration-300" />
                     </div>
 
                     {/* Layer 20: Anime Information Content Overlay */}
