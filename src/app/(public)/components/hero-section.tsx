@@ -43,10 +43,10 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                 <CarouselItem key={item.id} className="relative w-full pl-0">
                   <Link
                     href={`/anime/${item.slug}/${item.episodeNumber || 1}`}
-                    className="relative block w-full min-h-[380px] sm:min-h-[480px] lg:min-h-[640px] overflow-hidden group/card"
+                    className="flex flex-col sm:block relative w-full sm:min-h-[480px] lg:min-h-[640px] overflow-hidden group/card bg-card"
                   >
                     {/* Layer 0: Background Anime Poster/Banner & Contrast Gradients */}
-                    <div className="absolute inset-0 size-full z-0 bg-muted overflow-hidden">
+                    <div className="relative w-full aspect-video sm:absolute sm:inset-0 sm:size-full z-0 bg-muted overflow-hidden">
                       {/* Grid Pattern & Ambient Glow at the backmost layer */}
                       <div className="absolute inset-0 z-0 pointer-events-none bg-grid-pattern opacity-70 mix-blend-overlay" />
                       <div className="absolute -top-36 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-primary/30 blur-[120px] rounded-full pointer-events-none z-0" />
@@ -80,12 +80,12 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                       )}
 
                       {/* Gradient Overlays for readable text contrast & ambient depth */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/65 to-card/25 opacity-20 dark:opacity-100 transition-opacity duration-300" />
-                      <div className="absolute inset-0 bg-gradient-to-r from-card/90 via-card/45 to-transparent opacity-25 dark:opacity-100 transition-opacity duration-300" />
+                      <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-card via-card/65 to-card/25 opacity-20 dark:opacity-100 transition-opacity duration-300" />
+                      <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-card/90 via-card/45 to-transparent opacity-25 dark:opacity-100 transition-opacity duration-300" />
                     </div>
 
                     {/* Layer 20: Anime Information Content Overlay */}
-                    <div className="relative z-20 size-full min-h-[380px] sm:min-h-[480px] lg:min-h-[640px] flex flex-col justify-end p-5 sm:p-10 lg:p-14 text-left max-w-4xl space-y-3 sm:space-y-4">
+                    <div className="relative z-20 w-full sm:absolute sm:inset-0 sm:size-full sm:min-h-[480px] lg:min-h-[640px] flex flex-col justify-end p-5 sm:p-10 lg:p-14 text-left max-w-4xl space-y-3 sm:space-y-4 bg-card sm:bg-transparent">
                       {/* Eyebrow Badges Row */}
                       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-3 py-1 text-xs tracking-wider uppercase animate-pulse">
