@@ -29,7 +29,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
   return (
     <section className="relative w-full max-w-[1400px] mx-auto rounded-3xl overflow-hidden bg-card text-card-foreground border border-border/60 shadow-xl group">
       {isLoading ? (
-        <div className="relative w-full min-h-[500px] sm:min-h-[580px] flex items-center justify-center p-6">
+        <div className="relative w-full min-h-[380px] sm:min-h-[480px] lg:min-h-[640px] flex items-center justify-center p-6">
           <Skeleton className="size-full rounded-2xl" />
         </div>
       ) : (
@@ -43,7 +43,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                 <CarouselItem key={item.id} className="relative w-full pl-0">
                   <Link
                     href={`/anime/${item.slug}/${item.episodeNumber || 1}`}
-                    className="relative block w-full min-h-[520px] sm:min-h-[600px] lg:min-h-[640px] overflow-hidden group/card"
+                    className="relative block w-full min-h-[380px] sm:min-h-[480px] lg:min-h-[640px] overflow-hidden group/card"
                   >
                     {/* Layer 0: Background Anime Poster/Banner & Contrast Gradients */}
                     <div className="absolute inset-0 size-full z-0 bg-muted overflow-hidden">
@@ -85,7 +85,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
                     </div>
 
                     {/* Layer 20: Anime Information Content Overlay */}
-                    <div className="relative z-20 size-full min-h-[520px] sm:min-h-[600px] lg:min-h-[640px] flex flex-col justify-end p-6 sm:p-10 lg:p-14 text-left max-w-4xl space-y-4">
+                    <div className="relative z-20 size-full min-h-[380px] sm:min-h-[480px] lg:min-h-[640px] flex flex-col justify-end p-5 sm:p-10 lg:p-14 text-left max-w-4xl space-y-3 sm:space-y-4">
                       {/* Eyebrow Badges Row */}
                       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <Badge className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-3 py-1 text-xs tracking-wider uppercase animate-pulse">
@@ -109,7 +109,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
 
                       {/* Anime Title */}
                       <div className="space-y-1">
-                        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground line-clamp-2 leading-[1.1] group-hover/card:text-primary transition-colors duration-300">
+                        <h1 className="text-2xl sm:text-5xl lg:text-6xl font-black tracking-tight text-foreground line-clamp-2 leading-[1.1] group-hover/card:text-primary transition-colors duration-300">
                           {item.title}
                         </h1>
 
@@ -122,7 +122,7 @@ export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
 
                       {/* Synopsis (If available) */}
                       {item.synopsis && (
-                        <p className="text-xs sm:text-sm lg:text-base text-muted-foreground line-clamp-2 max-w-2xl leading-relaxed">
+                        <p className="text-[11px] sm:text-sm lg:text-base text-muted-foreground line-clamp-2 max-w-2xl leading-relaxed">
                           {item.synopsis}
                         </p>
                       )}
