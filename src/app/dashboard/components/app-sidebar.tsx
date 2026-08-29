@@ -7,27 +7,30 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 import { NAV_MAIN_DATA, NAV_SECONDARY_DATA } from "../constants";
 import { useSidebarUser } from "../hooks/use-sidebar-user";
+import { Logo } from "@/components/logo";
+import { LogoBrand } from "@/components/logo-brand";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { currentUser } = useSidebarUser();
+  const { state } = useSidebar();
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border/60" {...props}>
-      <SidebarHeader className="border-b border-border/60 p-4">
-        <div className="flex items-center gap-2.5 px-1">
-          <div className="flex size-6 items-center justify-center rounded bg-brand text-brand-foreground font-bold text-xs">
-            G
+      <SidebarHeader className="border-b border-border/60 p-2.5">
+        {state === "collapsed" ? (
+          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary/10 text-sidebar-primary transition-transform group-hover:scale-105 mx-auto">
+            <Logo size={22} />
           </div>
-          <span className="font-semibold text-sm tracking-tight text-foreground truncate group-data-[collapsible=icon]:hidden">
-            GoxStream
-          </span>
-        </div>
+        ) : (
+          <LogoBrand variant="horizontal" size="sm" className="px-1.5 py-1" />
+        )}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={NAV_MAIN_DATA} />
