@@ -9,7 +9,7 @@ export default function SandboxPage() {
         <DecryptedText
           text="GoxStream & React Bits"
           animateOn="view"
-          speed={1000}
+          speed={60}
           className="text-primary"
           encryptedClassName="text-muted-foreground opacity-70"
         />
