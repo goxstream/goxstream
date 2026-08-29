@@ -1,29 +1,9 @@
 import { eq, desc, asc, and } from "drizzle-orm";
 import { getDb } from "../index";
-import { episodes, streamSources, animes } from "../schema";
-import { getAnimeBySlug, mapToAnimeItem } from "./anime";
-import type { EpisodeItem, EpisodeWatchDetails, StreamSource } from "@/types/anime";
-
-export function mapToEpisodeItem(raw: any, animeSlug: string, animeTitle: string): EpisodeItem {
-  const durationMin = raw.durationSeconds ? `${Math.floor(raw.durationSeconds / 60)} min` : "24 min";
-  const dateStr = raw.airDate instanceof Date
-    ? raw.airDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-    : "Recently";
-
-  return {
-    id: raw.id,
-    animeId: raw.animeId,
-    animeSlug,
-    animeTitle,
-    episodeNumber: raw.number,
-    episodeTitle: raw.title || `Episode ${raw.number}`,
-    thumbnail: raw.thumbnail || "",
-    duration: durationMin,
-    releasedAt: dateStr,
-    isSub: true,
-    isDub: false,
-  };
-}
+import { episodes, animes } from "../schema";
+import { getAnimeBySlug } from "./anime";
+import type { EpisodeItem, EpisodeWatchDetails } from "@/types/anime";
+import { mapToEpisodeItem, mapToStreamSources } from "./episodes.mappers";
 
 export async function getLatestEpisodes(limit = 10): Promise<EpisodeItem[]> {
   const db = await getDb();
@@ -100,32 +80,7 @@ export async function getEpisodeWatchDetails(
   const prevEpisode = prevEpRaw ? mapToEpisodeItem(prevEpRaw, animeSlug, animeTitle) : undefined;
   const nextEpisode = nextEpRaw ? mapToEpisodeItem(nextEpRaw, animeSlug, animeTitle) : undefined;
 
-  const sources: StreamSource[] = (currentEpRaw.streamSources || []).map((ss: any) => ({
-    id: ss.id,
-    serverName: ss.serverName || "Default Server",
-    quality: ss.quality || "1080p",
-    url: ss.streamUrl,
-    type: (ss.format as StreamSource["type"]) || "hls",
-    isPrimary: Boolean(ss.isPrimary),
-    qualityUrls: {
-      url1080p: ss.url1080p || undefined,
-      url720p: ss.url720p || undefined,
-      url480p: ss.url480p || undefined,
-      url360p: ss.url360p || undefined,
-    },
-  }));
-
-  // Fallback demo stream if no stream sources populated
-  if (sources.length === 0) {
-    sources.push({
-      id: `fallback-${currentEpRaw.id}`,
-      serverName: "GoxStream CDN Alpha",
-      quality: "1080p",
-      url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-      type: "hls",
-      isPrimary: true,
-    });
-  }
+  const sources = mapToStreamSources(currentEpRaw.streamSources || [], currentEpRaw.id);
 
   return {
     anime,

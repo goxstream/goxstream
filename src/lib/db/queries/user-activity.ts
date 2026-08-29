@@ -1,7 +1,8 @@
-import { desc, eq } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 import { getDb } from "../index";
 import { watchlists, watchHistories } from "../schema";
 import type { WatchlistItem, WatchHistoryItem } from "@/types/user";
+import { mapToWatchlistItem, mapToWatchHistoryItem } from "./user-activity.mappers";
 
 export async function getUserWatchlistItems(): Promise<WatchlistItem[]> {
   try {
@@ -15,25 +16,7 @@ export async function getUserWatchlistItems(): Promise<WatchlistItem[]> {
     });
 
     if (records && records.length > 0) {
-      return records.map((w: any) => ({
-        id: w.id,
-        animeId: w.animeId,
-        status: (w.status as WatchlistItem["status"]) || "watching",
-        currentEpisode: w.currentEpisode || 1,
-        totalEpisodes: w.anime?.episodesCount || 12,
-        isFavorite: Boolean(w.isFavorite),
-        rating: w.rating || 0,
-        notes: w.notes || "",
-        updatedAt: w.updatedAt ? new Date(w.updatedAt).toISOString() : new Date().toISOString(),
-        anime: {
-          id: w.anime?.id || w.animeId,
-          title: w.anime?.titleEnglish || w.anime?.titleRomaji || "Anime",
-          slug: w.anime?.slug || "anime",
-          coverImage: w.anime?.coverImage || "",
-          type: w.anime?.type || "TV",
-          genres: ["Action", "Fantasy"],
-        },
-      }));
+      return records.map(mapToWatchlistItem);
     }
   } catch {
     // Fallback if DB empty
@@ -74,21 +57,7 @@ export async function getUserWatchHistoryItems(): Promise<WatchHistoryItem[]> {
     });
 
     if (records && records.length > 0) {
-      return records.map((h: any) => ({
-        id: h.id,
-        animeId: h.animeId,
-        animeTitle: h.anime?.titleEnglish || h.anime?.titleRomaji || "Anime",
-        animeSlug: h.anime?.slug || "anime",
-        animeCover: h.anime?.coverImage || "",
-        episodeNumber: h.episode?.episodeNumber || h.episodeNumber || 1,
-        episodeTitle: h.episode?.title || `Episode ${h.episode?.episodeNumber || h.episodeNumber || 1}`,
-        watchedSeconds: h.progressSeconds || 0,
-        durationSeconds: h.durationSeconds || 1440,
-        progressPercent: h.durationSeconds
-          ? Math.min(100, Math.round((h.progressSeconds / h.durationSeconds) * 100))
-          : h.progressPercent || 0,
-        lastWatchedAt: h.lastWatchedAt ? new Date(h.lastWatchedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "Today",
-      }));
+      return records.map(mapToWatchHistoryItem);
     }
   } catch {
     // Fallback
