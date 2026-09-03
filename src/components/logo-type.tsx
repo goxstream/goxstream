@@ -34,16 +34,16 @@ const SIZE_CLASSES = {
   xl: "text-2xl tracking-tight",
 };
 
-const SVG_SIZE_MAP = {
-  sm: { width: 106, height: 24, fontSize: 16 },
-  md: { width: 122, height: 28, fontSize: 18 },
-  lg: { width: 136, height: 32, fontSize: 20 },
-  xl: { width: 164, height: 38, fontSize: 24 },
+export const LOGO_TYPE_SVG_SIZE_MAP = {
+  sm: { width: 150, height: 24, fontSize: 16 },
+  md: { width: 170, height: 28, fontSize: 18 },
+  lg: { width: 190, height: 32, fontSize: 20 },
+  xl: { width: 225, height: 38, fontSize: 24 },
 };
 
 export function LogoType({ size = "md", className, renderAs = "html" }: LogoTypeProps) {
   if (renderAs === "svg") {
-    const svgSize = SVG_SIZE_MAP[size];
+    const svgSize = LOGO_TYPE_SVG_SIZE_MAP[size];
 
     return (
       <svg

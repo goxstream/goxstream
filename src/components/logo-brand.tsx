@@ -22,7 +22,7 @@
 
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { LogoType } from "@/components/logo-type";
+import { LOGO_TYPE_SVG_SIZE_MAP, LogoType } from "@/components/logo-type";
 import { cn } from "@/lib/utils";
 
 export interface LogoBrandProps {
@@ -56,7 +56,8 @@ export function LogoBrand({
   const iconSize = ICON_SIZE_MAP[size];
 
   if (renderAs === "svg") {
-    const wordmarkWidth = { sm: 106, md: 122, lg: 136, xl: 164 }[size];
+    const wordmarkWidth = LOGO_TYPE_SVG_SIZE_MAP[size].width;
+    const wordmarkHeight = LOGO_TYPE_SVG_SIZE_MAP[size].height;
     const gap = 8;
     const padding = variant === "horizontal" ? 4 : 16;
     const width = variant === "horizontal"
@@ -64,7 +65,7 @@ export function LogoBrand({
       : iconSize + padding * 2;
     const height = variant === "horizontal"
       ? Math.max(iconSize, { sm: 24, md: 28, lg: 32, xl: 38 }[size]) + padding * 2
-      : iconSize + 38 + padding * 2;
+      : iconSize + gap + wordmarkHeight + padding * 2;
 
     return (
       <svg
@@ -79,7 +80,7 @@ export function LogoBrand({
         <g transform={`translate(${padding} ${variant === "horizontal" ? padding : padding})`}>
           <Logo size={iconSize} className={logoClassName} />
           <g transform={variant === "horizontal"
-            ? `translate(${iconSize + gap} ${(iconSize - { sm: 24, md: 28, lg: 32, xl: 38 }[size]) / 2})`
+            ? `translate(${iconSize + gap} ${(iconSize - wordmarkHeight) / 2})`
             : `translate(${(iconSize - wordmarkWidth) / 2} ${iconSize + gap})`}>
             <LogoType size={size} renderAs="svg" className={logoTypeClassName} />
           </g>
