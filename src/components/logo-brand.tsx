@@ -33,6 +33,7 @@ export interface LogoBrandProps {
   className?: string;
   logoClassName?: string;
   logoTypeClassName?: string;
+  renderAs?: "html" | "svg";
 }
 
 const ICON_SIZE_MAP = {
@@ -50,8 +51,42 @@ export function LogoBrand({
   className,
   logoClassName,
   logoTypeClassName,
+  renderAs = "html",
 }: LogoBrandProps) {
   const iconSize = ICON_SIZE_MAP[size];
+
+  if (renderAs === "svg") {
+    const wordmarkWidth = { sm: 106, md: 122, lg: 136, xl: 164 }[size];
+    const gap = 8;
+    const padding = variant === "horizontal" ? 4 : 16;
+    const width = variant === "horizontal"
+      ? padding + iconSize + gap + wordmarkWidth + padding
+      : iconSize + padding * 2;
+    const height = variant === "horizontal"
+      ? Math.max(iconSize, { sm: 24, md: 28, lg: 32, xl: 38 }[size]) + padding * 2
+      : iconSize + 38 + padding * 2;
+
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        role="img"
+        aria-label="GoxStream"
+        className={className}
+      >
+        <g transform={`translate(${padding} ${variant === "horizontal" ? padding : padding})`}>
+          <Logo size={iconSize} className={logoClassName} />
+          <g transform={variant === "horizontal"
+            ? `translate(${iconSize + gap} ${(iconSize - { sm: 24, md: 28, lg: 32, xl: 38 }[size]) / 2})`
+            : `translate(${(iconSize - wordmarkWidth) / 2} ${iconSize + gap})`}>
+            <LogoType size={size} renderAs="svg" className={logoTypeClassName} />
+          </g>
+        </g>
+      </svg>
+    );
+  }
 
   const content = (
     <>

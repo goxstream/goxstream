@@ -3,6 +3,7 @@ import { LOGO_CONFIG } from "./config";
 import { loadSvgBuffer } from "./svg-loader";
 import { convertSvgToPngs } from "./png-converter";
 import { generateIcoFile } from "./ico-converter";
+import { renderBrandSvg } from "./svg-renderer";
 
 async function main() {
   console.log("🎨 Starting GoxStream Logo & Favicon Generator...");
@@ -12,6 +13,10 @@ async function main() {
     // 1. Load SVG Buffer
     const svgBuffer = await loadSvgBuffer(LOGO_CONFIG.svgInputPath);
     console.log("✓ Loaded SVG buffer successfully.");
+
+    const brandSvgBuffer = Buffer.from(renderBrandSvg());
+    await fs.writeFile(LOGO_CONFIG.brandSvgOutputPath, brandSvgBuffer);
+    console.log("✓ Generated React brand SVG: logo-brand.svg");
 
     // 2. Generate PNG multisize buffers and save files
     const pngResults = await convertSvgToPngs(svgBuffer, LOGO_CONFIG.pngTargets);
