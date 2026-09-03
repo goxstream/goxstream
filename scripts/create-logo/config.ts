@@ -9,6 +9,7 @@ export interface PngTarget {
 export interface LogoConfig {
   svgInputPath: string;
   brandSvgOutputPath: string;
+  fontPath: string;
   publicDir: string;
   pngTargets: PngTarget[];
   icoOutputPath: string;
@@ -21,6 +22,7 @@ const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 export const LOGO_CONFIG: LogoConfig = {
   svgInputPath: path.join(PUBLIC_DIR, "logo.svg"),
   brandSvgOutputPath: path.join(PUBLIC_DIR, "logo-brand.svg"),
+  fontPath: path.join(ROOT_DIR, "scripts/create-logo/fonts/Syne-ExtraBold.ttf"),
   publicDir: PUBLIC_DIR,
   pngTargets: [
     { name: "favicon-16x16.png", size: 16, outPath: path.join(PUBLIC_DIR, "favicon-16x16.png") },

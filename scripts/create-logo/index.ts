@@ -14,7 +14,7 @@ async function main() {
     const svgBuffer = await loadSvgBuffer(LOGO_CONFIG.svgInputPath);
     console.log("✓ Loaded SVG buffer successfully.");
 
-    const brandSvgBuffer = Buffer.from(renderBrandSvg());
+    const brandSvgBuffer = Buffer.from(await renderBrandSvg(LOGO_CONFIG.fontPath));
     await fs.writeFile(LOGO_CONFIG.brandSvgOutputPath, brandSvgBuffer);
     console.log("✓ Generated React brand SVG: logo-brand.svg");
 
