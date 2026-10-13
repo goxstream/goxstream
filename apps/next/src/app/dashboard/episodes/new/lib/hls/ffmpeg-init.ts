@@ -22,9 +22,7 @@ const ST_FALLBACK_CDN = `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/umd
 function timeoutPromise<T>(promise: Promise<T>, ms: number, errorMessage: string): Promise<T> {
   return Promise.race([
     promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(errorMessage)), ms)
-    ),
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error(errorMessage)), ms)),
   ]);
 }
 
@@ -63,7 +61,7 @@ async function loadSTCore(instance: FFmpeg, cdnBase: string, onProgress?: (msg: 
  */
 export async function loadFFmpegCore(
   onProgress?: (msg: string) => void,
-  mode: EngineMode = "mt"
+  mode: EngineMode = "mt",
 ): Promise<FFmpeg> {
   // 1. Return existing loaded instance if already ready
   if (ffmpegInstance && ffmpegInstance.loaded) {
@@ -85,19 +83,22 @@ export async function loadFFmpegCore(
       if (onProgress) onProgress("User selected Multi-Threaded WASM Core mode...");
 
       const crossIsolated = typeof window !== "undefined" && window.crossOriginIsolated;
-      const sabSupported = typeof window !== "undefined" && typeof SharedArrayBuffer !== "undefined";
+      const sabSupported =
+        typeof window !== "undefined" && typeof SharedArrayBuffer !== "undefined";
 
       if (!crossIsolated || !sabSupported) {
         ffmpegInstance = null;
         loadPromise = null;
         throw new Error(
-          "Multi-Threaded WASM Core requires Cross-Origin Isolation (window.crossOriginIsolated) and SharedArrayBuffer. Please verify server COOP/COEP headers or switch to Single-Threaded mode."
+          "Multi-Threaded WASM Core requires Cross-Origin Isolation (window.crossOriginIsolated) and SharedArrayBuffer. Please verify server COOP/COEP headers or switch to Single-Threaded mode.",
         );
       }
 
       const mtTimeoutMs = calculateDynamicTimeoutMs(33, mbps);
       if (onProgress) {
-        onProgress(`Network bandwidth: ~${mbps.toFixed(1)} Mbps (Adaptive MT CDN timeout budget: ${(mtTimeoutMs / 1000).toFixed(0)}s)`);
+        onProgress(
+          `Network bandwidth: ~${mbps.toFixed(1)} Mbps (Adaptive MT CDN timeout budget: ${(mtTimeoutMs / 1000).toFixed(0)}s)`,
+        );
       }
 
       // Tier 1: Primary Multi-Threaded CDN (jsDelivr)
@@ -108,32 +109,37 @@ export async function loadFFmpegCore(
         await timeoutPromise(
           loadMTCore(instance, MT_PRIMARY_CDN, onProgress),
           mtTimeoutMs,
-          `Primary MT CDN load timeout (${(mtTimeoutMs / 1000).toFixed(0)}s budget)`
+          `Primary MT CDN load timeout (${(mtTimeoutMs / 1000).toFixed(0)}s budget)`,
         );
 
         isMultiThreadedMode = true;
-        if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully (jsDelivr).");
+        if (onProgress)
+          onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully (jsDelivr).");
         return instance;
       } catch (mtPrimaryErr: any) {
         // Tier 2: Fallback Multi-Threaded CDN (unpkg)
         try {
-          if (onProgress) onProgress(`jsDelivr MT failed (${mtPrimaryErr?.message || "Error"}). Retrying unpkg MT CDN...`);
+          if (onProgress)
+            onProgress(
+              `jsDelivr MT failed (${mtPrimaryErr?.message || "Error"}). Retrying unpkg MT CDN...`,
+            );
           const instance = new FFmpeg();
           ffmpegInstance = instance;
           await timeoutPromise(
             loadMTCore(instance, MT_FALLBACK_CDN, onProgress),
             mtTimeoutMs,
-            `Fallback MT CDN load timeout (${(mtTimeoutMs / 1000).toFixed(0)}s budget)`
+            `Fallback MT CDN load timeout (${(mtTimeoutMs / 1000).toFixed(0)}s budget)`,
           );
 
           isMultiThreadedMode = true;
-          if (onProgress) onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully via unpkg.");
+          if (onProgress)
+            onProgress("FFmpeg Multi-Threaded WASM Core loaded successfully via unpkg.");
           return instance;
         } catch (mtFallbackErr: any) {
           ffmpegInstance = null;
           loadPromise = null;
           throw new Error(
-            `Multi-Threaded WASM Core load failed on all CDNs: ${mtFallbackErr?.message || "MT Core load failed"}`
+            `Multi-Threaded WASM Core load failed on all CDNs: ${mtFallbackErr?.message || "MT Core load failed"}`,
           );
         }
       }
@@ -151,32 +157,37 @@ export async function loadFFmpegCore(
       await timeoutPromise(
         loadSTCore(instance, ST_PRIMARY_CDN, onProgress),
         stTimeoutMs,
-        `Primary ST CDN load timeout (${(stTimeoutMs / 1000).toFixed(0)}s budget)`
+        `Primary ST CDN load timeout (${(stTimeoutMs / 1000).toFixed(0)}s budget)`,
       );
 
       isMultiThreadedMode = false;
-      if (onProgress) onProgress("FFmpeg Single-Threaded WASM Core loaded successfully (jsDelivr).");
+      if (onProgress)
+        onProgress("FFmpeg Single-Threaded WASM Core loaded successfully (jsDelivr).");
       return instance;
     } catch (stPrimaryErr: any) {
       // Tier 2: Fallback Single-Threaded CDN (unpkg)
       try {
-        if (onProgress) onProgress(`jsDelivr ST failed (${stPrimaryErr?.message || "Error"}). Retrying unpkg ST CDN...`);
+        if (onProgress)
+          onProgress(
+            `jsDelivr ST failed (${stPrimaryErr?.message || "Error"}). Retrying unpkg ST CDN...`,
+          );
         const instance = new FFmpeg();
         ffmpegInstance = instance;
         await timeoutPromise(
           loadSTCore(instance, ST_FALLBACK_CDN, onProgress),
           stTimeoutMs,
-          `Fallback ST CDN load timeout (${(stTimeoutMs / 1000).toFixed(0)}s budget)`
+          `Fallback ST CDN load timeout (${(stTimeoutMs / 1000).toFixed(0)}s budget)`,
         );
 
         isMultiThreadedMode = false;
-        if (onProgress) onProgress("FFmpeg Single-Threaded WASM Core loaded successfully via unpkg.");
+        if (onProgress)
+          onProgress("FFmpeg Single-Threaded WASM Core loaded successfully via unpkg.");
         return instance;
       } catch (stFallbackErr: any) {
         ffmpegInstance = null;
         loadPromise = null;
         throw new Error(
-          `Single-Threaded WASM Core load failed on all CDNs: ${stFallbackErr?.message || "ST Core load failed"}`
+          `Single-Threaded WASM Core load failed on all CDNs: ${stFallbackErr?.message || "ST Core load failed"}`,
         );
       }
     }
@@ -222,4 +233,3 @@ export function terminateAndResetFFmpeg(): void {
   loadPromise = null;
   isMultiThreadedMode = false;
 }
-

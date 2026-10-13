@@ -6,9 +6,7 @@ import type { HlsUploadOptions, HlsUploadResult } from "./types";
  * Send multi-resolution HLS master manifest, variant manifests, and segment chunks
  * to storage API endpoint via FormData.
  */
-export async function uploadHlsPackage(
-  options: HlsUploadOptions
-): Promise<HlsUploadResult> {
+export async function uploadHlsPackage(options: HlsUploadOptions): Promise<HlsUploadResult> {
   const { animeSlug, episodeNumber, hlsResult, onProgress } = options;
 
   if (onProgress) onProgress(10, "Uploading multi-resolution HLS package to Storage...");
@@ -53,7 +51,8 @@ export async function uploadHlsPackage(
   const resData: any = await response.json();
   const finalUrl = resData?.data?.url || masterUrl;
 
-  if (onProgress) onProgress(100, "Multi-resolution HLS Package successfully uploaded to CDN Storage!");
+  if (onProgress)
+    onProgress(100, "Multi-resolution HLS Package successfully uploaded to CDN Storage!");
 
   return {
     url: finalUrl,

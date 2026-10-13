@@ -50,7 +50,6 @@ export async function PATCH(req: NextRequest) {
   }
 
   if (body.player || body.notifications) {
-
     await updateUserSettings(user.id, {
       defaultQuality: body.player?.defaultQuality,
       defaultSubtitle: body.player?.defaultSubtitle,

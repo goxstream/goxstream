@@ -24,13 +24,7 @@ import { LogoBrand } from "@/components/logo-brand";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useUserNav } from "@/hooks/use-user-nav";
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -57,16 +51,19 @@ export function MobileNav({ navItems }: MobileNavProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="lg:hidden size-8 sm:size-9 rounded-lg shrink-0"
+          className="size-8 shrink-0 rounded-lg sm:size-9 lg:hidden"
           aria-label="Toggle Navigation Menu"
         >
-          <Menu className="size-5 text-foreground" />
+          <Menu className="text-foreground size-5" />
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="right" className="w-[85vw] max-w-[360px] sm:w-[360px] h-dvh max-h-dvh inset-y-0 right-0 bg-background border-border p-0 flex flex-col justify-between overflow-hidden">
+      <SheetContent
+        side="right"
+        className="bg-background border-border inset-y-0 right-0 flex h-dvh max-h-dvh w-[85vw] max-w-[360px] flex-col justify-between overflow-hidden p-0 sm:w-[360px]"
+      >
         {/* Hamburger Header (Fixed / Top) */}
-        <div className="px-6 pt-6 pb-4 shrink-0 border-b border-border/40">
+        <div className="border-border/40 shrink-0 border-b px-6 pt-6 pb-4">
           <SheetHeader className="p-0 text-left">
             <SheetTitle>
               <LogoBrand href="/" size="lg" />
@@ -75,31 +72,32 @@ export function MobileNav({ navItems }: MobileNavProps) {
         </div>
 
         {/* Hamburger Body (Scrollable Main Content) */}
-        <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4 space-y-4">
+        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-4">
           {/* User Header Info if Logged In */}
           {user && (
-            <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border/60">
-              <Avatar className="size-10 border border-border">
+            <div className="bg-muted/50 border-border/60 flex items-center gap-3 rounded-xl border p-3">
+              <Avatar className="border-border size-10 border">
                 <AvatarImage src={user.avatarUrl || undefined} alt={user.displayName} />
-                <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
+                <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
                   {user.displayName.substring(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex flex-col min-w-0 flex-1">
+              <div className="flex min-w-0 flex-1 flex-col">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-sm truncate text-foreground">
+                  <span className="text-foreground truncate text-sm font-semibold">
                     {user.displayName}
                   </span>
                   {user.isVip && (
-                    <Badge variant="secondary" className="px-1 py-0 text-[10px] h-4 bg-amber-500/10 text-amber-500 border-amber-500/20 font-bold gap-0.5">
+                    <Badge
+                      variant="secondary"
+                      className="h-4 gap-0.5 border-amber-500/20 bg-amber-500/10 px-1 py-0 text-[10px] font-bold text-amber-500"
+                    >
                       <Crown className="size-2.5 fill-amber-500" />
                       VIP
                     </Badge>
                   )}
                 </div>
-                <span className="text-xs text-muted-foreground truncate">
-                  @{user.username}
-                </span>
+                <span className="text-muted-foreground truncate text-xs">@{user.username}</span>
               </div>
             </div>
           )}
@@ -112,9 +110,9 @@ export function MobileNav({ navItems }: MobileNavProps) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted/80 flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors"
                 >
-                  <Icon className="size-4 text-primary" />
+                  <Icon className="text-primary size-4" />
                   {item.label}
                 </Link>
               );
@@ -123,24 +121,24 @@ export function MobileNav({ navItems }: MobileNavProps) {
             <Link
               href="/activate"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted/80 flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors"
             >
-              <Tv className="size-4 text-primary" />
+              <Tv className="text-primary size-4" />
               Pair TV Device
             </Link>
 
             {/* Authenticated User Links */}
             {user && (
               <>
-                <div className="my-2 border-t border-border/60" />
+                <div className="border-border/60 my-2 border-t" />
 
                 {isStaff && (
                   <Link
                     href="/dashboard"
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
+                    className="text-primary hover:bg-primary/10 flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-semibold transition-colors"
                   >
-                    <LayoutDashboard className="size-4 text-primary" />
+                    <LayoutDashboard className="text-primary size-4" />
                     Admin Dashboard
                   </Link>
                 )}
@@ -148,36 +146,36 @@ export function MobileNav({ navItems }: MobileNavProps) {
                 <Link
                   href="/profile"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted/80 flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors"
                 >
-                  <User className="size-4 text-muted-foreground" />
+                  <User className="text-muted-foreground size-4" />
                   Profile Overview
                 </Link>
 
                 <Link
                   href="/watchlist"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted/80 flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors"
                 >
-                  <Bookmark className="size-4 text-muted-foreground" />
+                  <Bookmark className="text-muted-foreground size-4" />
                   My Watchlist
                 </Link>
 
                 <Link
                   href="/history"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted/80 flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors"
                 >
-                  <History className="size-4 text-muted-foreground" />
+                  <History className="text-muted-foreground size-4" />
                   Watch History
                 </Link>
 
                 <Link
                   href="/settings"
                   onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted/80 flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors"
                 >
-                  <Settings className="size-4 text-muted-foreground" />
+                  <Settings className="text-muted-foreground size-4" />
                   Settings
                 </Link>
               </>
@@ -186,7 +184,7 @@ export function MobileNav({ navItems }: MobileNavProps) {
         </div>
 
         {/* Hamburger Footer (Fixed / Bottom) */}
-        <div className="p-6 pt-4 shrink-0 border-t border-border bg-background space-y-3">
+        <div className="border-border bg-background shrink-0 space-y-3 border-t p-6 pt-4">
           {isLoading ? (
             <Skeleton className="h-11 w-full rounded-lg" />
           ) : user ? (
@@ -197,7 +195,7 @@ export function MobileNav({ navItems }: MobileNavProps) {
                 setOpen(false);
                 logout();
               }}
-              className="w-full h-11 rounded-lg font-medium justify-center gap-2"
+              className="h-11 w-full justify-center gap-2 rounded-lg font-medium"
             >
               <LogOut className="size-4" />
               Sign Out
@@ -210,7 +208,7 @@ export function MobileNav({ navItems }: MobileNavProps) {
                 className={buttonVariants({
                   variant: "default",
                   size: "lg",
-                  className: "w-full h-11 rounded-lg font-semibold justify-center gap-2",
+                  className: "h-11 w-full justify-center gap-2 rounded-lg font-semibold",
                 })}
               >
                 <UserPlus className="size-4" />
@@ -223,16 +221,16 @@ export function MobileNav({ navItems }: MobileNavProps) {
                 className={buttonVariants({
                   variant: "outline",
                   size: "lg",
-                  className: "w-full h-11 rounded-lg font-medium justify-center gap-2",
+                  className: "h-11 w-full justify-center gap-2 rounded-lg font-medium",
                 })}
               >
-                <LogIn className="size-4 text-muted-foreground" />
+                <LogIn className="text-muted-foreground size-4" />
                 Sign In
               </Link>
             </>
           )}
 
-          <p className="text-xs text-center text-muted-foreground pt-1">
+          <p className="text-muted-foreground pt-1 text-center text-xs">
             Fast • Ad-Free • 1080p Simulcasts
           </p>
         </div>
@@ -240,4 +238,3 @@ export function MobileNav({ navItems }: MobileNavProps) {
     </Sheet>
   );
 }
-

@@ -26,15 +26,12 @@ export function WatchlistGridItem({
   onToggleFavorite,
   onRemove,
 }: WatchlistGridItemProps) {
-  const progressPercent = Math.min(
-    100,
-    (item.currentEpisode / (item.totalEpisodes || 1)) * 100
-  );
+  const progressPercent = Math.min(100, (item.currentEpisode / (item.totalEpisodes || 1)) * 100);
   const isGradient = item.anime.coverImage && item.anime.coverImage.startsWith("linear-gradient");
 
   return (
-    <div className="group rounded-xl border border-border/60 bg-card overflow-hidden hover:border-primary/40 transition-all flex flex-col justify-between shadow-xs">
-      <div className="relative h-44 w-full overflow-hidden bg-muted">
+    <div className="group border-border/60 bg-card hover:border-primary/40 flex flex-col justify-between overflow-hidden rounded-xl border shadow-xs transition-all">
+      <div className="bg-muted relative h-44 w-full overflow-hidden">
         {isGradient ? (
           <div
             className="absolute inset-0 size-full"
@@ -52,12 +49,12 @@ export function WatchlistGridItem({
             }}
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-black/30 to-black/10 z-0" />
+        <div className="from-card absolute inset-0 z-0 bg-gradient-to-t via-black/30 to-black/10" />
 
-        <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10">
+        <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5">
           <Badge
             variant="secondary"
-            className="capitalize text-[10px] px-2 py-0.5 font-bold bg-background/80 backdrop-blur-md border border-border/50 text-foreground"
+            className="bg-background/80 border-border/50 text-foreground border px-2 py-0.5 text-[10px] font-bold capitalize backdrop-blur-md"
           >
             {item.status.replace("_", " ")}
           </Badge>
@@ -65,30 +62,30 @@ export function WatchlistGridItem({
 
         <button
           onClick={() => onToggleFavorite(item.id)}
-          className="absolute top-2.5 right-2.5 size-7 rounded-lg bg-background/80 backdrop-blur-md border border-border/50 flex items-center justify-center text-amber-500 hover:scale-110 transition-transform z-10"
+          className="bg-background/80 border-border/50 absolute top-2.5 right-2.5 z-10 flex size-7 items-center justify-center rounded-lg border text-amber-500 backdrop-blur-md transition-transform hover:scale-110"
         >
           <Star className={`size-3.5 ${item.isFavorite ? "fill-amber-500" : ""}`} />
         </button>
 
         <Link
           href={`/anime/${item.anime.slug}`}
-          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/40 backdrop-blur-xs transition-opacity z-10"
+          className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100"
         >
-          <div className="size-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-lg transform group-hover:scale-105 transition-transform">
-            <Play className="size-5 fill-primary-foreground ml-0.5" />
+          <div className="bg-primary text-primary-foreground flex size-12 transform items-center justify-center rounded-full shadow-lg transition-transform group-hover:scale-105">
+            <Play className="fill-primary-foreground ml-0.5 size-5" />
           </div>
         </Link>
       </div>
 
-      <div className="p-4 flex flex-col gap-3 flex-1">
+      <div className="flex flex-1 flex-col gap-3 p-4">
         <div>
           <Link
             href={`/anime/${item.anime.slug}`}
-            className="font-bold text-sm text-foreground hover:text-primary transition-colors line-clamp-1 block"
+            className="text-foreground hover:text-primary line-clamp-1 block text-sm font-bold transition-colors"
           >
             {item.anime.title}
           </Link>
-          <span className="text-[11px] text-muted-foreground block mt-0.5">
+          <span className="text-muted-foreground mt-0.5 block text-[11px]">
             {item.anime.genres.slice(0, 3).join(" • ")}
           </span>
         </div>
@@ -100,23 +97,23 @@ export function WatchlistGridItem({
               Ep. {item.currentEpisode} / {item.totalEpisodes}
             </span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
+          <div className="bg-muted h-1.5 w-full overflow-hidden rounded-full">
             <div
-              className="h-full bg-primary rounded-full transition-all"
+              className="bg-primary h-full rounded-full transition-all"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
         </div>
 
-        <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs mt-auto">
+        <div className="border-border/40 mt-auto flex items-center justify-between border-t pt-2 text-xs">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1 font-medium text-muted-foreground hover:text-foreground text-[11px] px-2 py-1 rounded-md hover:bg-muted/60">
+              <button className="text-muted-foreground hover:text-foreground hover:bg-muted/60 flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium">
                 <span className="capitalize">{item.status.replace("_", " ")}</span>
                 <ChevronDown className="size-3" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-36 bg-popover/95 backdrop-blur-md border border-border/80 p-1 text-xs">
+            <DropdownMenuContent className="bg-popover/95 border-border/80 w-36 border p-1 text-xs backdrop-blur-md">
               <DropdownMenuItem onClick={() => onStatusChange(item.id, "watching")}>
                 Watching
               </DropdownMenuItem>

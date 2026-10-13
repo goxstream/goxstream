@@ -51,7 +51,7 @@ healthApp.openapi(healthRoute, async (c) => {
         timestamp: new Date().toISOString(),
         database: "connected",
       },
-      200
+      200,
     );
   } catch (err: any) {
     return c.json(
@@ -61,7 +61,7 @@ healthApp.openapi(healthRoute, async (c) => {
         database: "disconnected",
         error: err?.message || "Database connection check failed",
       },
-      500
+      500,
     );
   }
 });

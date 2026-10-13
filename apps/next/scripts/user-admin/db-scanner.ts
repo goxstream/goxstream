@@ -42,7 +42,7 @@ export async function scanAvailableDatabases(): Promise<DbTargetInfo[]> {
 
   // 2. D1 Local Scan
   try {
-    execSync("npx wrangler d1 execute goxstream --local --command=\"SELECT 1\"", {
+    execSync('npx wrangler d1 execute goxstream --local --command="SELECT 1"', {
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 5000,
       env: { ...process.env, CI: "true", WRANGLER_SEND_METRICS: "false" },
@@ -65,7 +65,7 @@ export async function scanAvailableDatabases(): Promise<DbTargetInfo[]> {
 
   // 3. D1 Remote Scan
   try {
-    execSync("npx wrangler d1 execute goxstream --remote --command=\"SELECT 1\"", {
+    execSync('npx wrangler d1 execute goxstream --remote --command="SELECT 1"', {
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 10000,
       env: { ...process.env, WRANGLER_SEND_METRICS: "false" },

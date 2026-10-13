@@ -1,10 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import type { UserAccount, UserRole, UserStatus, MembershipTier } from "../types";
 
@@ -15,12 +28,7 @@ interface UserFormSheetProps {
   onSave: (userData: Partial<UserAccount>) => void;
 }
 
-export function UserFormSheet({
-  isOpen,
-  onOpenChange,
-  editingUser,
-  onSave,
-}: UserFormSheetProps) {
+export function UserFormSheet({ isOpen, onOpenChange, editingUser, onSave }: UserFormSheetProps) {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -60,46 +68,52 @@ export function UserFormSheet({
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-md overflow-y-auto p-6">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6 h-full">
+      <SheetContent className="w-full overflow-y-auto p-6 sm:max-w-md">
+        <form onSubmit={handleSubmit} className="flex h-full flex-col gap-6">
           <SheetHeader className="text-left">
             <SheetTitle className="text-xl font-bold">
               {editingUser ? "Edit User Profile" : "Add New User Account"}
             </SheetTitle>
-            <SheetDescription className="text-xs text-muted-foreground">
+            <SheetDescription className="text-muted-foreground text-xs">
               {editingUser
                 ? "Update details, status, and role for this user account."
                 : "Create a new audience or staff account in the GoXStream directory."}
             </SheetDescription>
           </SheetHeader>
 
-          <div className="flex flex-col gap-4 text-xs flex-1">
+          <div className="flex flex-1 flex-col gap-4 text-xs">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="name" className="text-xs font-medium">Full Name</Label>
+              <Label htmlFor="name" className="text-xs font-medium">
+                Full Name
+              </Label>
               <Input
                 id="name"
                 placeholder="e.g. John Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="h-9 text-xs border-border/60"
+                className="border-border/60 h-9 text-xs"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="username" className="text-xs font-medium">Username</Label>
+              <Label htmlFor="username" className="text-xs font-medium">
+                Username
+              </Label>
               <Input
                 id="username"
                 placeholder="e.g. johndoe"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="h-9 text-xs border-border/60"
+                className="border-border/60 h-9 text-xs"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="email" className="text-xs font-medium">Email Address</Label>
+              <Label htmlFor="email" className="text-xs font-medium">
+                Email Address
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -107,22 +121,32 @@ export function UserFormSheet({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-9 text-xs border-border/60"
+                className="border-border/60 h-9 text-xs"
               />
             </div>
 
             <div className="flex flex-col gap-2">
               <Label className="text-xs font-medium">User Role</Label>
               <Select value={role} onValueChange={(val) => setRole((val as UserRole) ?? "user")}>
-                <SelectTrigger className="h-9 text-xs border-border/60">
+                <SelectTrigger className="border-border/60 h-9 text-xs">
                   <SelectValue placeholder="Select Role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="user" className="text-xs">User / Viewer</SelectItem>
-                  <SelectItem value="moderator" className="text-xs">Moderator</SelectItem>
-                  <SelectItem value="content_manager" className="text-xs">Content Manager</SelectItem>
-                  <SelectItem value="admin" className="text-xs">Admin</SelectItem>
-                  <SelectItem value="super_admin" className="text-xs">Super Admin</SelectItem>
+                  <SelectItem value="user" className="text-xs">
+                    User / Viewer
+                  </SelectItem>
+                  <SelectItem value="moderator" className="text-xs">
+                    Moderator
+                  </SelectItem>
+                  <SelectItem value="content_manager" className="text-xs">
+                    Content Manager
+                  </SelectItem>
+                  <SelectItem value="admin" className="text-xs">
+                    Admin
+                  </SelectItem>
+                  <SelectItem value="super_admin" className="text-xs">
+                    Super Admin
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -130,27 +154,43 @@ export function UserFormSheet({
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-2">
                 <Label className="text-xs font-medium">Account Status</Label>
-                <Select value={status} onValueChange={(val) => setStatus((val as UserStatus) ?? "active")}>
-                  <SelectTrigger className="h-9 text-xs border-border/60">
+                <Select
+                  value={status}
+                  onValueChange={(val) => setStatus((val as UserStatus) ?? "active")}
+                >
+                  <SelectTrigger className="border-border/60 h-9 text-xs">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active" className="text-xs">Active</SelectItem>
-                    <SelectItem value="suspended" className="text-xs">Suspended</SelectItem>
-                    <SelectItem value="pending" className="text-xs">Pending</SelectItem>
+                    <SelectItem value="active" className="text-xs">
+                      Active
+                    </SelectItem>
+                    <SelectItem value="suspended" className="text-xs">
+                      Suspended
+                    </SelectItem>
+                    <SelectItem value="pending" className="text-xs">
+                      Pending
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="flex flex-col gap-2">
                 <Label className="text-xs font-medium">Membership Tier</Label>
-                <Select value={membershipTier} onValueChange={(val) => setMembershipTier((val as MembershipTier) ?? "free")}>
-                  <SelectTrigger className="h-9 text-xs border-border/60">
+                <Select
+                  value={membershipTier}
+                  onValueChange={(val) => setMembershipTier((val as MembershipTier) ?? "free")}
+                >
+                  <SelectTrigger className="border-border/60 h-9 text-xs">
                     <SelectValue placeholder="Tier" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="free" className="text-xs">Free Tier</SelectItem>
-                    <SelectItem value="vip_pro" className="text-xs">VIP Pro</SelectItem>
+                    <SelectItem value="free" className="text-xs">
+                      Free Tier
+                    </SelectItem>
+                    <SelectItem value="vip_pro" className="text-xs">
+                      VIP Pro
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -167,7 +207,11 @@ export function UserFormSheet({
             >
               Cancel
             </Button>
-            <Button type="submit" size="sm" className="h-9 text-xs bg-primary text-primary-foreground">
+            <Button
+              type="submit"
+              size="sm"
+              className="bg-primary text-primary-foreground h-9 text-xs"
+            >
               {editingUser ? "Save Changes" : "Create Account"}
             </Button>
           </SheetFooter>

@@ -5,7 +5,14 @@ import { Check, ChevronsUpDown, X, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
 import { ANIME_GENRES } from "../../constants";
 
 interface GenreMultiSelectComboboxProps {
@@ -37,16 +44,21 @@ export function GenreMultiSelectCombobox({
       {/* Combobox Trigger Button */}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" type="button" role="combobox" className="w-full justify-between h-9 text-xs border-border/60 bg-background/80">
+          <Button
+            variant="outline"
+            type="button"
+            role="combobox"
+            className="border-border/60 bg-background/80 h-9 w-full justify-between text-xs"
+          >
             <div className="flex items-center gap-1.5 truncate">
-              <Tag className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <Tag className="text-muted-foreground h-3.5 w-3.5 shrink-0" />
               <span>
                 {selectedGenres.length === 0
                   ? "Search & select genres..."
                   : `${selectedGenres.length} genre(s) selected`}
               </span>
             </div>
-            <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground shrink-0 opacity-70" />
+            <ChevronsUpDown className="text-muted-foreground h-3.5 w-3.5 shrink-0 opacity-70" />
           </Button>
         </PopoverTrigger>
 
@@ -54,7 +66,7 @@ export function GenreMultiSelectCombobox({
           <Command>
             <CommandInput placeholder="Search genre..." className="h-8 text-xs" />
             <CommandList className="max-h-48">
-              <CommandEmpty className="py-2 text-center text-xs text-muted-foreground">
+              <CommandEmpty className="text-muted-foreground py-2 text-center text-xs">
                 No genre found.
               </CommandEmpty>
               <CommandGroup>
@@ -64,10 +76,10 @@ export function GenreMultiSelectCombobox({
                     <CommandItem
                       key={genre}
                       onSelect={() => toggleGenre(genre)}
-                      className="text-xs flex items-center justify-between cursor-pointer"
+                      className="flex cursor-pointer items-center justify-between text-xs"
                     >
                       <span>{genre}</span>
-                      {isSelected && <Check className="h-3.5 w-3.5 text-primary" />}
+                      {isSelected && <Check className="text-primary h-3.5 w-3.5" />}
                     </CommandItem>
                   );
                 })}
@@ -79,18 +91,18 @@ export function GenreMultiSelectCombobox({
 
       {/* Selected Genres Badges Display */}
       {selectedGenres.length > 0 && (
-        <div className="flex flex-wrap gap-1 p-2 bg-muted/20 rounded-md border border-border/60 max-h-28 overflow-y-auto">
+        <div className="bg-muted/20 border-border/60 flex max-h-28 flex-wrap gap-1 overflow-y-auto rounded-md border p-2">
           {selectedGenres.map((genre) => (
             <Badge
               key={genre}
               variant="secondary"
-              className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary border-primary/20 flex items-center gap-1 font-normal"
+              className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1 px-2 py-0.5 text-[10px] font-normal"
             >
               <span>{genre}</span>
               <button
                 type="button"
                 onClick={(e) => removeGenre(genre, e)}
-                className="hover:text-destructive transition-colors ml-0.5"
+                className="hover:text-destructive ml-0.5 transition-colors"
               >
                 <X className="h-3 w-3" />
               </button>

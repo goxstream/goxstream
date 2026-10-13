@@ -17,16 +17,14 @@ const fontkit = fontkitModule as unknown as {
   create(buffer: Buffer): FontkitFont;
 };
 
-const WORDMARK_PATTERN = /<text([^>]*)>(?:\s*<tspan([^>]*)>Gox<\/tspan>\s*<tspan([^>]*)>Stream<\/tspan>\s*)<\/text>/;
+const WORDMARK_PATTERN =
+  /<text([^>]*)>(?:\s*<tspan([^>]*)>Gox<\/tspan>\s*<tspan([^>]*)>Stream<\/tspan>\s*)<\/text>/;
 
 function getAttribute(attributes: string, name: string): string | undefined {
   return attributes.match(new RegExp(`${name}="([^"]+)"`))?.[1];
 }
 
-export async function convertWordmarkTextToPaths(
-  svg: string,
-  fontPath: string
-): Promise<string> {
+export async function convertWordmarkTextToPaths(svg: string, fontPath: string): Promise<string> {
   const font = fontkit.create(await fs.readFile(fontPath));
   const match = svg.match(WORDMARK_PATTERN);
 

@@ -1,7 +1,7 @@
-import { test, expect } from '../fixtures/test.fixture';
+import { test, expect } from "../fixtures/test.fixture";
 
-test.describe('Dashboard - HLS Studio Converter E2E Test', () => {
-  test('should render HLS Converter component and pipeline stages', async ({ hlsConverterPOM }) => {
+test.describe("Dashboard - HLS Studio Converter E2E Test", () => {
+  test("should render HLS Converter component and pipeline stages", async ({ hlsConverterPOM }) => {
     await hlsConverterPOM.goto();
     await expect(hlsConverterPOM.cardTitle).toBeVisible();
     await expect(hlsConverterPOM.pipelineSection).toBeVisible();
@@ -12,13 +12,15 @@ test.describe('Dashboard - HLS Studio Converter E2E Test', () => {
     await expect(hlsConverterPOM.uploadCdnStage).toBeVisible();
   });
 
-  test('should render browse file button and log history window', async ({ hlsConverterPOM }) => {
+  test("should render browse file button and log history window", async ({ hlsConverterPOM }) => {
     await hlsConverterPOM.goto();
     await expect(hlsConverterPOM.browseButton).toBeVisible();
     await expect(hlsConverterPOM.logHistoryHeader).toBeVisible();
   });
 
-  test('should render engine mode toggle buttons and support switching', async ({ hlsConverterPOM }) => {
+  test("should render engine mode toggle buttons and support switching", async ({
+    hlsConverterPOM,
+  }) => {
     await hlsConverterPOM.goto();
     await expect(hlsConverterPOM.singleThreadedButton).toBeVisible();
     await expect(hlsConverterPOM.multiThreadedButton).toBeVisible();
@@ -30,14 +32,17 @@ test.describe('Dashboard - HLS Studio Converter E2E Test', () => {
     await expect(hlsConverterPOM.singleThreadedButton).toHaveClass(/bg-primary/);
   });
 
-  test('should accept sample video file upload and initiate pipeline', async ({ hlsConverterPOM, page }) => {
+  test("should accept sample video file upload and initiate pipeline", async ({
+    hlsConverterPOM,
+    page,
+  }) => {
     await hlsConverterPOM.goto();
 
     // Create a dummy video file payload for input testing
-    const sampleBuffer = Buffer.from('dummy video content');
+    const sampleBuffer = Buffer.from("dummy video content");
     await hlsConverterPOM.fileInput.setInputFiles({
-      name: 'sample-master-1080p.mp4',
-      mimeType: 'video/mp4',
+      name: "sample-master-1080p.mp4",
+      mimeType: "video/mp4",
       buffer: sampleBuffer,
     });
 
@@ -45,4 +50,3 @@ test.describe('Dashboard - HLS Studio Converter E2E Test', () => {
     await expect(page.getByText(/File selected: sample-master-1080p.mp4/i)).toBeVisible();
   });
 });
-

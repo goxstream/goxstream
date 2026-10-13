@@ -18,7 +18,9 @@ export const apiClients = sqliteTable("api_clients", {
     .references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   description: text("description"),
-  tier: text("tier").notNull().$default(() => "free"),
+  tier: text("tier")
+    .notNull()
+    .$default(() => "free"),
   isActive: integer("is_active", { mode: "boolean" })
     .notNull()
     .$default(() => true),
@@ -63,5 +65,5 @@ export const apiKeys = sqliteTable(
     index("idx_api_keys_key_hash").on(table.keyHash),
     index("idx_api_keys_prefix").on(table.prefix),
     index("idx_api_keys_user_id").on(table.userId),
-  ]
+  ],
 );

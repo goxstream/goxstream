@@ -27,55 +27,86 @@ export function ImageDropzone({ label, value, aspectRatio, onChange }: ImageDrop
   };
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault(); setIsDragging(false);
+    e.preventDefault();
+    setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
   };
 
   return (
     <div className="space-y-1.5">
-      <span className="text-xs font-medium text-foreground">{label}</span>
-      <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => e.target.files?.[0] && processFile(e.target.files[0])} className="hidden" />
+      <span className="text-foreground text-xs font-medium">{label}</span>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={(e) => e.target.files?.[0] && processFile(e.target.files[0])}
+        className="hidden"
+      />
 
       {!value ? (
         <div
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-          onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={(e) => {
+            e.preventDefault();
+            setIsDragging(false);
+          }}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors flex flex-col items-center justify-center gap-2 ${
-            isDragging ? "border-primary bg-primary/10" : "border-border/60 hover:border-primary/50 bg-muted/20"
+          className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-4 text-center transition-colors ${
+            isDragging
+              ? "border-primary bg-primary/10"
+              : "border-border/60 hover:border-primary/50 bg-muted/20"
           }`}
         >
-          <div className="h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+          <div className="bg-primary/10 text-primary flex h-9 w-9 items-center justify-center rounded-full">
             <UploadCloud className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-xs font-semibold text-foreground">
+            <p className="text-foreground text-xs font-semibold">
               Drag & drop image here, or <span className="text-primary underline">browse</span>
             </p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
-              Supports PNG, JPG, WebP. Ratio {aspectRatio === 2 / 3 ? "2:3 (Poster)" : "16:9 (Banner)"}.
+            <p className="text-muted-foreground mt-0.5 text-[11px]">
+              Supports PNG, JPG, WebP. Ratio{" "}
+              {aspectRatio === 2 / 3 ? "2:3 (Poster)" : "16:9 (Banner)"}.
             </p>
           </div>
         </div>
       ) : (
-        <div className="relative rounded-lg border border-border/60 bg-muted overflow-hidden flex items-center justify-between p-2">
+        <div className="border-border/60 bg-muted relative flex items-center justify-between overflow-hidden rounded-lg border p-2">
           <div className="flex items-center gap-3">
-            <div className="relative h-14 rounded overflow-hidden border border-border/60 bg-background shadow-xs shrink-0" style={{ aspectRatio }}>
+            <div
+              className="border-border/60 bg-background relative h-14 shrink-0 overflow-hidden rounded border shadow-xs"
+              style={{ aspectRatio }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={value} alt="Uploaded preview" className="w-full h-full object-cover" />
+              <img src={value} alt="Uploaded preview" className="h-full w-full object-cover" />
             </div>
             <div className="text-xs">
-              <span className="font-semibold text-foreground block">Cropped Image Loaded</span>
-              <span className="text-[10px] text-emerald-500 font-medium">Ready for upload</span>
+              <span className="text-foreground block font-semibold">Cropped Image Loaded</span>
+              <span className="text-[10px] font-medium text-emerald-500">Ready for upload</span>
             </div>
           </div>
 
           <div className="flex items-center gap-1">
-            <Button type="button" variant="outline" size="xs" onClick={() => fileInputRef.current?.click()} className="h-7 text-xs px-2 gap-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="xs"
+              onClick={() => fileInputRef.current?.click()}
+              className="h-7 gap-1 px-2 text-xs"
+            >
               <Crop className="h-3 w-3" /> Re-crop
             </Button>
-            <Button type="button" variant="ghost" size="xs" onClick={() => onChange("")} className="h-7 text-xs px-2 text-destructive hover:text-destructive">
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              onClick={() => onChange("")}
+              className="text-destructive hover:text-destructive h-7 px-2 text-xs"
+            >
               <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>
@@ -84,8 +115,14 @@ export function ImageDropzone({ label, value, aspectRatio, onChange }: ImageDrop
 
       {tempImageSrc && (
         <ImageCropModal
-          open={Boolean(tempImageSrc)} imageSrc={tempImageSrc} aspectRatio={aspectRatio} title={`Crop & Edit ${label}`}
-          onCropComplete={(croppedDataUrl) => { onChange(croppedDataUrl); setTempImageSrc(null); }}
+          open={Boolean(tempImageSrc)}
+          imageSrc={tempImageSrc}
+          aspectRatio={aspectRatio}
+          title={`Crop & Edit ${label}`}
+          onCropComplete={(croppedDataUrl) => {
+            onChange(croppedDataUrl);
+            setTempImageSrc(null);
+          }}
           onCancel={() => setTempImageSrc(null)}
         />
       )}

@@ -1,24 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { SeasonQuarter } from "../types";
 
 interface SeasonAddSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddSeason: (data: { year: number; quarter: SeasonQuarter; startDate: string; endDate: string }) => void;
+  onAddSeason: (data: {
+    year: number;
+    quarter: SeasonQuarter;
+    startDate: string;
+    endDate: string;
+  }) => void;
 }
 
-export function SeasonAddSheet({
-  open,
-  onOpenChange,
-  onAddSeason,
-}: SeasonAddSheetProps) {
+export function SeasonAddSheet({ open, onOpenChange, onAddSeason }: SeasonAddSheetProps) {
   const [year, setYear] = useState<number>(2026);
   const [quarter, setQuarter] = useState<SeasonQuarter>("SUMMER");
   const [startDate, setStartDate] = useState("2026-07-01");
@@ -32,7 +46,7 @@ export function SeasonAddSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-md flex flex-col gap-6">
+      <SheetContent className="flex flex-col gap-6 sm:max-w-md">
         <SheetHeader>
           <SheetTitle>Add Seasonal Schedule</SheetTitle>
           <SheetDescription>
@@ -40,7 +54,7 @@ export function SeasonAddSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1">
+        <form onSubmit={handleSubmit} className="flex flex-1 flex-col gap-4">
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="year">Release Year</FieldLabel>
@@ -58,7 +72,10 @@ export function SeasonAddSheet({
 
             <Field>
               <FieldLabel htmlFor="quarter">Season Quarter</FieldLabel>
-              <Select value={quarter} onValueChange={(val) => val && setQuarter(val as SeasonQuarter)}>
+              <Select
+                value={quarter}
+                onValueChange={(val) => val && setQuarter(val as SeasonQuarter)}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select quarter" />
                 </SelectTrigger>

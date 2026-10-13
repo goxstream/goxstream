@@ -19,8 +19,12 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" className="size-8 sm:size-9 rounded-lg border border-border/50 shrink-0 cursor-pointer">
-        <Sun className="size-4 text-muted-foreground" />
+      <Button
+        variant="ghost"
+        size="icon"
+        className="border-border/50 size-8 shrink-0 cursor-pointer rounded-lg border sm:size-9"
+      >
+        <Sun className="text-muted-foreground size-4" />
         <span className="sr-only">Toggle theme</span>
       </Button>
     );
@@ -31,13 +35,12 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="relative size-8 sm:size-9 rounded-lg border border-border/60 bg-background/50 hover:bg-muted/80 text-foreground transition-colors shrink-0 cursor-pointer"
+      className="border-border/60 bg-background/50 hover:bg-muted/80 text-foreground relative size-8 shrink-0 cursor-pointer rounded-lg border transition-colors sm:size-9"
       title={resolvedTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
     >
-      <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-amber-500" />
-      <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-sky-400" />
+      <Sun className="size-4 scale-100 rotate-0 text-amber-500 transition-all dark:scale-0 dark:-rotate-90" />
+      <Moon className="absolute size-4 scale-0 rotate-90 text-sky-400 transition-all dark:scale-100 dark:rotate-0" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
 }
-

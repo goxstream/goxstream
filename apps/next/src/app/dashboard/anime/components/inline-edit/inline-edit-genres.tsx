@@ -21,10 +21,7 @@ export function InlineEditGenres({
     <div className="space-y-3">
       <div className="space-y-1">
         <Label className="text-[11px] font-medium">Genres</Label>
-        <GenreMultiSelectCombobox
-          selectedGenres={selectedGenres}
-          onChange={setSelectedGenres}
-        />
+        <GenreMultiSelectCombobox selectedGenres={selectedGenres} onChange={setSelectedGenres} />
       </div>
 
       <div className="space-y-1">
@@ -33,7 +30,7 @@ export function InlineEditGenres({
           value={synopsis}
           onChange={(e) => setSynopsis(e.target.value)}
           rows={2}
-          className="text-xs resize-none"
+          className="resize-none text-xs"
         />
       </div>
     </div>

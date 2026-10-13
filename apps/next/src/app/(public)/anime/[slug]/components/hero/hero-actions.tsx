@@ -77,9 +77,9 @@ export function HeroActions({ slug, latestEpisodeNum, isLoading }: HeroActionsPr
     <div className="flex flex-wrap items-center gap-3 pt-2">
       <Link
         href={`/anime/${slug}/${latestEpisodeNum || 1}`}
-        className={buttonVariants({ size: "lg", className: "font-semibold shadow-xs gap-2" })}
+        className={buttonVariants({ size: "lg", className: "gap-2 font-semibold shadow-xs" })}
       >
-        <Play className="size-4 fill-primary-foreground" />
+        <Play className="fill-primary-foreground size-4" />
         <span>Watch Episode {latestEpisodeNum || 1}</span>
       </Link>
 
@@ -87,7 +87,7 @@ export function HeroActions({ slug, latestEpisodeNum, isLoading }: HeroActionsPr
         variant={isBookmarked ? "secondary" : "outline"}
         size="lg"
         onClick={handleToggleFavorite}
-        className="w-[165px] min-w-[165px] justify-center font-medium gap-2 border-border/80"
+        className="border-border/80 w-[165px] min-w-[165px] justify-center gap-2 font-medium"
       >
         {isBookmarked ? (
           <>
@@ -106,7 +106,7 @@ export function HeroActions({ slug, latestEpisodeNum, isLoading }: HeroActionsPr
         variant="outline"
         size="lg"
         onClick={handleShare}
-        className="w-[135px] min-w-[135px] justify-center font-medium gap-2 border-border/80"
+        className="border-border/80 w-[135px] min-w-[135px] justify-center gap-2 font-medium"
       >
         {copied ? (
           <>

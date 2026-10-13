@@ -17,8 +17,8 @@ export async function POST(req: NextRequest) {
     const contentType = file.name.endsWith(".m3u8")
       ? "application/x-mpegURL"
       : file.name.endsWith(".ts")
-      ? "video/MP2T"
-      : file.type || "application/octet-stream";
+        ? "video/MP2T"
+        : file.type || "application/octet-stream";
 
     const result = await uploadToStorage(relativePath, bytes, contentType);
 
@@ -29,9 +29,6 @@ export async function POST(req: NextRequest) {
       sizeBytes: result.sizeBytes,
     });
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error?.message || "HLS upload failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error?.message || "HLS upload failed" }, { status: 500 });
   }
 }

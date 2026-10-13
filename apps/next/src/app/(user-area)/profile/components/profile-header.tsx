@@ -17,17 +17,17 @@ interface ProfileHeaderProps {
 export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
   if (isLoading || !user) {
     return (
-      <div className="relative rounded-2xl overflow-hidden border border-border/60 bg-card shadow-xs">
-        <div className="h-44 sm:h-56 w-full relative bg-muted">
+      <div className="border-border/60 bg-card relative overflow-hidden rounded-2xl border shadow-xs">
+        <div className="bg-muted relative h-44 w-full sm:h-56">
           <Skeleton className="size-full" />
         </div>
-        <div className="px-6 pb-6 pt-0 relative z-20 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 -mt-16 sm:-mt-20">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5">
-            <Skeleton className="size-28 sm:size-36 rounded-full border-4 border-background" />
+        <div className="relative z-20 -mt-16 flex flex-col items-start justify-between gap-4 px-6 pt-0 pb-6 sm:-mt-20 sm:flex-row sm:items-end">
+          <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-end">
+            <Skeleton className="border-background size-28 rounded-full border-4 sm:size-36" />
             <div className="flex flex-col gap-2 sm:pb-2">
               <Skeleton className="h-8 w-48" />
               <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-4 w-64 mt-2" />
+              <Skeleton className="mt-2 h-4 w-64" />
             </div>
           </div>
         </div>
@@ -39,15 +39,12 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
   const hasBanner = Boolean(user.bannerUrl && user.bannerUrl.trim() !== "");
 
   return (
-    <div className="relative rounded-2xl overflow-hidden border border-border/60 bg-card shadow-xs">
+    <div className="border-border/60 bg-card relative overflow-hidden rounded-2xl border shadow-xs">
       {/* Banner */}
-      <div className="h-44 sm:h-56 w-full relative bg-gradient-to-br from-emerald-950 via-slate-900 to-emerald-900 overflow-hidden">
-        {hasBanner && (
-          isBannerGradient ? (
-            <div
-              className="absolute inset-0 size-full"
-              style={getImageStyle(user.bannerUrl!)}
-            />
+      <div className="relative h-44 w-full overflow-hidden bg-gradient-to-br from-emerald-950 via-slate-900 to-emerald-900 sm:h-56">
+        {hasBanner &&
+          (isBannerGradient ? (
+            <div className="absolute inset-0 size-full" style={getImageStyle(user.bannerUrl!)} />
           ) : (
             <img
               src={user.bannerUrl}
@@ -59,39 +56,39 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
-          )
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent z-10" />
+          ))}
+        <div className="from-background via-background/40 absolute inset-0 z-10 bg-gradient-to-t to-transparent" />
       </div>
 
       {/* Profile Details Overlay Container */}
-      <div className="px-6 pb-6 pt-0 relative z-20 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 -mt-16 sm:-mt-20">
-        <div className="flex flex-col sm:flex-row items-start sm:items-end gap-5">
+      <div className="relative z-20 -mt-16 flex flex-col items-start justify-between gap-4 px-6 pt-0 pb-6 sm:-mt-20 sm:flex-row sm:items-end">
+        <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-end">
           {/* Avatar */}
-          <Avatar className="size-28 sm:size-36 border-4 border-background ring-2 ring-primary/20 shadow-md bg-card">
-            {user.avatarUrl ? (
-              <AvatarImage src={user.avatarUrl} alt={user.displayName} />
-            ) : null}
-            <AvatarFallback className="bg-primary/10 text-primary font-bold text-3xl">
+          <Avatar className="border-background ring-primary/20 bg-card size-28 border-4 shadow-md ring-2 sm:size-36">
+            {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt={user.displayName} /> : null}
+            <AvatarFallback className="bg-primary/10 text-primary text-3xl font-bold">
               {user.displayName ? user.displayName.substring(0, 2).toUpperCase() : "US"}
             </AvatarFallback>
           </Avatar>
 
           {/* User Information */}
           <div className="flex flex-col gap-1 sm:pb-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground drop-shadow-xs">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-foreground text-2xl font-extrabold tracking-tight drop-shadow-xs sm:text-3xl">
                 {user.displayName}
               </h1>
               {user.isVip && (
-                <Badge variant="secondary" className="px-2 py-0.5 text-xs bg-amber-500/10 text-amber-500 border border-amber-500/30 font-bold gap-1 shadow-2xs">
+                <Badge
+                  variant="secondary"
+                  className="gap-1 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-500 shadow-2xs"
+                >
                   {user.vipTier || "VIP Member"}
                 </Badge>
               )}
             </div>
 
-            <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-              <span className="font-medium text-foreground/80">@{user.username}</span>
+            <div className="text-muted-foreground flex flex-wrap items-center gap-3 text-xs">
+              <span className="text-foreground/80 font-medium">@{user.username}</span>
               <span>•</span>
               <span className="flex items-center gap-1">
                 <Calendar className="size-3.5" />
@@ -104,20 +101,19 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
               </span>
             </div>
 
-            <p className="text-sm text-muted-foreground mt-2 max-w-xl line-clamp-2">
-              {user.bio}
-            </p>
+            <p className="text-muted-foreground mt-2 line-clamp-2 max-w-xl text-sm">{user.bio}</p>
           </div>
         </div>
 
         {/* Action Controls */}
-        <div className="sm:pb-2 self-stretch sm:self-auto flex items-center gap-2">
+        <div className="flex items-center gap-2 self-stretch sm:self-auto sm:pb-2">
           <Link
             href="/settings"
             className={buttonVariants({
               variant: "outline",
               size: "sm",
-              className: "rounded-xl font-medium gap-2 text-xs flex-1 sm:flex-none border-border/80 hover:bg-muted/70 cursor-pointer",
+              className:
+                "border-border/80 hover:bg-muted/70 flex-1 cursor-pointer gap-2 rounded-xl text-xs font-medium sm:flex-none",
             })}
           >
             <Settings className="size-3.5" />
@@ -128,4 +124,3 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
     </div>
   );
 }
-

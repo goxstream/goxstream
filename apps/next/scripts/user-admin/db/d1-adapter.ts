@@ -10,7 +10,7 @@ function runD1Query(flag: "--local" | "--remote", sqlCommand: string): any[] {
       {
         stdio: ["ignore", "pipe", "pipe"],
         env: { ...process.env, CI: "true", WRANGLER_SEND_METRICS: "false" },
-      }
+      },
     ).toString();
     const parsed = JSON.parse(output);
     if (Array.isArray(parsed) && parsed[0]?.results) {
@@ -58,14 +58,19 @@ export async function createD1User(target: DbTarget, input: CreateUserInput): Pr
     runD1Query(
       flag,
       `INSERT INTO users (id, username, email, password_hash, display_name, role, status, membership_tier, created_at, updated_at, last_active_at) VALUES (${sqlEscape(
-        userId
+        userId,
       )}, ${sqlEscape(input.username)}, ${sqlEscape(input.email)}, ${sqlEscape(passwordHash)}, ${sqlEscape(
-        displayName
-      )}, ${sqlEscape(role)}, ${sqlEscape(status)}, ${sqlEscape(membershipTier)}, ${nowMs}, ${nowMs}, ${nowMs})`
+        displayName,
+      )}, ${sqlEscape(role)}, ${sqlEscape(status)}, ${sqlEscape(membershipTier)}, ${nowMs}, ${nowMs}, ${nowMs})`,
     );
   } catch (err: any) {
-    if (err.message?.includes("UNIQUE constraint failed") || err.message?.includes("already exists")) {
-      throw new Error(`User creation failed: Username '${input.username}' or Email '${input.email}' already exists in database.`);
+    if (
+      err.message?.includes("UNIQUE constraint failed") ||
+      err.message?.includes("already exists")
+    ) {
+      throw new Error(
+        `User creation failed: Username '${input.username}' or Email '${input.email}' already exists in database.`,
+      );
     }
     throw err;
   }
@@ -74,8 +79,8 @@ export async function createD1User(target: DbTarget, input: CreateUserInput): Pr
     runD1Query(
       flag,
       `INSERT INTO user_settings (user_id, default_quality, default_subtitle, auto_play_next, auto_skip_intro, preferred_audio, new_episode_alerts, watchlist_updates, marketing_emails, public_watchlist) VALUES (${sqlEscape(
-        userId
-      )}, '1080p', 'indonesia', 1, 0, 'japanese', 1, 1, 0, 1)`
+        userId,
+      )}, '1080p', 'indonesia', 1, 0, 'japanese', 1, 1, 0, 1)`,
     );
   } catch {}
 
@@ -96,7 +101,7 @@ export async function createD1User(target: DbTarget, input: CreateUserInput): Pr
 export async function updateD1User(
   target: DbTarget,
   existingUser: UserItem,
-  input: UpdateUserInput
+  input: UpdateUserInput,
 ): Promise<UserItem> {
   const flag = target === "d1-remote" ? "--remote" : "--local";
   const nowMs = Date.now();

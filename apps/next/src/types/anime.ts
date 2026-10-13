@@ -9,15 +9,15 @@ export interface AnimeItem {
   rating: number;
   episodesCount: number;
   latestEpisode?: number;
-  status: 'Ongoing' | 'Completed' | 'Upcoming';
-  type: 'TV' | 'Movie' | 'OVA';
+  status: "Ongoing" | "Completed" | "Upcoming";
+  type: "TV" | "Movie" | "OVA";
   season: string;
   year: number;
   genres: string[];
   studio: string;
   isTrending?: boolean;
   isFeatured?: boolean;
-  subOrDub: 'SUB' | 'DUB' | 'SUB & DUB';
+  subOrDub: "SUB" | "DUB" | "SUB & DUB";
 }
 
 export interface EpisodeItem {
@@ -76,4 +76,3 @@ export interface EpisodeWatchDetails {
   prevEpisode?: EpisodeItem;
   sources: StreamSource[];
 }
-

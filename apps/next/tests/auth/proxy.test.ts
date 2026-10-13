@@ -17,7 +17,9 @@ describe("Next.js 16 Edge Proxy Guard (proxy.ts)", () => {
     const res = proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("https://goxstream.com/login?redirect=%2Fdashboard%2Fanime");
+    expect(res.headers.get("location")).toBe(
+      "https://goxstream.com/login?redirect=%2Fdashboard%2Fanime",
+    );
   });
 
   it("should redirect unauthenticated users away from /profile to /login?redirect=/profile", () => {
@@ -25,7 +27,9 @@ describe("Next.js 16 Edge Proxy Guard (proxy.ts)", () => {
     const res = proxy(req);
 
     expect(res.status).toBe(307);
-    expect(res.headers.get("location")).toBe("https://goxstream.com/login?redirect=%2Fprofile%2Fsettings");
+    expect(res.headers.get("location")).toBe(
+      "https://goxstream.com/login?redirect=%2Fprofile%2Fsettings",
+    );
   });
 
   it("should redirect authenticated users away from /login to /", () => {

@@ -10,9 +10,7 @@ const isPostgres =
     (!connectionType && Boolean(dbUrl)));
 
 export default defineConfig({
-  schema: isPostgres
-    ? "./src/lib/db/schema/pg/index.ts"
-    : "./src/lib/db/schema/sqlite/index.ts",
+  schema: isPostgres ? "./src/lib/db/schema/pg/index.ts" : "./src/lib/db/schema/sqlite/index.ts",
   out: isPostgres ? "./drizzle/pg" : "./drizzle/d1",
   dialect: isPostgres ? "postgresql" : "sqlite",
   ...(isPostgres && dbUrl ? { dbCredentials: { url: dbUrl } } : {}),

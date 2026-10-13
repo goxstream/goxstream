@@ -2,7 +2,13 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { ZoomIn, ZoomOut, FlipHorizontal, Crop, Check, X } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
@@ -16,7 +22,12 @@ interface ImageCropModalProps {
 }
 
 export function ImageCropModal({
-  open, imageSrc, aspectRatio, title, onCropComplete, onCancel,
+  open,
+  imageSrc,
+  aspectRatio,
+  title,
+  onCropComplete,
+  onCancel,
 }: ImageCropModalProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [zoom, setZoom] = useState(1);
@@ -33,7 +44,9 @@ export function ImageCropModal({
     img.src = imageSrc;
     img.onload = () => {
       imgRef.current = img;
-      setZoom(1); setIsFlipped(false); setOffset({ x: 0, y: 0 });
+      setZoom(1);
+      setIsFlipped(false);
+      setOffset({ x: 0, y: 0 });
     };
   }, [imageSrc]);
 
@@ -46,7 +59,8 @@ export function ImageCropModal({
 
     const canvasWidth = 320;
     const canvasHeight = Math.round(320 / aspectRatio);
-    canvas.width = canvasWidth; canvas.height = canvasHeight;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     ctx.save();
@@ -56,7 +70,9 @@ export function ImageCropModal({
     ctx.restore();
   }, [aspectRatio, zoom, isFlipped, offset]);
 
-  useEffect(() => { drawCanvas(); }, [drawCanvas]);
+  useEffect(() => {
+    drawCanvas();
+  }, [drawCanvas]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -76,50 +92,66 @@ export function ImageCropModal({
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onCancel()}>
-      <DialogContent className="sm:max-w-md bg-background border-border/60 p-4">
-        <DialogHeader className="pb-2 border-b border-border/40">
-          <DialogTitle className="text-sm font-bold flex items-center gap-2">
-            <Crop className="h-4 w-4 text-primary" />
+      <DialogContent className="bg-background border-border/60 p-4 sm:max-w-md">
+        <DialogHeader className="border-border/40 border-b pb-2">
+          <DialogTitle className="flex items-center gap-2 text-sm font-bold">
+            <Crop className="text-primary h-4 w-4" />
             {title}
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col items-center justify-center gap-3 py-2">
           <div
-            onMouseDown={handleMouseDown} onMouseMove={handleMouseMove}
-            onMouseUp={() => setIsDragging(false)} onMouseLeave={() => setIsDragging(false)}
-            className="relative border-2 border-dashed border-primary/50 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing bg-black/60 shadow-md flex items-center justify-center"
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={() => setIsDragging(false)}
+            onMouseLeave={() => setIsDragging(false)}
+            className="border-primary/50 relative flex cursor-grab items-center justify-center overflow-hidden rounded-lg border-2 border-dashed bg-black/60 shadow-md active:cursor-grabbing"
           >
-            <canvas ref={canvasRef} className="max-w-full block" />
+            <canvas ref={canvasRef} className="block max-w-full" />
           </div>
 
-          <div className="flex items-center justify-between w-full max-w-xs px-2 gap-3 bg-muted/30 p-2 rounded-lg border border-border/60">
-            <div className="flex items-center gap-2 flex-1">
-              <ZoomOut className="h-3.5 w-3.5 text-muted-foreground" />
+          <div className="bg-muted/30 border-border/60 flex w-full max-w-xs items-center justify-between gap-3 rounded-lg border p-2 px-2">
+            <div className="flex flex-1 items-center gap-2">
+              <ZoomOut className="text-muted-foreground h-3.5 w-3.5" />
               <Slider
-                value={[zoom]} min={0.5} max={3} step={0.1}
+                value={[zoom]}
+                min={0.5}
+                max={3}
+                step={0.1}
                 onValueChange={(val) => {
                   if (typeof val === "number") setZoom(val);
                   else if (Array.isArray(val) && val.length > 0) setZoom(val[0]);
                 }}
                 className="flex-1"
               />
-              <ZoomIn className="h-3.5 w-3.5 text-muted-foreground" />
+              <ZoomIn className="text-muted-foreground h-3.5 w-3.5" />
             </div>
 
-            <Button type="button" variant={isFlipped ? "default" : "outline"} size="xs" onClick={() => setIsFlipped(!isFlipped)} className="h-7 text-xs px-2 gap-1">
+            <Button
+              type="button"
+              variant={isFlipped ? "default" : "outline"}
+              size="xs"
+              onClick={() => setIsFlipped(!isFlipped)}
+              className="h-7 gap-1 px-2 text-xs"
+            >
               <FlipHorizontal className="h-3.5 w-3.5" />
               Flip
             </Button>
           </div>
         </div>
 
-        <DialogFooter className="flex flex-row justify-between sm:justify-between items-center gap-2 pt-2 border-t border-border/40">
+        <DialogFooter className="border-border/40 flex flex-row items-center justify-between gap-2 border-t pt-2 sm:justify-between">
           <Button type="button" variant="outline" size="sm" onClick={onCancel} className="text-xs">
-            <X className="h-3.5 w-3.5 mr-1" />
+            <X className="mr-1 h-3.5 w-3.5" />
             Cancel
           </Button>
-          <Button type="button" size="sm" onClick={handleExport} className="bg-primary text-primary-foreground text-xs gap-1">
+          <Button
+            type="button"
+            size="sm"
+            onClick={handleExport}
+            className="bg-primary text-primary-foreground gap-1 text-xs"
+          >
             <Check className="h-3.5 w-3.5" />
             Apply & Crop
           </Button>

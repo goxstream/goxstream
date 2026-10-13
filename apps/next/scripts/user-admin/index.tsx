@@ -45,7 +45,7 @@ const cli = meow(
       displayName: { type: "string", shortFlag: "n" },
       nonInteractive: { type: "boolean", default: false },
     },
-  }
+  },
 );
 
 async function main() {
@@ -76,7 +76,7 @@ async function main() {
       initialTarget={flags.db as DbTarget}
       initialAction={command}
       initialFlags={flags as Record<string, any>}
-    />
+    />,
   );
 }
 

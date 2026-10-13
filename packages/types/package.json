@@ -8,12 +8,15 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "zod": "catalog:"
   },
   "devDependencies": {
+    "prettier": "catalog:",
     "typescript": "catalog:"
   }
 }

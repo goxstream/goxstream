@@ -16,16 +16,19 @@ export function LatestEpisodesSection({ initialEpisodes }: LatestEpisodesSection
   const { episodesList, isLoading } = useLatestEpisodes(initialEpisodes);
 
   return (
-    <section id="latest" className="py-12 md:py-16 bg-muted/30 border-y border-border/60 overflow-hidden">
+    <section
+      id="latest"
+      className="bg-muted/30 border-border/60 overflow-hidden border-y py-12 md:py-16"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
+            <div className="text-primary flex items-center gap-2 text-xs font-bold tracking-wider uppercase">
               <Radio className="size-4 animate-pulse text-emerald-500" />
               <span>Simulcast Feed</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+            <h2 className="text-foreground text-2xl font-extrabold tracking-tight sm:text-3xl">
               Just Released Episodes
             </h2>
           </div>
@@ -34,7 +37,8 @@ export function LatestEpisodesSection({ initialEpisodes }: LatestEpisodesSection
             href="/schedule"
             className={buttonVariants({
               variant: "ghost",
-              className: "self-start sm:self-auto text-sm font-semibold text-primary hover:text-primary hover:bg-primary/10 rounded-lg group",
+              className:
+                "text-primary hover:text-primary hover:bg-primary/10 group self-start rounded-lg text-sm font-semibold sm:self-auto",
             })}
           >
             Simulcast Schedule
@@ -44,13 +48,13 @@ export function LatestEpisodesSection({ initialEpisodes }: LatestEpisodesSection
 
         {/* In-Component Skeleton Loader */}
         {isLoading ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {Array.from({ length: 6 }).map((_, i) => (
               <EpisodeCard key={i} isLoading={true} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {episodesList.map((episode) => (
               <EpisodeCard key={episode.id} episode={episode} />
             ))}

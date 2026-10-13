@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BaseFilterCombobox } from "./base-filter-combobox";
 import { BaseGenreMultiSelectCombobox } from "./base-genre-multiselect-combobox";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import {
   ANIME_STATUSES,
   ANIME_FORMATS,
@@ -48,22 +42,25 @@ export function MobileFilterDrawer({
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          className="lg:hidden h-10 rounded-xl flex items-center justify-center gap-2 border-border bg-card w-full sm:w-auto text-xs font-semibold"
+          className="border-border bg-card flex h-10 w-full items-center justify-center gap-2 rounded-xl text-xs font-semibold sm:w-auto lg:hidden"
         >
-          <SlidersHorizontal className="size-3.5 text-primary" />
+          <SlidersHorizontal className="text-primary size-3.5" />
           <span>Filters & Options</span>
           {activeFiltersCount > 0 && (
-            <Badge className="ml-1 size-5 rounded-full p-0 flex items-center justify-center text-[10px] font-bold bg-primary text-primary-foreground">
+            <Badge className="bg-primary text-primary-foreground ml-1 flex size-5 items-center justify-center rounded-full p-0 text-[10px] font-bold">
               {activeFiltersCount}
             </Badge>
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[320px] sm:w-[380px] bg-background border-border p-6 flex flex-col justify-between overflow-y-auto">
+      <SheetContent
+        side="right"
+        className="bg-background border-border flex w-[320px] flex-col justify-between overflow-y-auto p-6 sm:w-[380px]"
+      >
         <div className="space-y-6">
-          <SheetHeader className="p-0 text-left border-b border-border pb-4">
+          <SheetHeader className="border-border border-b p-0 pb-4 text-left">
             <SheetTitle className="flex items-center gap-2 text-lg font-bold">
-              <Filter className="size-5 text-primary" />
+              <Filter className="text-primary size-5" />
               Filter Anime
             </SheetTitle>
           </SheetHeader>
@@ -126,14 +123,14 @@ export function MobileFilterDrawer({
           </div>
         </div>
 
-        <div className="pt-6 border-t border-border space-y-3">
+        <div className="border-border space-y-3 border-t pt-6">
           <Button
             variant="outline"
             onClick={() => {
               onResetFilters();
               setOpen(false);
             }}
-            className="w-full h-10 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold"
+            className="flex h-10 w-full items-center justify-center gap-2 rounded-xl text-xs font-semibold"
           >
             <RotateCcw className="size-3.5" />
             Reset All Filters
@@ -141,7 +138,7 @@ export function MobileFilterDrawer({
 
           <Button
             onClick={() => setOpen(false)}
-            className="w-full h-10 rounded-xl font-semibold text-xs"
+            className="h-10 w-full rounded-xl text-xs font-semibold"
           >
             Apply Filters
           </Button>

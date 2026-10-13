@@ -36,7 +36,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ success: true, result });
 }
 
-
 export async function DELETE(req: NextRequest) {
   const user = await getCurrentUser();
   if (!user) {
@@ -56,4 +55,3 @@ export async function DELETE(req: NextRequest) {
 
   return NextResponse.json({ success: true });
 }
-

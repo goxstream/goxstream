@@ -4,10 +4,7 @@ import { getEpisodesByAnimeSlug } from "@/lib/db/queries/episodes";
 import { getCacheItem, setCacheItem } from "@/lib/cache";
 import type { AnimeItem, EpisodeItem } from "@/types/anime";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const CACHE_KEY = `kv_anime_details_${slug}`;
   const CACHE_TTL = 300;

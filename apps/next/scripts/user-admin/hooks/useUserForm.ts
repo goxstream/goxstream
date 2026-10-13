@@ -8,10 +8,10 @@ export function useUserForm(initialValues?: Partial<UserItem>) {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState(initialValues?.displayName || "");
   const [role, setRole] = useState<"super_admin" | "admin" | "user" | "moderator">(
-    (initialValues?.role as any) || "user"
+    (initialValues?.role as any) || "user",
   );
   const [status, setStatus] = useState<"active" | "inactive" | "suspended" | "banned">(
-    (initialValues?.status as any) || "active"
+    (initialValues?.status as any) || "active",
   );
 
   const nextStep = () => setStep((prev) => prev + 1);

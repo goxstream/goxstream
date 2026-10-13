@@ -1,11 +1,6 @@
 import { AnimeItem } from "./anime";
 
-export type WatchlistStatus =
-  | "watching"
-  | "plan_to_watch"
-  | "completed"
-  | "on_hold"
-  | "dropped";
+export type WatchlistStatus = "watching" | "plan_to_watch" | "completed" | "on_hold" | "dropped";
 
 export interface UserProfile {
   id: string;
@@ -26,7 +21,6 @@ export interface UserProfile {
     favoriteGenres: { genre: string; percentage: number }[];
   };
 }
-
 
 export interface WatchlistItem {
   id: string;

@@ -33,19 +33,13 @@ export function isWebCodecsSupported(): boolean {
  */
 export async function transcodeVideoGPU(
   file: File,
-  options: GPUTranscodeOptions
+  options: GPUTranscodeOptions,
 ): Promise<GPUTranscodeResult> {
   if (!isWebCodecsSupported()) {
     throw new Error("WebCodecs GPU Hardware Acceleration is not supported in this browser.");
   }
 
-  const {
-    targetWidth,
-    targetHeight,
-    bitrate = 2_500_000,
-    framerate = 24,
-    onProgress,
-  } = options;
+  const { targetWidth, targetHeight, bitrate = 2_500_000, framerate = 24, onProgress } = options;
 
   return new Promise((resolve, reject) => {
     const video = document.createElement("video");

@@ -3,11 +3,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -28,7 +24,7 @@ interface NavMainProps {
 export function NavMain({ items }: NavMainProps) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 px-2 py-1.5">
+      <SidebarGroupLabel className="text-muted-foreground/70 px-2 py-1.5 text-xs font-semibold tracking-wider uppercase">
         Management & Studio
       </SidebarGroupLabel>
       <SidebarMenu>
@@ -46,14 +42,14 @@ export function NavMain({ items }: NavMainProps) {
                   className="w-full justify-between"
                 >
                   <Link href={item.url}>
-                    <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex min-w-0 items-center gap-2">
                       <Icon className="size-4 shrink-0" />
                       <span className="truncate">{item.title}</span>
                     </div>
                     {item.badge && (
                       <Badge
                         variant="secondary"
-                        className="ml-auto text-[10px] h-5 px-1.5 font-medium bg-brand/10 text-brand border-brand/20 shrink-0 group-data-[collapsible=icon]:hidden"
+                        className="bg-brand/10 text-brand border-brand/20 ml-auto h-5 shrink-0 px-1.5 text-[10px] font-medium group-data-[collapsible=icon]:hidden"
                       >
                         {item.badge}
                       </Badge>
@@ -65,11 +61,7 @@ export function NavMain({ items }: NavMainProps) {
           }
 
           return (
-            <Collapsible
-              key={item.title}
-              defaultOpen={item.isActive}
-              className="group/collapsible"
-            >
+            <Collapsible key={item.title} defaultOpen={item.isActive} className="group/collapsible">
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
@@ -77,37 +69,34 @@ export function NavMain({ items }: NavMainProps) {
                     isActive={item.isActive}
                     className="w-full justify-between"
                   >
-                    <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex min-w-0 items-center gap-2">
                       <Icon className="size-4 shrink-0" />
                       <span className="truncate">{item.title}</span>
                     </div>
-                    <div className="flex items-center gap-1 ml-auto shrink-0 group-data-[collapsible=icon]:hidden">
+                    <div className="ml-auto flex shrink-0 items-center gap-1 group-data-[collapsible=icon]:hidden">
                       {item.badge && (
                         <Badge
                           variant="secondary"
-                          className="text-[10px] h-5 px-1.5 font-medium bg-brand/10 text-brand border-brand/20"
+                          className="bg-brand/10 text-brand border-brand/20 h-5 px-1.5 text-[10px] font-medium"
                         >
                           {item.badge}
                         </Badge>
                       )}
-                      <ChevronRight className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 text-muted-foreground" />
+                      <ChevronRight className="text-muted-foreground size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                     </div>
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <SidebarMenuSub className="mr-0 border-l border-border/60 pl-2">
+                  <SidebarMenuSub className="border-border/60 mr-0 border-l pl-2">
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton
-                          asChild
-                          className="w-full justify-between"
-                        >
+                        <SidebarMenuSubButton asChild className="w-full justify-between">
                           <Link href={subItem.url}>
                             <span className="truncate">{subItem.title}</span>
                             {subItem.badge && (
                               <Badge
                                 variant="outline"
-                                className="ml-auto text-[9px] h-4 px-1 text-muted-foreground border-border/60 shrink-0 group-data-[collapsible=icon]:hidden"
+                                className="text-muted-foreground border-border/60 ml-auto h-4 shrink-0 px-1 text-[9px] group-data-[collapsible=icon]:hidden"
                               >
                                 {subItem.badge}
                               </Badge>

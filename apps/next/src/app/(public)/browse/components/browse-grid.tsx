@@ -22,22 +22,20 @@ export function BrowseGrid({
   return (
     <div className="space-y-6">
       {/* Grid Top Toolbar: Stats & View Toggle */}
-      <div className="flex items-center justify-between border-b border-border/60 pb-4">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span className="font-semibold text-foreground">{totalResults}</span>
+      <div className="border-border/60 flex items-center justify-between border-b pb-4">
+        <div className="text-muted-foreground flex items-center gap-2 text-sm">
+          <span className="text-foreground font-semibold">{totalResults}</span>
           <span>{totalResults === 1 ? "anime found" : "anime found"}</span>
           <span className="text-muted-foreground/40">•</span>
-          <span className="text-xs text-muted-foreground">
-            Total library: {totalAnimeCount}
-          </span>
+          <span className="text-muted-foreground text-xs">Total library: {totalAnimeCount}</span>
         </div>
 
         {/* View Mode Toggle */}
-        <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-xl border border-border/60">
+        <div className="bg-muted/60 border-border/60 flex items-center gap-1 rounded-xl border p-1">
           <button
             type="button"
             onClick={() => onViewModeChange("grid")}
-            className={`p-1.5 rounded-lg transition-all ${
+            className={`rounded-lg p-1.5 transition-all ${
               viewMode === "grid"
                 ? "bg-card text-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
@@ -51,7 +49,7 @@ export function BrowseGrid({
           <button
             type="button"
             onClick={() => onViewModeChange("list")}
-            className={`p-1.5 rounded-lg transition-all ${
+            className={`rounded-lg p-1.5 transition-all ${
               viewMode === "list"
                 ? "bg-card text-foreground shadow-xs"
                 : "text-muted-foreground hover:text-foreground"
@@ -67,7 +65,7 @@ export function BrowseGrid({
       {/* Loading Skeleton State matching active viewMode */}
       {isLoading ? (
         viewMode === "grid" ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {Array.from({ length: 12 }).map((_, i) => (
               <AnimeCard key={i} variant="grid" isLoading={true} />
             ))}
@@ -81,14 +79,15 @@ export function BrowseGrid({
         )
       ) : items.length === 0 ? (
         /* No Results Empty State */
-        <div className="flex flex-col items-center justify-center py-16 px-4 text-center rounded-2xl border border-dashed border-border/80 bg-card/40 my-6 space-y-4">
-          <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+        <div className="border-border/80 bg-card/40 my-6 flex flex-col items-center justify-center space-y-4 rounded-2xl border border-dashed px-4 py-16 text-center">
+          <div className="bg-primary/10 text-primary flex size-16 items-center justify-center rounded-full">
             <SearchX className="size-8" />
           </div>
-          <div className="space-y-1.5 max-w-md">
-            <h3 className="font-bold text-lg text-foreground">No anime found</h3>
-            <p className="text-sm text-muted-foreground">
-              We couldn&apos;t find any anime matching your current search query or active filter criteria.
+          <div className="max-w-md space-y-1.5">
+            <h3 className="text-foreground text-lg font-bold">No anime found</h3>
+            <p className="text-muted-foreground text-sm">
+              We couldn&apos;t find any anime matching your current search query or active filter
+              criteria.
             </p>
           </div>
           <Button onClick={onResetFilters} variant="default" className="rounded-xl font-semibold">
@@ -97,7 +96,7 @@ export function BrowseGrid({
         </div>
       ) : viewMode === "grid" ? (
         /* Grid View */
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {items.map((anime) => (
             <AnimeCard key={anime.id} variant="grid" anime={anime} />
           ))}

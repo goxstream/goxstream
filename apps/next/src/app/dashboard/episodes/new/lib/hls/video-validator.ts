@@ -12,9 +12,7 @@ export interface VideoValidationResult {
 /**
  * Validate that input file is an MP4 video and resolution is at least 1080p (height >= 1080 or width >= 1920).
  */
-export async function validateVideoFile(
-  file: File
-): Promise<VideoValidationResult> {
+export async function validateVideoFile(file: File): Promise<VideoValidationResult> {
   const fileName = file.name.toLowerCase();
   const mimeType = file.type.toLowerCase();
 
@@ -77,7 +75,8 @@ export async function validateVideoFile(
         width: 0,
         height: 0,
         format: "MP4",
-        errorMessage: "Failed to parse video metadata. Please ensure the MP4 file is not corrupted.",
+        errorMessage:
+          "Failed to parse video metadata. Please ensure the MP4 file is not corrupted.",
       });
     };
 

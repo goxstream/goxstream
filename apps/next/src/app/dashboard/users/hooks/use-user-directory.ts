@@ -7,7 +7,7 @@ export function useUserDirectory() {
   const [users, setUsers] = useState<UserAccount[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserAccount | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
-  
+
   // Form sheet state (Add & Edit)
   const [isFormSheetOpen, setIsFormSheetOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<UserAccount | null>(null);
@@ -19,7 +19,9 @@ export function useUserDirectory() {
         name: p.displayName,
         username: p.username,
         email: p.email,
-        avatar: p.avatarUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+        avatar:
+          p.avatarUrl ||
+          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
         role: "user",
         status: "active",
         membershipTier: (p.isVip ? "vip" : "free") as MembershipTier,
@@ -36,7 +38,6 @@ export function useUserDirectory() {
       setUsers(mapped);
     }
   }, [fetchedProfiles]);
-
 
   const [filters, setFilters] = useState<UserFilters>({
     search: "",
@@ -81,7 +82,7 @@ export function useUserDirectory() {
           return { ...u, status: nextStatus };
         }
         return u;
-      })
+      }),
     );
 
     if (selectedUser && selectedUser.id === userId) {
@@ -91,7 +92,7 @@ export function useUserDirectory() {
               ...prev,
               status: prev.status === "suspended" ? "active" : "suspended",
             }
-          : null
+          : null,
       );
     }
   };
@@ -100,7 +101,7 @@ export function useUserDirectory() {
     if (editingUser) {
       // Edit mode
       setUsers((prev) =>
-        prev.map((u) => (u.id === editingUser.id ? ({ ...u, ...userData } as UserAccount) : u))
+        prev.map((u) => (u.id === editingUser.id ? ({ ...u, ...userData } as UserAccount) : u)),
       );
     } else {
       // Add mode
@@ -109,7 +110,8 @@ export function useUserDirectory() {
         name: userData.name || "New User",
         username: userData.username || "newuser",
         email: userData.email || "user@example.com",
-        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+        avatar:
+          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
         role: userData.role || "user",
         status: userData.status || "active",
         membershipTier: userData.membershipTier || "free",
@@ -139,7 +141,8 @@ export function useUserDirectory() {
       }
       if (filters.role !== "all" && u.role !== filters.role) return false;
       if (filters.status !== "all" && u.status !== filters.status) return false;
-      if (filters.membershipTier !== "all" && u.membershipTier !== filters.membershipTier) return false;
+      if (filters.membershipTier !== "all" && u.membershipTier !== filters.membershipTier)
+        return false;
 
       return true;
     });

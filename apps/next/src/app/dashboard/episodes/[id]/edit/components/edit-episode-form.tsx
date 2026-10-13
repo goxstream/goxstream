@@ -50,16 +50,12 @@ export function EditEpisodeForm({ initialEpisode }: EditEpisodeFormProps) {
             health: "online",
             latencyMs: 38,
           },
-        ]
+        ],
   );
 
-  const [subtitles, setSubtitles] = useState<SubtitleTrack[]>(
-    initialEpisode.subtitles || []
-  );
+  const [subtitles, setSubtitles] = useState<SubtitleTrack[]>(initialEpisode.subtitles || []);
 
-  const [audioTracks, setAudioTracks] = useState<AudioTrack[]>(
-    initialEpisode.audioTracks || []
-  );
+  const [audioTracks, setAudioTracks] = useState<AudioTrack[]>(initialEpisode.audioTracks || []);
 
   const [status, setStatus] = useState<EpisodeStatus>(initialEpisode.status || "published");
   const [notifySubscribers, setNotifySubscribers] = useState(true);
@@ -91,9 +87,7 @@ export function EditEpisodeForm({ initialEpisode }: EditEpisodeFormProps) {
   };
 
   const handleUpdateServer = (id: string, key: keyof VideoServerSource, value: any) => {
-    setServers((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, [key]: value } : s))
-    );
+    setServers((prev) => prev.map((s) => (s.id === id ? { ...s, [key]: value } : s)));
   };
 
   const handleAddSubtitle = () => {
@@ -116,9 +110,7 @@ export function EditEpisodeForm({ initialEpisode }: EditEpisodeFormProps) {
   };
 
   const handleUpdateSubtitle = (id: string, key: keyof SubtitleTrack, value: any) => {
-    setSubtitles((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, [key]: value } : s))
-    );
+    setSubtitles((prev) => prev.map((s) => (s.id === id ? { ...s, [key]: value } : s)));
   };
 
   const handleAddAudio = () => {
@@ -139,9 +131,7 @@ export function EditEpisodeForm({ initialEpisode }: EditEpisodeFormProps) {
   };
 
   const handleUpdateAudio = (id: string, key: keyof AudioTrack, value: any) => {
-    setAudioTracks((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, [key]: value } : a))
-    );
+    setAudioTracks((prev) => prev.map((a) => (a.id === id ? { ...a, [key]: value } : a)));
   };
 
   const handleSave = () => {
@@ -159,7 +149,7 @@ export function EditEpisodeForm({ initialEpisode }: EditEpisodeFormProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto min-w-0 p-4 sm:p-6">
+    <div className="mx-auto max-w-5xl min-w-0 space-y-6 p-4 sm:p-6">
       <EditEpisodeHeader
         episodeId={initialEpisode.id}
         episodeNumber={basicData.episodeNumber || initialEpisode.episodeNumber}
@@ -173,31 +163,31 @@ export function EditEpisodeForm({ initialEpisode }: EditEpisodeFormProps) {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full h-auto p-1 bg-muted/40 border border-border/60 rounded-xl">
+        <TabsList className="bg-muted/40 border-border/60 grid h-auto w-full grid-cols-2 rounded-xl border p-1 sm:grid-cols-4">
           <TabsTrigger
             value="basic"
-            className="flex items-center justify-center gap-2 py-2.5 text-xs font-semibold rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-xs"
+            className="data-[state=active]:bg-card flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-semibold data-[state=active]:shadow-xs"
           >
             <FileText className="size-4" />
             <span>1. Basic Info</span>
           </TabsTrigger>
           <TabsTrigger
             value="sources"
-            className="flex items-center justify-center gap-2 py-2.5 text-xs font-semibold rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-xs"
+            className="data-[state=active]:bg-card flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-semibold data-[state=active]:shadow-xs"
           >
             <Server className="size-4" />
             <span>2. Video Sources</span>
           </TabsTrigger>
           <TabsTrigger
             value="subtitles"
-            className="flex items-center justify-center gap-2 py-2.5 text-xs font-semibold rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-xs"
+            className="data-[state=active]:bg-card flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-semibold data-[state=active]:shadow-xs"
           >
             <Globe className="size-4" />
             <span>3. Subtitles & Audio</span>
           </TabsTrigger>
           <TabsTrigger
             value="publish"
-            className="flex items-center justify-center gap-2 py-2.5 text-xs font-semibold rounded-lg data-[state=active]:bg-card data-[state=active]:shadow-xs"
+            className="data-[state=active]:bg-card flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-semibold data-[state=active]:shadow-xs"
           >
             <CheckCircle2 className="size-4" />
             <span>4. Preview & Publish</span>

@@ -7,6 +7,9 @@
     "dev": "wrangler dev",
     "build": "echo 'API build ready'",
     "deploy": "wrangler deploy --minify",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
@@ -25,6 +28,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
     "drizzle-kit": "catalog:",
+    "prettier": "catalog:",
     "typescript": "catalog:",
     "wrangler": "catalog:"
   }

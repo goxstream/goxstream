@@ -2,7 +2,9 @@ import { pgTable, text, integer, real, timestamp, boolean, primaryKey } from "dr
 import { relations } from "drizzle-orm";
 
 export const animes = pgTable("animes", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   slug: text("slug").notNull().unique(),
   titleRomaji: text("title_romaji").notNull(),
   titleEnglish: text("title_english"),
@@ -10,16 +12,28 @@ export const animes = pgTable("animes", {
   synopsis: text("synopsis"),
   coverImage: text("cover_image"),
   bannerImage: text("banner_image"),
-  type: text("type").notNull().$default(() => "TV"),
-  status: text("status").notNull().$default(() => "Ongoing"),
+  type: text("type")
+    .notNull()
+    .$default(() => "TV"),
+  status: text("status")
+    .notNull()
+    .$default(() => "Ongoing"),
   seasonName: text("season_name"),
   seasonYear: integer("season_year"),
-  episodesCount: integer("episodes_count").notNull().$default(() => 0),
+  episodesCount: integer("episodes_count")
+    .notNull()
+    .$default(() => 0),
   durationPerEp: text("duration_per_ep"),
   rating: real("rating").$default(() => 0),
-  isFeatured: boolean("is_featured").notNull().$default(() => false),
-  isTrending: boolean("is_trending").notNull().$default(() => false),
-  subOrDub: text("sub_or_dub").notNull().$default(() => "SUB"),
+  isFeatured: boolean("is_featured")
+    .notNull()
+    .$default(() => false),
+  isTrending: boolean("is_trending")
+    .notNull()
+    .$default(() => false),
+  subOrDub: text("sub_or_dub")
+    .notNull()
+    .$default(() => "SUB"),
   createdAt: timestamp("created_at")
     .notNull()
     .$defaultFn(() => new Date()),
@@ -29,7 +43,9 @@ export const animes = pgTable("animes", {
 });
 
 export const genres = pgTable("genres", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull().unique(),
   slug: text("slug").notNull().unique(),
 });
@@ -44,11 +60,13 @@ export const animeGenres = pgTable(
       .notNull()
       .references(() => genres.id, { onDelete: "cascade" }),
   },
-  (t) => [primaryKey({ columns: [t.animeId, t.genreId] })]
+  (t) => [primaryKey({ columns: [t.animeId, t.genreId] })],
 );
 
 export const studios = pgTable("studios", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull().unique(),
   slug: text("slug").notNull().unique(),
 });
@@ -63,33 +81,55 @@ export const animeStudios = pgTable(
       .notNull()
       .references(() => studios.id, { onDelete: "cascade" }),
   },
-  (t) => [primaryKey({ columns: [t.animeId, t.studioId] })]
+  (t) => [primaryKey({ columns: [t.animeId, t.studioId] })],
 );
 
 export const schedules = pgTable("schedules", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   animeId: text("anime_id")
     .notNull()
     .references(() => animes.id, { onDelete: "cascade" }),
   releaseDay: text("release_day").notNull(),
   releaseTime: text("release_time").notNull(),
   episodeNumber: integer("episode_number"),
-  status: text("status").notNull().$default(() => "upcoming"),
-  timezone: text("timezone").notNull().$default(() => "UTC"),
+  status: text("status")
+    .notNull()
+    .$default(() => "upcoming"),
+  timezone: text("timezone")
+    .notNull()
+    .$default(() => "UTC"),
 });
 
 export const trendingStats = pgTable("trending_stats", {
   animeId: text("anime_id")
     .primaryKey()
     .references(() => animes.id, { onDelete: "cascade" }),
-  rank: integer("rank").notNull().$default(() => 0),
-  previousRank: integer("previous_rank").notNull().$default(() => 0),
-  viewsToday: integer("views_today").notNull().$default(() => 0),
-  viewsThisWeek: integer("views_this_week").notNull().$default(() => 0),
-  weeklyViews: integer("weekly_views").notNull().$default(() => 0),
-  monthlyViews: integer("monthly_views").notNull().$default(() => 0),
-  totalViews: integer("total_views").notNull().$default(() => 0),
-  trendScore: real("trend_score").notNull().$default(() => 0),
+  rank: integer("rank")
+    .notNull()
+    .$default(() => 0),
+  previousRank: integer("previous_rank")
+    .notNull()
+    .$default(() => 0),
+  viewsToday: integer("views_today")
+    .notNull()
+    .$default(() => 0),
+  viewsThisWeek: integer("views_this_week")
+    .notNull()
+    .$default(() => 0),
+  weeklyViews: integer("weekly_views")
+    .notNull()
+    .$default(() => 0),
+  monthlyViews: integer("monthly_views")
+    .notNull()
+    .$default(() => 0),
+  totalViews: integer("total_views")
+    .notNull()
+    .$default(() => 0),
+  trendScore: real("trend_score")
+    .notNull()
+    .$default(() => 0),
   updatedAt: timestamp("updated_at")
     .notNull()
     .$defaultFn(() => new Date()),

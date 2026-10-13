@@ -9,11 +9,7 @@ const EpisodeFormContext = createContext<EpisodeFormContextType | undefined>(und
 export function EpisodeFormProvider({ children }: { children: ReactNode }) {
   const formState = useEpisodeFormState();
 
-  return (
-    <EpisodeFormContext.Provider value={formState}>
-      {children}
-    </EpisodeFormContext.Provider>
-  );
+  return <EpisodeFormContext.Provider value={formState}>{children}</EpisodeFormContext.Provider>;
 }
 
 export function useEpisodeForm() {

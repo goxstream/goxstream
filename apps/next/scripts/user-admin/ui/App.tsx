@@ -93,7 +93,8 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
       {(isScanning || userMgmt.loading) && (
         <Box marginY={1}>
           <Text color="cyan">
-            <Spinner type="dots" /> {isScanning ? "Scanning environment database targets..." : "Executing operation..."}
+            <Spinner type="dots" />{" "}
+            {isScanning ? "Scanning environment database targets..." : "Executing operation..."}
           </Text>
         </Box>
       )}
@@ -108,13 +109,18 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
         />
       )}
 
-      {!isScanning && !userMgmt.loading && view === "MENU" && <MenuView onSelect={handleMenuSelect} />}
+      {!isScanning && !userMgmt.loading && view === "MENU" && (
+        <MenuView onSelect={handleMenuSelect} />
+      )}
 
       {!isScanning && !userMgmt.loading && view === "LIST" && (
         <Box flexDirection="column">
           <UserTable users={userMgmt.users} title={`Users in ${selectedDb?.toUpperCase()}`} />
           <Box marginTop={1}>
-            <SelectInput items={[{ label: "Back to Main Menu", value: "back" }]} onSelect={() => setView("MENU")} />
+            <SelectInput
+              items={[{ label: "Back to Main Menu", value: "back" }]}
+              onSelect={() => setView("MENU")}
+            />
           </Box>
         </Box>
       )}
@@ -166,23 +172,33 @@ export const App: React.FC<AppProps> = ({ initialTarget, initialAction }) => {
         />
       )}
 
-      {!isScanning && !userMgmt.loading && view === "DELETE_CONFIRM" && selectedUsers.length > 0 && (
-        <DeleteConfirmModal
-          selectedUsers={selectedUsers}
-          onConfirm={async () => {
-            if (selectedDb) await userMgmt.handleDeleteBatch(selectedDb, selectedUsers.map((u) => u.id));
-            setSelectedUsers([]);
-            setView("MENU");
-          }}
-          onCancel={() => setView("MENU")}
-        />
-      )}
+      {!isScanning &&
+        !userMgmt.loading &&
+        view === "DELETE_CONFIRM" &&
+        selectedUsers.length > 0 && (
+          <DeleteConfirmModal
+            selectedUsers={selectedUsers}
+            onConfirm={async () => {
+              if (selectedDb)
+                await userMgmt.handleDeleteBatch(
+                  selectedDb,
+                  selectedUsers.map((u) => u.id),
+                );
+              setSelectedUsers([]);
+              setView("MENU");
+            }}
+            onCancel={() => setView("MENU")}
+          />
+        )}
 
       {!isScanning && !userMgmt.loading && view === "HELP" && (
         <Box flexDirection="column">
           <HelpView />
           <Box marginTop={1}>
-            <SelectInput items={[{ label: "Back to Main Menu", value: "back" }]} onSelect={() => setView("MENU")} />
+            <SelectInput
+              items={[{ label: "Back to Main Menu", value: "back" }]}
+              onSelect={() => setView("MENU")}
+            />
           </Box>
         </Box>
       )}

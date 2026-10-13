@@ -20,13 +20,14 @@ export function AnimeDetailsContent({ paramsPromise }: AnimeDetailsContentProps)
     notFound();
   }
 
-  const latestEpNum = episodes && episodes.length > 0 ? Math.max(...episodes.map((e) => e.episodeNumber)) : 1;
+  const latestEpNum =
+    episodes && episodes.length > 0 ? Math.max(...episodes.map((e) => e.episodeNumber)) : 1;
 
   return (
     <div className="flex-1 space-y-6">
       <AnimeHero anime={anime} latestEpisodeNum={latestEpNum} isLoading={isLoading} />
 
-      <div className="container mx-auto px-4 space-y-8">
+      <div className="container mx-auto space-y-8 px-4">
         <AnimeMetadata anime={anime} isLoading={isLoading} />
         <EpisodeList episodes={episodes} animeSlug={anime?.slug || slug} isLoading={isLoading} />
         {recommendations && recommendations.length > 0 && (

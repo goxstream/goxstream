@@ -45,16 +45,19 @@ export function CommentInputForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 bg-card/60 p-3 rounded-xl border border-border/60">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-card/60 border-border/60 flex flex-col gap-2.5 rounded-xl border p-3"
+    >
       <div className="flex items-center gap-2 text-xs">
-        <User className="size-3.5 text-primary shrink-0" />
+        <User className="text-primary size-3.5 shrink-0" />
         <span className="text-muted-foreground font-medium">Posting as:</span>
         <input
           type="text"
           value={guestName}
           onChange={(e) => setGuestName(e.target.value)}
           placeholder="Guest Otaku (optional nickname)"
-          className="bg-transparent border-b border-border/60 text-foreground font-semibold px-1 py-0.5 text-xs focus:outline-none focus:border-primary max-w-[180px]"
+          className="border-border/60 text-foreground focus:border-primary max-w-[180px] border-b bg-transparent px-1 py-0.5 text-xs font-semibold focus:outline-none"
         />
       </div>
 
@@ -63,17 +66,17 @@ export function CommentInputForm({
         onChange={(e) => setText(e.target.value)}
         placeholder={placeholder}
         rows={isReply ? 2 : 3}
-        className="w-full text-xs p-3 rounded-lg bg-background border border-border/60 focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground resize-none"
+        className="bg-background border-border/60 focus:ring-primary text-foreground placeholder:text-muted-foreground w-full resize-none rounded-lg border p-3 text-xs focus:ring-1 focus:outline-none"
       />
 
-      <div className="flex items-center justify-between gap-2 flex-wrap pt-0.5">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
         {/* Spoiler Toggle Button */}
         <button
           type="button"
           onClick={() => setIsSpoiler(!isSpoiler)}
-          className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md font-medium transition-colors border ${
+          className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-colors ${
             isSpoiler
-              ? "bg-amber-500/15 text-amber-500 border-amber-500/30"
+              ? "border-amber-500/30 bg-amber-500/15 text-amber-500"
               : "bg-muted/40 text-muted-foreground hover:text-foreground border-border/60"
           }`}
         >
@@ -88,7 +91,7 @@ export function CommentInputForm({
               variant="ghost"
               size="sm"
               onClick={onCancel}
-              className="h-8 text-xs rounded-lg px-3"
+              className="h-8 rounded-lg px-3 text-xs"
             >
               Cancel
             </Button>
@@ -98,7 +101,7 @@ export function CommentInputForm({
             type="submit"
             size="sm"
             disabled={!text.trim()}
-            className="h-8 text-xs rounded-lg px-4 shadow-xs font-semibold gap-1.5"
+            className="h-8 gap-1.5 rounded-lg px-4 text-xs font-semibold shadow-xs"
           >
             <Send className="size-3.5" />
             <span>{buttonLabel}</span>

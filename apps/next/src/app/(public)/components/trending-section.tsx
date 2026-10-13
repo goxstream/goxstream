@@ -22,20 +22,20 @@ export function TrendingSection({ initialTrending, initialGenres }: TrendingSect
     selectedGenre === "All"
       ? trendingAnime
       : trendingAnime.filter((item) =>
-          item.genres.some((g) => g.toLowerCase() === selectedGenre.toLowerCase())
+          item.genres.some((g) => g.toLowerCase() === selectedGenre.toLowerCase()),
         );
 
   return (
-    <section id="trending" className="py-12 md:py-16 bg-background">
+    <section id="trending" className="bg-background py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
+            <div className="text-primary flex items-center gap-2 text-xs font-bold tracking-wider uppercase">
               <Sparkles className="size-4" />
               <span>Trending Series</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+            <h2 className="text-foreground text-2xl font-extrabold tracking-tight sm:text-3xl">
               Most Popular Right Now
             </h2>
           </div>
@@ -44,7 +44,8 @@ export function TrendingSection({ initialTrending, initialGenres }: TrendingSect
             href="/browse"
             className={buttonVariants({
               variant: "ghost",
-              className: "self-start sm:self-auto text-sm font-semibold text-primary hover:text-primary hover:bg-primary/10 rounded-lg group",
+              className:
+                "text-primary hover:text-primary hover:bg-primary/10 group self-start rounded-lg text-sm font-semibold sm:self-auto",
             })}
           >
             View Complete Library
@@ -57,10 +58,10 @@ export function TrendingSection({ initialTrending, initialGenres }: TrendingSect
           <div className="space-y-6">
             <div className="flex items-center gap-2 overflow-hidden pb-3">
               {Array.from({ length: 8 }).map((_, i) => (
-                <Skeleton key={i} className="h-7 w-20 rounded-full flex-shrink-0" />
+                <Skeleton key={i} className="h-7 w-20 flex-shrink-0 rounded-full" />
               ))}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-5">
               {Array.from({ length: 10 }).map((_, i) => (
                 <AnimeCard key={i} isLoading={true} />
               ))}
@@ -69,14 +70,14 @@ export function TrendingSection({ initialTrending, initialGenres }: TrendingSect
         ) : (
           <>
             {/* Genre Filter Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none">
+            <div className="mb-6 flex scrollbar-none items-center gap-2 overflow-x-auto pb-3">
               {genresList.slice(0, 10).map((genre) => {
                 const isActive = selectedGenre.toLowerCase() === genre.toLowerCase();
                 return (
                   <button
                     key={genre}
                     onClick={() => setSelectedGenre(genre)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
+                    className={`rounded-full px-4 py-1.5 text-xs font-semibold whitespace-nowrap transition-colors ${
                       isActive
                         ? "bg-primary text-primary-foreground shadow-sm"
                         : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
@@ -90,14 +91,14 @@ export function TrendingSection({ initialTrending, initialGenres }: TrendingSect
 
             {/* Anime Cards Grid */}
             {filteredAnime.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-5">
                 {filteredAnime.map((anime) => (
                   <AnimeCard key={anime.id} anime={anime} />
                 ))}
               </div>
             ) : (
-              <div className="p-12 text-center rounded-xl bg-card border border-border">
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-card border-border rounded-xl border p-12 text-center">
+                <p className="text-muted-foreground text-sm">
                   No trending anime found in the "{selectedGenre}" category right now.
                 </p>
               </div>

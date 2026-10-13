@@ -5,7 +5,15 @@ import { ChevronDown, ChevronRight, Edit2, Trash2, Star, MoreVertical, Flame } f
 import { TableRow, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { AnimeStatusBadge } from "./anime-status-badge";
 import { AnimeInlineEditForm } from "../anime-inline-edit-form";
 import type { AnimeItem } from "../../types";
@@ -39,52 +47,83 @@ export function AnimeTableRow({
   return (
     <React.Fragment>
       <TableRow
-        className={`transition-colors border-border/40 hover:bg-muted/40 cursor-pointer ${isExpanded ? "bg-muted/30 font-medium" : ""}`}
+        className={`border-border/40 hover:bg-muted/40 cursor-pointer transition-colors ${isExpanded ? "bg-muted/30 font-medium" : ""}`}
         onClick={handleEditClick}
       >
-        <TableCell className="text-center p-2" onClick={(e) => e.stopPropagation()}>
-          <Button variant="ghost" size="icon-xs" onClick={handleEditClick} className="h-6 w-6 text-muted-foreground hover:text-foreground">
-            {isExpanded ? <ChevronDown className="h-4 w-4 text-primary" /> : <ChevronRight className="h-4 w-4" />}
+        <TableCell className="p-2 text-center" onClick={(e) => e.stopPropagation()}>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            onClick={handleEditClick}
+            className="text-muted-foreground hover:text-foreground h-6 w-6"
+          >
+            {isExpanded ? (
+              <ChevronDown className="text-primary h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
           </Button>
         </TableCell>
 
         <TableCell className="py-2.5">
           <div className="flex items-center gap-3">
-            <div className="relative aspect-2/3 w-9 rounded overflow-hidden border border-border/60 bg-muted shrink-0 shadow-xs">
+            <div className="border-border/60 bg-muted relative aspect-2/3 w-9 shrink-0 overflow-hidden rounded border shadow-xs">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={anime.coverImage} alt={anime.titleRomaji} className="w-full h-full object-cover" />
+              <img
+                src={anime.coverImage}
+                alt={anime.titleRomaji}
+                className="h-full w-full object-cover"
+              />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-semibold text-foreground truncate max-w-[200px] sm:max-w-[300px]">{anime.titleRomaji}</span>
-                {anime.trending && <Flame className="h-3 w-3 text-orange-500 fill-orange-500 shrink-0" />}
+                <span className="text-foreground max-w-[200px] truncate text-xs font-semibold sm:max-w-[300px]">
+                  {anime.titleRomaji}
+                </span>
+                {anime.trending && (
+                  <Flame className="h-3 w-3 shrink-0 fill-orange-500 text-orange-500" />
+                )}
               </div>
-              <span className="text-[11px] text-muted-foreground block truncate max-w-[240px]">
+              <span className="text-muted-foreground block max-w-[240px] truncate text-[11px]">
                 {anime.titleEnglish || anime.titleJapanese || anime.studios.join(", ")}
               </span>
             </div>
           </div>
         </TableCell>
 
-        <TableCell className="py-2.5"><AnimeStatusBadge status={anime.status} /></TableCell>
+        <TableCell className="py-2.5">
+          <AnimeStatusBadge status={anime.status} />
+        </TableCell>
 
         <TableCell className="py-2.5">
           <div className="flex flex-col">
-            <span className="text-xs font-medium text-foreground">{anime.type}</span>
-            <span className="text-[11px] text-muted-foreground">{anime.episodes} eps</span>
+            <span className="text-foreground text-xs font-medium">{anime.type}</span>
+            <span className="text-muted-foreground text-[11px]">{anime.episodes} eps</span>
           </div>
         </TableCell>
 
         <TableCell className="py-2.5">
-          <span className="text-xs text-foreground">{anime.season.season} {anime.season.year}</span>
+          <span className="text-foreground text-xs">
+            {anime.season.season} {anime.season.year}
+          </span>
         </TableCell>
 
         <TableCell className="py-2.5">
-          <div className="flex flex-wrap gap-1 max-w-[200px]">
+          <div className="flex max-w-[200px] flex-wrap gap-1">
             {anime.genres.slice(0, 2).map((g) => (
-              <Badge key={g} variant="secondary" className="text-[10px] px-1.5 py-0 bg-muted text-muted-foreground font-normal border-border/40">{g}</Badge>
+              <Badge
+                key={g}
+                variant="secondary"
+                className="bg-muted text-muted-foreground border-border/40 px-1.5 py-0 text-[10px] font-normal"
+              >
+                {g}
+              </Badge>
             ))}
-            {anime.genres.length > 2 && <span className="text-[10px] text-muted-foreground self-center">+{anime.genres.length - 2}</span>}
+            {anime.genres.length > 2 && (
+              <span className="text-muted-foreground self-center text-[10px]">
+                +{anime.genres.length - 2}
+              </span>
+            )}
           </div>
         </TableCell>
 
@@ -95,24 +134,33 @@ export function AnimeTableRow({
           </div>
         </TableCell>
 
-        <TableCell className="py-2.5 text-right pr-4" onClick={(e) => e.stopPropagation()}>
+        <TableCell className="py-2.5 pr-4 text-right" onClick={(e) => e.stopPropagation()}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground h-7 w-7"
+              >
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40 text-xs">
               <DropdownMenuGroup>
-                <DropdownMenuLabel className="text-[11px] text-muted-foreground font-normal">Actions</DropdownMenuLabel>
+                <DropdownMenuLabel className="text-muted-foreground text-[11px] font-normal">
+                  Actions
+                </DropdownMenuLabel>
                 <DropdownMenuItem onClick={handleEditClick}>
-                  <Edit2 className="h-3.5 w-3.5 mr-2 text-primary" />
+                  <Edit2 className="text-primary mr-2 h-3.5 w-3.5" />
                   {isExpanded ? "Close Edit" : "Edit Anime"}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => onDeleteAnime(anime.id)}>
-                <Trash2 className="h-3.5 w-3.5 mr-2" />
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive"
+                onClick={() => onDeleteAnime(anime.id)}
+              >
+                <Trash2 className="mr-2 h-3.5 w-3.5" />
                 Delete Anime
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -121,11 +169,14 @@ export function AnimeTableRow({
       </TableRow>
 
       {isExpanded && (
-        <TableRow className="hover:bg-transparent border-border/60">
+        <TableRow className="border-border/60 hover:bg-transparent">
           <TableCell colSpan={8} className="p-0">
             <AnimeInlineEditForm
               anime={anime}
-              onSave={(updated) => { onUpdateAnime(updated); onToggleExpand(anime.id); }}
+              onSave={(updated) => {
+                onUpdateAnime(updated);
+                onToggleExpand(anime.id);
+              }}
               onCancel={() => onToggleExpand(anime.id)}
             />
           </TableCell>

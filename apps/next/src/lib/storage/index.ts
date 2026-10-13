@@ -15,7 +15,7 @@ export function resolveStorageAdapter(): StorageAdapter {
     process.env.S3_BUCKET_NAME ||
     process.env.S3_ACCESS_KEY_ID ||
     process.env.AWS_ACCESS_KEY_ID ||
-    process.env.S3_ENDPOINT
+    process.env.S3_ENDPOINT,
   );
 
   if (connection === "s3" || hasS3Config) {
@@ -28,7 +28,7 @@ export function resolveStorageAdapter(): StorageAdapter {
 export async function uploadMediaFile(
   arg1: string | File | Blob | Uint8Array | ArrayBuffer,
   arg2: string | File | Blob | Uint8Array | ArrayBuffer,
-  contentType?: string
+  contentType?: string,
 ): Promise<StorageUploadResult> {
   const adapter = resolveStorageAdapter();
   return adapter.uploadFile(arg1, arg2, contentType);

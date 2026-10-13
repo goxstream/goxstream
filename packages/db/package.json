@@ -9,6 +9,8 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,6 +19,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
     "drizzle-kit": "catalog:",
+    "prettier": "catalog:",
     "typescript": "catalog:"
   }
 }

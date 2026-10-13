@@ -49,15 +49,15 @@ export function UserDirectoryStats({ users }: UserDirectoryStatsProps) {
           <Card key={item.title} className="border-border/60 bg-card shadow-xs">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-muted-foreground">{item.title}</span>
-                <div className="flex size-8 items-center justify-center rounded-md border border-border/60 bg-muted/40 text-foreground">
+                <span className="text-muted-foreground text-xs font-medium">{item.title}</span>
+                <div className="border-border/60 bg-muted/40 text-foreground flex size-8 items-center justify-center rounded-md border">
                   <Icon className="size-4" />
                 </div>
               </div>
-              <div className="mt-2 text-2xl font-bold tracking-tight text-foreground">
+              <div className="text-foreground mt-2 text-2xl font-bold tracking-tight">
                 {item.value}
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">{item.subtext}</p>
+              <p className="text-muted-foreground mt-1 text-xs">{item.subtext}</p>
             </CardContent>
           </Card>
         );

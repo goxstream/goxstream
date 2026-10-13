@@ -66,7 +66,7 @@ export async function getFeaturedAnime(): Promise<AnimeItem | null> {
 
 export async function getTrendingAnime(limit = 10): Promise<AnimeItem[]> {
   const db = await getDb();
-  
+
   try {
     const rawList = await db.query.trendingStats.findMany({
       limit,
@@ -105,7 +105,7 @@ export async function getTrendingAnime(limit = 10): Promise<AnimeItem[]> {
       animeStudios: { with: { studio: true } },
     },
   });
-  
+
   return fallback.map(mapToAnimeItem);
 }
 
@@ -134,8 +134,8 @@ export async function getBrowseAnime(options?: {
       or(
         like(sql`LOWER(${animes.titleEnglish})`, pattern),
         like(sql`LOWER(${animes.titleRomaji})`, pattern),
-        like(sql`LOWER(${animes.titleJapanese})`, pattern)
-      )
+        like(sql`LOWER(${animes.titleJapanese})`, pattern),
+      ),
     );
   }
 
@@ -170,10 +170,13 @@ export async function getBrowseAnime(options?: {
   let items: AnimeItem[] = rawList.map(mapToAnimeItem);
 
   if (options?.genre && options.genre !== "All") {
-    const selectedGenres = options.genre.split(",").map((g) => g.trim().toLowerCase()).filter(Boolean);
+    const selectedGenres = options.genre
+      .split(",")
+      .map((g) => g.trim().toLowerCase())
+      .filter(Boolean);
     if (selectedGenres.length > 0) {
       items = items.filter((item: AnimeItem) =>
-        item.genres.some((g: string) => selectedGenres.includes(g.toLowerCase()))
+        item.genres.some((g: string) => selectedGenres.includes(g.toLowerCase())),
       );
     }
   }

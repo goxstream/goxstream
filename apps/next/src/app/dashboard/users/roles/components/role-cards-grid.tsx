@@ -12,11 +12,7 @@ interface RoleCardsGridProps {
   onSelectRole: (roleSlug: string) => void;
 }
 
-export function RoleCardsGrid({
-  roles,
-  selectedRoleSlug,
-  onSelectRole,
-}: RoleCardsGridProps) {
+export function RoleCardsGrid({ roles, selectedRoleSlug, onSelectRole }: RoleCardsGridProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {roles.map((role) => {
@@ -26,36 +22,38 @@ export function RoleCardsGrid({
           <Card
             key={role.id}
             onClick={() => onSelectRole(role.slug)}
-            className={`cursor-pointer transition-all border-border/60 bg-card shadow-xs hover:border-foreground/30 ${
-              isSelected ? "ring-2 ring-primary/40 border-primary" : ""
+            className={`border-border/60 bg-card hover:border-foreground/30 cursor-pointer shadow-xs transition-all ${
+              isSelected ? "ring-primary/40 border-primary ring-2" : ""
             }`}
           >
-            <CardContent className="p-4 flex flex-col justify-between h-full gap-4">
+            <CardContent className="flex h-full flex-col justify-between gap-4 p-4">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="flex size-8 items-center justify-center rounded-md border border-border/60 bg-muted/40 text-foreground">
+                    <div className="border-border/60 bg-muted/40 text-foreground flex size-8 items-center justify-center rounded-md border">
                       <Shield className="size-4" />
                     </div>
-                    <span className="font-semibold text-foreground text-sm">{role.name}</span>
+                    <span className="text-foreground text-sm font-semibold">{role.name}</span>
                   </div>
                   {role.isDefault && (
-                    <Badge variant="secondary" className="text-[10px]">Default</Badge>
+                    <Badge variant="secondary" className="text-[10px]">
+                      Default
+                    </Badge>
                   )}
                 </div>
 
-                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                <p className="text-muted-foreground line-clamp-2 text-xs leading-relaxed">
                   {role.description}
                 </p>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-border/40 text-xs text-muted-foreground">
+              <div className="border-border/40 text-muted-foreground flex items-center justify-between border-t pt-2 text-xs">
                 <div className="flex items-center gap-1.5 font-medium">
                   <Users className="size-3.5" />
                   <span>{role.memberCount} members</span>
                 </div>
-                <div className="flex items-center gap-1 font-medium text-foreground">
-                  <Lock className="size-3.5 text-muted-foreground" />
+                <div className="text-foreground flex items-center gap-1 font-medium">
+                  <Lock className="text-muted-foreground size-3.5" />
                   <span>{role.permissions.length} perms</span>
                 </div>
               </div>

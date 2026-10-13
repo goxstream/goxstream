@@ -73,4 +73,3 @@ export function useUserNav() {
 
   return { user, isLoading, logout };
 }
-

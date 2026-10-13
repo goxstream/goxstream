@@ -9,14 +9,15 @@ interface CategoriesHeaderProps {
 
 export function CategoriesHeader({ onOpenAddSheet }: CategoriesHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border/60 pb-5">
+    <div className="border-border/60 flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-          <Layers className="size-6 text-primary" />
+        <h1 className="text-foreground flex items-center gap-2 text-2xl font-bold tracking-tight">
+          <Layers className="text-primary size-6" />
           Categories & Genres
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Manage media format categories, genres, demographic tags, and taxonomy structures for your anime catalog.
+        <p className="text-muted-foreground text-sm">
+          Manage media format categories, genres, demographic tags, and taxonomy structures for your
+          anime catalog.
         </p>
       </div>
 
@@ -25,7 +26,7 @@ export function CategoriesHeader({ onOpenAddSheet }: CategoriesHeaderProps) {
           variant="outline"
           size="sm"
           onClick={() => onOpenAddSheet("genre")}
-          className="rounded-lg gap-1.5"
+          className="gap-1.5 rounded-lg"
         >
           <Tags className="size-4" />
           Add Genre Tag
@@ -34,7 +35,7 @@ export function CategoriesHeader({ onOpenAddSheet }: CategoriesHeaderProps) {
           variant="default"
           size="sm"
           onClick={() => onOpenAddSheet("category")}
-          className="rounded-lg gap-1.5"
+          className="gap-1.5 rounded-lg"
         >
           <Plus className="size-4" />
           Add Category

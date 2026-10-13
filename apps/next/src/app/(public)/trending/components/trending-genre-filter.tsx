@@ -41,17 +41,17 @@ export function TrendingGenreFilter({
   const isFiltered = selectedGenre !== "All" && Boolean(selectedGenre);
 
   return (
-    <div className="space-y-3 p-4 rounded-2xl bg-card border border-border/80 shadow-xs">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-          <Filter className="size-3.5 text-primary" />
+    <div className="bg-card border-border/80 space-y-3 rounded-2xl border p-4 shadow-xs">
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div className="text-muted-foreground flex items-center gap-2 text-xs font-bold tracking-wider uppercase">
+          <Filter className="text-primary size-3.5" />
           <span>Filter Trending by Genre</span>
         </div>
 
         {/* Combobox Dropdown */}
         <div className="w-full sm:w-64">
           <Combobox>
-            <div ref={inputContainerRef} className="w-full relative">
+            <div ref={inputContainerRef} className="relative w-full">
               <ComboboxInput
                 value={query}
                 onInput={(e: React.FormEvent<HTMLInputElement>) => {
@@ -59,7 +59,7 @@ export function TrendingGenreFilter({
                 }}
                 placeholder={isFiltered ? selectedGenre : "Select Genre..."}
                 showTrigger
-                className="w-full h-9 text-xs font-medium bg-background rounded-xl border border-border/80 shadow-xs focus-within:border-primary/50"
+                className="bg-background border-border/80 focus-within:border-primary/50 h-9 w-full rounded-xl border text-xs font-medium shadow-xs"
               />
             </div>
 
@@ -67,25 +67,23 @@ export function TrendingGenreFilter({
               anchor={inputContainerRef}
               sideOffset={6}
               align="end"
-              className="!w-[var(--anchor-width)] !min-w-[var(--anchor-width)] !max-w-[var(--anchor-width)] z-50 bg-popover border border-border/60 shadow-md rounded-xl p-1"
+              className="bg-popover border-border/60 z-50 !w-[var(--anchor-width)] !max-w-[var(--anchor-width)] !min-w-[var(--anchor-width)] rounded-xl border p-1 shadow-md"
             >
-              <ComboboxList className="max-h-56 no-scrollbar">
+              <ComboboxList className="no-scrollbar max-h-56">
                 <ComboboxItem
                   value="All"
                   onClick={() => {
                     onGenreSelect("All");
                     setQuery("");
                   }}
-                  className="text-xs py-2 px-2.5 rounded-lg cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground font-medium flex items-center justify-between"
+                  className="hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium transition-colors"
                 >
                   <span>All Genres</span>
-                  {!isFiltered && (
-                    <Check className="size-3.5 text-primary shrink-0" />
-                  )}
+                  {!isFiltered && <Check className="text-primary size-3.5 shrink-0" />}
                 </ComboboxItem>
 
                 {filteredGenres.length === 0 ? (
-                  <ComboboxEmpty className="text-xs py-3 px-2 text-center text-muted-foreground">
+                  <ComboboxEmpty className="text-muted-foreground px-2 py-3 text-center text-xs">
                     No genre found
                   </ComboboxEmpty>
                 ) : (
@@ -100,14 +98,12 @@ export function TrendingGenreFilter({
                           setQuery("");
                         }}
                         className={cn(
-                          "text-xs py-2 px-2.5 rounded-lg cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground font-medium flex items-center justify-between",
-                          isSelected && "bg-primary/10 text-primary font-bold"
+                          "hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium transition-colors",
+                          isSelected && "bg-primary/10 text-primary font-bold",
                         )}
                       >
                         <span>{g}</span>
-                        {isSelected && (
-                          <Check className="size-3.5 text-primary shrink-0" />
-                        )}
+                        {isSelected && <Check className="text-primary size-3.5 shrink-0" />}
                       </ComboboxItem>
                     );
                   })
@@ -120,18 +116,18 @@ export function TrendingGenreFilter({
 
       {/* Active Selected Genre Badge & Reset Bar */}
       {isFiltered && (
-        <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
+        <div className="border-border/40 flex items-center justify-between gap-2 border-t pt-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground">Active Filter:</span>
+            <span className="text-muted-foreground text-xs font-semibold">Active Filter:</span>
             <Badge
               variant="secondary"
-              className="bg-primary/10 text-primary border border-primary/20 text-xs font-semibold px-2.5 py-1 flex items-center gap-1.5 rounded-lg"
+              className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold"
             >
               <span>Genre: {selectedGenre}</span>
               <button
                 type="button"
                 onClick={() => onGenreSelect("All")}
-                className="hover:opacity-75 cursor-pointer"
+                className="cursor-pointer hover:opacity-75"
                 aria-label="Remove selected genre filter"
               >
                 <X className="size-3" />
@@ -143,7 +139,7 @@ export function TrendingGenreFilter({
             variant="ghost"
             size="sm"
             onClick={() => onGenreSelect("All")}
-            className="h-7 px-2 text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 font-medium cursor-pointer"
+            className="text-muted-foreground hover:text-destructive flex h-7 cursor-pointer items-center gap-1 px-2 text-xs font-medium"
           >
             <RotateCcw className="size-3" />
             Reset Filter

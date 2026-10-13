@@ -19,8 +19,8 @@ export async function getLatestEpisodes(limit = 10): Promise<EpisodeItem[]> {
     mapToEpisodeItem(
       ep,
       ep.anime?.slug || "",
-      ep.anime?.titleEnglish || ep.anime?.titleRomaji || "Anime"
-    )
+      ep.anime?.titleEnglish || ep.anime?.titleRomaji || "Anime",
+    ),
   );
 }
 
@@ -43,7 +43,7 @@ export async function getEpisodesByAnimeSlug(animeSlug: string): Promise<Episode
 
 export async function getEpisodeWatchDetails(
   animeSlug: string,
-  episodeNumber: number
+  episodeNumber: number,
 ): Promise<EpisodeWatchDetails | null> {
   const db = await getDb();
   const anime = await getAnimeBySlug(animeSlug);
@@ -55,10 +55,7 @@ export async function getEpisodeWatchDetails(
   if (!animeRecord) return null;
 
   const currentEpRaw = await db.query.episodes.findFirst({
-    where: and(
-      eq(episodes.animeId, animeRecord.id),
-      eq(episodes.number, episodeNumber)
-    ),
+    where: and(eq(episodes.animeId, animeRecord.id), eq(episodes.number, episodeNumber)),
     with: {
       streamSources: true,
     },

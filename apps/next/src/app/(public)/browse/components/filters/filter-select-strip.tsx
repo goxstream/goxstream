@@ -46,11 +46,11 @@ export function FilterSelectStrip({
   return (
     <div className="w-full">
       {/* Primary Desktop 4-Column x 2-Row Filter Grid Layout */}
-      <div className="hidden lg:grid grid-cols-4 gap-4 w-full items-end">
+      <div className="hidden w-full grid-cols-4 items-end gap-4 lg:grid">
         {/* ROW 1 */}
         {/* Column 1: Search Input */}
-        <div className="w-full flex flex-col gap-1.5">
-          <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+        <div className="flex w-full flex-col gap-1.5">
+          <label className="text-muted-foreground text-[11px] font-bold tracking-wider uppercase">
             Search Keyword
           </label>
           <SearchInput query={query} onQueryChange={onQueryChange} />
@@ -106,10 +106,7 @@ export function FilterSelectStrip({
         />
 
         {/* Column 4: Genres Multi-Select Combobox */}
-        <BaseGenreMultiSelectCombobox
-          value={genre}
-          onValueChange={onGenreChange}
-        />
+        <BaseGenreMultiSelectCombobox value={genre} onValueChange={onGenreChange} />
       </div>
     </div>
   );

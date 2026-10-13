@@ -17,13 +17,15 @@ export function HeroPoster({ anime, isLoading }: HeroPosterProps) {
   const [isPosterLoaded, setIsPosterLoaded] = useState(false);
 
   if (isLoading || !anime) {
-    return <Skeleton className="mx-auto md:mx-0 w-full max-w-[260px] md:max-w-none aspect-[2/3] rounded-xl" />;
+    return (
+      <Skeleton className="mx-auto aspect-[2/3] w-full max-w-[260px] rounded-xl md:mx-0 md:max-w-none" />
+    );
   }
 
   const isPosterGradient = anime.coverImage && anime.coverImage.startsWith("linear-gradient");
 
   return (
-    <div className="relative group mx-auto md:mx-0 w-full max-w-[260px] md:max-w-none aspect-[2/3] rounded-xl overflow-hidden shadow-md border border-border/80 bg-muted">
+    <div className="group border-border/80 bg-muted relative mx-auto aspect-[2/3] w-full max-w-[260px] overflow-hidden rounded-xl border shadow-md md:mx-0 md:max-w-none">
       {!isPosterGradient && !isPosterLoaded && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
           <VercelSpinner size="md" />
@@ -32,7 +34,7 @@ export function HeroPoster({ anime, isLoading }: HeroPosterProps) {
 
       {isPosterGradient ? (
         <div
-          className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full transition-transform duration-500 group-hover:scale-105"
           style={getImageStyle(anime.coverImage)}
         />
       ) : (
@@ -42,7 +44,7 @@ export function HeroPoster({ anime, isLoading }: HeroPosterProps) {
           loading="eager"
           decoding="async"
           onLoad={() => setIsPosterLoaded(true)}
-          className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+          className={`h-full w-full object-cover transition-all duration-500 group-hover:scale-105 ${
             isPosterLoaded ? "opacity-100" : "opacity-0"
           }`}
           onError={(e) => {
@@ -54,19 +56,19 @@ export function HeroPoster({ anime, isLoading }: HeroPosterProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
 
       {/* Poster Badges */}
-      <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-        <Badge className="bg-amber-500 text-amber-950 border-amber-400 font-bold px-2 py-0.5 text-xs shadow-xs flex items-center gap-1">
+      <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+        <Badge className="flex items-center gap-1 border-amber-400 bg-amber-500 px-2 py-0.5 text-xs font-bold text-amber-950 shadow-xs">
           <Star className="size-3 fill-amber-950" />
           {anime.rating ? anime.rating.toFixed(2) : "N/A"}
         </Badge>
-        <Badge className="bg-black/60 backdrop-blur-md text-white border-white/20 font-medium px-2 py-0.5 text-xs">
+        <Badge className="border-white/20 bg-black/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-md">
           {anime.type}
         </Badge>
       </div>
 
-      <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white/90 font-medium z-10">
+      <div className="absolute right-3 bottom-3 left-3 z-10 flex items-center justify-between text-xs font-medium text-white/90">
         <span>{anime.subOrDub}</span>
-        <span className="bg-primary/90 text-primary-foreground px-2 py-0.5 rounded text-[11px] font-semibold">
+        <span className="bg-primary/90 text-primary-foreground rounded px-2 py-0.5 text-[11px] font-semibold">
           {anime.status}
         </span>
       </div>

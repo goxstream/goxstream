@@ -12,17 +12,13 @@ interface WatchlistListItemProps {
   onRemove: (id: string) => void;
 }
 
-export function WatchlistListItem({
-  item,
-  onToggleFavorite,
-  onRemove,
-}: WatchlistListItemProps) {
+export function WatchlistListItem({ item, onToggleFavorite, onRemove }: WatchlistListItemProps) {
   const isGradient = item.anime.coverImage && item.anime.coverImage.startsWith("linear-gradient");
 
   return (
-    <div className="p-3 rounded-xl border border-border/60 bg-card hover:border-primary/40 transition-colors flex items-center justify-between gap-4 shadow-xs">
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="size-14 rounded-lg shrink-0 overflow-hidden relative bg-muted">
+    <div className="border-border/60 bg-card hover:border-primary/40 flex items-center justify-between gap-4 rounded-xl border p-3 shadow-xs transition-colors">
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="bg-muted relative size-14 shrink-0 overflow-hidden rounded-lg">
           {isGradient ? (
             <div
               className="absolute inset-0 size-full"
@@ -41,14 +37,14 @@ export function WatchlistListItem({
             />
           )}
         </div>
-        <div className="flex flex-col min-w-0">
+        <div className="flex min-w-0 flex-col">
           <Link
             href={`/anime/${item.anime.slug}`}
-            className="font-bold text-sm text-foreground hover:text-primary transition-colors truncate"
+            className="text-foreground hover:text-primary truncate text-sm font-bold transition-colors"
           >
             {item.anime.title}
           </Link>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+          <div className="text-muted-foreground mt-0.5 flex items-center gap-2 text-xs">
             <span>{item.anime.type}</span>
             <span>•</span>
             <span className="capitalize">{item.status.replace("_", " ")}</span>
@@ -60,18 +56,18 @@ export function WatchlistListItem({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex shrink-0 items-center gap-2">
         <button
           onClick={() => onToggleFavorite(item.id)}
-          className="p-2 rounded-lg text-amber-500 hover:bg-amber-500/10"
+          className="rounded-lg p-2 text-amber-500 hover:bg-amber-500/10"
         >
           <Star className={`size-4 ${item.isFavorite ? "fill-amber-500" : ""}`} />
         </button>
         <Link
           href={`/anime/${item.anime.slug}`}
-          className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 flex items-center gap-1.5"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold"
         >
-          <Play className="size-3 fill-primary-foreground" />
+          <Play className="fill-primary-foreground size-3" />
           Watch
         </Link>
         <Button

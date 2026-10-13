@@ -1,20 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { FormatCategoryCode, GenreGroup } from "../types";
 
 interface CategoryAddSheetProps {
   open: boolean;
   type: "category" | "genre";
   onOpenChange: (open: boolean) => void;
-  onAddCategory: (data: { code: FormatCategoryCode; name: string; slug: string; description: string }) => void;
-  onAddGenre: (data: { name: string; slug: string; group: GenreGroup; description: string }) => void;
+  onAddCategory: (data: {
+    code: FormatCategoryCode;
+    name: string;
+    slug: string;
+    description: string;
+  }) => void;
+  onAddGenre: (data: {
+    name: string;
+    slug: string;
+    group: GenreGroup;
+    description: string;
+  }) => void;
 }
 
 export function CategoryAddSheet({
@@ -30,7 +53,10 @@ export function CategoryAddSheet({
   const [description, setDescription] = useState("");
 
   const handleSlug = (text: string) =>
-    text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +76,7 @@ export function CategoryAddSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-md flex flex-col gap-6">
+      <SheetContent className="flex flex-col gap-6 sm:max-w-md">
         <SheetHeader>
           <SheetTitle>
             {type === "category" ? "Add New Category Format" : "Add New Genre Tag"}
@@ -62,13 +88,15 @@ export function CategoryAddSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1">
+        <form onSubmit={handleSubmit} className="flex flex-1 flex-col gap-4">
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="name">Display Name</FieldLabel>
               <Input
                 id="name"
-                placeholder={type === "category" ? "e.g. Original Net Animation" : "e.g. Psychological"}
+                placeholder={
+                  type === "category" ? "e.g. Original Net Animation" : "e.g. Psychological"
+                }
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -78,7 +106,10 @@ export function CategoryAddSheet({
             {type === "category" ? (
               <Field>
                 <FieldLabel htmlFor="code">Format Code</FieldLabel>
-                <Select value={code} onValueChange={(val) => val && setCode(val as FormatCategoryCode)}>
+                <Select
+                  value={code}
+                  onValueChange={(val) => val && setCode(val as FormatCategoryCode)}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select format code" />
                   </SelectTrigger>

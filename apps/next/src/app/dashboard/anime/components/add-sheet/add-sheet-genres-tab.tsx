@@ -34,10 +34,7 @@ export function AddSheetGenresTab({
 
       <div className="space-y-1.5">
         <Label className="text-xs font-medium">Genres</Label>
-        <GenreMultiSelectCombobox
-          selectedGenres={selectedGenres}
-          onChange={setSelectedGenres}
-        />
+        <GenreMultiSelectCombobox selectedGenres={selectedGenres} onChange={setSelectedGenres} />
       </div>
     </div>
   );

@@ -1,14 +1,21 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import Link from "next/link"
-import { EyeIcon, EyeOffIcon, ArrowLeftIcon, CheckIcon, XIcon, AlertCircleIcon } from "lucide-react"
-import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons"
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  ArrowLeftIcon,
+  CheckIcon,
+  XIcon,
+  AlertCircleIcon,
+} from "lucide-react";
+import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons";
 
-import { Button, buttonVariants } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { LogoBrand } from "@/components/logo-brand"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { LogoBrand } from "@/components/logo-brand";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
   CardContent,
@@ -16,35 +23,30 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field"
-import { Skeleton } from "@/components/ui/skeleton"
+} from "@/components/ui/card";
+import { Field, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import { getPasswordStrength } from "../lib/password-strength"
+import { getPasswordStrength } from "../lib/password-strength";
 
 export function SignupForm() {
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [agreed, setAgreed] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [agreed, setAgreed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const strength = getPasswordStrength(password)
+  const strength = getPasswordStrength(password);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!agreed) return
+    e.preventDefault();
+    if (!agreed) return;
 
-    setError(null)
-    setIsLoading(true)
+    setError(null);
+    setIsLoading(true);
 
     try {
       const res = await fetch("/api/auth/register", {
@@ -55,30 +57,30 @@ export function SignupForm() {
           email,
           password,
         }),
-      })
+      });
 
-      const data = (await res.json()) as { success?: boolean; error?: string }
+      const data = (await res.json()) as { success?: boolean; error?: string };
 
       if (!res.ok || !data.success) {
-        setError(data.error || "Registration failed. Please try again.")
-        setIsLoading(false)
-        return
+        setError(data.error || "Registration failed. Please try again.");
+        setIsLoading(false);
+        return;
       }
 
-      setIsLoading(false)
-      setIsSuccess(true)
+      setIsLoading(false);
+      setIsSuccess(true);
     } catch {
-      setError("Connection error. Please try again.")
-      setIsLoading(false)
+      setError("Connection error. Please try again.");
+      setIsLoading(false);
     }
-  }
+  };
 
   if (isSuccess) {
     return (
-      <Card className="w-full max-w-md border-border/60 shadow-xs rounded-xl text-center">
+      <Card className="border-border/60 w-full max-w-md rounded-xl text-center shadow-xs">
         <CardHeader>
-          <div className="mx-auto size-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-            <CheckIcon className="size-6 text-primary" />
+          <div className="bg-primary/10 mx-auto mb-2 flex size-12 items-center justify-center rounded-full">
+            <CheckIcon className="text-primary size-6" />
           </div>
           <CardTitle className="text-2xl font-bold">Registration Successful!</CardTitle>
           <CardDescription>
@@ -86,23 +88,20 @@ export function SignupForm() {
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-center pb-6">
-          <Link
-            href="/"
-            className={buttonVariants({ variant: "default", className: "w-full" })}
-          >
+          <Link href="/" className={buttonVariants({ variant: "default", className: "w-full" })}>
             Start Watching Now
           </Link>
         </CardFooter>
       </Card>
-    )
+    );
   }
 
   return (
-    <Card className="w-full max-w-md border-border/60 shadow-xs rounded-xl">
+    <Card className="border-border/60 w-full max-w-md rounded-xl shadow-xs">
       <CardHeader className="text-center">
         <Link
           href="/"
-          className="inline-flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground mb-2 transition-colors self-center cursor-pointer"
+          className="text-muted-foreground hover:text-foreground mb-2 inline-flex cursor-pointer items-center justify-center gap-1 self-center text-xs transition-colors"
         >
           <ArrowLeftIcon data-icon="inline-start" className="size-3" />
           Back to Home
@@ -111,7 +110,7 @@ export function SignupForm() {
         <CardTitle className="text-2xl font-bold tracking-tight">
           Create GoxStream Account
         </CardTitle>
-        <CardDescription className="text-sm text-muted-foreground">
+        <CardDescription className="text-muted-foreground text-sm">
           Join the ultimate anime streaming community now
         </CardDescription>
       </CardHeader>
@@ -132,7 +131,7 @@ export function SignupForm() {
         <FieldSeparator>or register with email</FieldSeparator>
 
         {error && (
-          <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-xs font-medium text-destructive border border-destructive/20">
+          <div className="bg-destructive/10 text-destructive border-destructive/20 flex items-center gap-2 rounded-lg border p-3 text-xs font-medium">
             <AlertCircleIcon className="size-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -186,7 +185,7 @@ export function SignupForm() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground cursor-pointer"
+                    className="text-muted-foreground hover:text-foreground absolute top-2.5 right-3 cursor-pointer"
                   >
                     {showPassword ? (
                       <EyeOffIcon className="size-4" />
@@ -199,12 +198,12 @@ export function SignupForm() {
 
                 {/* Password Strength Meter & Interactive Requirements Checklist */}
                 {password && (
-                  <div className="flex flex-col gap-2 mt-2 rounded-lg bg-muted/40 p-3 border border-border/40 text-xs">
+                  <div className="bg-muted/40 border-border/40 mt-2 flex flex-col gap-2 rounded-lg border p-3 text-xs">
                     <div className="flex items-center justify-between font-medium">
                       <span>Password Strength</span>
                       <span className="text-muted-foreground">{strength.label}</span>
                     </div>
-                    <div className="flex gap-1 h-1.5 w-full">
+                    <div className="flex h-1.5 w-full gap-1">
                       <div
                         className={`flex-1 rounded-full transition-colors ${
                           strength.score >= 1 ? strength.color : "bg-muted"
@@ -227,13 +226,13 @@ export function SignupForm() {
                       />
                     </div>
 
-                    <ul className="flex flex-col gap-1 mt-1 text-[11px]">
+                    <ul className="mt-1 flex flex-col gap-1 text-[11px]">
                       {strength.requirements.map((req) => (
                         <li
                           key={req.id}
                           className={`flex items-center gap-1.5 transition-colors ${
                             req.met
-                              ? "text-emerald-500 font-medium"
+                              ? "font-medium text-emerald-500"
                               : "text-muted-foreground opacity-75"
                           }`}
                         >
@@ -259,19 +258,22 @@ export function SignupForm() {
                   required
                   className="cursor-pointer"
                 />
-                <FieldLabel htmlFor="terms" className="text-xs font-normal text-muted-foreground leading-normal cursor-pointer">
+                <FieldLabel
+                  htmlFor="terms"
+                  className="text-muted-foreground cursor-pointer text-xs leading-normal font-normal"
+                >
                   I agree to the{" "}
-                  <Link href="#" className="text-primary underline cursor-pointer">
+                  <Link href="#" className="text-primary cursor-pointer underline">
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="#" className="text-primary underline cursor-pointer">
+                  <Link href="#" className="text-primary cursor-pointer underline">
                     Privacy Policy
                   </Link>
                 </FieldLabel>
               </Field>
 
-              <Button type="submit" disabled={!agreed} className="w-full mt-2 cursor-pointer">
+              <Button type="submit" disabled={!agreed} className="mt-2 w-full cursor-pointer">
                 Create Account
               </Button>
             </FieldGroup>
@@ -279,15 +281,14 @@ export function SignupForm() {
         )}
       </CardContent>
 
-      <CardFooter className="flex justify-center border-t border-border/40 py-4">
-        <p className="text-sm text-muted-foreground">
+      <CardFooter className="border-border/40 flex justify-center border-t py-4">
+        <p className="text-muted-foreground text-sm">
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-primary hover:underline cursor-pointer">
+          <Link href="/login" className="text-primary cursor-pointer font-semibold hover:underline">
             Sign In
           </Link>
         </p>
       </CardFooter>
-
     </Card>
-  )
+  );
 }

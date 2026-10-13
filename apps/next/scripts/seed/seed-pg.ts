@@ -39,7 +39,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Animes
   bundle.animes.forEach((a) => {
     lines.push(
-      `INSERT INTO "animes" ("id", "slug", "title_romaji", "title_english", "title_japanese", "synopsis", "cover_image", "banner_image", "type", "status", "season_name", "season_year", "episodes_count", "duration_per_ep", "rating", "is_featured", "is_trending", "sub_or_dub", "created_at", "updated_at") VALUES (${sqlEscape(a.id)}, ${sqlEscape(a.slug)}, ${sqlEscape(a.titleRomaji)}, ${sqlEscape(a.titleEnglish)}, ${sqlEscape(a.titleJapanese)}, ${sqlEscape(a.synopsis)}, ${sqlEscape(a.coverImage)}, ${sqlEscape(a.bannerImage)}, ${sqlEscape(a.type)}, ${sqlEscape(a.status)}, ${sqlEscape(a.seasonName)}, ${sqlNum(a.seasonYear)}, ${sqlNum(a.episodesCount)}, ${sqlEscape(a.durationPerEp)}, ${sqlNum(a.rating)}, ${sqlBool(a.isFeatured)}, ${sqlBool(a.isTrending)}, ${sqlEscape(a.subOrDub)}, ${sqlTimestamp(a.createdAt)}, ${sqlTimestamp(a.updatedAt)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "animes" ("id", "slug", "title_romaji", "title_english", "title_japanese", "synopsis", "cover_image", "banner_image", "type", "status", "season_name", "season_year", "episodes_count", "duration_per_ep", "rating", "is_featured", "is_trending", "sub_or_dub", "created_at", "updated_at") VALUES (${sqlEscape(a.id)}, ${sqlEscape(a.slug)}, ${sqlEscape(a.titleRomaji)}, ${sqlEscape(a.titleEnglish)}, ${sqlEscape(a.titleJapanese)}, ${sqlEscape(a.synopsis)}, ${sqlEscape(a.coverImage)}, ${sqlEscape(a.bannerImage)}, ${sqlEscape(a.type)}, ${sqlEscape(a.status)}, ${sqlEscape(a.seasonName)}, ${sqlNum(a.seasonYear)}, ${sqlNum(a.episodesCount)}, ${sqlEscape(a.durationPerEp)}, ${sqlNum(a.rating)}, ${sqlBool(a.isFeatured)}, ${sqlBool(a.isTrending)}, ${sqlEscape(a.subOrDub)}, ${sqlTimestamp(a.createdAt)}, ${sqlTimestamp(a.updatedAt)}) ON CONFLICT ("id") DO NOTHING;`,
     );
   });
 
@@ -48,7 +48,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Genres
   bundle.genres.forEach((g) => {
     lines.push(
-      `INSERT INTO "genres" ("id", "name", "slug") VALUES (${sqlEscape(g.id)}, ${sqlEscape(g.name)}, ${sqlEscape(g.slug)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "genres" ("id", "name", "slug") VALUES (${sqlEscape(g.id)}, ${sqlEscape(g.name)}, ${sqlEscape(g.slug)}) ON CONFLICT ("id") DO NOTHING;`,
     );
   });
 
@@ -57,7 +57,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Studios
   bundle.studios.forEach((s) => {
     lines.push(
-      `INSERT INTO "studios" ("id", "name", "slug") VALUES (${sqlEscape(s.id)}, ${sqlEscape(s.name)}, ${sqlEscape(s.slug)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "studios" ("id", "name", "slug") VALUES (${sqlEscape(s.id)}, ${sqlEscape(s.name)}, ${sqlEscape(s.slug)}) ON CONFLICT ("id") DO NOTHING;`,
     );
   });
 
@@ -66,7 +66,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Anime Genres
   bundle.animeGenres.forEach((ag) => {
     lines.push(
-      `INSERT INTO "anime_genres" ("anime_id", "genre_id") VALUES (${sqlEscape(ag.animeId)}, ${sqlEscape(ag.genreId)}) ON CONFLICT ("anime_id", "genre_id") DO NOTHING;`
+      `INSERT INTO "anime_genres" ("anime_id", "genre_id") VALUES (${sqlEscape(ag.animeId)}, ${sqlEscape(ag.genreId)}) ON CONFLICT ("anime_id", "genre_id") DO NOTHING;`,
     );
   });
 
@@ -75,20 +75,18 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Anime Studios
   bundle.animeStudios.forEach((as) => {
     lines.push(
-      `INSERT INTO "anime_studios" ("anime_id", "studio_id") VALUES (${sqlEscape(as.animeId)}, ${sqlEscape(as.studioId)}) ON CONFLICT ("anime_id", "studio_id") DO NOTHING;`
+      `INSERT INTO "anime_studios" ("anime_id", "studio_id") VALUES (${sqlEscape(as.animeId)}, ${sqlEscape(as.studioId)}) ON CONFLICT ("anime_id", "studio_id") DO NOTHING;`,
     );
   });
 
   lines.push("");
-
-
 
   lines.push("");
 
   // Insert Episodes
   bundle.episodes.forEach((e) => {
     lines.push(
-      `INSERT INTO "episodes" ("id", "anime_id", "number", "title", "duration_seconds", "thumbnail", "air_date", "status", "views_count", "is_vip", "created_at") VALUES (${sqlEscape(e.id)}, ${sqlEscape(e.animeId)}, ${sqlNum(e.number)}, ${sqlEscape(e.title)}, ${sqlNum(e.durationSeconds)}, ${sqlEscape(e.thumbnail)}, ${sqlTimestamp(e.airDate)}, ${sqlEscape(e.status)}, ${sqlNum(e.viewsCount)}, ${sqlBool(e.isVip)}, ${sqlTimestamp(e.createdAt)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "episodes" ("id", "anime_id", "number", "title", "duration_seconds", "thumbnail", "air_date", "status", "views_count", "is_vip", "created_at") VALUES (${sqlEscape(e.id)}, ${sqlEscape(e.animeId)}, ${sqlNum(e.number)}, ${sqlEscape(e.title)}, ${sqlNum(e.durationSeconds)}, ${sqlEscape(e.thumbnail)}, ${sqlTimestamp(e.airDate)}, ${sqlEscape(e.status)}, ${sqlNum(e.viewsCount)}, ${sqlBool(e.isVip)}, ${sqlTimestamp(e.createdAt)}) ON CONFLICT ("id") DO NOTHING;`,
     );
   });
 
@@ -97,7 +95,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Stream Sources
   bundle.streamSources.forEach((ss) => {
     lines.push(
-      `INSERT INTO "stream_sources" ("id", "episode_id", "server_name", "stream_url", "format", "quality", "url_1080p", "url_720p", "url_480p", "url_360p", "is_primary") VALUES (${sqlEscape(ss.id)}, ${sqlEscape(ss.episodeId)}, ${sqlEscape(ss.serverName)}, ${sqlEscape(ss.streamUrl)}, ${sqlEscape(ss.format)}, ${sqlEscape(ss.quality)}, ${sqlEscape(ss.url1080p)}, ${sqlEscape(ss.url720p)}, ${sqlEscape(ss.url480p)}, ${sqlEscape(ss.url360p)}, ${sqlBool(ss.isPrimary)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "stream_sources" ("id", "episode_id", "server_name", "stream_url", "format", "quality", "url_1080p", "url_720p", "url_480p", "url_360p", "is_primary") VALUES (${sqlEscape(ss.id)}, ${sqlEscape(ss.episodeId)}, ${sqlEscape(ss.serverName)}, ${sqlEscape(ss.streamUrl)}, ${sqlEscape(ss.format)}, ${sqlEscape(ss.quality)}, ${sqlEscape(ss.url1080p)}, ${sqlEscape(ss.url720p)}, ${sqlEscape(ss.url480p)}, ${sqlEscape(ss.url360p)}, ${sqlBool(ss.isPrimary)}) ON CONFLICT ("id") DO NOTHING;`,
     );
   });
 
@@ -106,7 +104,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Subtitle Tracks
   bundle.subtitleTracks.forEach((st) => {
     lines.push(
-      `INSERT INTO "subtitle_tracks" ("id", "episode_id", "label", "language_code", "file_url", "format", "is_default") VALUES (${sqlEscape(st.id)}, ${sqlEscape(st.episodeId)}, ${sqlEscape(st.label)}, ${sqlEscape(st.languageCode)}, ${sqlEscape(st.fileUrl)}, ${sqlEscape(st.format)}, ${sqlBool(st.isDefault)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "subtitle_tracks" ("id", "episode_id", "label", "language_code", "file_url", "format", "is_default") VALUES (${sqlEscape(st.id)}, ${sqlEscape(st.episodeId)}, ${sqlEscape(st.label)}, ${sqlEscape(st.languageCode)}, ${sqlEscape(st.fileUrl)}, ${sqlEscape(st.format)}, ${sqlBool(st.isDefault)}) ON CONFLICT ("id") DO NOTHING;`,
     );
   });
 
@@ -115,7 +113,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Audio Tracks
   bundle.audioTracks.forEach((at) => {
     lines.push(
-      `INSERT INTO "audio_tracks" ("id", "episode_id", "label", "language_code", "audio_url", "type", "is_default") VALUES (${sqlEscape(at.id)}, ${sqlEscape(at.episodeId)}, ${sqlEscape(at.label)}, ${sqlEscape(at.languageCode)}, ${sqlEscape(at.audioUrl)}, ${sqlEscape(at.type)}, ${sqlBool(at.isDefault)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "audio_tracks" ("id", "episode_id", "label", "language_code", "audio_url", "type", "is_default") VALUES (${sqlEscape(at.id)}, ${sqlEscape(at.episodeId)}, ${sqlEscape(at.label)}, ${sqlEscape(at.languageCode)}, ${sqlEscape(at.audioUrl)}, ${sqlEscape(at.type)}, ${sqlBool(at.isDefault)}) ON CONFLICT ("id") DO NOTHING;`,
     );
   });
 
@@ -124,7 +122,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Schedules
   bundle.schedules.forEach((sch) => {
     lines.push(
-      `INSERT INTO "schedules" ("id", "anime_id", "release_day", "release_time", "episode_number", "status", "timezone") VALUES (${sqlEscape(sch.id)}, ${sqlEscape(sch.animeId)}, ${sqlEscape(sch.releaseDay)}, ${sqlEscape(sch.releaseTime)}, ${sqlNum(sch.episodeNumber)}, ${sqlEscape(sch.status)}, ${sqlEscape(sch.timezone)}) ON CONFLICT ("id") DO NOTHING;`
+      `INSERT INTO "schedules" ("id", "anime_id", "release_day", "release_time", "episode_number", "status", "timezone") VALUES (${sqlEscape(sch.id)}, ${sqlEscape(sch.animeId)}, ${sqlEscape(sch.releaseDay)}, ${sqlEscape(sch.releaseTime)}, ${sqlNum(sch.episodeNumber)}, ${sqlEscape(sch.status)}, ${sqlEscape(sch.timezone)}) ON CONFLICT ("id") DO NOTHING;`,
     );
   });
 
@@ -133,7 +131,7 @@ export function generatePostgresSQL(bundle: TransformedSeedBundle): string {
   // Insert Trending Stats
   bundle.trendingStats.forEach((ts) => {
     lines.push(
-      `INSERT INTO "trending_stats" ("anime_id", "rank", "previous_rank", "views_today", "views_this_week", "weekly_views", "monthly_views", "total_views", "trend_score", "updated_at") VALUES (${sqlEscape(ts.animeId)}, ${sqlNum(ts.rank)}, ${sqlNum(ts.previousRank)}, ${sqlNum(ts.viewsToday)}, ${sqlNum(ts.viewsThisWeek)}, ${sqlNum(ts.weeklyViews)}, ${sqlNum(ts.monthlyViews)}, ${sqlNum(ts.totalViews)}, ${sqlNum(ts.trendScore)}, ${sqlTimestamp(ts.updatedAt)}) ON CONFLICT ("anime_id") DO NOTHING;`
+      `INSERT INTO "trending_stats" ("anime_id", "rank", "previous_rank", "views_today", "views_this_week", "weekly_views", "monthly_views", "total_views", "trend_score", "updated_at") VALUES (${sqlEscape(ts.animeId)}, ${sqlNum(ts.rank)}, ${sqlNum(ts.previousRank)}, ${sqlNum(ts.viewsToday)}, ${sqlNum(ts.viewsThisWeek)}, ${sqlNum(ts.weeklyViews)}, ${sqlNum(ts.monthlyViews)}, ${sqlNum(ts.totalViews)}, ${sqlNum(ts.trendScore)}, ${sqlTimestamp(ts.updatedAt)}) ON CONFLICT ("anime_id") DO NOTHING;`,
     );
   });
 
@@ -165,7 +163,9 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
 
   const dbUrl = process.env.DB_URL || process.env.DATABASE_URL;
   if (!dbUrl) {
-    console.log("[SEED PG] Note: DB_URL/DATABASE_URL not set. Saved drizzle/pg/seed.sql file locally.");
+    console.log(
+      "[SEED PG] Note: DB_URL/DATABASE_URL not set. Saved drizzle/pg/seed.sql file locally.",
+    );
     return;
   }
 
@@ -188,7 +188,10 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
 
     console.log("[SEED PG] Inserting Animes...");
     if (bundle.animes.length > 0) {
-      await db.insert(pgSchema.animes).values(bundle.animes as any).onConflictDoNothing();
+      await db
+        .insert(pgSchema.animes)
+        .values(bundle.animes as any)
+        .onConflictDoNothing();
     }
 
     console.log("[SEED PG] Inserting Genres...");
@@ -204,7 +207,7 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
     console.log("[SEED PG] Inserting Anime-Genre relations...");
     if (bundle.animeGenres.length > 0) {
       const uniqueAnimeGenres = Array.from(
-        new Map(bundle.animeGenres.map((ag) => [`${ag.animeId}_${ag.genreId}`, ag])).values()
+        new Map(bundle.animeGenres.map((ag) => [`${ag.animeId}_${ag.genreId}`, ag])).values(),
       );
       await db.insert(pgSchema.animeGenres).values(uniqueAnimeGenres).onConflictDoNothing();
     }
@@ -212,12 +215,10 @@ export async function runSeedPG(customBundle?: TransformedSeedBundle) {
     console.log("[SEED PG] Inserting Anime-Studio relations...");
     if (bundle.animeStudios.length > 0) {
       const uniqueAnimeStudios = Array.from(
-        new Map(bundle.animeStudios.map((as) => [`${as.animeId}_${as.studioId}`, as])).values()
+        new Map(bundle.animeStudios.map((as) => [`${as.animeId}_${as.studioId}`, as])).values(),
       );
       await db.insert(pgSchema.animeStudios).values(uniqueAnimeStudios).onConflictDoNothing();
     }
-
-
 
     console.log("[SEED PG] Inserting Episodes...");
     if (bundle.episodes.length > 0) {

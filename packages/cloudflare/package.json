@@ -8,10 +8,13 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
+    "prettier": "catalog:",
     "typescript": "catalog:"
   }
 }

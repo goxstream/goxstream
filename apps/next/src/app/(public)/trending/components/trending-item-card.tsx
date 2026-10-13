@@ -14,11 +14,7 @@ interface TrendingItemCardProps {
   viewMode: "list" | "grid";
 }
 
-export function TrendingItemCard({
-  anime,
-  period,
-  viewMode,
-}: TrendingItemCardProps) {
+export function TrendingItemCard({ anime, period, viewMode }: TrendingItemCardProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const primaryGenre = anime.genres[0] || "Anime";
   const secondaryGenres = anime.genres.slice(1);
@@ -28,8 +24,8 @@ export function TrendingItemCard({
     period === "weekly"
       ? `${(anime.weeklyViews / 1000000).toFixed(2)}M weekly`
       : period === "monthly"
-      ? `${(anime.monthlyViews / 1000000).toFixed(2)}M monthly`
-      : `${(anime.totalViews / 1000000).toFixed(1)}M total`;
+        ? `${(anime.monthlyViews / 1000000).toFixed(2)}M monthly`
+        : `${(anime.totalViews / 1000000).toFixed(1)}M total`;
 
   const getRankBadgeStyle = (rank: number) => {
     if (rank === 1) {
@@ -47,7 +43,7 @@ export function TrendingItemCard({
   const renderRankChange = () => {
     if (anime.weeklyGrowth === "NEW") {
       return (
-        <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary/15 text-primary">
+        <span className="bg-primary/15 text-primary rounded px-1.5 py-0.5 text-[10px] font-bold">
           NEW
         </span>
       );
@@ -72,18 +68,14 @@ export function TrendingItemCard({
         </span>
       );
     }
-    return (
-      <span className="text-[11px] font-medium text-muted-foreground">
-        -
-      </span>
-    );
+    return <span className="text-muted-foreground text-[11px] font-medium">-</span>;
   };
 
   if (viewMode === "grid") {
     return (
-      <div className="group relative bg-card border border-border/60 rounded-xl overflow-hidden shadow-xs hover:border-primary/50 transition-all flex flex-col justify-between">
+      <div className="group bg-card border-border/60 hover:border-primary/50 relative flex flex-col justify-between overflow-hidden rounded-xl border shadow-xs transition-all">
         {/* Cover Image Container */}
-        <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
+        <div className="bg-muted relative aspect-[2/3] w-full overflow-hidden">
           {!isGradient && !isImageLoaded && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
               <VercelSpinner size="md" />
@@ -113,11 +105,11 @@ export function TrendingItemCard({
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30" />
 
           {/* Floating Rank Badge */}
-          <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 z-10">
+          <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5">
             <div
               className={cn(
-                "size-8 rounded-lg flex items-center justify-center text-sm border shadow-xs",
-                getRankBadgeStyle(anime.rank)
+                "flex size-8 items-center justify-center rounded-lg border text-sm shadow-xs",
+                getRankBadgeStyle(anime.rank),
               )}
             >
               {anime.rank === 1 ? <Crown className="size-4" /> : `#${anime.rank}`}
@@ -126,45 +118,41 @@ export function TrendingItemCard({
           </div>
 
           {/* Sub / Dub tag */}
-          <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-[10px] font-bold text-white uppercase z-10">
+          <div className="absolute top-2.5 right-2.5 z-10 rounded bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white uppercase backdrop-blur-xs">
             {anime.subOrDub}
           </div>
 
           {/* Bottom Card Title Overlay */}
-          <div className="absolute bottom-2.5 left-2.5 right-2.5 text-white z-10">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-primary text-primary-foreground">
+          <div className="absolute right-2.5 bottom-2.5 left-2.5 z-10 text-white">
+            <span className="bg-primary text-primary-foreground rounded px-2 py-0.5 text-[10px] font-bold">
               {primaryGenre}
             </span>
-            <h3 className="font-bold text-sm line-clamp-1 mt-1 text-white group-hover:text-primary transition-colors">
+            <h3 className="group-hover:text-primary mt-1 line-clamp-1 text-sm font-bold text-white transition-colors">
               {anime.title}
             </h3>
           </div>
         </div>
 
         {/* Card Footer Details */}
-        <div className="p-3 space-y-2 text-xs">
-          <div className="flex items-center justify-between text-muted-foreground">
-            <span className="font-medium truncate">{anime.studio}</span>
+        <div className="space-y-2 p-3 text-xs">
+          <div className="text-muted-foreground flex items-center justify-between">
+            <span className="truncate font-medium">{anime.studio}</span>
             <div className="flex items-center gap-1 font-bold text-amber-500">
               <Star className="size-3.5 fill-amber-500 stroke-amber-500" />
               <span>{anime.rating ? anime.rating.toFixed(2) : "N/A"}</span>
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/40 text-muted-foreground">
+          <div className="border-border/40 text-muted-foreground flex items-center justify-between border-t pt-1 text-[11px]">
             <span>{viewsDisplay}</span>
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">
               {anime.weeklyGrowth}
             </span>
           </div>
 
-          <Button
-            asChild
-            size="sm"
-            className="w-full rounded-lg font-semibold text-xs h-8"
-          >
+          <Button asChild size="sm" className="h-8 w-full rounded-lg text-xs font-semibold">
             <Link href={`/anime/${anime.slug}`}>
-              <Play className="size-3.5 mr-1.5 fill-current" />
+              <Play className="mr-1.5 size-3.5 fill-current" />
               Watch Now
             </Link>
           </Button>
@@ -177,20 +165,20 @@ export function TrendingItemCard({
   return (
     <div
       className={cn(
-        "group relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl border transition-all bg-card/60 hover:bg-card shadow-xs",
+        "group bg-card/60 hover:bg-card relative flex flex-col items-start justify-between gap-4 rounded-xl border p-4 shadow-xs transition-all sm:flex-row sm:items-center",
         anime.rank === 1
-          ? "border-amber-500/40 bg-gradient-to-r from-amber-950/20 via-card to-card"
-          : "border-border/60 hover:border-primary/40"
+          ? "via-card to-card border-amber-500/40 bg-gradient-to-r from-amber-950/20"
+          : "border-border/60 hover:border-primary/40",
       )}
     >
       {/* Left: Rank + Poster + Primary Metadata */}
-      <div className="flex items-center gap-4 w-full sm:w-auto">
+      <div className="flex w-full items-center gap-4 sm:w-auto">
         {/* Rank Number & Movement */}
-        <div className="flex flex-col items-center justify-center min-w-10 text-center gap-1">
+        <div className="flex min-w-10 flex-col items-center justify-center gap-1 text-center">
           <div
             className={cn(
-              "size-9 rounded-xl flex items-center justify-center text-sm border shadow-xs",
-              getRankBadgeStyle(anime.rank)
+              "flex size-9 items-center justify-center rounded-xl border text-sm shadow-xs",
+              getRankBadgeStyle(anime.rank),
             )}
           >
             {anime.rank === 1 ? <Crown className="size-4" /> : `#${anime.rank}`}
@@ -201,7 +189,7 @@ export function TrendingItemCard({
         {/* Thumbnail Poster */}
         <Link
           href={`/anime/${anime.slug}`}
-          className="relative size-16 sm:size-20 rounded-lg overflow-hidden shrink-0 border border-border/60 shadow-xs group-hover:scale-105 transition-transform bg-muted flex items-center justify-center"
+          className="border-border/60 bg-muted relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border shadow-xs transition-transform group-hover:scale-105 sm:size-20"
         >
           {!isGradient && !isImageLoaded && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
@@ -210,10 +198,7 @@ export function TrendingItemCard({
           )}
 
           {isGradient ? (
-            <div
-              className="absolute inset-0"
-              style={getImageStyle(anime.coverImage)}
-            />
+            <div className="absolute inset-0" style={getImageStyle(anime.coverImage)} />
           ) : (
             <img
               src={anime.coverImage || ""}
@@ -230,14 +215,14 @@ export function TrendingItemCard({
               }}
             />
           )}
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+          <div className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-transparent" />
         </Link>
 
         {/* Anime Information */}
-        <div className="space-y-1 min-w-0 flex-1">
+        <div className="min-w-0 flex-1 space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             {/* Primary/Featured Genre Tag */}
-            <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-primary/10 text-primary uppercase tracking-wide">
+            <span className="bg-primary/10 text-primary rounded px-2 py-0.5 text-[10px] font-extrabold tracking-wide uppercase">
               {primaryGenre}
             </span>
 
@@ -245,7 +230,7 @@ export function TrendingItemCard({
             {secondaryGenres.slice(0, 2).map((g) => (
               <span
                 key={g}
-                className="hidden md:inline-block text-[11px] text-muted-foreground font-medium"
+                className="text-muted-foreground hidden text-[11px] font-medium md:inline-block"
               >
                 • {g}
               </span>
@@ -253,12 +238,12 @@ export function TrendingItemCard({
           </div>
 
           <Link href={`/anime/${anime.slug}`}>
-            <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors truncate">
+            <h3 className="text-foreground group-hover:text-primary truncate text-base font-bold transition-colors">
               {anime.title}
             </h3>
           </Link>
 
-          <p className="text-xs text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-0.5">
+          <p className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
             <span>{anime.studio}</span>
             <span>•</span>
             <span>{anime.type}</span>
@@ -271,7 +256,7 @@ export function TrendingItemCard({
       </div>
 
       {/* Right: Metrics & CTA Action Button */}
-      <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-border/40">
+      <div className="border-border/40 flex w-full items-center justify-between gap-6 border-t pt-3 sm:w-auto sm:justify-end sm:border-t-0 sm:pt-0">
         {/* Rating & View Count Stats */}
         <div className="flex items-center gap-5 text-xs">
           <div className="flex items-center gap-1 font-bold text-amber-500">
@@ -280,24 +265,20 @@ export function TrendingItemCard({
           </div>
 
           <div className="flex flex-col text-right">
-            <div className="flex items-center gap-1 font-semibold text-foreground">
-              <Eye className="size-3.5 text-primary" />
+            <div className="text-foreground flex items-center gap-1 font-semibold">
+              <Eye className="text-primary size-3.5" />
               <span>{viewsDisplay}</span>
             </div>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+            <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
               {anime.weeklyGrowth} growth
             </span>
           </div>
         </div>
 
         {/* Action Button */}
-        <Button
-          asChild
-          size="sm"
-          className="rounded-lg font-bold text-xs shadow-xs"
-        >
+        <Button asChild size="sm" className="rounded-lg text-xs font-bold shadow-xs">
           <Link href={`/anime/${anime.slug}/${anime.latestEpisode || 1}`}>
-            <Play className="size-3.5 mr-1.5 fill-current" />
+            <Play className="mr-1.5 size-3.5 fill-current" />
             Watch
           </Link>
         </Button>

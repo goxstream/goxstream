@@ -8,10 +8,7 @@ interface InlineEditPosterProps {
   setCoverImage: (v: string) => void;
 }
 
-export function InlineEditPoster({
-  coverImage,
-  setCoverImage,
-}: InlineEditPosterProps) {
+export function InlineEditPoster({ coverImage, setCoverImage }: InlineEditPosterProps) {
   return (
     <div className="md:col-span-4">
       <ImageDropzone

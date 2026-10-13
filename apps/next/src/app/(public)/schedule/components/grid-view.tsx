@@ -16,10 +16,10 @@ interface GridViewProps {
 export function GridView({ items, dayLabel }: GridViewProps) {
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center border border-dashed border-border/60 rounded-xl bg-card/30">
-        <Clock className="w-12 h-12 text-muted-foreground/50 mb-3" />
-        <h3 className="text-lg font-semibold text-foreground">No Release Schedule Found</h3>
-        <p className="text-sm text-muted-foreground max-w-md mt-1">
+      <div className="border-border/60 bg-card/30 flex flex-col items-center justify-center rounded-xl border border-dashed p-12 text-center">
+        <Clock className="text-muted-foreground/50 mb-3 h-12 w-12" />
+        <h3 className="text-foreground text-lg font-semibold">No Release Schedule Found</h3>
+        <p className="text-muted-foreground mt-1 max-w-md text-sm">
           No anime releases found for {dayLabel} matching your search query.
         </p>
       </div>
@@ -27,7 +27,7 @@ export function GridView({ items, dayLabel }: GridViewProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4">
       {items.map((item) => {
         const isAiringNow = item.status === "airing_now";
         const isUpcoming = item.status === "upcoming";
@@ -36,12 +36,12 @@ export function GridView({ items, dayLabel }: GridViewProps) {
         return (
           <div
             key={item.id}
-            className="group flex flex-col rounded-xl border border-border/60 bg-card/60 hover:bg-card hover:border-border transition-all duration-200 overflow-hidden shadow-xs"
+            className="group border-border/60 bg-card/60 hover:bg-card hover:border-border flex flex-col overflow-hidden rounded-xl border shadow-xs transition-all duration-200"
           >
             {/* Cover image container */}
             <Link
               href={`/anime/${item.slug}`}
-              className="relative aspect-16/9 overflow-hidden bg-muted"
+              className="bg-muted relative aspect-16/9 overflow-hidden"
             >
               {isGradient ? (
                 <div
@@ -63,8 +63,8 @@ export function GridView({ items, dayLabel }: GridViewProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
               {/* Time pill top-left */}
-              <div className="absolute top-2 left-2 flex items-center gap-1.5 z-10">
-                <Badge className="bg-black/75 text-white font-mono text-[11px] border-0">
+              <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
+                <Badge className="border-0 bg-black/75 font-mono text-[11px] text-white">
                   {item.airTime} {TIMEZONE_CONFIG.defaultShortLabel}
                 </Badge>
               </div>
@@ -72,48 +72,51 @@ export function GridView({ items, dayLabel }: GridViewProps) {
               {/* Status pill top-right */}
               <div className="absolute top-2 right-2 z-10">
                 {isAiringNow ? (
-                  <Badge className="bg-emerald-500 text-white font-bold text-[10px] gap-1 animate-pulse">
-                    <Radio className="w-3 h-3" />
+                  <Badge className="animate-pulse gap-1 bg-emerald-500 text-[10px] font-bold text-white">
+                    <Radio className="h-3 w-3" />
                     LIVE
                   </Badge>
                 ) : (
-                  <Badge variant="secondary" className="bg-black/60 backdrop-blur-xs text-white text-[10px] border-0">
+                  <Badge
+                    variant="secondary"
+                    className="border-0 bg-black/60 text-[10px] text-white backdrop-blur-xs"
+                  >
                     Ep {item.episodeNumber}
                   </Badge>
                 )}
               </div>
 
               {/* Hover play icon */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40 z-10">
-                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-md">
-                  <Play className="w-5 h-5 fill-current ml-0.5" />
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="bg-primary text-primary-foreground flex h-10 w-10 items-center justify-center rounded-full shadow-md">
+                  <Play className="ml-0.5 h-5 w-5 fill-current" />
                 </div>
               </div>
             </Link>
 
             {/* Info body */}
-            <div className="flex-1 p-4 flex flex-col justify-between">
+            <div className="flex flex-1 flex-col justify-between p-4">
               <div>
                 {/* Title */}
                 <Link href={`/anime/${item.slug}`}>
-                  <h3 className="font-bold text-sm md:text-base text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                  <h3 className="text-foreground group-hover:text-primary line-clamp-1 text-sm font-bold transition-colors md:text-base">
                     {item.title}
                   </h3>
                 </Link>
 
                 {/* Studio & Rating */}
-                <div className="flex items-center justify-between text-xs text-muted-foreground mt-1.5 mb-2.5">
+                <div className="text-muted-foreground mt-1.5 mb-2.5 flex items-center justify-between text-xs">
                   <span className="truncate">{item.studio}</span>
-                  <span className="flex items-center gap-1 text-amber-400 font-medium shrink-0">
-                    <Star className="w-3 h-3 fill-amber-400" />
+                  <span className="flex shrink-0 items-center gap-1 font-medium text-amber-400">
+                    <Star className="h-3 w-3 fill-amber-400" />
                     {item.rating ? item.rating.toFixed(2) : "N/A"}
                   </span>
                 </div>
 
                 {/* Countdown / Status indicator */}
                 {isUpcoming && item.countdownText && (
-                  <p className="text-xs text-primary font-medium flex items-center gap-1 mb-2">
-                    <Clock className="w-3 h-3 shrink-0" />
+                  <p className="text-primary mb-2 flex items-center gap-1 text-xs font-medium">
+                    <Clock className="h-3 w-3 shrink-0" />
                     <span className="truncate">{item.countdownText}</span>
                   </p>
                 )}
@@ -123,7 +126,7 @@ export function GridView({ items, dayLabel }: GridViewProps) {
                   {item.genres.slice(0, 3).map((genre) => (
                     <span
                       key={genre}
-                      className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground"
+                      className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px]"
                     >
                       {genre}
                     </span>
@@ -132,16 +135,16 @@ export function GridView({ items, dayLabel }: GridViewProps) {
               </div>
 
               {/* Footer action button */}
-              <div className="mt-4 pt-3 border-t border-border/40">
+              <div className="border-border/40 mt-4 border-t pt-3">
                 <Link
                   href={`/anime/${item.slug}/${item.episodeNumber}`}
                   className={buttonVariants({
                     variant: "secondary",
                     size: "sm",
-                    className: "w-full text-xs gap-1.5 h-8 justify-center font-medium",
+                    className: "h-8 w-full justify-center gap-1.5 text-xs font-medium",
                   })}
                 >
-                  <Play className="w-3 h-3 fill-current" />
+                  <Play className="h-3 w-3 fill-current" />
                   <span>Watch Episode {item.episodeNumber}</span>
                 </Link>
               </div>

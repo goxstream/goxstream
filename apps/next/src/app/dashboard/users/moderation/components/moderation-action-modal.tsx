@@ -1,9 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import type { ReportedComment } from "../types";
@@ -16,7 +29,7 @@ interface ModerationActionModalProps {
     reportId: string,
     actionType: "delete" | "mute" | "dismiss",
     duration?: string,
-    moderatorNote?: string
+    moderatorNote?: string,
   ) => void;
 }
 
@@ -36,41 +49,50 @@ export function ModerationActionModal({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-lg font-bold">Take Moderation Action</DialogTitle>
-          <DialogDescription className="text-xs text-muted-foreground">
-            Apply enforcement on reported comment for <span className="font-semibold text-foreground">@{report.author.username}</span>.
+          <DialogDescription className="text-muted-foreground text-xs">
+            Apply enforcement on reported comment for{" "}
+            <span className="text-foreground font-semibold">@{report.author.username}</span>.
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 py-2 text-xs">
-          <div className="rounded-md border border-border/60 bg-muted/20 p-3 flex flex-col gap-1">
-            <span className="font-semibold text-foreground">Reported Comment:</span>
+          <div className="border-border/60 bg-muted/20 flex flex-col gap-1 rounded-md border p-3">
+            <span className="text-foreground font-semibold">Reported Comment:</span>
             <p className="text-muted-foreground italic">"{report.commentText}"</p>
-            <span className="mt-1 text-[11px] text-muted-foreground">
+            <span className="text-muted-foreground mt-1 text-[11px]">
               Episode: {report.animeTitle} (Ep {report.episodeNumber})
             </span>
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label className="font-medium text-foreground">Sanction Duration for Mute:</Label>
+            <Label className="text-foreground font-medium">Sanction Duration for Mute:</Label>
             <Select value={muteDuration} onValueChange={(val) => setMuteDuration(val ?? "24h")}>
-              <SelectTrigger className="h-9 border-border/60 text-xs">
+              <SelectTrigger className="border-border/60 h-9 text-xs">
                 <SelectValue placeholder="Duration" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="24h" className="text-xs">Mute for 24 Hours</SelectItem>
-                <SelectItem value="7d" className="text-xs">Mute for 7 Days</SelectItem>
-                <SelectItem value="permanent" className="text-xs">Permanent Comment Ban</SelectItem>
+                <SelectItem value="24h" className="text-xs">
+                  Mute for 24 Hours
+                </SelectItem>
+                <SelectItem value="7d" className="text-xs">
+                  Mute for 7 Days
+                </SelectItem>
+                <SelectItem value="permanent" className="text-xs">
+                  Permanent Comment Ban
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label className="font-medium text-foreground">Moderator Internal Note (Optional):</Label>
+            <Label className="text-foreground font-medium">
+              Moderator Internal Note (Optional):
+            </Label>
             <Textarea
               placeholder="Provide reason or context for audit log..."
               value={moderatorNote}
               onChange={(e) => setModeratorNote(e.target.value)}
-              className="text-xs border-border/60 min-h-[70px]"
+              className="border-border/60 min-h-[70px] text-xs"
             />
           </div>
         </div>
@@ -94,7 +116,7 @@ export function ModerationActionModal({
               onConfirmAction(report.id, "mute", muteDuration, moderatorNote);
               onOpenChange(false);
             }}
-            className="h-9 text-xs gap-1.5"
+            className="h-9 gap-1.5 text-xs"
           >
             Delete & Mute User
           </Button>

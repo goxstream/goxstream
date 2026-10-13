@@ -15,7 +15,7 @@ export function CategoriesStats({ categories, genres }: CategoriesStatsProps) {
 
   const topGenre = genres.reduce(
     (max, item) => (item.animeCount > max.animeCount ? item : max),
-    genres[0] || { name: "N/A", animeCount: 0 }
+    genres[0] || { name: "N/A", animeCount: 0 },
   );
 
   const totalCatalogTitles = categories.reduce((sum, c) => sum + c.animeCount, 0);
@@ -23,38 +23,30 @@ export function CategoriesStats({ categories, genres }: CategoriesStatsProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {/* Total Formats */}
-      <Card className="rounded-xl border-border/60 bg-card/60 shadow-xs">
-        <CardContent className="p-4 flex items-center justify-between">
+      <Card className="border-border/60 bg-card/60 rounded-xl shadow-xs">
+        <CardContent className="flex items-center justify-between p-4">
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Media Formats
             </span>
-            <span className="text-2xl font-bold text-foreground">
-              {totalCategories} Categories
-            </span>
-            <span className="text-xs text-muted-foreground">
-              TV, Movie, OVA, ONA, Special
-            </span>
+            <span className="text-foreground text-2xl font-bold">{totalCategories} Categories</span>
+            <span className="text-muted-foreground text-xs">TV, Movie, OVA, ONA, Special</span>
           </div>
-          <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-lg">
             <Layers className="size-5" />
           </div>
         </CardContent>
       </Card>
 
       {/* Active Genres */}
-      <Card className="rounded-xl border-border/60 bg-card/60 shadow-xs">
-        <CardContent className="p-4 flex items-center justify-between">
+      <Card className="border-border/60 bg-card/60 rounded-xl shadow-xs">
+        <CardContent className="flex items-center justify-between p-4">
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Active Taxonomy Tags
             </span>
-            <span className="text-2xl font-bold text-foreground">
-              {totalActiveGenres} Genres
-            </span>
-            <span className="text-xs text-muted-foreground">
-              Main, Demographic, Themes
-            </span>
+            <span className="text-foreground text-2xl font-bold">{totalActiveGenres} Genres</span>
+            <span className="text-muted-foreground text-xs">Main, Demographic, Themes</span>
           </div>
           <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
             <Tags className="size-5" />
@@ -63,16 +55,16 @@ export function CategoriesStats({ categories, genres }: CategoriesStatsProps) {
       </Card>
 
       {/* Top Popular Genre */}
-      <Card className="rounded-xl border-border/60 bg-card/60 shadow-xs">
-        <CardContent className="p-4 flex items-center justify-between">
+      <Card className="border-border/60 bg-card/60 rounded-xl shadow-xs">
+        <CardContent className="flex items-center justify-between p-4">
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Most Popular Genre
             </span>
-            <span className="text-2xl font-bold text-foreground truncate max-w-[140px]">
+            <span className="text-foreground max-w-[140px] truncate text-2xl font-bold">
               {topGenre.name}
             </span>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               {topGenre.animeCount.toLocaleString()} Anime titles
             </span>
           </div>
@@ -83,18 +75,16 @@ export function CategoriesStats({ categories, genres }: CategoriesStatsProps) {
       </Card>
 
       {/* Total Catalog Items */}
-      <Card className="rounded-xl border-border/60 bg-card/60 shadow-xs">
-        <CardContent className="p-4 flex items-center justify-between">
+      <Card className="border-border/60 bg-card/60 rounded-xl shadow-xs">
+        <CardContent className="flex items-center justify-between p-4">
           <div className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <span className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Total Cataloged
             </span>
-            <span className="text-2xl font-bold text-foreground">
+            <span className="text-foreground text-2xl font-bold">
               {totalCatalogTitles.toLocaleString()}
             </span>
-            <span className="text-xs text-muted-foreground">
-              Assigned across categories
-            </span>
+            <span className="text-muted-foreground text-xs">Assigned across categories</span>
           </div>
           <div className="flex size-10 items-center justify-center rounded-lg bg-sky-500/10 text-sky-500">
             <AlertCircle className="size-5" />

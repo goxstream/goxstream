@@ -5,11 +5,7 @@ import { Button } from "@/components/ui/button";
 
 import type { BrowsePaginationProps } from "../types";
 
-export function BrowsePagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: BrowsePaginationProps) {
+export function BrowsePagination({ currentPage, totalPages, onPageChange }: BrowsePaginationProps) {
   if (totalPages <= 1) return null;
 
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -22,7 +18,7 @@ export function BrowsePagination({
         size="icon"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
-        className="size-9 rounded-xl border-border/80"
+        className="border-border/80 size-9 rounded-xl"
         aria-label="Previous Page"
       >
         <ChevronLeft className="size-4" />
@@ -38,7 +34,7 @@ export function BrowsePagination({
               variant={isSelected ? "default" : "outline"}
               size="icon"
               onClick={() => onPageChange(p)}
-              className={`size-9 rounded-xl font-medium text-xs ${
+              className={`size-9 rounded-xl text-xs font-medium ${
                 isSelected
                   ? "bg-primary text-primary-foreground font-bold shadow-xs"
                   : "border-border/80 text-muted-foreground hover:text-foreground"
@@ -56,7 +52,7 @@ export function BrowsePagination({
         size="icon"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
-        className="size-9 rounded-xl border-border/80"
+        className="border-border/80 size-9 rounded-xl"
         aria-label="Next Page"
       >
         <ChevronRight className="size-4" />

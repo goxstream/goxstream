@@ -27,7 +27,9 @@ export function useHistory() {
               progressPercent: h.progressPercent || 0,
               durationSeconds: h.durationSeconds || 0,
               watchedSeconds: h.progressSeconds || 0,
-              lastWatchedAt: h.lastWatchedAt ? new Date(h.lastWatchedAt).toLocaleDateString() : "Recently",
+              lastWatchedAt: h.lastWatchedAt
+                ? new Date(h.lastWatchedAt).toLocaleDateString()
+                : "Recently",
             }));
             setHistoryList(formatted);
           }
@@ -49,7 +51,6 @@ export function useHistory() {
       isMounted = false;
     };
   }, []);
-
 
   const handleRemoveItem = (id: string) => {
     fetch(`/api/user/history?id=${id}`, { method: "DELETE" }).catch(() => {});

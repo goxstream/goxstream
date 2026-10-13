@@ -17,8 +17,15 @@ export const UserMultiSelect: React.FC<UserMultiSelectProps> = ({
   onSubmit,
   onCancel,
 }) => {
-  const { query, handleQueryChange, selectedIndex, selectedIds, filteredUsers, isFiltering, setIsFiltering } =
-    useMultiSelect(users, onSubmit, onCancel);
+  const {
+    query,
+    handleQueryChange,
+    selectedIndex,
+    selectedIds,
+    filteredUsers,
+    isFiltering,
+    setIsFiltering,
+  } = useMultiSelect(users, onSubmit, onCancel);
 
   return (
     <Box flexDirection="column" marginY={1}>
@@ -65,7 +72,13 @@ export const UserMultiSelect: React.FC<UserMultiSelectProps> = ({
         </Box>
       )}
 
-      <Box marginTop={1} flexDirection="column" borderStyle="single" borderColor="cyan" paddingX={1}>
+      <Box
+        marginTop={1}
+        flexDirection="column"
+        borderStyle="single"
+        borderColor="cyan"
+        paddingX={1}
+      >
         <Text color="green" bold>
           Selected Count: {selectedIds.size} user(s)
         </Text>

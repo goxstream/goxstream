@@ -27,16 +27,16 @@ export function EpisodeFilters({
   animeOptions,
 }: EpisodeFiltersProps) {
   return (
-    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between bg-card p-4 rounded-xl border border-border/60">
+    <div className="bg-card border-border/60 flex flex-col gap-3 rounded-xl border p-4 md:flex-row md:items-center md:justify-between">
       <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
         {/* Search */}
-        <div className="relative flex-1 min-w-[240px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+        <div className="relative min-w-[240px] flex-1">
+          <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
           <Input
             placeholder="Search episode title or number..."
             value={filters.search}
             onChange={(e) => onFilterChange("search", e.target.value)}
-            className="pl-9 h-9 border-border/60 text-xs"
+            className="border-border/60 h-9 pl-9 text-xs"
           />
         </div>
 
@@ -54,7 +54,7 @@ export function EpisodeFilters({
           value={filters.status}
           onValueChange={(val) => val && onFilterChange("status", val)}
         >
-          <SelectTrigger className="w-full sm:w-[150px] h-9 border-border/60 text-xs">
+          <SelectTrigger className="border-border/60 h-9 w-full text-xs sm:w-[150px]">
             <SelectValue placeholder="All Status" />
           </SelectTrigger>
           <SelectContent>
@@ -71,7 +71,7 @@ export function EpisodeFilters({
           value={filters.serverStatus}
           onValueChange={(val) => val && onFilterChange("serverStatus", val)}
         >
-          <SelectTrigger className="w-full sm:w-[160px] h-9 border-border/60 text-xs">
+          <SelectTrigger className="border-border/60 h-9 w-full text-xs sm:w-[160px]">
             <SelectValue placeholder="Server Health" />
           </SelectTrigger>
           <SelectContent>
@@ -89,7 +89,7 @@ export function EpisodeFilters({
           value={filters.sortBy}
           onValueChange={(val) => val && onFilterChange("sortBy", val)}
         >
-          <SelectTrigger className="w-[140px] h-9 border-border/60 text-xs">
+          <SelectTrigger className="border-border/60 h-9 w-[140px] text-xs">
             <SelectValue placeholder="Sort By" />
           </SelectTrigger>
           <SelectContent>
@@ -104,7 +104,7 @@ export function EpisodeFilters({
           variant="outline"
           size="icon"
           onClick={onReset}
-          className="h-9 w-9 border-border/60 shrink-0"
+          className="border-border/60 h-9 w-9 shrink-0"
           title="Reset Filters"
         >
           <RotateCcw className="size-4" />

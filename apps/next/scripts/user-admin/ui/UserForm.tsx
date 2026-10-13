@@ -39,7 +39,9 @@ export const UserForm: React.FC<UserFormProps> = ({
       title: "Username",
       content: (
         <Box flexDirection="column">
-          <Text color="cyan">Enter Username {isEdit ? `(current: ${initialValues?.username})` : ""}:</Text>
+          <Text color="cyan">
+            Enter Username {isEdit ? `(current: ${initialValues?.username})` : ""}:
+          </Text>
           <TextInput
             value={form.username}
             onChange={form.setUsername}
@@ -52,7 +54,9 @@ export const UserForm: React.FC<UserFormProps> = ({
       title: "Email",
       content: (
         <Box flexDirection="column">
-          <Text color="cyan">Enter Email {isEdit ? `(current: ${initialValues?.email})` : ""}:</Text>
+          <Text color="cyan">
+            Enter Email {isEdit ? `(current: ${initialValues?.email})` : ""}:
+          </Text>
           <TextInput
             value={form.email}
             onChange={form.setEmail}
@@ -84,7 +88,11 @@ export const UserForm: React.FC<UserFormProps> = ({
           <Text color="cyan">
             Enter Display Name {isEdit ? `(current: ${initialValues?.displayName})` : "(optional)"}:
           </Text>
-          <TextInput value={form.displayName} onChange={form.setDisplayName} onSubmit={form.nextStep} />
+          <TextInput
+            value={form.displayName}
+            onChange={form.setDisplayName}
+            onSubmit={form.nextStep}
+          />
         </Box>
       ),
     },
@@ -161,8 +169,8 @@ export const UserForm: React.FC<UserFormProps> = ({
   return (
     <Box flexDirection="column" marginY={1}>
       <Text bold color="yellow">
-        {isEdit ? `Editing User [${initialValues?.username}]` : "Creating New User"}{" "}
-        (Step {form.step + 1}/{steps.length}: {steps[form.step].title})
+        {isEdit ? `Editing User [${initialValues?.username}]` : "Creating New User"} (Step{" "}
+        {form.step + 1}/{steps.length}: {steps[form.step].title})
       </Text>
       <Box marginTop={1}>{steps[form.step].content}</Box>
     </Box>

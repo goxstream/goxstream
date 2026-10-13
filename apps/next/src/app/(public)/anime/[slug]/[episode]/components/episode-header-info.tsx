@@ -30,7 +30,7 @@ export function EpisodeHeaderInfo({
   onToggleCinemaMode,
 }: EpisodeHeaderInfoProps) {
   return (
-    <div className="flex flex-col gap-5 py-4 border-b border-border/60">
+    <div className="border-border/60 flex flex-col gap-5 border-b py-4">
       <EpisodeTitleNav
         anime={anime}
         episode={episode}

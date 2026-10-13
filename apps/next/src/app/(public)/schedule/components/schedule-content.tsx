@@ -23,7 +23,7 @@ export function ScheduleContent() {
   } = useScheduleView();
 
   return (
-    <div className="container mx-auto px-4 py-6 md:py-8 space-y-6 max-w-7xl">
+    <div className="container mx-auto max-w-7xl space-y-6 px-4 py-6 md:py-8">
       <ScheduleHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -41,7 +41,7 @@ export function ScheduleContent() {
       />
 
       {isLoading ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 py-4">
+        <div className="grid grid-cols-1 gap-4 py-4 lg:grid-cols-2">
           {Array.from({ length: 6 }).map((_, i) => (
             <EpisodeCard key={i} isLoading={true} />
           ))}

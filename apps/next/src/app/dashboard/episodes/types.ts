@@ -77,7 +77,6 @@ export interface EpisodeStats {
   totalViews: number;
 }
 
-
 export interface SubtitleCoverageItem {
   animeId: string;
   animeTitle: string;

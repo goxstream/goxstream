@@ -49,7 +49,7 @@ export async function GET() {
         recentActivities: [],
         notifications: [],
       },
-      { status: 200 }
+      { status: 200 },
     );
   }
 }

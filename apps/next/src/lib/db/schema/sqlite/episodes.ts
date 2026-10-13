@@ -3,61 +3,91 @@ import { relations } from "drizzle-orm";
 import { animes } from "./anime";
 
 export const episodes = sqliteTable("episodes", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   animeId: text("anime_id")
     .notNull()
     .references(() => animes.id, { onDelete: "cascade" }),
   number: integer("number").notNull(),
   title: text("title").notNull(),
-  durationSeconds: integer("duration_seconds").notNull().$default(() => 1440),
+  durationSeconds: integer("duration_seconds")
+    .notNull()
+    .$default(() => 1440),
   thumbnail: text("thumbnail"),
   airDate: integer("air_date", { mode: "timestamp" }),
-  status: text("status").notNull().$default(() => "published"),
-  viewsCount: integer("views_count").notNull().$default(() => 0),
-  isVip: integer("is_vip", { mode: "boolean" }).notNull().$default(() => false),
+  status: text("status")
+    .notNull()
+    .$default(() => "published"),
+  viewsCount: integer("views_count")
+    .notNull()
+    .$default(() => 0),
+  isVip: integer("is_vip", { mode: "boolean" })
+    .notNull()
+    .$default(() => false),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
 });
 
 export const streamSources = sqliteTable("stream_sources", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   episodeId: text("episode_id")
     .notNull()
     .references(() => episodes.id, { onDelete: "cascade" }),
   serverName: text("server_name"),
   streamUrl: text("stream_url").notNull(),
-  format: text("format").notNull().$default(() => "hls"),
-  quality: text("quality").notNull().$default(() => "1080p"),
+  format: text("format")
+    .notNull()
+    .$default(() => "hls"),
+  quality: text("quality")
+    .notNull()
+    .$default(() => "1080p"),
   url1080p: text("url_1080p"),
   url720p: text("url_720p"),
   url480p: text("url_480p"),
   url360p: text("url_360p"),
-  isPrimary: integer("is_primary", { mode: "boolean" }).notNull().$default(() => false),
+  isPrimary: integer("is_primary", { mode: "boolean" })
+    .notNull()
+    .$default(() => false),
 });
 
 export const subtitleTracks = sqliteTable("subtitle_tracks", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   episodeId: text("episode_id")
     .notNull()
     .references(() => episodes.id, { onDelete: "cascade" }),
   label: text("label").notNull(),
   languageCode: text("language_code").notNull(),
   fileUrl: text("file_url").notNull(),
-  format: text("format").notNull().$default(() => "vtt"),
-  isDefault: integer("is_default", { mode: "boolean" }).notNull().$default(() => false),
+  format: text("format")
+    .notNull()
+    .$default(() => "vtt"),
+  isDefault: integer("is_default", { mode: "boolean" })
+    .notNull()
+    .$default(() => false),
 });
 
 export const audioTracks = sqliteTable("audio_tracks", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   episodeId: text("episode_id")
     .notNull()
     .references(() => episodes.id, { onDelete: "cascade" }),
   label: text("label").notNull(),
   languageCode: text("language_code").notNull(),
   audioUrl: text("audio_url").notNull(),
-  type: text("type").notNull().$default(() => "original"),
-  isDefault: integer("is_default", { mode: "boolean" }).notNull().$default(() => false),
+  type: text("type")
+    .notNull()
+    .$default(() => "original"),
+  isDefault: integer("is_default", { mode: "boolean" })
+    .notNull()
+    .$default(() => false),
 });
 
 export const episodesRelations = relations(episodes, ({ one, many }) => ({

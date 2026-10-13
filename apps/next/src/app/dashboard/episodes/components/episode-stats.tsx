@@ -10,80 +10,78 @@ export function EpisodeStatsCards({ stats }: EpisodeStatsProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
       <Card className="border-border/60 bg-card">
-        <CardContent className="p-4 flex items-center justify-between">
+        <CardContent className="flex items-center justify-between p-4">
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Total Episodes
             </p>
-            <p className="text-2xl font-bold text-foreground mt-1">
+            <p className="text-foreground mt-1 text-2xl font-bold">
               {stats.totalEpisodes.toLocaleString()}
             </p>
           </div>
-          <div className="p-2.5 rounded-lg bg-primary/10 text-primary">
+          <div className="bg-primary/10 text-primary rounded-lg p-2.5">
             <Film className="size-5" />
           </div>
         </CardContent>
       </Card>
 
       <Card className="border-border/60 bg-card">
-        <CardContent className="p-4 flex items-center justify-between">
+        <CardContent className="flex items-center justify-between p-4">
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Published
             </p>
-            <p className="text-2xl font-bold text-emerald-500 mt-1">
+            <p className="mt-1 text-2xl font-bold text-emerald-500">
               {stats.publishedEpisodes.toLocaleString()}
             </p>
           </div>
-          <div className="p-2.5 rounded-lg bg-emerald-500/10 text-emerald-500">
+          <div className="rounded-lg bg-emerald-500/10 p-2.5 text-emerald-500">
             <CheckCircle2 className="size-5" />
           </div>
         </CardContent>
       </Card>
 
       <Card className="border-border/60 bg-card">
-        <CardContent className="p-4 flex items-center justify-between">
+        <CardContent className="flex items-center justify-between p-4">
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Draft / Processing
             </p>
-            <p className="text-2xl font-bold text-amber-500 mt-1">
+            <p className="mt-1 text-2xl font-bold text-amber-500">
               {stats.draftEpisodes.toLocaleString()}
             </p>
           </div>
-          <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-500">
+          <div className="rounded-lg bg-amber-500/10 p-2.5 text-amber-500">
             <Clock className="size-5" />
           </div>
         </CardContent>
       </Card>
 
       <Card className="border-border/60 bg-card">
-        <CardContent className="p-4 flex items-center justify-between">
+        <CardContent className="flex items-center justify-between p-4">
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Server Alerts
             </p>
-            <p className="text-2xl font-bold text-destructive mt-1">
-              {stats.serverIssues}
-            </p>
+            <p className="text-destructive mt-1 text-2xl font-bold">{stats.serverIssues}</p>
           </div>
-          <div className="p-2.5 rounded-lg bg-destructive/10 text-destructive">
+          <div className="bg-destructive/10 text-destructive rounded-lg p-2.5">
             <AlertTriangle className="size-5" />
           </div>
         </CardContent>
       </Card>
 
       <Card className="border-border/60 bg-card sm:col-span-2 lg:col-span-1">
-        <CardContent className="p-4 flex items-center justify-between">
+        <CardContent className="flex items-center justify-between p-4">
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <p className="text-muted-foreground text-xs font-medium tracking-wider uppercase">
               Total Streams
             </p>
-            <p className="text-2xl font-bold text-foreground mt-1">
+            <p className="text-foreground mt-1 text-2xl font-bold">
               {(stats.totalViews / 1000000).toFixed(1)}M
             </p>
           </div>
-          <div className="p-2.5 rounded-lg bg-sky-500/10 text-sky-500">
+          <div className="rounded-lg bg-sky-500/10 p-2.5 text-sky-500">
             <Eye className="size-5" />
           </div>
         </CardContent>

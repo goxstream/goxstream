@@ -24,51 +24,48 @@ export function UserAreaSidebar() {
   return (
     <aside className="w-full">
       {/* Vidio-Style Customer Portal Sidebar Container */}
-      <div className="p-3 sm:p-4 rounded-2xl bg-card/70 backdrop-blur-md border border-border/60 shadow-xs space-y-4">
+      <div className="bg-card/70 border-border/60 space-y-4 rounded-2xl border p-3 shadow-xs backdrop-blur-md sm:p-4">
         {/* User Mini Profile Header (Tablet & Desktop) */}
         {isLoading ? (
-          <div className="hidden md:flex items-center gap-3 p-2">
-            <Skeleton className="size-11 rounded-full shrink-0" />
-            <div className="space-y-2 flex-1 min-w-0">
+          <div className="hidden items-center gap-3 p-2 md:flex">
+            <Skeleton className="size-11 shrink-0 rounded-full" />
+            <div className="min-w-0 flex-1 space-y-2">
               <Skeleton className="h-4 w-3/4 rounded" />
               <Skeleton className="h-3 w-1/2 rounded" />
             </div>
           </div>
         ) : user ? (
-          <div className="hidden md:flex items-center gap-3 p-2">
-            <Avatar className="size-11 border border-border/80 shadow-xs shrink-0 bg-card">
-              {user.avatarUrl ? (
-                <AvatarImage src={user.avatarUrl} alt={user.displayName} />
-              ) : null}
-              <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
+          <div className="hidden items-center gap-3 p-2 md:flex">
+            <Avatar className="border-border/80 bg-card size-11 shrink-0 border shadow-xs">
+              {user.avatarUrl ? <AvatarImage src={user.avatarUrl} alt={user.displayName} /> : null}
+              <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
                 {user.displayName ? user.displayName.substring(0, 2).toUpperCase() : "US"}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col min-w-0 flex-1">
+            <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-sm truncate text-foreground">
+                <span className="text-foreground truncate text-sm font-bold">
                   {user.displayName}
                 </span>
                 {user.isVip && (
-                  <Badge variant="secondary" className="px-1 py-0 text-[10px] h-4 bg-amber-500/10 text-amber-500 border-amber-500/20 font-bold gap-0.5 shrink-0">
+                  <Badge
+                    variant="secondary"
+                    className="h-4 shrink-0 gap-0.5 border-amber-500/20 bg-amber-500/10 px-1 py-0 text-[10px] font-bold text-amber-500"
+                  >
                     <Crown className="size-2.5 fill-amber-500" />
                     VIP
                   </Badge>
                 )}
               </div>
-              <span className="text-xs text-muted-foreground truncate">
-                @{user.username}
-              </span>
+              <span className="text-muted-foreground truncate text-xs">@{user.username}</span>
             </div>
           </div>
         ) : null}
 
-        {isLoading || user ? (
-          <Separator className="hidden md:block bg-border/60" />
-        ) : null}
+        {isLoading || user ? <Separator className="bg-border/60 hidden md:block" /> : null}
 
         {/* Navigation Tabs (Vertical on Tablet/Desktop, Horizontal Scroll on Mobile) */}
-        <nav className="flex md:flex-col gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none py-0.5">
+        <nav className="flex scrollbar-none gap-1 overflow-x-auto py-0.5 sm:gap-1.5 md:flex-col">
           {USER_HUB_TABS.map((tab) => {
             const isActive = pathname === tab.href;
             const Icon = tab.icon;
@@ -78,21 +75,24 @@ export function UserAreaSidebar() {
                 key={tab.href}
                 href={tab.href}
                 className={cn(
-                  "px-3.5 py-2.5 text-xs sm:text-sm font-medium rounded-xl flex items-center gap-3 transition-all whitespace-nowrap shrink-0 md:w-full cursor-pointer",
+                  "flex shrink-0 cursor-pointer items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-medium whitespace-nowrap transition-all sm:text-sm md:w-full",
                   isActive
-                    ? "bg-primary/10 text-primary font-bold border-l-0 md:border-l-4 border-primary shadow-2xs md:rounded-l-xs md:rounded-r-xl"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                    ? "bg-primary/10 text-primary border-primary border-l-0 font-bold shadow-2xs md:rounded-l-xs md:rounded-r-xl md:border-l-4"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60",
                 )}
               >
-                <Icon className={cn("size-4 shrink-0", isActive ? "text-primary" : "text-muted-foreground")} />
+                <Icon
+                  className={cn(
+                    "size-4 shrink-0",
+                    isActive ? "text-primary" : "text-muted-foreground",
+                  )}
+                />
                 <span>{tab.label}</span>
               </Link>
             );
           })}
         </nav>
-
       </div>
     </aside>
   );
 }
-

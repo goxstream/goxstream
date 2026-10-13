@@ -5,7 +5,7 @@ import type { UserItem } from "../types";
 export function useMultiSelect(
   users: UserItem[],
   onSubmit: (selected: UserItem[]) => void,
-  onCancel: () => void
+  onCancel: () => void,
 ) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -18,7 +18,7 @@ export function useMultiSelect(
       u.email.toLowerCase().includes(query.toLowerCase()) ||
       u.displayName.toLowerCase().includes(query.toLowerCase()) ||
       u.role.toLowerCase().includes(query.toLowerCase()) ||
-      u.id.toLowerCase().includes(query.toLowerCase())
+      u.id.toLowerCase().includes(query.toLowerCase()),
   );
 
   useInput((input, key) => {

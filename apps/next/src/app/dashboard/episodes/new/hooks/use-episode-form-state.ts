@@ -89,9 +89,7 @@ export function useEpisodeFormState(): EpisodeFormContextType {
   };
 
   const handleUpdateServer = (id: string, key: keyof VideoServerSource, value: any) => {
-    setServers((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, [key]: value } : s))
-    );
+    setServers((prev) => prev.map((s) => (s.id === id ? { ...s, [key]: value } : s)));
   };
 
   const handleAddSubtitle = () => {
@@ -114,9 +112,7 @@ export function useEpisodeFormState(): EpisodeFormContextType {
   };
 
   const handleUpdateSubtitle = (id: string, key: keyof SubtitleTrack, value: any) => {
-    setSubtitles((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, [key]: value } : s))
-    );
+    setSubtitles((prev) => prev.map((s) => (s.id === id ? { ...s, [key]: value } : s)));
   };
 
   const handleAddAudio = () => {
@@ -137,9 +133,7 @@ export function useEpisodeFormState(): EpisodeFormContextType {
   };
 
   const handleUpdateAudio = (id: string, key: keyof AudioTrack, value: any) => {
-    setAudioTracks((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, [key]: value } : a))
-    );
+    setAudioTracks((prev) => prev.map((a) => (a.id === id ? { ...a, [key]: value } : a)));
   };
 
   const handleSave = () => {

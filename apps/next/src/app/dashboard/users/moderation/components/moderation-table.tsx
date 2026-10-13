@@ -28,21 +28,46 @@ export function ModerationTable({
   const getReasonBadge = (reason: ReportedComment["reason"]) => {
     switch (reason) {
       case "spoiler":
-        return <Badge variant="outline" className="border-amber-500/30 bg-amber-500/10 text-amber-500 text-[10px]">Spoiler</Badge>;
+        return (
+          <Badge
+            variant="outline"
+            className="border-amber-500/30 bg-amber-500/10 text-[10px] text-amber-500"
+          >
+            Spoiler
+          </Badge>
+        );
       case "spam_link":
-        return <Badge variant="outline" className="border-destructive/30 bg-destructive/10 text-destructive text-[10px]">Spam Link</Badge>;
+        return (
+          <Badge
+            variant="outline"
+            className="border-destructive/30 bg-destructive/10 text-destructive text-[10px]"
+          >
+            Spam Link
+          </Badge>
+        );
       case "hate_speech":
-        return <Badge variant="outline" className="border-destructive/30 bg-destructive/10 text-destructive text-[10px]">Hate Speech</Badge>;
+        return (
+          <Badge
+            variant="outline"
+            className="border-destructive/30 bg-destructive/10 text-destructive text-[10px]"
+          >
+            Hate Speech
+          </Badge>
+        );
       default:
-        return <Badge variant="secondary" className="text-[10px]">Community Standard</Badge>;
+        return (
+          <Badge variant="secondary" className="text-[10px]">
+            Community Standard
+          </Badge>
+        );
     }
   };
 
   if (reports.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-border/60 bg-card p-12 text-center shadow-xs">
-        <p className="text-sm font-medium text-foreground">Moderation queue is clean!</p>
-        <p className="mt-1 text-xs text-muted-foreground">
+      <div className="border-border/60 bg-card flex flex-col items-center justify-center rounded-lg border p-12 text-center shadow-xs">
+        <p className="text-foreground text-sm font-medium">Moderation queue is clean!</p>
+        <p className="text-muted-foreground mt-1 text-xs">
           No pending user reports or community violations at this time.
         </p>
       </div>
@@ -50,16 +75,20 @@ export function ModerationTable({
   }
 
   return (
-    <div className="rounded-lg border border-border/60 bg-card shadow-xs overflow-hidden">
+    <div className="border-border/60 bg-card overflow-hidden rounded-lg border shadow-xs">
       <Table>
         <TableHeader>
           <TableRow className="border-border/60 bg-muted/30 hover:bg-muted/30">
-            <TableHead className="text-xs font-semibold text-foreground">Author & Comment</TableHead>
-            <TableHead className="text-xs font-semibold text-foreground">Anime Episode</TableHead>
-            <TableHead className="text-xs font-semibold text-foreground">Reason</TableHead>
-            <TableHead className="text-xs font-semibold text-foreground">Reporter</TableHead>
-            <TableHead className="text-xs font-semibold text-foreground">Status</TableHead>
-            <TableHead className="w-[140px] text-right text-xs font-semibold text-foreground">Quick Action</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">
+              Author & Comment
+            </TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">Anime Episode</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">Reason</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">Reporter</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">Status</TableHead>
+            <TableHead className="text-foreground w-[140px] text-right text-xs font-semibold">
+              Quick Action
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -74,23 +103,27 @@ export function ModerationTable({
             return (
               <TableRow key={item.id} className="border-border/60 hover:bg-muted/20">
                 {/* Author & comment */}
-                <TableCell className="py-3 max-w-[280px]">
+                <TableCell className="max-w-[280px] py-3">
                   <div className="flex items-start gap-3">
-                    <Avatar className="size-8 border border-border/60 mt-0.5">
+                    <Avatar className="border-border/60 mt-0.5 size-8 border">
                       <AvatarImage src={item.author.avatar} alt={item.author.name} />
                       <AvatarFallback className="text-[10px]">{initials}</AvatarFallback>
                     </Avatar>
-                    <div className="flex flex-col gap-1 min-w-0">
+                    <div className="flex min-w-0 flex-col gap-1">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-semibold text-foreground truncate">{item.author.name}</span>
-                        <span className="text-[10px] text-muted-foreground">@{item.author.username}</span>
+                        <span className="text-foreground truncate text-xs font-semibold">
+                          {item.author.name}
+                        </span>
+                        <span className="text-muted-foreground text-[10px]">
+                          @{item.author.username}
+                        </span>
                         {item.flaggedBySystem && (
-                          <span className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground">
+                          <span className="text-muted-foreground inline-flex items-center gap-0.5 text-[10px]">
                             <Bot className="size-3" /> Auto
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-foreground bg-muted/30 p-2 rounded-md border border-border/40 line-clamp-2 italic">
+                      <p className="text-foreground bg-muted/30 border-border/40 line-clamp-2 rounded-md border p-2 text-xs italic">
                         "{item.commentText}"
                       </p>
                     </div>
@@ -98,10 +131,12 @@ export function ModerationTable({
                 </TableCell>
 
                 {/* Anime episode */}
-                <TableCell className="py-3 text-xs text-foreground">
+                <TableCell className="text-foreground py-3 text-xs">
                   <div className="flex flex-col">
-                    <span className="font-medium truncate">{item.animeTitle}</span>
-                    <span className="text-[11px] text-muted-foreground">Episode {item.episodeNumber}</span>
+                    <span className="truncate font-medium">{item.animeTitle}</span>
+                    <span className="text-muted-foreground text-[11px]">
+                      Episode {item.episodeNumber}
+                    </span>
                   </div>
                 </TableCell>
 
@@ -109,7 +144,7 @@ export function ModerationTable({
                 <TableCell className="py-3">{getReasonBadge(item.reason)}</TableCell>
 
                 {/* Reporter */}
-                <TableCell className="py-3 text-xs text-muted-foreground">
+                <TableCell className="text-muted-foreground py-3 text-xs">
                   {item.flaggedBySystem ? "System Bot" : `@${item.reporter.username}`}
                 </TableCell>
 
@@ -126,7 +161,7 @@ export function ModerationTable({
                       Resolved
                     </span>
                   ) : (
-                    <span className="text-xs text-muted-foreground">Dismissed</span>
+                    <span className="text-muted-foreground text-xs">Dismissed</span>
                   )}
                 </TableCell>
 
@@ -137,7 +172,7 @@ export function ModerationTable({
                       <Button
                         variant="outline"
                         size="icon"
-                        className="size-7 text-emerald-500 border-border/60 hover:bg-emerald-500/10"
+                        className="border-border/60 size-7 text-emerald-500 hover:bg-emerald-500/10"
                         title="Approve / Dismiss Report"
                         onClick={() => onApproveReport(item.id)}
                       >
@@ -146,7 +181,7 @@ export function ModerationTable({
                       <Button
                         variant="outline"
                         size="icon"
-                        className="size-7 text-destructive border-border/60 hover:bg-destructive/10"
+                        className="text-destructive border-border/60 hover:bg-destructive/10 size-7"
                         title="Delete & Sanction User"
                         onClick={() => onOpenActionModal(item)}
                       >
@@ -154,7 +189,7 @@ export function ModerationTable({
                       </Button>
                     </div>
                   ) : (
-                    <span className="text-[11px] text-muted-foreground">Done</span>
+                    <span className="text-muted-foreground text-[11px]">Done</span>
                   )}
                 </TableCell>
               </TableRow>

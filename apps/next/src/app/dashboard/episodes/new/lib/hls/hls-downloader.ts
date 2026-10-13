@@ -9,7 +9,7 @@ import type { HlsTranscodeResult } from "./types";
  */
 export async function downloadHlsPackageZip(
   hlsResult: HlsTranscodeResult,
-  zipFileName = "hls-multi-res-package.zip"
+  zipFileName = "hls-multi-res-package.zip",
 ): Promise<void> {
   if (!hlsResult || !hlsResult.masterManifestBlob) {
     throw new Error("No HLS transcode result available to download.");

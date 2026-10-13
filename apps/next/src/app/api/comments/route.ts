@@ -16,7 +16,8 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body: any = await request.json();
-    const { animeId, episodeId, parentId, content, isSpoiler, guestName, guestEmail, userId } = body;
+    const { animeId, episodeId, parentId, content, isSpoiler, guestName, guestEmail, userId } =
+      body;
 
     if (!animeId || !episodeId || !content) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });

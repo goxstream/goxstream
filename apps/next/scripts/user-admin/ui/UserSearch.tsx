@@ -36,7 +36,7 @@ export const UserSearch: React.FC<UserSearchProps> = ({
       u.email.toLowerCase().includes(query.toLowerCase()) ||
       u.displayName.toLowerCase().includes(query.toLowerCase()) ||
       u.role.toLowerCase().includes(query.toLowerCase()) ||
-      u.id.toLowerCase().includes(query.toLowerCase())
+      u.id.toLowerCase().includes(query.toLowerCase()),
   );
 
   const selectItems = [

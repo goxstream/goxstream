@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { registerUserAccount, getUserByEmail, getUserByUsername, createSession } from "@/lib/db/queries/users";
+import {
+  registerUserAccount,
+  getUserByEmail,
+  getUserByUsername,
+  createSession,
+} from "@/lib/db/queries/users";
 import { hashPassword } from "@/lib/auth/password";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/session";
 
@@ -15,7 +20,10 @@ export async function POST(req: NextRequest) {
     const { username, email, password, displayName } = body;
 
     if (!username || !email || !password) {
-      return NextResponse.json({ error: "Username, email, and password are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Username, email, and password are required" },
+        { status: 400 },
+      );
     }
 
     const existingEmail = await getUserByEmail(email);
@@ -38,7 +46,8 @@ export async function POST(req: NextRequest) {
     });
 
     const userAgent = req.headers.get("user-agent") || undefined;
-    const ipAddress = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || undefined;
+    const ipAddress =
+      req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || undefined;
 
     const sessionToken = await createSession(newId, userAgent, ipAddress);
 
@@ -63,7 +72,7 @@ export async function POST(req: NextRequest) {
 
     response.headers.set(
       "Set-Cookie",
-      `${SESSION_COOKIE_NAME}=${sessionToken}; Path=/; Max-Age=604800; HttpOnly; SameSite=Lax`
+      `${SESSION_COOKIE_NAME}=${sessionToken}; Path=/; Max-Age=604800; HttpOnly; SameSite=Lax`,
     );
 
     return response;

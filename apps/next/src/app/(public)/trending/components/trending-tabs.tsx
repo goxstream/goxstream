@@ -47,9 +47,9 @@ export function TrendingTabs({
   totalCount,
 }: TrendingTabsProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/60 pb-4">
+    <div className="border-border/60 flex flex-col justify-between gap-4 border-b pb-4 sm:flex-row sm:items-center">
       {/* Time Horizon Tabs */}
-      <div className="flex flex-wrap items-center gap-2 p-1 bg-muted/60 rounded-xl border border-border/40">
+      <div className="bg-muted/60 border-border/40 flex flex-wrap items-center gap-2 rounded-xl border p-1">
         {PERIODS.map((period) => {
           const Icon = period.icon;
           const isActive = activePeriod === period.id;
@@ -59,21 +59,21 @@ export function TrendingTabs({
               key={period.id}
               onClick={() => onPeriodChange(period.id)}
               className={cn(
-                "flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold border transition-colors duration-150 cursor-pointer select-none",
+                "flex cursor-pointer items-center gap-2 rounded-lg border px-3.5 py-2 text-xs font-semibold transition-colors duration-150 select-none sm:text-sm",
                 isActive
-                  ? "bg-background text-foreground shadow-xs border-border/60"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:bg-background/40"
+                  ? "bg-background text-foreground border-border/60 shadow-xs"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/40 border-transparent",
               )}
             >
               <Icon
                 className={cn(
                   "size-4 shrink-0 transition-colors",
-                  isActive ? "text-primary" : "text-muted-foreground"
+                  isActive ? "text-primary" : "text-muted-foreground",
                 )}
               />
               <div className="flex flex-col text-left">
                 <span className="leading-none">{period.label}</span>
-                <span className="text-[10px] text-muted-foreground font-normal mt-0.5">
+                <span className="text-muted-foreground mt-0.5 text-[10px] font-normal">
                   {period.sublabel}
                 </span>
               </div>
@@ -83,13 +83,13 @@ export function TrendingTabs({
       </div>
 
       {/* Right Controls: Count & View Switcher */}
-      <div className="flex items-center justify-between sm:justify-end gap-3">
-        <span className="text-xs text-muted-foreground font-medium">
-          Showing <span className="font-bold text-foreground">{totalCount}</span> anime
+      <div className="flex items-center justify-between gap-3 sm:justify-end">
+        <span className="text-muted-foreground text-xs font-medium">
+          Showing <span className="text-foreground font-bold">{totalCount}</span> anime
         </span>
 
         {/* View Mode Toggle Buttons */}
-        <div className="flex items-center gap-1 p-1 bg-muted/60 rounded-lg border border-border/40">
+        <div className="bg-muted/60 border-border/40 flex items-center gap-1 rounded-lg border p-1">
           <Button
             variant="ghost"
             size="icon"
@@ -97,8 +97,8 @@ export function TrendingTabs({
             className={cn(
               "size-7 rounded-md border transition-colors",
               viewMode === "list"
-                ? "bg-background text-foreground shadow-xs border-border/60"
-                : "border-transparent text-muted-foreground hover:text-foreground"
+                ? "bg-background text-foreground border-border/60 shadow-xs"
+                : "text-muted-foreground hover:text-foreground border-transparent",
             )}
             aria-label="List View"
           >
@@ -112,8 +112,8 @@ export function TrendingTabs({
             className={cn(
               "size-7 rounded-md border transition-colors",
               viewMode === "grid"
-                ? "bg-background text-foreground shadow-xs border-border/60"
-                : "border-transparent text-muted-foreground hover:text-foreground"
+                ? "bg-background text-foreground border-border/60 shadow-xs"
+                : "text-muted-foreground hover:text-foreground border-transparent",
             )}
             aria-label="Grid View"
           >

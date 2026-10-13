@@ -30,17 +30,24 @@ export function WatchlistClientPage() {
     <div className="space-y-6">
       <WatchlistHeader viewMode={viewMode} onViewModeChange={setViewMode} />
 
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <Tabs value={activeTab} onValueChange={(v: any) => setActiveTab(v)} className="w-full lg:w-auto">
-          <TabsList className="bg-card border border-border/60 p-1 rounded-xl h-auto flex flex-wrap gap-1">
+      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
+        <Tabs
+          value={activeTab}
+          onValueChange={(v: any) => setActiveTab(v)}
+          className="w-full lg:w-auto"
+        >
+          <TabsList className="bg-card border-border/60 flex h-auto flex-wrap gap-1 rounded-xl border p-1">
             {WATCHLIST_TABS.map((tab) => (
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg data-active:bg-primary data-active:text-primary-foreground transition-all gap-1.5 cursor-pointer"
+                className="data-active:bg-primary data-active:text-primary-foreground cursor-pointer gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
               >
                 {tab.label}
-                <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 border-current opacity-80">
+                <Badge
+                  variant="outline"
+                  className="h-4 border-current px-1.5 py-0 text-[10px] opacity-80"
+                >
                   {getItemCount(tab.value)}
                 </Badge>
               </TabsTrigger>
@@ -49,33 +56,32 @@ export function WatchlistClientPage() {
         </Tabs>
 
         <div className="relative w-full lg:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+          <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
           <Input
             placeholder="Search watchlist..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 text-xs rounded-xl bg-card border-border/60 h-9"
+            className="bg-card border-border/60 h-9 rounded-xl pl-9 text-xs"
           />
         </div>
       </div>
 
       {items.length === 0 ? (
-        <div className="p-12 text-center border border-dashed border-border/70 rounded-2xl bg-card/50 flex flex-col items-center gap-3">
-          <Bookmark className="size-10 text-muted-foreground/40" />
-          <h3 className="font-semibold text-base text-foreground">No Titles Found</h3>
-          <p className="text-xs text-muted-foreground max-w-sm">
+        <div className="border-border/70 bg-card/50 flex flex-col items-center gap-3 rounded-2xl border border-dashed p-12 text-center">
+          <Bookmark className="text-muted-foreground/40 size-10" />
+          <h3 className="text-foreground text-base font-semibold">No Titles Found</h3>
+          <p className="text-muted-foreground max-w-sm text-xs">
             There are no anime titles matching your current filter criteria.
           </p>
           <Link
             href="/browse"
-            className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-xs font-semibold rounded-xl shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2 inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold shadow-xs transition-colors"
           >
             Explore Browse Catalog
           </Link>
-
         </div>
       ) : viewMode === "grid" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {items.map((item) => (
             <WatchlistGridItem
               key={item.id}

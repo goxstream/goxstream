@@ -5,7 +5,7 @@ export class CloudflareR2StorageAdapter implements StorageAdapter {
   async uploadFile(
     arg1: string | File | Blob | Uint8Array | ArrayBuffer,
     arg2: string | File | Blob | Uint8Array | ArrayBuffer,
-    contentType?: string
+    contentType?: string,
   ): Promise<StorageUploadResult> {
     let key: string;
     let dataBuffer: ArrayBuffer;

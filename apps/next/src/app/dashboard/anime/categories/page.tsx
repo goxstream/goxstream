@@ -16,7 +16,6 @@ export default function CategoriesPage() {
   const { categories, isLoading, setCategories } = useDashboardCategories();
   const [genres, setGenres] = useState<GenreItem[]>([]);
 
-
   // Sheet State
   const [sheetOpen, setSheetOpen] = useState(false);
   const [sheetType, setSheetType] = useState<"category" | "genre">("category");
@@ -29,7 +28,7 @@ export default function CategoriesPage() {
   // Category Handlers
   const handleToggleCategoryStatus = (id: string) => {
     setCategories((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, isActive: !item.isActive } : item))
+      prev.map((item) => (item.id === id ? { ...item, isActive: !item.isActive } : item)),
     );
   };
 
@@ -59,7 +58,7 @@ export default function CategoriesPage() {
   // Genre Handlers
   const handleToggleGenreStatus = (id: string) => {
     setGenres((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, isActive: !item.isActive } : item))
+      prev.map((item) => (item.id === id ? { ...item, isActive: !item.isActive } : item)),
     );
   };
 
@@ -87,17 +86,17 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto w-full">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 sm:p-6">
       {/* Header */}
       <CategoriesHeader onOpenAddSheet={handleOpenAddSheet} />
 
       {/* Stats Cards */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
-          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
-          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
-          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Skeleton className="bg-card border-border/60 h-24 w-full rounded-xl border" />
+          <Skeleton className="bg-card border-border/60 h-24 w-full rounded-xl border" />
+          <Skeleton className="bg-card border-border/60 h-24 w-full rounded-xl border" />
+          <Skeleton className="bg-card border-border/60 h-24 w-full rounded-xl border" />
         </div>
       ) : (
         <CategoriesStats categories={categories} genres={genres} />
@@ -105,7 +104,7 @@ export default function CategoriesPage() {
 
       {/* Tabs Layout for Categories Format vs Genre Taxonomy */}
       <Tabs defaultValue="categories" className="w-full">
-        <TabsList className="w-full sm:w-auto grid grid-cols-2 rounded-lg bg-muted/60 p-1 mb-4">
+        <TabsList className="bg-muted/60 mb-4 grid w-full grid-cols-2 rounded-lg p-1 sm:w-auto">
           <TabsTrigger value="categories" className="rounded-md text-xs font-semibold">
             Media Format Categories ({categories.length})
           </TabsTrigger>
@@ -116,7 +115,7 @@ export default function CategoriesPage() {
 
         <TabsContent value="categories" className="focus-visible:outline-none">
           {isLoading ? (
-            <Skeleton className="h-64 w-full rounded-xl bg-card border border-border/60" />
+            <Skeleton className="bg-card border-border/60 h-64 w-full rounded-xl border" />
           ) : (
             <CategoriesTable
               categories={categories}

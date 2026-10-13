@@ -13,7 +13,7 @@ export function calculateDashboardStats(
   activeStreams: number,
   bandwidthUsageGb: number,
   storageUsedGb: number,
-  monthlyGrowthPercent: number
+  monthlyGrowthPercent: number,
 ): DashboardStatsData {
   return {
     totalAnime,
@@ -41,8 +41,16 @@ export function mapToDashboardUser(u: any): UserProfile {
     joinDate: u.createdAt
       ? new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })
       : "Recently",
-    isVip: u.membershipTier === "vip" || u.membershipTier === "ultra_vip" || u.membershipTier === "vip_pro",
-    vipTier: u.membershipTier === "ultra_vip" ? "Ultra VIP" : u.membershipTier === "vip" || u.membershipTier === "vip_pro" ? "VIP Pro" : undefined,
+    isVip:
+      u.membershipTier === "vip" ||
+      u.membershipTier === "ultra_vip" ||
+      u.membershipTier === "vip_pro",
+    vipTier:
+      u.membershipTier === "ultra_vip"
+        ? "Ultra VIP"
+        : u.membershipTier === "vip" || u.membershipTier === "vip_pro"
+          ? "VIP Pro"
+          : undefined,
     bio: u.bio || "GoxStream community member.",
     stats: {
       animeCompleted: 0,
@@ -66,7 +74,9 @@ export function mapToDashboardCategory(g: any): CategoryItem {
     description: g.description || `Category for ${g.name} anime content.`,
     animeCount: g.animeCount || 0,
     isActive: g.isActive !== false,
-    updatedAt: g.updatedAt ? new Date(g.updatedAt).toLocaleDateString() : new Date().toLocaleDateString(),
+    updatedAt: g.updatedAt
+      ? new Date(g.updatedAt).toLocaleDateString()
+      : new Date().toLocaleDateString(),
   };
 }
 
@@ -82,7 +92,9 @@ export function calculateDashboardSeasons(animesList: any[]): SeasonItem[] {
 
   return Array.from(seasonMap.entries()).map(([name, animeCount], idx) => {
     const qStr = name.split(" ")[0].toUpperCase();
-    const quarter: SeasonQuarter = (["WINTER", "SPRING", "SUMMER", "FALL"].includes(qStr) ? qStr : "FALL") as SeasonQuarter;
+    const quarter: SeasonQuarter = (
+      ["WINTER", "SPRING", "SUMMER", "FALL"].includes(qStr) ? qStr : "FALL"
+    ) as SeasonQuarter;
     const year = parseInt(name.split(" ")[1]) || 2026;
     return {
       id: `season-${idx + 1}`,

@@ -20,35 +20,44 @@ export function EpisodeTitleNav({
   nextEpisode,
 }: EpisodeTitleNavProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
       <div>
-        <div className="flex items-center gap-2 flex-wrap mb-1.5">
+        <div className="mb-1.5 flex flex-wrap items-center gap-2">
           <Link
             href={`/anime/${anime.slug}`}
-            className="text-xs font-semibold text-primary hover:underline"
+            className="text-primary text-xs font-semibold hover:underline"
           >
             {anime.title}
           </Link>
           <span className="text-muted-foreground/60 text-xs">•</span>
-          <Badge variant="outline" className="text-xs py-0.5 px-2 rounded-md font-mono border-border/60 text-muted-foreground bg-muted/30">
+          <Badge
+            variant="outline"
+            className="border-border/60 text-muted-foreground bg-muted/30 rounded-md px-2 py-0.5 font-mono text-xs"
+          >
             Episode {episode.episodeNumber}
           </Badge>
           {episode.isSub && (
-            <Badge variant="secondary" className="text-[10px] py-0 px-1.5 rounded-sm bg-primary/10 text-primary border border-primary/20 dark:bg-primary/20">
+            <Badge
+              variant="secondary"
+              className="bg-primary/10 text-primary border-primary/20 dark:bg-primary/20 rounded-sm border px-1.5 py-0 text-[10px]"
+            >
               SUB
             </Badge>
           )}
           {episode.isDub && (
-            <Badge variant="secondary" className="text-[10px] py-0 px-1.5 rounded-sm bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <Badge
+              variant="secondary"
+              className="rounded-sm border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0 text-[10px] text-emerald-600 dark:text-emerald-400"
+            >
               DUB
             </Badge>
           )}
         </div>
 
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
+        <h1 className="text-foreground text-xl font-bold tracking-tight md:text-2xl">
           {episode.episodeTitle}
         </h1>
-        <p className="text-xs text-muted-foreground mt-1 font-medium">
+        <p className="text-muted-foreground mt-1 text-xs font-medium">
           Released {episode.releasedAt} • Duration: {episode.duration}
         </p>
       </div>
@@ -61,10 +70,11 @@ export function EpisodeTitleNav({
             className={buttonVariants({
               variant: "outline",
               size: "sm",
-              className: "h-9 px-3.5 rounded-lg border-border/60 text-xs font-medium text-foreground hover:bg-muted/60",
+              className:
+                "border-border/60 text-foreground hover:bg-muted/60 h-9 rounded-lg px-3.5 text-xs font-medium",
             })}
           >
-            <ChevronLeft className="w-4 h-4 mr-1 shrink-0" />
+            <ChevronLeft className="mr-1 h-4 w-4 shrink-0" />
             Previous Ep
           </Link>
         ) : (
@@ -72,9 +82,9 @@ export function EpisodeTitleNav({
             variant="outline"
             size="sm"
             disabled
-            className="h-9 px-3.5 rounded-lg border-border/60 text-xs font-medium text-muted-foreground opacity-50"
+            className="border-border/60 text-muted-foreground h-9 rounded-lg px-3.5 text-xs font-medium opacity-50"
           >
-            <ChevronLeft className="w-4 h-4 mr-1 shrink-0" />
+            <ChevronLeft className="mr-1 h-4 w-4 shrink-0" />
             Previous Ep
           </Button>
         )}
@@ -85,21 +95,22 @@ export function EpisodeTitleNav({
             className={buttonVariants({
               variant: "default",
               size: "sm",
-              className: "h-9 px-3.5 rounded-lg text-xs font-semibold shadow-xs bg-primary text-primary-foreground hover:bg-primary/90",
+              className:
+                "bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-lg px-3.5 text-xs font-semibold shadow-xs",
             })}
           >
             Next Ep
-            <ChevronRight className="w-4 h-4 ml-1 shrink-0" />
+            <ChevronRight className="ml-1 h-4 w-4 shrink-0" />
           </Link>
         ) : (
           <Button
             variant="outline"
             size="sm"
             disabled
-            className="h-9 px-3.5 rounded-lg border-border/60 text-xs font-medium text-muted-foreground opacity-50"
+            className="border-border/60 text-muted-foreground h-9 rounded-lg px-3.5 text-xs font-medium opacity-50"
           >
             Next Ep
-            <ChevronRight className="w-4 h-4 ml-1 shrink-0" />
+            <ChevronRight className="ml-1 h-4 w-4 shrink-0" />
           </Button>
         )}
       </div>

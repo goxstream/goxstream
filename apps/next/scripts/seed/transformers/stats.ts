@@ -4,7 +4,7 @@ export function generateScheduleAndStats(
   animeId: string,
   animeStatus: string,
   idx: number,
-  epToGenerate: number
+  epToGenerate: number,
 ) {
   let schedule: ScheduleSeedData | null = null;
 

@@ -33,7 +33,7 @@ export function TrendingGrid({
     }
 
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-5">
         {Array.from({ length: 10 }).map((_, i) => (
           <AnimeCard key={i} variant="grid" isLoading={true} />
         ))}
@@ -43,14 +43,14 @@ export function TrendingGrid({
 
   if (items.length === 0) {
     return (
-      <div className="text-center py-16 border border-dashed border-border rounded-xl space-y-3">
-        <p className="text-base font-semibold text-foreground">
+      <div className="border-border space-y-3 rounded-xl border border-dashed py-16 text-center">
+        <p className="text-foreground text-base font-semibold">
           No trending anime found for genre "{selectedGenre}".
         </p>
         <button
           onClick={onResetGenre}
           aria-label="Reset genre filter to view all trending anime"
-          className="text-xs text-primary font-bold hover:underline cursor-pointer"
+          className="text-primary cursor-pointer text-xs font-bold hover:underline"
         >
           Reset genre filter
         </button>
@@ -64,17 +64,12 @@ export function TrendingGrid({
     <div
       className={
         viewMode === "grid"
-          ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6"
+          ? "grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-5"
           : "space-y-3"
       }
     >
       {rankedItems.map((anime) => (
-        <TrendingItemCard
-          key={anime.id}
-          anime={anime}
-          period={period}
-          viewMode={viewMode}
-        />
+        <TrendingItemCard key={anime.id} anime={anime} period={period} viewMode={viewMode} />
       ))}
     </div>
   );

@@ -18,7 +18,10 @@ function timeAgo(date: Date): string {
  * Maps latest episodes and comments into a unified ActivityLogItem format.
  * Uses real uploader data from episode_uploads join and real guest email from comments.
  */
-export function mapToActivityLogItem(raw: { type: "episode" | "comment"; data: any }): ActivityLogItem {
+export function mapToActivityLogItem(raw: {
+  type: "episode" | "comment";
+  data: any;
+}): ActivityLogItem {
   if (raw.type === "episode") {
     const ep = raw.data;
     const uploader = ep.upload?.user;
@@ -44,7 +47,11 @@ export function mapToActivityLogItem(raw: { type: "episode" | "comment"; data: a
         avatar: c.user?.avatarUrl || "",
       },
       action: "Posted Comment",
-      target: c.content ? (c.content.length > 30 ? c.content.slice(0, 30) + "..." : c.content) : "Comment",
+      target: c.content
+        ? c.content.length > 30
+          ? c.content.slice(0, 30) + "..."
+          : c.content
+        : "Comment",
       timestamp: c.createdAt ? timeAgo(new Date(c.createdAt)) : "Recently",
       status: "completed",
     };
@@ -54,7 +61,9 @@ export function mapToActivityLogItem(raw: { type: "episode" | "comment"; data: a
 /**
  * Aggregates 24 hours of watch history data into 3-hour traffic blocks
  */
-export function mapToTrafficData(watchHistories: any[]): Array<{ time: string; activeStreams: number; bandwidthGbps: number }> {
+export function mapToTrafficData(
+  watchHistories: any[],
+): Array<{ time: string; activeStreams: number; bandwidthGbps: number }> {
   const intervals = [
     { time: "00:00", hourStart: 0, hourEnd: 3, activeStreams: 0, bandwidthGbps: 0 },
     { time: "03:00", hourStart: 3, hourEnd: 6, activeStreams: 0, bandwidthGbps: 0 },
@@ -94,9 +103,21 @@ export function mapToTrafficData(watchHistories: any[]): Array<{ time: string; a
 export function generateDynamicNotifications(
   latestEpisode: any,
   commentsCount: number,
-  usersCount: number
-): Array<{ id: string; title: string; description: string; time: string; type: "success" | "alert" | "info" }> {
-  const notifications: Array<{ id: string; title: string; description: string; time: string; type: "success" | "alert" | "info" }> = [];
+  usersCount: number,
+): Array<{
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  type: "success" | "alert" | "info";
+}> {
+  const notifications: Array<{
+    id: string;
+    title: string;
+    description: string;
+    time: string;
+    type: "success" | "alert" | "info";
+  }> = [];
 
   if (latestEpisode) {
     const uploader = latestEpisode.upload?.user;

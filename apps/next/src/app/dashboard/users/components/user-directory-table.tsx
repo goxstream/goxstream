@@ -38,15 +38,31 @@ export function UserDirectoryTable({
   const getRoleBadge = (role: UserAccount["role"]) => {
     switch (role) {
       case "super_admin":
-        return <Badge variant="secondary" className="border-border/60 bg-muted/60 text-xs">Super Admin</Badge>;
+        return (
+          <Badge variant="secondary" className="border-border/60 bg-muted/60 text-xs">
+            Super Admin
+          </Badge>
+        );
       case "admin":
-        return <Badge variant="secondary" className="border-border/60 text-xs">Admin</Badge>;
+        return (
+          <Badge variant="secondary" className="border-border/60 text-xs">
+            Admin
+          </Badge>
+        );
       case "content_manager":
-        return <Badge variant="outline" className="border-border/60 text-xs">Content Manager</Badge>;
+        return (
+          <Badge variant="outline" className="border-border/60 text-xs">
+            Content Manager
+          </Badge>
+        );
       case "moderator":
-        return <Badge variant="outline" className="border-border/60 text-xs">Moderator</Badge>;
+        return (
+          <Badge variant="outline" className="border-border/60 text-xs">
+            Moderator
+          </Badge>
+        );
       default:
-        return <span className="text-xs text-muted-foreground">Viewer</span>;
+        return <span className="text-muted-foreground text-xs">Viewer</span>;
     }
   };
 
@@ -54,21 +70,21 @@ export function UserDirectoryTable({
     switch (status) {
       case "active":
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground">
+          <span className="text-foreground inline-flex items-center gap-1.5 text-xs font-medium">
             <span className="size-1.5 rounded-full bg-emerald-500" />
             Active
           </span>
         );
       case "suspended":
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-destructive">
-            <span className="size-1.5 rounded-full bg-destructive" />
+          <span className="text-destructive inline-flex items-center gap-1.5 text-xs font-medium">
+            <span className="bg-destructive size-1.5 rounded-full" />
             Suspended
           </span>
         );
       case "pending":
         return (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+          <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs font-medium">
             <span className="size-1.5 rounded-full bg-amber-500" />
             Pending
           </span>
@@ -78,9 +94,9 @@ export function UserDirectoryTable({
 
   if (users.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-lg border border-border/60 bg-card p-12 text-center shadow-xs">
-        <p className="text-sm font-medium text-foreground">No users found</p>
-        <p className="mt-1 text-xs text-muted-foreground">
+      <div className="border-border/60 bg-card flex flex-col items-center justify-center rounded-lg border p-12 text-center shadow-xs">
+        <p className="text-foreground text-sm font-medium">No users found</p>
+        <p className="text-muted-foreground mt-1 text-xs">
           Try adjusting your search terms or active filters.
         </p>
       </div>
@@ -88,16 +104,18 @@ export function UserDirectoryTable({
   }
 
   return (
-    <div className="rounded-lg border border-border/60 bg-card shadow-xs overflow-hidden">
+    <div className="border-border/60 bg-card overflow-hidden rounded-lg border shadow-xs">
       <Table>
         <TableHeader>
           <TableRow className="border-border/60 bg-muted/30 hover:bg-muted/30">
-            <TableHead className="text-xs font-semibold text-foreground">User / Audience</TableHead>
-            <TableHead className="text-xs font-semibold text-foreground">Role</TableHead>
-            <TableHead className="text-xs font-semibold text-foreground">Tier</TableHead>
-            <TableHead className="text-xs font-semibold text-foreground">Status</TableHead>
-            <TableHead className="text-xs font-semibold text-foreground">Last Active</TableHead>
-            <TableHead className="w-[60px] text-right text-xs font-semibold text-foreground">Actions</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">User / Audience</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">Role</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">Tier</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">Status</TableHead>
+            <TableHead className="text-foreground text-xs font-semibold">Last Active</TableHead>
+            <TableHead className="text-foreground w-[60px] text-right text-xs font-semibold">
+              Actions
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -114,13 +132,13 @@ export function UserDirectoryTable({
                 {/* User column */}
                 <TableCell className="py-3">
                   <div className="flex items-center gap-3">
-                    <Avatar className="size-9 border border-border/60">
+                    <Avatar className="border-border/60 size-9 border">
                       <AvatarImage src={user.avatar} alt={user.name} />
                       <AvatarFallback className="text-xs">{initials}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="text-xs font-semibold text-foreground">{user.name}</span>
-                      <span className="text-[11px] text-muted-foreground">
+                      <span className="text-foreground text-xs font-semibold">{user.name}</span>
+                      <span className="text-muted-foreground text-[11px]">
                         @{user.username} • {user.email}
                       </span>
                     </div>
@@ -133,12 +151,15 @@ export function UserDirectoryTable({
                 {/* Tier column */}
                 <TableCell className="py-3">
                   {user.membershipTier === "vip_pro" ? (
-                    <Badge variant="outline" className="gap-1 border-amber-500/30 bg-amber-500/10 text-amber-500 text-[10px] font-medium">
+                    <Badge
+                      variant="outline"
+                      className="gap-1 border-amber-500/30 bg-amber-500/10 text-[10px] font-medium text-amber-500"
+                    >
                       <Crown className="size-3" />
                       <span>VIP Pro</span>
                     </Badge>
                   ) : (
-                    <span className="text-xs text-muted-foreground">Free Tier</span>
+                    <span className="text-muted-foreground text-xs">Free Tier</span>
                   )}
                 </TableCell>
 
@@ -146,7 +167,7 @@ export function UserDirectoryTable({
                 <TableCell className="py-3">{getStatusBadge(user.status)}</TableCell>
 
                 {/* Last active column */}
-                <TableCell className="py-3 text-xs text-muted-foreground">
+                <TableCell className="text-muted-foreground py-3 text-xs">
                   {new Date(user.lastActiveAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
@@ -163,25 +184,25 @@ export function UserDirectoryTable({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-[160px]">
-                      <DropdownMenuLabel className="text-[11px] font-normal text-muted-foreground">
+                      <DropdownMenuLabel className="text-muted-foreground text-[11px] font-normal">
                         Actions
                       </DropdownMenuLabel>
                       <DropdownMenuItem
-                        className="text-xs gap-2 cursor-pointer"
+                        className="cursor-pointer gap-2 text-xs"
                         onClick={() => onSelectUser(user)}
                       >
                         <Eye className="size-3.5" />
                         <span>View Details</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-xs gap-2 cursor-pointer"
+                        className="cursor-pointer gap-2 text-xs"
                         onClick={() => onEditUser(user)}
                       >
                         <Edit className="size-3.5" />
                         <span>Edit Profile</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-xs gap-2 cursor-pointer"
+                        className="cursor-pointer gap-2 text-xs"
                         onClick={() => alert(`Reset password email sent to ${user.email}`)}
                       >
                         <KeyRound className="size-3.5" />
@@ -189,11 +210,13 @@ export function UserDirectoryTable({
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        className="text-xs gap-2 text-destructive cursor-pointer"
+                        className="text-destructive cursor-pointer gap-2 text-xs"
                         onClick={() => onToggleStatus(user.id)}
                       >
                         <ShieldAlert className="size-3.5" />
-                        <span>{user.status === "suspended" ? "Unsuspend Account" : "Suspend Account"}</span>
+                        <span>
+                          {user.status === "suspended" ? "Unsuspend Account" : "Suspend Account"}
+                        </span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

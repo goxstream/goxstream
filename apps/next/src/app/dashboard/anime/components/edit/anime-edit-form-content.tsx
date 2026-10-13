@@ -11,10 +11,7 @@ interface AnimeEditFormContentProps {
   onSave: (updated: AnimeItem) => void;
 }
 
-export function AnimeEditFormContent({
-  anime,
-  onSave,
-}: AnimeEditFormContentProps) {
+export function AnimeEditFormContent({ anime, onSave }: AnimeEditFormContentProps) {
   const [titleRomaji, setTitleRomaji] = useState(anime.titleRomaji);
   const [titleEnglish, setTitleEnglish] = useState(anime.titleEnglish);
   const [synopsis, setSynopsis] = useState(anime.synopsis);
@@ -30,7 +27,7 @@ export function AnimeEditFormContent({
 
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
-      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre],
     );
   };
 
@@ -46,7 +43,10 @@ export function AnimeEditFormContent({
       rating: Number(rating),
       season: { year: Number(seasonYear), season: seasonName },
       coverImage,
-      studios: studiosStr.split(",").map((s) => s.trim()).filter(Boolean),
+      studios: studiosStr
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
       genres: selectedGenres,
       updatedAt: new Date().toISOString(),
     });
@@ -54,14 +54,14 @@ export function AnimeEditFormContent({
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
         <InlineEditPoster
           titleRomaji={titleRomaji}
           coverImage={coverImage}
           setCoverImage={setCoverImage}
         />
 
-        <div className="md:col-span-9 space-y-3">
+        <div className="space-y-3 md:col-span-9">
           <InlineEditDetails
             titleRomaji={titleRomaji}
             setTitleRomaji={setTitleRomaji}

@@ -34,13 +34,13 @@ export function ActiveFiltersBar({
   };
 
   return (
-    <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border/40">
-      <span className="text-xs font-semibold text-muted-foreground">Active:</span>
+    <div className="border-border/40 flex flex-wrap items-center gap-2 border-t pt-2">
+      <span className="text-muted-foreground text-xs font-semibold">Active:</span>
 
       {query && (
         <Badge
           variant="secondary"
-          className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium px-2.5 py-1 flex items-center gap-1.5 rounded-lg"
+          className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium"
         >
           <span>Search: &quot;{query}&quot;</span>
           <button
@@ -59,7 +59,7 @@ export function ActiveFiltersBar({
         <Badge
           key={singleGenre}
           variant="secondary"
-          className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium px-2.5 py-1 flex items-center gap-1.5 rounded-lg"
+          className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium"
         >
           <span>Genre: {singleGenre}</span>
           <button
@@ -76,7 +76,7 @@ export function ActiveFiltersBar({
       {status !== "All" && (
         <Badge
           variant="secondary"
-          className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium px-2.5 py-1 flex items-center gap-1.5 rounded-lg"
+          className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium"
         >
           <span>Status: {status}</span>
           <button
@@ -93,7 +93,7 @@ export function ActiveFiltersBar({
       {format !== "All" && (
         <Badge
           variant="secondary"
-          className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium px-2.5 py-1 flex items-center gap-1.5 rounded-lg"
+          className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium"
         >
           <span>Type: {format}</span>
           <button
@@ -110,7 +110,7 @@ export function ActiveFiltersBar({
       {audio !== "All" && (
         <Badge
           variant="secondary"
-          className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium px-2.5 py-1 flex items-center gap-1.5 rounded-lg"
+          className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium"
         >
           <span>Audio: {audio}</span>
           <button
@@ -127,7 +127,7 @@ export function ActiveFiltersBar({
       {season !== "All" && (
         <Badge
           variant="secondary"
-          className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium px-2.5 py-1 flex items-center gap-1.5 rounded-lg"
+          className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium"
         >
           <span>Season: {season}</span>
           <button
@@ -144,7 +144,7 @@ export function ActiveFiltersBar({
       {year !== "All" && (
         <Badge
           variant="secondary"
-          className="bg-primary/10 text-primary border border-primary/20 text-xs font-medium px-2.5 py-1 flex items-center gap-1.5 rounded-lg"
+          className="bg-primary/10 text-primary border-primary/20 flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium"
         >
           <span>Year: {year}</span>
           <button
@@ -162,7 +162,7 @@ export function ActiveFiltersBar({
         variant="ghost"
         size="sm"
         onClick={onResetFilters}
-        className="h-7 px-2 text-xs text-muted-foreground hover:text-destructive flex items-center gap-1 ml-auto font-medium"
+        className="text-muted-foreground hover:text-destructive ml-auto flex h-7 items-center gap-1 px-2 text-xs font-medium"
       >
         <RotateCcw className="size-3" />
         Reset All ({activeFiltersCount})

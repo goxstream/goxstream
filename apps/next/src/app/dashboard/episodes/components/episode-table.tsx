@@ -43,13 +43,29 @@ interface EpisodeTableProps {
 function renderStatusBadge(status: EpisodeStatus) {
   switch (status) {
     case "published":
-      return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-normal">Published</Badge>;
+      return (
+        <Badge className="border-emerald-500/20 bg-emerald-500/10 font-normal text-emerald-500">
+          Published
+        </Badge>
+      );
     case "scheduled":
-      return <Badge className="bg-sky-500/10 text-sky-500 border-sky-500/20 font-normal">Scheduled</Badge>;
+      return (
+        <Badge className="border-sky-500/20 bg-sky-500/10 font-normal text-sky-500">
+          Scheduled
+        </Badge>
+      );
     case "draft":
-      return <Badge variant="secondary" className="font-normal">Draft</Badge>;
+      return (
+        <Badge variant="secondary" className="font-normal">
+          Draft
+        </Badge>
+      );
     case "processing":
-      return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 font-normal">Processing</Badge>;
+      return (
+        <Badge className="border-amber-500/20 bg-amber-500/10 font-normal text-amber-500">
+          Processing
+        </Badge>
+      );
     default:
       return <Badge variant="outline">{status}</Badge>;
   }
@@ -58,21 +74,21 @@ function renderStatusBadge(status: EpisodeStatus) {
 function renderServerHealthIcon(health: ServerHealth) {
   switch (health) {
     case "online":
-      return <CheckCircle className="size-3.5 text-emerald-500 inline mr-1" />;
+      return <CheckCircle className="mr-1 inline size-3.5 text-emerald-500" />;
     case "degraded":
-      return <AlertCircle className="size-3.5 text-amber-500 inline mr-1" />;
+      return <AlertCircle className="mr-1 inline size-3.5 text-amber-500" />;
     case "offline":
-      return <XCircle className="size-3.5 text-destructive inline mr-1" />;
+      return <XCircle className="text-destructive mr-1 inline size-3.5" />;
   }
 }
 
 export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProps) {
   if (episodes.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center bg-card border border-border/60 rounded-xl">
-        <Server className="size-12 text-muted-foreground/50 mb-3" />
-        <h3 className="text-lg font-semibold text-foreground">No episodes found</h3>
-        <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+      <div className="bg-card border-border/60 flex flex-col items-center justify-center rounded-xl border p-12 text-center">
+        <Server className="text-muted-foreground/50 mb-3 size-12" />
+        <h3 className="text-foreground text-lg font-semibold">No episodes found</h3>
+        <p className="text-muted-foreground mt-1 max-w-sm text-sm">
           Try adjusting your search filter or add a new episode to your catalog.
         </p>
       </div>
@@ -80,7 +96,7 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
   }
 
   return (
-    <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+    <div className="border-border/60 bg-card overflow-hidden rounded-xl border">
       <Table>
         <TableHeader>
           <TableRow className="border-border/60 hover:bg-transparent">
@@ -98,14 +114,12 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
           {episodes.map((ep) => (
             <TableRow key={ep.id} className="border-border/60 hover:bg-muted/40">
               {/* Ep Number */}
-              <TableCell className="font-bold text-foreground">
-                #{ep.episodeNumber}
-              </TableCell>
+              <TableCell className="text-foreground font-bold">#{ep.episodeNumber}</TableCell>
 
               {/* Episode Info */}
               <TableCell>
                 <div className="flex items-center gap-3">
-                  <div className="relative size-14 rounded-lg overflow-hidden shrink-0 bg-muted border border-border/60 group">
+                  <div className="bg-muted border-border/60 group relative size-14 shrink-0 overflow-hidden rounded-lg border">
                     <Image
                       src={ep.thumbnail}
                       alt={ep.title}
@@ -115,24 +129,22 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
                     />
                     <button
                       onClick={() => onPreview(ep)}
-                      className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100"
                       title="Preview Episode"
                     >
-                      <Play className="size-5 text-white fill-white" />
+                      <Play className="size-5 fill-white text-white" />
                     </button>
                     {ep.isVip && (
-                      <span className="absolute top-1 left-1 bg-amber-500 text-black p-0.5 rounded text-[10px] font-bold">
-                        <Lock className="size-2.5 inline" />
+                      <span className="absolute top-1 left-1 rounded bg-amber-500 p-0.5 text-[10px] font-bold text-black">
+                        <Lock className="inline size-2.5" />
                       </span>
                     )}
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-semibold text-foreground line-clamp-1">
-                        {ep.title}
-                      </span>
+                      <span className="text-foreground line-clamp-1 font-semibold">{ep.title}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                    <div className="text-muted-foreground mt-1 flex items-center gap-2 text-xs">
                       <span>{ep.duration}</span>
                       <span>•</span>
                       <span>Aired: {ep.airDate}</span>
@@ -142,7 +154,7 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
               </TableCell>
 
               {/* Anime Title */}
-              <TableCell className="text-sm font-medium text-muted-foreground line-clamp-1 max-w-[200px]">
+              <TableCell className="text-muted-foreground line-clamp-1 max-w-[200px] text-sm font-medium">
                 {ep.animeTitle}
               </TableCell>
 
@@ -155,7 +167,7 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
                   {ep.servers.map((srv) => (
                     <span
                       key={srv.id}
-                      className="inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border/40"
+                      className="bg-muted text-muted-foreground border-border/40 inline-flex items-center rounded border px-2 py-0.5"
                       title={`${srv.name} (${srv.quality}) - ${srv.health}`}
                     >
                       {renderServerHealthIcon(srv.health)}
@@ -163,7 +175,7 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
                     </span>
                   ))}
                   {ep.servers.length === 0 && (
-                    <span className="text-xs text-destructive flex items-center gap-1">
+                    <span className="text-destructive flex items-center gap-1 text-xs">
                       <XCircle className="size-3.5" /> No servers
                     </span>
                   )}
@@ -172,8 +184,8 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
 
               {/* Subtitles */}
               <TableCell>
-                <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Globe className="size-3.5 text-primary" />
+                <div className="text-muted-foreground flex items-center gap-1 text-xs">
+                  <Globe className="text-primary size-3.5" />
                   <span>
                     {ep.subtitles.length > 0
                       ? ep.subtitles.map((s) => s.code.toUpperCase()).join(", ")
@@ -183,7 +195,7 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
               </TableCell>
 
               {/* Views */}
-              <TableCell className="text-right font-medium text-foreground text-sm">
+              <TableCell className="text-foreground text-right text-sm font-medium">
                 {ep.viewsCount.toLocaleString()}
               </TableCell>
 
@@ -198,12 +210,12 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuLabel>Episode Actions</DropdownMenuLabel>
                     <DropdownMenuItem onClick={() => onPreview(ep)}>
-                      <Play className="size-4 mr-2 text-primary" />
+                      <Play className="text-primary mr-2 size-4" />
                       Quick Preview
                     </DropdownMenuItem>
                     <Link href={`/dashboard/episodes/${ep.id}/edit`}>
                       <DropdownMenuItem>
-                        <Edit className="size-4 mr-2" />
+                        <Edit className="mr-2 size-4" />
                         Edit Details
                       </DropdownMenuItem>
                     </Link>
@@ -212,7 +224,7 @@ export function EpisodeTable({ episodes, onPreview, onDelete }: EpisodeTableProp
                       onClick={() => onDelete(ep.id)}
                       className="text-destructive focus:text-destructive"
                     >
-                      <Trash2 className="size-4 mr-2" />
+                      <Trash2 className="mr-2 size-4" />
                       Delete Episode
                     </DropdownMenuItem>
                   </DropdownMenuContent>

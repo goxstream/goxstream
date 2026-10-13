@@ -20,7 +20,7 @@ import type {
 export async function transcodeVideoToHls(
   input: File | MultiResolutionInputFiles,
   onProgressCallback?: (p: TranscodeProgress) => void,
-  onLogCallback?: (entry: TranscodeLogEntry) => void
+  onLogCallback?: (entry: TranscodeLogEntry) => void,
 ): Promise<HlsTranscodeResult> {
   let currentStageId: PipelineStageId = "init";
 
@@ -34,7 +34,8 @@ export async function transcodeVideoToHls(
       id: `log-${Date.now()}-copy`,
       timestamp: new Date().toLocaleTimeString("en-US", { hour12: false }),
       type: "info",
-      message: "[Stream Copy Pipeline] Executing 100% Fast Stream Copy (-c copy) for 4 resolutions without CPU re-encoding.",
+      message:
+        "[Stream Copy Pipeline] Executing 100% Fast Stream Copy (-c copy) for 4 resolutions without CPU re-encoding.",
     });
   }
 
@@ -80,24 +81,39 @@ export async function transcodeVideoToHls(
     const input1080Name = "input_1080p_" + Date.now() + ".mp4";
 
     if (onProgressCallback) {
-      onProgressCallback({ progress: 20, message: `Mounting 1080p Master (${file1080.name}) into VFS...`, stageId: "1080p" });
+      onProgressCallback({
+        progress: 20,
+        message: `Mounting 1080p Master (${file1080.name}) into VFS...`,
+        stageId: "1080p",
+      });
     }
 
     const data1080 = await fetchFile(file1080);
     await ffmpeg.writeFile(input1080Name, data1080);
 
     if (onProgressCallback) {
-      onProgressCallback({ progress: 30, message: "Stream Copying 1080p to HLS segments...", stageId: "1080p" });
+      onProgressCallback({
+        progress: 30,
+        message: "Stream Copying 1080p to HLS segments...",
+        stageId: "1080p",
+      });
     }
 
     await ffmpeg.exec([
-      "-i", input1080Name,
-      "-c:v", "copy",
-      "-c:a", "copy",
-      "-start_number", "0",
-      "-hls_time", "10",
-      "-hls_list_size", "0",
-      "-f", "hls",
+      "-i",
+      input1080Name,
+      "-c:v",
+      "copy",
+      "-c:a",
+      "copy",
+      "-start_number",
+      "0",
+      "-hls_time",
+      "10",
+      "-hls_list_size",
+      "0",
+      "-f",
+      "hls",
       "1080p.m3u8",
     ]);
 
@@ -120,24 +136,39 @@ export async function transcodeVideoToHls(
       const input720Name = "input_720p_" + Date.now() + ".mp4";
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 45, message: `Mounting 720p Source (${file720.name}) into VFS...`, stageId: "720p" });
+        onProgressCallback({
+          progress: 45,
+          message: `Mounting 720p Source (${file720.name}) into VFS...`,
+          stageId: "720p",
+        });
       }
 
       const data720 = await fetchFile(file720);
       await ffmpeg.writeFile(input720Name, data720);
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 55, message: "Stream Copying 720p to HLS segments...", stageId: "720p" });
+        onProgressCallback({
+          progress: 55,
+          message: "Stream Copying 720p to HLS segments...",
+          stageId: "720p",
+        });
       }
 
       await ffmpeg.exec([
-        "-i", input720Name,
-        "-c:v", "copy",
-        "-c:a", "copy",
-        "-start_number", "0",
-        "-hls_time", "10",
-        "-hls_list_size", "0",
-        "-f", "hls",
+        "-i",
+        input720Name,
+        "-c:v",
+        "copy",
+        "-c:a",
+        "copy",
+        "-start_number",
+        "0",
+        "-hls_time",
+        "10",
+        "-hls_list_size",
+        "0",
+        "-f",
+        "hls",
         "720p.m3u8",
       ]);
 
@@ -161,24 +192,39 @@ export async function transcodeVideoToHls(
       const input480Name = "input_480p_" + Date.now() + ".mp4";
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 65, message: `Mounting 480p Source (${file480.name}) into VFS...`, stageId: "480p" });
+        onProgressCallback({
+          progress: 65,
+          message: `Mounting 480p Source (${file480.name}) into VFS...`,
+          stageId: "480p",
+        });
       }
 
       const data480 = await fetchFile(file480);
       await ffmpeg.writeFile(input480Name, data480);
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 75, message: "Stream Copying 480p to HLS segments...", stageId: "480p" });
+        onProgressCallback({
+          progress: 75,
+          message: "Stream Copying 480p to HLS segments...",
+          stageId: "480p",
+        });
       }
 
       await ffmpeg.exec([
-        "-i", input480Name,
-        "-c:v", "copy",
-        "-c:a", "copy",
-        "-start_number", "0",
-        "-hls_time", "10",
-        "-hls_list_size", "0",
-        "-f", "hls",
+        "-i",
+        input480Name,
+        "-c:v",
+        "copy",
+        "-c:a",
+        "copy",
+        "-start_number",
+        "0",
+        "-hls_time",
+        "10",
+        "-hls_list_size",
+        "0",
+        "-f",
+        "hls",
         "480p.m3u8",
       ]);
 
@@ -202,24 +248,39 @@ export async function transcodeVideoToHls(
       const input360Name = "input_360p_" + Date.now() + ".mp4";
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 85, message: `Mounting 360p Mobile Source (${file360.name}) into VFS...`, stageId: "360p" });
+        onProgressCallback({
+          progress: 85,
+          message: `Mounting 360p Mobile Source (${file360.name}) into VFS...`,
+          stageId: "360p",
+        });
       }
 
       const data360 = await fetchFile(file360);
       await ffmpeg.writeFile(input360Name, data360);
 
       if (onProgressCallback) {
-        onProgressCallback({ progress: 90, message: "Stream Copying 360p to HLS segments...", stageId: "360p" });
+        onProgressCallback({
+          progress: 90,
+          message: "Stream Copying 360p to HLS segments...",
+          stageId: "360p",
+        });
       }
 
       await ffmpeg.exec([
-        "-i", input360Name,
-        "-c:v", "copy",
-        "-c:a", "copy",
-        "-start_number", "0",
-        "-hls_time", "10",
-        "-hls_list_size", "0",
-        "-f", "hls",
+        "-i",
+        input360Name,
+        "-c:v",
+        "copy",
+        "-c:a",
+        "copy",
+        "-start_number",
+        "0",
+        "-hls_time",
+        "10",
+        "-hls_list_size",
+        "0",
+        "-f",
+        "hls",
         "360p.m3u8",
       ]);
 
@@ -253,38 +314,34 @@ export async function transcodeVideoToHls(
     }
 
     // 6. Generate Master Playlist index (master.m3u8) dynamically based on active variants
-    const masterLines: string[] = [
-      "#EXTM3U",
-      "#EXT-X-VERSION:3",
-      "",
-    ];
+    const masterLines: string[] = ["#EXTM3U", "#EXT-X-VERSION:3", ""];
 
     if (variants.some((v) => v.resolution === "1080p")) {
       masterLines.push(
         '#EXT-X-STREAM-INF:BANDWIDTH=5000000,RESOLUTION=1920x1080,NAME="1080p"',
         "1080p.m3u8",
-        ""
+        "",
       );
     }
     if (variants.some((v) => v.resolution === "720p")) {
       masterLines.push(
         '#EXT-X-STREAM-INF:BANDWIDTH=2800000,RESOLUTION=1280x720,NAME="720p"',
         "720p.m3u8",
-        ""
+        "",
       );
     }
     if (variants.some((v) => v.resolution === "480p")) {
       masterLines.push(
         '#EXT-X-STREAM-INF:BANDWIDTH=1400000,RESOLUTION=854x480,NAME="480p"',
         "480p.m3u8",
-        ""
+        "",
       );
     }
     if (variants.some((v) => v.resolution === "360p")) {
       masterLines.push(
         '#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360,NAME="360p"',
         "360p.m3u8",
-        ""
+        "",
       );
     }
 
@@ -294,7 +351,10 @@ export async function transcodeVideoToHls(
     });
 
     if (onProgressCallback) {
-      onProgressCallback({ progress: 100, message: "Instant Multi-Resolution HLS Packaging Complete!" });
+      onProgressCallback({
+        progress: 100,
+        message: "Instant Multi-Resolution HLS Packaging Complete!",
+      });
     }
 
     return {

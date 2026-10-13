@@ -1,3 +1,3 @@
 export interface ActivateFormData {
-  code: string
+  code: string;
 }

@@ -1,4 +1,11 @@
-import type { VideoServerSource, SubtitleTrack, AudioTrack, EpisodeStatus, ServerType, QualityUrls } from "../types";
+import type {
+  VideoServerSource,
+  SubtitleTrack,
+  AudioTrack,
+  EpisodeStatus,
+  ServerType,
+  QualityUrls,
+} from "../types";
 
 export interface BasicEpisodeData {
   animeId: string;
@@ -34,4 +41,11 @@ export interface EpisodeFormContextType {
   handleSave: () => void;
 }
 
-export type { VideoServerSource, SubtitleTrack, AudioTrack, EpisodeStatus, ServerType, QualityUrls };
+export type {
+  VideoServerSource,
+  SubtitleTrack,
+  AudioTrack,
+  EpisodeStatus,
+  ServerType,
+  QualityUrls,
+};

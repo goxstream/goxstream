@@ -27,7 +27,10 @@ export function BaseGenreMultiSelectCombobox({
   // Parse comma-separated value into array of selected genres
   const selectedGenres = useMemo(() => {
     if (!value || value === "All") return [];
-    return value.split(",").map((g) => g.trim()).filter(Boolean);
+    return value
+      .split(",")
+      .map((g) => g.trim())
+      .filter(Boolean);
   }, [value]);
 
   // Filterable genres list (excluding 'All' from search options)
@@ -70,13 +73,13 @@ export function BaseGenreMultiSelectCombobox({
   };
 
   return (
-    <div className="w-full flex flex-col gap-1.5">
-      <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+    <div className="flex w-full flex-col gap-1.5">
+      <label className="text-muted-foreground text-[11px] font-bold tracking-wider uppercase">
         Genres
       </label>
 
       <Combobox>
-        <div ref={inputContainerRef} className="w-full relative">
+        <div ref={inputContainerRef} className="relative w-full">
           <ComboboxInput
             value={query}
             onInput={(e: React.FormEvent<HTMLInputElement>) => {
@@ -85,8 +88,8 @@ export function BaseGenreMultiSelectCombobox({
             placeholder={placeholderText}
             showTrigger
             className={cn(
-              "w-full h-10 text-xs font-medium bg-card rounded-xl border border-border/80 shadow-xs focus-within:border-primary/50 transition-colors",
-              className
+              "bg-card border-border/80 focus-within:border-primary/50 h-10 w-full rounded-xl border text-xs font-medium shadow-xs transition-colors",
+              className,
             )}
           />
         </div>
@@ -96,11 +99,11 @@ export function BaseGenreMultiSelectCombobox({
           sideOffset={6}
           align="start"
           className={cn(
-            "!w-[var(--anchor-width)] !min-w-[var(--anchor-width)] !max-w-[var(--anchor-width)] z-50 bg-popover border border-border/60 shadow-md rounded-xl p-1",
-            contentClassName
+            "bg-popover border-border/60 z-50 !w-[var(--anchor-width)] !max-w-[var(--anchor-width)] !min-w-[var(--anchor-width)] rounded-xl border p-1 shadow-md",
+            contentClassName,
           )}
         >
-          <ComboboxList className="max-h-56 no-scrollbar">
+          <ComboboxList className="no-scrollbar max-h-56">
             {/* 'All Genres' Reset Option */}
             <ComboboxItem
               value="All"
@@ -108,16 +111,14 @@ export function BaseGenreMultiSelectCombobox({
                 onValueChange("All");
                 setQuery("");
               }}
-              className="text-xs py-2 px-2.5 rounded-lg cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground font-medium flex items-center justify-between"
+              className="hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium transition-colors"
             >
               <span>All Genres</span>
-              {selectedGenres.length === 0 && (
-                <Check className="size-3.5 text-primary shrink-0" />
-              )}
+              {selectedGenres.length === 0 && <Check className="text-primary size-3.5 shrink-0" />}
             </ComboboxItem>
 
             {filteredGenres.length === 0 ? (
-              <ComboboxEmpty className="text-xs py-3 px-2 text-center text-muted-foreground">
+              <ComboboxEmpty className="text-muted-foreground px-2 py-3 text-center text-xs">
                 No genre found
               </ComboboxEmpty>
             ) : (
@@ -129,14 +130,12 @@ export function BaseGenreMultiSelectCombobox({
                     value={genre}
                     onClick={() => toggleGenre(genre)}
                     className={cn(
-                      "text-xs py-2 px-2.5 rounded-lg cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground font-medium flex items-center justify-between",
-                      isSelected && "bg-primary/10 text-primary"
+                      "hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium transition-colors",
+                      isSelected && "bg-primary/10 text-primary",
                     )}
                   >
                     <span>{genre}</span>
-                    {isSelected && (
-                      <Check className="size-3.5 text-primary shrink-0" />
-                    )}
+                    {isSelected && <Check className="text-primary size-3.5 shrink-0" />}
                   </ComboboxItem>
                 );
               })

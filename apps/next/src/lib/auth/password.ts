@@ -30,13 +30,9 @@ export async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
   const passwordBuffer = encoder.encode(password);
 
-  const baseKey = await crypto.subtle.importKey(
-    "raw",
-    passwordBuffer,
-    { name: "PBKDF2" },
-    false,
-    ["deriveBits"]
-  );
+  const baseKey = await crypto.subtle.importKey("raw", passwordBuffer, { name: "PBKDF2" }, false, [
+    "deriveBits",
+  ]);
 
   const derivedBits = await crypto.subtle.deriveBits(
     {
@@ -46,7 +42,7 @@ export async function hashPassword(password: string): Promise<string> {
       hash: ALGORITHM,
     },
     baseKey,
-    KEY_LEN * 8
+    KEY_LEN * 8,
   );
 
   const saltHex = bufferToHex(salt.buffer);
@@ -67,13 +63,9 @@ export async function verifyPassword(password: string, storedHash: string): Prom
   const encoder = new TextEncoder();
   const passwordBuffer = encoder.encode(password);
 
-  const baseKey = await crypto.subtle.importKey(
-    "raw",
-    passwordBuffer,
-    { name: "PBKDF2" },
-    false,
-    ["deriveBits"]
-  );
+  const baseKey = await crypto.subtle.importKey("raw", passwordBuffer, { name: "PBKDF2" }, false, [
+    "deriveBits",
+  ]);
 
   const derivedBits = await crypto.subtle.deriveBits(
     {
@@ -83,7 +75,7 @@ export async function verifyPassword(password: string, storedHash: string): Prom
       hash: ALGORITHM,
     },
     baseKey,
-    KEY_LEN * 8
+    KEY_LEN * 8,
   );
 
   const derivedHashHex = bufferToHex(derivedBits);

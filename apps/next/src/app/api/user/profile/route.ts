@@ -11,7 +11,7 @@ export async function GET() {
 
     const [profile, activity] = await Promise.all([
       getCurrentUserProfile().catch(() => null),
-      getCurrentUserActivity(userSession.id).catch(() => ({ watchlist: [], history: [] }))
+      getCurrentUserActivity(userSession.id).catch(() => ({ watchlist: [], history: [] })),
     ]);
 
     if (!profile) {
@@ -24,7 +24,7 @@ export async function GET() {
         headers: {
           "Cache-Control": "private, no-cache, no-store, must-revalidate",
         },
-      }
+      },
     );
   } catch (error) {
     console.error("[Profile API Error]", error);

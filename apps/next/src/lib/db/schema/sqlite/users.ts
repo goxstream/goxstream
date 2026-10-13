@@ -2,7 +2,9 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 
 export const users = sqliteTable("users", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
@@ -10,9 +12,15 @@ export const users = sqliteTable("users", {
   avatarUrl: text("avatar_url"),
   bannerUrl: text("banner_url"),
   bio: text("bio"),
-  role: text("role").notNull().$default(() => "user"),
-  status: text("status").notNull().$default(() => "active"),
-  membershipTier: text("membership_tier").notNull().$default(() => "free"),
+  role: text("role")
+    .notNull()
+    .$default(() => "user"),
+  status: text("status")
+    .notNull()
+    .$default(() => "active"),
+  membershipTier: text("membership_tier")
+    .notNull()
+    .$default(() => "free"),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
@@ -26,15 +34,33 @@ export const userSettings = sqliteTable("user_settings", {
   userId: text("user_id")
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
-  defaultQuality: text("default_quality").notNull().$default(() => "1080p"),
-  defaultSubtitle: text("default_subtitle").notNull().$default(() => "indonesia"),
-  autoPlayNext: integer("auto_play_next", { mode: "boolean" }).notNull().$default(() => true),
-  autoSkipIntro: integer("auto_skip_intro", { mode: "boolean" }).notNull().$default(() => false),
-  preferredAudio: text("preferred_audio").notNull().$default(() => "japanese"),
-  newEpisodeAlerts: integer("new_episode_alerts", { mode: "boolean" }).notNull().$default(() => true),
-  watchlistUpdates: integer("watchlist_updates", { mode: "boolean" }).notNull().$default(() => true),
-  marketingEmails: integer("marketing_emails", { mode: "boolean" }).notNull().$default(() => false),
-  publicWatchlist: integer("public_watchlist", { mode: "boolean" }).notNull().$default(() => true),
+  defaultQuality: text("default_quality")
+    .notNull()
+    .$default(() => "1080p"),
+  defaultSubtitle: text("default_subtitle")
+    .notNull()
+    .$default(() => "indonesia"),
+  autoPlayNext: integer("auto_play_next", { mode: "boolean" })
+    .notNull()
+    .$default(() => true),
+  autoSkipIntro: integer("auto_skip_intro", { mode: "boolean" })
+    .notNull()
+    .$default(() => false),
+  preferredAudio: text("preferred_audio")
+    .notNull()
+    .$default(() => "japanese"),
+  newEpisodeAlerts: integer("new_episode_alerts", { mode: "boolean" })
+    .notNull()
+    .$default(() => true),
+  watchlistUpdates: integer("watchlist_updates", { mode: "boolean" })
+    .notNull()
+    .$default(() => true),
+  marketingEmails: integer("marketing_emails", { mode: "boolean" })
+    .notNull()
+    .$default(() => false),
+  publicWatchlist: integer("public_watchlist", { mode: "boolean" })
+    .notNull()
+    .$default(() => true),
 });
 
 export const sessions = sqliteTable("sessions", {

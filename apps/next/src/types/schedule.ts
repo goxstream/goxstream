@@ -1,15 +1,9 @@
 export type DayOfWeek =
-  | 'monday'
-  | 'tuesday'
-  | 'wednesday'
-  | 'thursday'
-  | 'friday'
-  | 'saturday'
-  | 'sunday';
+  "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 
-export type AiringStatus = 'airing_now' | 'upcoming' | 'aired';
+export type AiringStatus = "airing_now" | "upcoming" | "aired";
 
-export type ScheduleViewMode = 'timeline' | 'grid';
+export type ScheduleViewMode = "timeline" | "grid";
 
 export interface ScheduleItem {
   id: string;
@@ -27,7 +21,7 @@ export interface ScheduleItem {
   genres: string[];
   rating: number;
   studio: string;
-  subOrDub: 'SUB' | 'DUB' | 'SUB & DUB';
+  subOrDub: "SUB" | "DUB" | "SUB & DUB";
   season: string;
   year: number;
   isPopular?: boolean;

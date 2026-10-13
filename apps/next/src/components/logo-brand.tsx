@@ -9,13 +9,13 @@
  * @author      GoxStream Architecture & Brand Design Team
  * @copyright   (c) 2026 GoxStream Inc. All rights reserved.
  * @license     MIT License (https://opensource.org/licenses/MIT)
- * 
+ *
  * @description
  * Unified brand logo component composing the Icon Mark (<Logo />) and Syne
  * Wordmark (<LogoType />) with responsive layout variants:
  * - "horizontal": Inline row layout for headers, navbars, and footers.
  * - "1:1": Stacked square container layout for auth cards, modals, and app badges.
- * 
+ *
  * @see {@link https://gox.my.id}
  * ============================================================================
  */
@@ -60,12 +60,14 @@ export function LogoBrand({
     const wordmarkHeight = LOGO_TYPE_SVG_SIZE_MAP[size].height;
     const gap = 8;
     const padding = variant === "horizontal" ? 4 : 16;
-    const width = variant === "horizontal"
-      ? padding + iconSize + gap + wordmarkWidth + padding
-      : iconSize + padding * 2;
-    const height = variant === "horizontal"
-      ? Math.max(iconSize, { sm: 24, md: 28, lg: 32, xl: 38 }[size]) + padding * 2
-      : iconSize + gap + wordmarkHeight + padding * 2;
+    const width =
+      variant === "horizontal"
+        ? padding + iconSize + gap + wordmarkWidth + padding
+        : iconSize + padding * 2;
+    const height =
+      variant === "horizontal"
+        ? Math.max(iconSize, { sm: 24, md: 28, lg: 32, xl: 38 }[size]) + padding * 2
+        : iconSize + gap + wordmarkHeight + padding * 2;
 
     return (
       <svg
@@ -79,9 +81,13 @@ export function LogoBrand({
       >
         <g transform={`translate(${padding} ${variant === "horizontal" ? padding : padding})`}>
           <Logo size={iconSize} className={logoClassName} />
-          <g transform={variant === "horizontal"
-            ? `translate(${iconSize + gap} ${(iconSize - wordmarkHeight) / 2})`
-            : `translate(${(iconSize - wordmarkWidth) / 2} ${iconSize + gap})`}>
+          <g
+            transform={
+              variant === "horizontal"
+                ? `translate(${iconSize + gap} ${(iconSize - wordmarkHeight) / 2})`
+                : `translate(${(iconSize - wordmarkWidth) / 2} ${iconSize + gap})`
+            }
+          >
             <LogoType size={size} renderAs="svg" className={logoTypeClassName} />
           </g>
         </g>
@@ -93,25 +99,21 @@ export function LogoBrand({
     <>
       <Logo
         size={iconSize}
-        className={cn("transition-transform group-hover:scale-105 shrink-0", logoClassName)}
+        className={cn("shrink-0 transition-transform group-hover:scale-105", logoClassName)}
       />
       <LogoType
         size={size}
-        className={cn(
-          hideTextOnMobile && "hidden min-[380px]:inline-flex",
-          logoTypeClassName
-        )}
+        className={cn(hideTextOnMobile && "hidden min-[380px]:inline-flex", logoTypeClassName)}
       />
     </>
   );
-
 
   const containerClassName = cn(
     "group inline-flex items-center transition-colors rounded-lg",
     variant === "horizontal"
       ? "flex-row gap-2 px-1.5 py-1"
       : "flex-col justify-center text-center gap-2 p-4 bg-card border border-border/60 shadow-xs",
-    className
+    className,
   );
 
   if (href) {

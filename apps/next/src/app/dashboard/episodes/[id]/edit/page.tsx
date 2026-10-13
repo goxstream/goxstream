@@ -16,7 +16,8 @@ export default async function EditEpisodePage({ params }: EditEpisodePageProps) 
     animeSlug: "solo-leveling-season-2",
     episodeNumber: 1,
     title: "New Episode",
-    thumbnail: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
+    thumbnail:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80",
     duration: "24:00",
     airDate: new Date().toISOString().split("T")[0],
     status: "draft",

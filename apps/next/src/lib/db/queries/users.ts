@@ -1,13 +1,20 @@
 import { eq, or, desc } from "drizzle-orm";
 import { getDb } from "../index";
-import { users, userSettings, sessions, watchlists, watchHistories, animeGenres, genres } from "../schema";
+import {
+  users,
+  userSettings,
+  sessions,
+  watchlists,
+  watchHistories,
+  animeGenres,
+  genres,
+} from "../schema";
 import { mapToAnimeItem } from "./anime";
 import type { InferInsertModel } from "drizzle-orm";
 import type { UserProfile } from "@/types/user";
 import { getCurrentUser } from "@/lib/auth/session";
 
 export type UserSettingsInput = Partial<InferInsertModel<typeof userSettings>>;
-
 
 export async function createSession(userId: string, userAgent?: string, ipAddress?: string) {
   const db = await getDb();
@@ -99,10 +106,7 @@ export async function updateUserSettings(userId: string, data: UserSettingsInput
 export async function loginUserAccount(usernameOrEmail: string) {
   const db = await getDb();
   return db.query.users.findFirst({
-    where: or(
-      eq(users.username, usernameOrEmail),
-      eq(users.email, usernameOrEmail)
-    ),
+    where: or(eq(users.username, usernameOrEmail), eq(users.email, usernameOrEmail)),
   });
 }
 
@@ -137,8 +141,12 @@ export async function getActiveUserSession() {
         username: activeUser.username,
         displayName: activeUser.displayName,
         email: activeUser.email,
-        avatarUrl: activeUser.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-        bannerUrl: activeUser.bannerUrl || "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&auto=format&fit=crop&q=80",
+        avatarUrl:
+          activeUser.avatarUrl ||
+          "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+        bannerUrl:
+          activeUser.bannerUrl ||
+          "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&auto=format&fit=crop&q=80",
         role: activeUser.role || "admin",
         isVip: activeUser.membershipTier === "vip" || activeUser.membershipTier === "ultra_vip",
       };
@@ -152,8 +160,10 @@ export async function getActiveUserSession() {
     username: "alex_admin",
     displayName: "Alex Rivera",
     email: "alex@goxstream.com",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-    bannerUrl: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&auto=format&fit=crop&q=80",
+    avatarUrl:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+    bannerUrl:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&auto=format&fit=crop&q=80",
     role: "admin",
     isVip: true,
   };
@@ -174,17 +184,24 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
       });
 
       if (dbUser) {
-        const userWatchlist = await db.query.watchlists.findMany({
-          where: eq(watchlists.userId, userId),
-        }).catch(() => []);
+        const userWatchlist = await db.query.watchlists
+          .findMany({
+            where: eq(watchlists.userId, userId),
+          })
+          .catch(() => []);
 
-        const userHistory = await db.query.watchHistories.findMany({
-          where: eq(watchHistories.userId, userId),
-        }).catch(() => []);
+        const userHistory = await db.query.watchHistories
+          .findMany({
+            where: eq(watchHistories.userId, userId),
+          })
+          .catch(() => []);
 
         const animeCompleted = userWatchlist.filter((w: any) => w.status === "completed").length;
         const episodesWatched = userHistory.length;
-        const totalSecondsWatched = userHistory.reduce((acc: number, h: any) => acc + (h.progressSeconds || 0), 0);
+        const totalSecondsWatched = userHistory.reduce(
+          (acc: number, h: any) => acc + (h.progressSeconds || 0),
+          0,
+        );
         const hoursWatched = Math.round(totalSecondsWatched / 3600);
 
         // Compute favorite genres from watchlist anime
@@ -198,10 +215,18 @@ export async function getCurrentUserProfile(): Promise<UserProfile> {
           avatarUrl: dbUser.avatarUrl || undefined,
           bannerUrl: dbUser.bannerUrl || undefined,
           joinDate: dbUser.createdAt
-            ? new Date(dbUser.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+            ? new Date(dbUser.createdAt).toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })
             : "Jan 2025",
           isVip: dbUser.membershipTier === "vip_pro" || dbUser.membershipTier === "vip",
-          vipTier: dbUser.membershipTier === "vip_pro" ? "VIP Pro" : dbUser.membershipTier === "vip" ? "VIP Supporter" : undefined,
+          vipTier:
+            dbUser.membershipTier === "vip_pro"
+              ? "VIP Pro"
+              : dbUser.membershipTier === "vip"
+                ? "VIP Supporter"
+                : undefined,
           bio: dbUser.bio || "Anime enthusiast & community reviewer.",
           stats: {
             animeCompleted,
@@ -316,9 +341,7 @@ export async function getCurrentUserActivity(userId: string): Promise<{
         currentEpisode: w.currentEpisode || 0,
         totalEpisodes: w.anime?.episodesCount || 0,
         rating: w.userRating ?? undefined,
-        updatedAt: w.updatedAt
-          ? new Date(w.updatedAt).toLocaleDateString()
-          : "Recently",
+        updatedAt: w.updatedAt ? new Date(w.updatedAt).toLocaleDateString() : "Recently",
       }));
 
     // Fetch history with anime + episode
@@ -343,9 +366,7 @@ export async function getCurrentUserActivity(userId: string): Promise<{
       progressPercent: h.progressPercent || 0,
       durationSeconds: h.durationSeconds || 0,
       watchedSeconds: h.progressSeconds || 0,
-      lastWatchedAt: h.lastWatchedAt
-        ? new Date(h.lastWatchedAt).toLocaleDateString()
-        : "Recently",
+      lastWatchedAt: h.lastWatchedAt ? new Date(h.lastWatchedAt).toLocaleDateString() : "Recently",
     }));
 
     return { watchlist: formattedWatchlist, history: formattedHistory };
@@ -367,9 +388,5 @@ export async function updateUserProfile(
   if (data.bio !== undefined) updateData.bio = data.bio;
   if (data.avatarUrl !== undefined) updateData.avatarUrl = data.avatarUrl;
 
-  return db
-    .update(users)
-    .set(updateData)
-    .where(eq(users.id, userId))
-    .returning();
+  return db.update(users).set(updateData).where(eq(users.id, userId)).returning();
 }

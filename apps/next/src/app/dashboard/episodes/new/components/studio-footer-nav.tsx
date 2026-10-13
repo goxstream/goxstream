@@ -15,11 +15,11 @@ export function StudioFooterNav() {
   if (!currentNav) return null;
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-border/60 mt-6 min-w-0">
+    <div className="border-border/60 mt-6 flex min-w-0 flex-col items-stretch justify-between gap-3 border-t pt-4 sm:flex-row sm:items-center">
       <div>
         {currentNav.prev ? (
-          <Link href={currentNav.prev.href} className="w-full sm:w-auto block">
-            <Button variant="outline" size="sm" className="w-full sm:w-auto gap-1.5 text-xs">
+          <Link href={currentNav.prev.href} className="block w-full sm:w-auto">
+            <Button variant="outline" size="sm" className="w-full gap-1.5 text-xs sm:w-auto">
               <ArrowLeft className="size-3.5" />
               Previous: {currentNav.prev.label}
             </Button>
@@ -31,8 +31,11 @@ export function StudioFooterNav() {
 
       <div className="flex items-center gap-2">
         {currentNav.next ? (
-          <Link href={currentNav.next.href} className="w-full sm:w-auto block">
-            <Button size="sm" className="w-full sm:w-auto gap-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90">
+          <Link href={currentNav.next.href} className="block w-full sm:w-auto">
+            <Button
+              size="sm"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-1.5 text-xs sm:w-auto"
+            >
               Next: {currentNav.next.label}
               <ArrowRight className="size-3.5" />
             </Button>
@@ -42,7 +45,7 @@ export function StudioFooterNav() {
             size="sm"
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full sm:w-auto gap-1.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 w-full gap-1.5 text-xs sm:w-auto"
           >
             <CheckCircle2 className="size-4" />
             {isSaving ? "Publishing..." : "Publish Episode"}

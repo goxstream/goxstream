@@ -10,17 +10,17 @@ export function HistoryClientPage() {
   const { historyList, handleRemoveItem, handleClearAll } = useHistory();
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl border border-border/60 bg-gradient-to-r from-card via-card to-primary/5">
+    <div className="mx-auto max-w-5xl space-y-6">
+      <div className="border-border/60 from-card via-card to-primary/5 flex flex-col justify-between gap-4 rounded-2xl border bg-gradient-to-r p-6 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3.5">
-          <div className="size-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+          <div className="bg-primary/10 border-primary/20 text-primary flex size-12 items-center justify-center rounded-xl border">
             <History className="size-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-foreground">
+            <h1 className="text-foreground text-2xl font-extrabold tracking-tight">
               Watch History & Progress
             </h1>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-muted-foreground mt-0.5 text-xs">
               Resume watching where you left off or clear your past streaming logs.
             </p>
           </div>
@@ -30,15 +30,16 @@ export function HistoryClientPage() {
       </div>
 
       {historyList.length === 0 ? (
-        <div className="p-12 text-center border border-dashed border-border/70 rounded-2xl bg-card/50 flex flex-col items-center gap-3">
-          <History className="size-10 text-muted-foreground/40" />
-          <h3 className="font-semibold text-base text-foreground">Your History is Empty</h3>
-          <p className="text-xs text-muted-foreground max-w-sm">
-            You haven't watched any anime episodes yet. Episodes you stream will automatically appear here.
+        <div className="border-border/70 bg-card/50 flex flex-col items-center gap-3 rounded-2xl border border-dashed p-12 text-center">
+          <History className="text-muted-foreground/40 size-10" />
+          <h3 className="text-foreground text-base font-semibold">Your History is Empty</h3>
+          <p className="text-muted-foreground max-w-sm text-xs">
+            You haven't watched any anime episodes yet. Episodes you stream will automatically
+            appear here.
           </p>
           <Link
             href="/trending"
-            className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground text-xs font-semibold rounded-xl shadow-xs hover:bg-primary/90 transition-colors"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold shadow-xs transition-colors"
           >
             Explore Trending Anime
           </Link>

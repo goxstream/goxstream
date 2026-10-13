@@ -6,7 +6,13 @@ import type { ActivityLogItem } from "../types";
 export interface DashboardOverviewData {
   trafficData: Array<{ time: string; activeStreams: number; bandwidthGbps: number }>;
   recentActivities: ActivityLogItem[];
-  notifications: Array<{ id: string; title: string; description: string; time: string; type: "success" | "alert" | "info" }>;
+  notifications: Array<{
+    id: string;
+    title: string;
+    description: string;
+    time: string;
+    type: "success" | "alert" | "info";
+  }>;
 }
 
 export function useDashboardOverview() {

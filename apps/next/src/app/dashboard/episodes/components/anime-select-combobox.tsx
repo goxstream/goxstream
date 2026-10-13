@@ -50,23 +50,21 @@ export function AnimeSelectCombobox({
           type="button"
           role="combobox"
           aria-expanded={open}
-          className={`justify-between h-9 text-xs border-border/60 bg-card font-normal ${className}`}
+          className={`border-border/60 bg-card h-9 justify-between text-xs font-normal ${className}`}
         >
           <div className="flex items-center gap-2 truncate">
-            <Film className="size-3.5 text-primary shrink-0" />
-            <span className="truncate">
-              {selectedOption ? selectedOption.title : placeholder}
-            </span>
+            <Film className="text-primary size-3.5 shrink-0" />
+            <span className="truncate">{selectedOption ? selectedOption.title : placeholder}</span>
           </div>
-          <ChevronsUpDown className="size-3.5 text-muted-foreground shrink-0 opacity-70 ml-2" />
+          <ChevronsUpDown className="text-muted-foreground ml-2 size-3.5 shrink-0 opacity-70" />
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent align="start" className="w-[320px] p-0 text-xs border-border/60 bg-card">
+      <PopoverContent align="start" className="border-border/60 bg-card w-[320px] p-0 text-xs">
         <Command>
           <CommandInput placeholder="Type to search anime..." className="h-9 text-xs" />
           <CommandList className="max-h-60 overflow-y-auto">
-            <CommandEmpty className="py-3 text-center text-xs text-muted-foreground">
+            <CommandEmpty className="text-muted-foreground py-3 text-center text-xs">
               No anime series found.
             </CommandEmpty>
             <CommandGroup>
@@ -77,10 +75,10 @@ export function AnimeSelectCombobox({
                     onValueChange("all");
                     setOpen(false);
                   }}
-                  className="text-xs cursor-pointer"
+                  className="cursor-pointer text-xs"
                 >
                   <Check
-                    className={`mr-2 size-3.5 text-primary ${
+                    className={`text-primary mr-2 size-3.5 ${
                       value === "all" ? "opacity-100" : "opacity-0"
                     }`}
                   />
@@ -97,10 +95,10 @@ export function AnimeSelectCombobox({
                       onValueChange(opt.id);
                       setOpen(false);
                     }}
-                    className="text-xs cursor-pointer"
+                    className="cursor-pointer text-xs"
                   >
                     <Check
-                      className={`mr-2 size-3.5 text-primary ${
+                      className={`text-primary mr-2 size-3.5 ${
                         isSelected ? "opacity-100" : "opacity-0"
                       }`}
                     />

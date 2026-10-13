@@ -5,7 +5,9 @@ import { animes } from "./anime";
 import { episodes } from "./episodes";
 
 export const comments = sqliteTable("comments", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   animeId: text("anime_id")
     .notNull()
     .references(() => animes.id, { onDelete: "cascade" }),
@@ -17,7 +19,9 @@ export const comments = sqliteTable("comments", {
   guestEmail: text("guest_email"),
   parentId: text("parent_id"),
   content: text("content").notNull(),
-  isSpoiler: integer("is_spoiler", { mode: "boolean" }).notNull().$default(() => false),
+  isSpoiler: integer("is_spoiler", { mode: "boolean" })
+    .notNull()
+    .$default(() => false),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
@@ -27,19 +31,27 @@ export const comments = sqliteTable("comments", {
 });
 
 export const commentLikes = sqliteTable("comment_likes", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   commentId: text("comment_id")
     .notNull()
     .references(() => comments.id, { onDelete: "cascade" }),
-  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  isDislike: integer("is_dislike", { mode: "boolean" }).notNull().$default(() => false),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  isDislike: integer("is_dislike", { mode: "boolean" })
+    .notNull()
+    .$default(() => false),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),
 });
 
 export const commentReports = sqliteTable("comment_reports", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   commentId: text("comment_id")
     .notNull()
     .references(() => comments.id, { onDelete: "cascade" }),

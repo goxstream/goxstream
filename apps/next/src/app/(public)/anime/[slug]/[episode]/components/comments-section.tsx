@@ -116,7 +116,12 @@ export function CommentsSection({ animeId, episodeId }: CommentsSectionProps) {
     }
   };
 
-  const handleAddReply = async (parentId: string, text: string, isSpoiler: boolean, guestName: string) => {
+  const handleAddReply = async (
+    parentId: string,
+    text: string,
+    isSpoiler: boolean,
+    guestName: string,
+  ) => {
     const newReply: CommentData = {
       id: `reply-${Date.now()}`,
       user: guestName,
@@ -213,14 +218,14 @@ export function CommentsSection({ animeId, episodeId }: CommentsSectionProps) {
   const totalCount = countTotalComments(comments);
 
   return (
-    <div className="flex flex-col gap-5 mt-6 p-4 md:p-6 bg-card border border-border/60 rounded-xl shadow-xs">
+    <div className="bg-card border-border/60 mt-6 flex flex-col gap-5 rounded-xl border p-4 shadow-xs md:p-6">
       {/* Section Header */}
-      <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3.5">
+      <div className="border-border/60 flex items-center justify-between gap-2 border-b pb-3.5">
         <div className="flex items-center gap-2">
-          <MessageSquare className="size-4 text-primary shrink-0" />
-          <h2 className="text-base font-bold text-foreground">Comments</h2>
+          <MessageSquare className="text-primary size-4 shrink-0" />
+          <h2 className="text-foreground text-base font-bold">Comments</h2>
         </div>
-        <span className="text-xs text-muted-foreground font-mono bg-muted/60 px-2 py-0.5 rounded-full font-semibold">
+        <span className="text-muted-foreground bg-muted/60 rounded-full px-2 py-0.5 font-mono text-xs font-semibold">
           {totalCount} Comments
         </span>
       </div>
@@ -230,15 +235,15 @@ export function CommentsSection({ animeId, episodeId }: CommentsSectionProps) {
 
       {/* Nested Thread Comment List or Clean Empty State */}
       {comments.length === 0 ? (
-        <div className="text-center py-8 px-4 rounded-xl bg-muted/20 border border-dashed border-border/60 my-2">
-          <MessageSquare className="size-8 text-muted-foreground/40 mx-auto mb-2" />
-          <p className="text-xs font-bold text-foreground">No comments yet</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">
+        <div className="bg-muted/20 border-border/60 my-2 rounded-xl border border-dashed px-4 py-8 text-center">
+          <MessageSquare className="text-muted-foreground/40 mx-auto mb-2 size-8" />
+          <p className="text-foreground text-xs font-bold">No comments yet</p>
+          <p className="text-muted-foreground mt-0.5 text-[11px]">
             Be the first to share your thoughts on this episode!
           </p>
         </div>
       ) : (
-        <div className="flex flex-col gap-3.5 mt-2">
+        <div className="mt-2 flex flex-col gap-3.5">
           {comments.map((comment) => (
             <CommentItem
               key={comment.id}

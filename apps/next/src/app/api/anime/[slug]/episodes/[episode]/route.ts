@@ -11,7 +11,7 @@ function parseEpisodeNumber(epParam: string): number {
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string; episode: string }> }
+  { params }: { params: Promise<{ slug: string; episode: string }> },
 ) {
   const { slug, episode: epParam } = await params;
   const epNum = parseEpisodeNumber(epParam);

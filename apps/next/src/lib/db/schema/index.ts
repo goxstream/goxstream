@@ -10,9 +10,7 @@ export const isPostgresEnv =
     connectionType === "postgresql" ||
     (!connectionType && Boolean(dbUrl)));
 
-const activeSchema: typeof sqliteSchema = isPostgresEnv
-  ? (pgSchema as any)
-  : sqliteSchema;
+const activeSchema: typeof sqliteSchema = isPostgresEnv ? (pgSchema as any) : sqliteSchema;
 
 export const {
   users,

@@ -10,7 +10,7 @@ export function ProfileContentClient() {
 
   if (error) {
     return (
-      <div className="p-8 text-center rounded-xl border border-destructive/20 bg-destructive/5 text-destructive text-sm font-medium">
+      <div className="border-destructive/20 bg-destructive/5 text-destructive rounded-xl border p-8 text-center text-sm font-medium">
         {error}
       </div>
     );

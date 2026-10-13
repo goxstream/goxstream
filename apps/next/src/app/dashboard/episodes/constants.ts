@@ -1,8 +1,4 @@
-import type {
-  EpisodeItem,
-  EpisodeStats,
-  SubtitleCoverageItem,
-} from "./types";
+import type { EpisodeItem, EpisodeStats, SubtitleCoverageItem } from "./types";
 
 export const MOCK_EPISODES: EpisodeItem[] = [];
 

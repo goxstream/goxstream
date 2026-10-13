@@ -20,17 +20,9 @@ let cachedConnectionKey: string | null = null;
  * If the key changes (e.g. different DB_CONNECTION after a deploy), the singleton is invalidated.
  */
 function buildConnectionKey(env: any): string {
-  const connectionType = (
-    env?.DB_CONNECTION ||
-    process.env.DB_CONNECTION ||
-    ""
-  ).toLowerCase();
+  const connectionType = (env?.DB_CONNECTION || process.env.DB_CONNECTION || "").toLowerCase();
   const dbUrl =
-    env?.DB_URL ||
-    process.env.DB_URL ||
-    env?.DATABASE_URL ||
-    process.env.DATABASE_URL ||
-    "";
+    env?.DB_URL || process.env.DB_URL || env?.DATABASE_URL || process.env.DATABASE_URL || "";
   const hasD1 = env?.DB ? "d1" : "";
   const hasHyperdrive = env?.HYPERDRIVE?.connectionString ? "hd" : "";
   return `${connectionType}|${dbUrl}|${hasD1}|${hasHyperdrive}`;
@@ -61,17 +53,9 @@ export async function getDb() {
     return cachedDb;
   }
 
-  const connectionType = (
-    env?.DB_CONNECTION ||
-    process.env.DB_CONNECTION ||
-    ""
-  ).toLowerCase();
+  const connectionType = (env?.DB_CONNECTION || process.env.DB_CONNECTION || "").toLowerCase();
 
-  const dbUrl =
-    env?.DB_URL ||
-    process.env.DB_URL ||
-    env?.DATABASE_URL ||
-    process.env.DATABASE_URL;
+  const dbUrl = env?.DB_URL || process.env.DB_URL || env?.DATABASE_URL || process.env.DATABASE_URL;
 
   let db: any;
 
@@ -123,7 +107,7 @@ export async function getDb() {
       } catch (err) {
         console.warn(
           "[GoxStream DB] Hyperdrive connection test failed or inaccessible. Falling back to D1/DB_URL.",
-          err
+          err,
         );
       }
     }
@@ -153,6 +137,6 @@ export async function getDb() {
   }
 
   throw new Error(
-    "No valid database connection found. Configure D1 (env.DB), DB_CONNECTION=postgres & DB_URL, or Cloudflare Hyperdrive."
+    "No valid database connection found. Configure D1 (env.DB), DB_CONNECTION=postgres & DB_URL, or Cloudflare Hyperdrive.",
   );
 }

@@ -9,11 +9,15 @@ export async function listUsers(target: DbTarget, searchFilter?: string): Promis
   return listD1Users(target, searchFilter);
 }
 
-export async function getUserById(target: DbTarget, idOrUsername: string): Promise<UserItem | null> {
+export async function getUserById(
+  target: DbTarget,
+  idOrUsername: string,
+): Promise<UserItem | null> {
   const usersList = await listUsers(target);
   return (
-    usersList.find((u) => u.id === idOrUsername || u.username.toLowerCase() === idOrUsername.toLowerCase()) ||
-    null
+    usersList.find(
+      (u) => u.id === idOrUsername || u.username.toLowerCase() === idOrUsername.toLowerCase(),
+    ) || null
   );
 }
 
@@ -27,7 +31,7 @@ export async function createUser(target: DbTarget, input: CreateUserInput): Prom
 export async function updateUser(
   target: DbTarget,
   id: string,
-  input: UpdateUserInput
+  input: UpdateUserInput,
 ): Promise<UserItem> {
   const existing = await getUserById(target, id);
   if (!existing) {
@@ -48,7 +52,10 @@ export async function deleteUser(target: DbTarget, id: string): Promise<boolean>
   return true;
 }
 
-export async function deleteUsersBatch(target: DbTarget, idsOrUsernames: string[]): Promise<number> {
+export async function deleteUsersBatch(
+  target: DbTarget,
+  idsOrUsernames: string[],
+): Promise<number> {
   if (idsOrUsernames.length === 0) return 0;
   const allUsers = await listUsers(target);
   const targetIds = allUsers

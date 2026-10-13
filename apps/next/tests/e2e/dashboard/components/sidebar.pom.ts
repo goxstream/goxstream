@@ -1,4 +1,4 @@
-import { type Page, type Locator } from '@playwright/test';
+import { type Page, type Locator } from "@playwright/test";
 
 export class SidebarPOM {
   readonly page: Page;
@@ -10,6 +10,6 @@ export class SidebarPOM {
   }
 
   async goto() {
-    await this.page.goto('/dashboard');
+    await this.page.goto("/dashboard");
   }
 }

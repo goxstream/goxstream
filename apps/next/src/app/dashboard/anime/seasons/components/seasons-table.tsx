@@ -30,7 +30,7 @@ export function SeasonsTable({
   onEditSeason,
 }: SeasonsTableProps) {
   return (
-    <div className="rounded-xl border border-border/60 bg-card/60 overflow-hidden shadow-xs">
+    <div className="border-border/60 bg-card/60 overflow-hidden rounded-xl border shadow-xs">
       <Table>
         <TableHeader>
           <TableRow className="border-border/60 hover:bg-transparent">
@@ -45,35 +45,42 @@ export function SeasonsTable({
         </TableHeader>
         <TableBody>
           {seasons.map((season) => (
-            <TableRow key={season.id} className="border-border/40 hover:bg-muted/40 transition-colors">
+            <TableRow
+              key={season.id}
+              className="border-border/40 hover:bg-muted/40 transition-colors"
+            >
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-foreground text-sm">
-                    {season.name}
-                  </span>
+                  <span className="text-foreground text-sm font-semibold">{season.name}</span>
                   {season.isCurrent && (
-                    <Badge variant="default" className="text-[10px] bg-emerald-500/20 text-emerald-500 hover:bg-emerald-500/30 border-emerald-500/30">
+                    <Badge
+                      variant="default"
+                      className="border-emerald-500/30 bg-emerald-500/20 text-[10px] text-emerald-500 hover:bg-emerald-500/30"
+                    >
                       Active Now
                     </Badge>
                   )}
                 </div>
               </TableCell>
 
-              <TableCell className="text-xs font-mono text-muted-foreground">
+              <TableCell className="text-muted-foreground font-mono text-xs">
                 {season.year} — {season.quarter}
               </TableCell>
 
-              <TableCell className="text-xs text-muted-foreground font-mono">
+              <TableCell className="text-muted-foreground font-mono text-xs">
                 {season.startDate} to {season.endDate}
               </TableCell>
 
-              <TableCell className="text-right font-medium text-sm text-foreground">
+              <TableCell className="text-foreground text-right text-sm font-medium">
                 {season.totalAnime} Titles
               </TableCell>
 
               <TableCell className="text-center">
                 {season.isCurrent ? (
-                  <Badge variant="outline" className="text-[11px] gap-1 text-emerald-500 border-emerald-500/40">
+                  <Badge
+                    variant="outline"
+                    className="gap-1 border-emerald-500/40 text-[11px] text-emerald-500"
+                  >
                     <Check className="size-3" /> Selected
                   </Badge>
                 ) : (
@@ -81,7 +88,7 @@ export function SeasonsTable({
                     variant="ghost"
                     size="sm"
                     onClick={() => onSetCurrent(season.id)}
-                    className="h-7 text-xs text-muted-foreground hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground h-7 text-xs"
                   >
                     Set Active
                   </Button>
@@ -102,7 +109,7 @@ export function SeasonsTable({
                     variant="ghost"
                     size="icon"
                     onClick={() => onEditSeason(season)}
-                    className="size-8 text-muted-foreground hover:text-foreground rounded-lg"
+                    className="text-muted-foreground hover:text-foreground size-8 rounded-lg"
                   >
                     <Edit2 className="size-4" />
                   </Button>
@@ -110,7 +117,7 @@ export function SeasonsTable({
                     variant="ghost"
                     size="icon"
                     onClick={() => onDeleteSeason(season.id)}
-                    className="size-8 text-muted-foreground hover:text-destructive rounded-lg"
+                    className="text-muted-foreground hover:text-destructive size-8 rounded-lg"
                   >
                     <Trash2 className="size-4" />
                   </Button>

@@ -3,7 +3,7 @@ import type { GeneratedPng } from "./png-converter";
 
 export async function generateIcoFile(
   generatedPngs: GeneratedPng[],
-  icoSizes: number[]
+  icoSizes: number[],
 ): Promise<Buffer> {
   // Filter PNG buffers that match required ico sizes
   const icoBuffers = generatedPngs

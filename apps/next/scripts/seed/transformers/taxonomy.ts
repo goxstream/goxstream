@@ -1,12 +1,17 @@
 import type { AniListMedia } from "../anilist";
-import type { GenreSeedData, StudioSeedData, AnimeGenreRelation, AnimeStudioRelation } from "./types";
+import type {
+  GenreSeedData,
+  StudioSeedData,
+  AnimeGenreRelation,
+  AnimeStudioRelation,
+} from "./types";
 import { slugify } from "./utils";
 
 export function extractTaxonomies(
   media: AniListMedia,
   animeId: string,
   genreMap: Map<string, GenreSeedData>,
-  studioMap: Map<string, StudioSeedData>
+  studioMap: Map<string, StudioSeedData>,
 ) {
   const animeGenres: AnimeGenreRelation[] = [];
   const animeStudios: AnimeStudioRelation[] = [];

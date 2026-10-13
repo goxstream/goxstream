@@ -50,7 +50,7 @@ export async function getDashboardRecentActivities(): Promise<ActivityLogItem[]>
           with: { user: true },
         });
         return { ...ep, upload };
-      })
+      }),
     );
 
     const latestComments = await db.query.comments.findMany({
@@ -112,7 +112,7 @@ export async function getDashboardNotifications() {
     return generateDynamicNotifications(
       latestEpisodeWithUploader,
       commCountRes?.count || 0,
-      usersCountRes?.count || 0
+      usersCountRes?.count || 0,
     );
   } catch (error) {
     console.error("Failed to query notifications:", error);

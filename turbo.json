@@ -10,6 +10,9 @@
     "format": {
       "dependsOn": []
     },
+    "format:check": {
+      "dependsOn": []
+    },
     "typecheck": {
       "dependsOn": ["^typecheck"]
     },

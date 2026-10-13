@@ -25,13 +25,13 @@ export async function POST() {
       success: true,
       message: "Logged out successfully",
     },
-    { status: 200 }
+    { status: 200 },
   );
 
   // Set-Cookie header for robust cookie deletion across all environments
   response.headers.set(
     "Set-Cookie",
-    `${SESSION_COOKIE_NAME}=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax`
+    `${SESSION_COOKIE_NAME}=; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax`,
   );
 
   return response;

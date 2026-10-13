@@ -46,8 +46,6 @@ export default function AnimeCatalogPage() {
     }
   }, [fetchedAnime]);
 
-
-
   // Filter state
   const [filters, setFilters] = useState<AnimeFilterState>({
     search: "",
@@ -105,9 +103,7 @@ export default function AnimeCatalogPage() {
   };
 
   const handleUpdateAnime = (updatedAnime: AnimeItem) => {
-    setAnimeList((prev) =>
-      prev.map((item) => (item.id === updatedAnime.id ? updatedAnime : item))
-    );
+    setAnimeList((prev) => prev.map((item) => (item.id === updatedAnime.id ? updatedAnime : item)));
   };
 
   const handleDeleteAnime = (id: string) => {
@@ -115,12 +111,9 @@ export default function AnimeCatalogPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto w-full">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 sm:p-6">
       {/* Header & Stats */}
-      <AnimeHeader
-        animeList={animeList}
-        onOpenAddSheet={() => setIsAddSheetOpen(true)}
-      />
+      <AnimeHeader animeList={animeList} onOpenAddSheet={() => setIsAddSheetOpen(true)} />
 
       {/* Filter Bar */}
       <AnimeFilters
@@ -131,7 +124,7 @@ export default function AnimeCatalogPage() {
 
       {/* Main Table */}
       {isLoading ? (
-        <Skeleton className="h-96 w-full rounded-xl bg-card border border-border/60" />
+        <Skeleton className="bg-card border-border/60 h-96 w-full rounded-xl border" />
       ) : (
         <AnimeTable
           animeList={filteredAnimeList}

@@ -22,10 +22,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar();
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border/60" {...props}>
-      <SidebarHeader className="border-b border-border/60 p-2.5">
+    <Sidebar collapsible="icon" className="border-border/60 border-r" {...props}>
+      <SidebarHeader className="border-border/60 border-b p-2.5">
         {state === "collapsed" ? (
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary/10 text-sidebar-primary transition-transform group-hover:scale-105 mx-auto">
+          <div className="bg-sidebar-primary/10 text-sidebar-primary mx-auto flex aspect-square size-8 items-center justify-center rounded-lg transition-transform group-hover:scale-105">
             <Logo size={22} />
           </div>
         ) : (
@@ -34,9 +34,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={NAV_MAIN_DATA} />
-        <NavSecondary items={NAV_SECONDARY_DATA} className="mt-auto border-t border-border/60" />
+        <NavSecondary items={NAV_SECONDARY_DATA} className="border-border/60 mt-auto border-t" />
       </SidebarContent>
-      <SidebarFooter className="border-t border-border/60 p-2">
+      <SidebarFooter className="border-border/60 border-t p-2">
         <NavUser user={currentUser} />
       </SidebarFooter>
       <SidebarRail />

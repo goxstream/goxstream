@@ -65,6 +65,6 @@ protectedApp.openapi(protectedSampleRoute, (c) => {
         role: user.role,
       },
     },
-    200
+    200,
   );
 });

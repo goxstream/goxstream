@@ -5,14 +5,15 @@ import type { ScheduleItem, DayOfWeek, AiringStatus } from "@/types/schedule";
  */
 export function mapToScheduleItem(s: any): ScheduleItem {
   const anime = s.anime || {};
-  
+
   const genreList: string[] = anime.animeGenres
     ? anime.animeGenres.map((ag: any) => ag.genre?.name || ag.genreName).filter(Boolean)
     : [];
 
-  const studioName: string = anime.animeStudios && anime.animeStudios.length > 0
-    ? anime.animeStudios[0].studio?.name || anime.studioName || "Unknown Studio"
-    : "Unknown Studio";
+  const studioName: string =
+    anime.animeStudios && anime.animeStudios.length > 0
+      ? anime.animeStudios[0].studio?.name || anime.studioName || "Unknown Studio"
+      : "Unknown Studio";
 
   const airDay = (s.releaseDay || "Monday").toLowerCase() as DayOfWeek;
   const status = (s.status || "upcoming").toLowerCase() as AiringStatus;

@@ -17,7 +17,6 @@ export async function getUserWatchlist(userId: string) {
   }
 }
 
-
 export async function addToWatchlist(userId: string, animeId: string, status = "plan_to_watch") {
   const db = await getDb();
   return db
@@ -34,7 +33,12 @@ export async function addToWatchlist(userId: string, animeId: string, status = "
     .returning();
 }
 
-export async function updateWatchlistStatus(userId: string, animeId: string, status: string, isFavorite?: boolean) {
+export async function updateWatchlistStatus(
+  userId: string,
+  animeId: string,
+  status: string,
+  isFavorite?: boolean,
+) {
   const db = await getDb();
   const updateData: Record<string, any> = { status, updatedAt: new Date() };
   if (isFavorite !== undefined) {

@@ -19,7 +19,6 @@ export function useRolesAndAccess() {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
-
   const handleTogglePermission = (roleSlug: string, permKey: string) => {
     setRoles((prevRoles) =>
       prevRoles.map((role) => {
@@ -32,11 +31,15 @@ export function useRolesAndAccess() {
           return { ...role, permissions: nextPerms };
         }
         return role;
-      })
+      }),
     );
   };
 
-  const handleAddRole = (newRoleData: { name: string; description: string; permissions: string[] }) => {
+  const handleAddRole = (newRoleData: {
+    name: string;
+    description: string;
+    permissions: string[];
+  }) => {
     const slug = newRoleData.name.toLowerCase().replace(/\s+/g, "_");
     const newRole: RoleDefinition = {
       id: `role-${Date.now()}`,
@@ -58,7 +61,8 @@ export function useRolesAndAccess() {
       id: `team-${Date.now()}`,
       name: staffData.name,
       email: staffData.email,
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      avatar:
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
       roleSlug: staffData.roleSlug,
       joinedAt: new Date().toISOString(),
     };
@@ -67,7 +71,9 @@ export function useRolesAndAccess() {
 
     // Update member count in role
     setRoles((prev) =>
-      prev.map((r) => (r.slug === staffData.roleSlug ? { ...r, memberCount: r.memberCount + 1 } : r))
+      prev.map((r) =>
+        r.slug === staffData.roleSlug ? { ...r, memberCount: r.memberCount + 1 } : r,
+      ),
     );
 
     setIsInviteModalOpen(false);

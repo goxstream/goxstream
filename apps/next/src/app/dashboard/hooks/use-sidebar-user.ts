@@ -13,7 +13,8 @@ export function useSidebarUser() {
   const [currentUser, setCurrentUser] = useState<SidebarUser>({
     name: "Alex Rivera",
     email: "alex@goxstream.com",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
     role: "Super Admin",
   });
 

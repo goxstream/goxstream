@@ -7,7 +7,9 @@ export async function GET() {
   const CACHE_TTL = 300;
 
   try {
-    const cached = await getCacheItem<{ stats: Awaited<ReturnType<typeof getDashboardStats>> }>(CACHE_KEY);
+    const cached = await getCacheItem<{ stats: Awaited<ReturnType<typeof getDashboardStats>> }>(
+      CACHE_KEY,
+    );
     if (cached) {
       return NextResponse.json(cached, {
         headers: {

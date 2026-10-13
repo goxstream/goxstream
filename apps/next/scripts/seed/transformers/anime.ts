@@ -5,12 +5,12 @@ import { slugify, stripHtml, capitalize, mapFormat, mapStatus } from "./utils";
 export function transformAnimeEntity(
   media: AniListMedia,
   idx: number,
-  usedAnimeSlugs: Set<string>
+  usedAnimeSlugs: Set<string>,
 ): AnimeSeedData {
   const animeId = `anime-${media.id}`;
   const titleRomaji = media.title.romaji || media.title.userPreferred || "Unknown Title";
   const baseSlug = slugify(titleRomaji) || `anime-${media.id}`;
-  
+
   let slug = baseSlug;
   if (usedAnimeSlugs.has(slug)) {
     slug = `${baseSlug}-${media.id}`;

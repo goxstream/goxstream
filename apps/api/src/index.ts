@@ -16,7 +16,7 @@ app.use(
     allowHeaders: ["Content-Type", "Authorization", "x-api-key"],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
-  })
+  }),
 );
 
 // ── Better Auth Handler ────────────────────────────────────────────────
@@ -39,7 +39,7 @@ app.get(
     spec: {
       url: "/v1/openapi.json",
     },
-  })
+  }),
 );
 
 // Redirect root to /reference for developer convenience
@@ -51,8 +51,7 @@ app.doc("/v1/openapi.json", {
   info: {
     title: "GoxStream API",
     version: "1.0.0",
-    description:
-      "Modular anime streaming and metadata API built with Hono on Cloudflare Workers.",
+    description: "Modular anime streaming and metadata API built with Hono on Cloudflare Workers.",
   },
   servers: [
     { url: "http://localhost:8787", description: "Local Development" },

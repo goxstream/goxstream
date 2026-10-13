@@ -22,36 +22,37 @@ export function VideoPlayer({
   animeSlug,
 }: VideoPlayerProps) {
   return (
-    <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-border/60 shadow-sm group">
+    <div className="border-border/60 group relative aspect-video w-full overflow-hidden rounded-xl border bg-black shadow-sm">
       <MediaPlayer
         title={title}
         src={currentSource.url}
         controls
         aspectRatio={16 / 9}
-        className="w-full h-full text-white font-sans overflow-hidden"
+        className="h-full w-full overflow-hidden font-sans text-white"
       >
         <MediaOutlet>
           <MediaPoster
             src={poster}
             alt={title}
-            className="w-full h-full object-cover opacity-80 transition-opacity group-hover:opacity-100"
+            className="h-full w-full object-cover opacity-80 transition-opacity group-hover:opacity-100"
           />
         </MediaOutlet>
       </MediaPlayer>
 
       {/* Overlay controls */}
       {nextEpisode && (
-        <div className="absolute top-4 right-4 z-20 flex items-center gap-2 pointer-events-auto">
+        <div className="pointer-events-auto absolute top-4 right-4 z-20 flex items-center gap-2">
           <Link
             href={`/anime/${animeSlug}/${nextEpisode.episodeNumber}`}
             className={buttonVariants({
               variant: "default",
               size: "sm",
-              className: "bg-primary text-primary-foreground hover:bg-primary/90 text-xs font-medium h-8 px-3 rounded-md shadow-xs",
+              className:
+                "bg-primary text-primary-foreground hover:bg-primary/90 h-8 rounded-md px-3 text-xs font-medium shadow-xs",
             })}
           >
             <span>Next Ep</span>
-            <ChevronRight className="w-3.5 h-3.5 ml-1" />
+            <ChevronRight className="ml-1 h-3.5 w-3.5" />
           </Link>
         </div>
       )}

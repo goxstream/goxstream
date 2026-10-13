@@ -8,9 +8,10 @@ export function mapToAnimeItem(raw: any): AnimeItem {
     ? raw.animeGenres.map((ag: any) => ag.genre?.name || ag.genreName).filter(Boolean)
     : [];
 
-  const studioName: string = raw.animeStudios && raw.animeStudios.length > 0
-    ? raw.animeStudios[0].studio?.name || raw.studioName || "Unknown Studio"
-    : "Unknown Studio";
+  const studioName: string =
+    raw.animeStudios && raw.animeStudios.length > 0
+      ? raw.animeStudios[0].studio?.name || raw.studioName || "Unknown Studio"
+      : "Unknown Studio";
 
   return {
     id: raw.id,

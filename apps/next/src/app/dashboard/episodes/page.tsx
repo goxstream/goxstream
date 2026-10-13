@@ -67,7 +67,6 @@ export default function EpisodeManagerPage() {
     }
   }, [fetchedEpisodes]);
 
-
   const stats: EpisodeStats = useMemo(() => {
     return {
       totalEpisodes: episodes.length,
@@ -78,9 +77,6 @@ export default function EpisodeManagerPage() {
       totalViews: 0,
     };
   }, [episodes]);
-
-
-
 
   // Filter state
   const [filters, setFilters] = useState<EpisodeFilterState>({
@@ -135,17 +131,17 @@ export default function EpisodeManagerPage() {
         if (filters.status !== "all" && ep.status !== filters.status) return false;
 
         if (filters.serverStatus !== "all") {
-          const hasMatchingHealth = ep.servers?.some(
-            (srv) => srv.health === filters.serverStatus
-          );
+          const hasMatchingHealth = ep.servers?.some((srv) => srv.health === filters.serverStatus);
           if (!hasMatchingHealth) return false;
         }
 
         return true;
       })
       .sort((a, b) => {
-        if (filters.sortBy === "newest") return new Date(b.airDate).getTime() - new Date(a.airDate).getTime();
-        if (filters.sortBy === "oldest") return new Date(a.airDate).getTime() - new Date(b.airDate).getTime();
+        if (filters.sortBy === "newest")
+          return new Date(b.airDate).getTime() - new Date(a.airDate).getTime();
+        if (filters.sortBy === "oldest")
+          return new Date(a.airDate).getTime() - new Date(b.airDate).getTime();
         if (filters.sortBy === "views") return b.viewsCount - a.viewsCount;
         if (filters.sortBy === "number") return b.episodeNumber - a.episodeNumber;
         return 0;
@@ -157,11 +153,10 @@ export default function EpisodeManagerPage() {
       <EpisodeHeader />
 
       {isLoading ? (
-        <Skeleton className="h-28 w-full rounded-xl bg-card border border-border/60" />
+        <Skeleton className="bg-card border-border/60 h-28 w-full rounded-xl border" />
       ) : (
         <EpisodeStatsCards stats={stats} />
       )}
-
 
       <EpisodeFilters
         filters={filters}
@@ -171,7 +166,7 @@ export default function EpisodeManagerPage() {
       />
 
       {isLoading ? (
-        <Skeleton className="h-96 w-full rounded-xl bg-card border border-border/60" />
+        <Skeleton className="bg-card border-border/60 h-96 w-full rounded-xl border" />
       ) : (
         <EpisodeTable
           episodes={filteredEpisodes}

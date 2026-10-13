@@ -1,8 +1,8 @@
-import { test as baseTest, expect, type Page } from '@playwright/test';
-import { HeaderPOM } from '../home/components/header.pom';
-import { HeroPOM } from '../home/components/hero.pom';
-import { NavMainPOM } from '../dashboard/components/nav-main.pom';
-import { HlsConverterPOM } from '../dashboard/components/hls-converter.pom';
+import { test as baseTest, expect, type Page } from "@playwright/test";
+import { HeaderPOM } from "../home/components/header.pom";
+import { HeroPOM } from "../home/components/hero.pom";
+import { NavMainPOM } from "../dashboard/components/nav-main.pom";
+import { HlsConverterPOM } from "../dashboard/components/hls-converter.pom";
 
 type CustomFixtures = {
   headerPOM: HeaderPOM;
@@ -27,5 +27,3 @@ export const test = baseTest.extend<CustomFixtures>({
 });
 
 export { expect };
-
-

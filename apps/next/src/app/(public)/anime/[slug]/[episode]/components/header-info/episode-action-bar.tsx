@@ -73,24 +73,24 @@ export function EpisodeActionBar({
   };
 
   return (
-    <div className="flex items-center justify-between gap-2 flex-wrap">
-      <div className="flex items-center gap-2 flex-wrap">
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <Button
           variant="outline"
           size="sm"
           onClick={onToggleCinemaMode}
-          className={`h-8 text-xs rounded-lg border-border/60 w-[150px] min-w-[150px] justify-center ${
+          className={`border-border/60 h-8 w-[150px] min-w-[150px] justify-center rounded-lg text-xs ${
             isCinemaMode ? "bg-primary/10 text-primary border-primary/30" : ""
           }`}
         >
           {isCinemaMode ? (
             <>
-              <Sun className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+              <Sun className="mr-1.5 h-3.5 w-3.5 shrink-0" />
               Exit Cinema Mode
             </>
           ) : (
             <>
-              <Moon className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+              <Moon className="mr-1.5 h-3.5 w-3.5 shrink-0" />
               Cinema Mode
             </>
           )}
@@ -100,11 +100,13 @@ export function EpisodeActionBar({
           variant="outline"
           size="sm"
           onClick={handleToggleWatchlist}
-          className={`h-8 text-xs rounded-lg border-border/60 w-[155px] min-w-[155px] justify-center ${
-            isBookmarked ? "text-amber-500 border-amber-500/30 bg-amber-500/10" : ""
+          className={`border-border/60 h-8 w-[155px] min-w-[155px] justify-center rounded-lg text-xs ${
+            isBookmarked ? "border-amber-500/30 bg-amber-500/10 text-amber-500" : ""
           }`}
         >
-          <Bookmark className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isBookmarked ? "fill-amber-500" : ""}`} />
+          <Bookmark
+            className={`mr-1.5 h-3.5 w-3.5 shrink-0 ${isBookmarked ? "fill-amber-500" : ""}`}
+          />
           {isBookmarked ? "Watchlisted" : "Add to Watchlist"}
         </Button>
 
@@ -112,16 +114,16 @@ export function EpisodeActionBar({
           variant="outline"
           size="sm"
           onClick={handleShare}
-          className="h-8 text-xs rounded-lg border-border/60 w-[125px] min-w-[125px] justify-center"
+          className="border-border/60 h-8 w-[125px] min-w-[125px] justify-center rounded-lg text-xs"
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 mr-1.5 text-emerald-500 shrink-0" />
+              <Check className="mr-1.5 h-3.5 w-3.5 shrink-0 text-emerald-500" />
               Copied Link!
             </>
           ) : (
             <>
-              <Share2 className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+              <Share2 className="mr-1.5 h-3.5 w-3.5 shrink-0" />
               Share
             </>
           )}
@@ -132,18 +134,20 @@ export function EpisodeActionBar({
         variant={reported ? "secondary" : "ghost"}
         size="sm"
         onClick={handleReportIssue}
-        className={`h-8 text-xs rounded-lg w-[130px] min-w-[130px] justify-center ${
-          reported ? "text-emerald-500 bg-emerald-500/10" : "text-muted-foreground hover:text-destructive"
+        className={`h-8 w-[130px] min-w-[130px] justify-center rounded-lg text-xs ${
+          reported
+            ? "bg-emerald-500/10 text-emerald-500"
+            : "text-muted-foreground hover:text-destructive"
         }`}
       >
         {reported ? (
           <>
-            <Check className="w-3.5 h-3.5 mr-1.5 text-emerald-500 shrink-0" />
+            <Check className="mr-1.5 h-3.5 w-3.5 shrink-0 text-emerald-500" />
             Reported!
           </>
         ) : (
           <>
-            <AlertCircle className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+            <AlertCircle className="mr-1.5 h-3.5 w-3.5 shrink-0" />
             Report Issue
           </>
         )}

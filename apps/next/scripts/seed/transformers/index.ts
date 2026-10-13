@@ -40,8 +40,6 @@ export function transformAniListToEntities(mediaList: AniListMedia[]): Transform
   const schedules: ScheduleSeedData[] = [];
   const trendingStats: TrendingStatSeedData[] = [];
 
-
-
   mediaList.forEach((media, idx) => {
     const anime = transformAnimeEntity(media, idx, usedAnimeSlugs);
     animes.push(anime);
@@ -50,7 +48,7 @@ export function transformAniListToEntities(mediaList: AniListMedia[]): Transform
       media,
       anime.id,
       genreMap,
-      studioMap
+      studioMap,
     );
     animeGenres.push(...aGenres);
     animeStudios.push(...aStudios);
@@ -72,7 +70,7 @@ export function transformAniListToEntities(mediaList: AniListMedia[]): Transform
       anime.id,
       anime.status,
       idx,
-      epToGenerate
+      epToGenerate,
     );
 
     if (schedule) schedules.push(schedule);

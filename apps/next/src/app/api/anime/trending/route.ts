@@ -41,9 +41,6 @@ export async function GET() {
       },
     });
   } catch {
-    return NextResponse.json(
-      { trendingAnime: [], genresList: [] },
-      { status: 200 }
-    );
+    return NextResponse.json({ trendingAnime: [], genresList: [] }, { status: 200 });
   }
 }

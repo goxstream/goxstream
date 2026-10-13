@@ -7,11 +7,7 @@ import type {
 } from "./types";
 import { SAMPLE_HLS_STREAMS } from "./utils";
 
-export function generateEpisodesAndMedia(
-  media: AniListMedia,
-  animeId: string,
-  idx: number
-) {
+export function generateEpisodesAndMedia(media: AniListMedia, animeId: string, idx: number) {
   const episodes: EpisodeSeedData[] = [];
   const streamSources: StreamSourceSeedData[] = [];
   const subtitleTracks: SubtitleTrackSeedData[] = [];
@@ -71,7 +67,7 @@ export function generateEpisodesAndMedia(
         fileUrl: "https://goxstream.com/subtitles/sample-en.vtt",
         format: "vtt",
         isDefault: false,
-      }
+      },
     );
 
     audioTracks.push({

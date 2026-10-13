@@ -9,20 +9,14 @@ export const metadata: Metadata = {
   description: "Administrative control center for GoxStream anime streaming platform.",
 };
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <DashboardAuthGuard>
       <SidebarProvider defaultOpen={true}>
         <AppSidebar />
-        <SidebarInset className="flex flex-col flex-1 min-w-0 min-h-screen bg-background">
+        <SidebarInset className="bg-background flex min-h-screen min-w-0 flex-1 flex-col">
           <DashboardHeader />
-          <main className="flex-1 overflow-y-auto">
-            {children}
-          </main>
+          <main className="flex-1 overflow-y-auto">{children}</main>
         </SidebarInset>
       </SidebarProvider>
     </DashboardAuthGuard>

@@ -57,28 +57,26 @@ export function NavUser({ user }: NavUserProps) {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer w-full"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground w-full cursor-pointer"
             >
-              <Avatar className="h-8 w-8 rounded-lg border border-border/60">
+              <Avatar className="border-border/60 h-8 w-8 rounded-lg border">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg bg-brand/10 text-brand font-semibold text-xs">
+                <AvatarFallback className="bg-brand/10 text-brand rounded-lg text-xs font-semibold">
                   {getInitials(user.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-xs leading-tight">
-                <span className="truncate font-semibold flex items-center gap-1">
+                <span className="flex items-center gap-1 truncate font-semibold">
                   {user.name}
-                  <Shield className="size-3 text-brand fill-brand/20 shrink-0" />
+                  <Shield className="text-brand fill-brand/20 size-3 shrink-0" />
                 </span>
-                <span className="truncate text-[10px] text-muted-foreground">
-                  {user.email}
-                </span>
+                <span className="text-muted-foreground truncate text-[10px]">{user.email}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4 text-muted-foreground shrink-0" />
+              <ChevronsUpDown className="text-muted-foreground ml-auto size-4 shrink-0" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg border-border/60"
+            className="border-border/60 w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
@@ -86,15 +84,15 @@ export function NavUser({ user }: NavUserProps) {
             <DropdownMenuGroup>
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-xs">
-                  <Avatar className="h-8 w-8 rounded-lg border border-border/60">
+                  <Avatar className="border-border/60 h-8 w-8 rounded-lg border">
                     <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="rounded-lg bg-brand/10 text-brand font-semibold text-xs">
+                    <AvatarFallback className="bg-brand/10 text-brand rounded-lg text-xs font-semibold">
                       {getInitials(user.name)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-xs leading-tight">
                     <span className="truncate font-semibold">{user.name}</span>
-                    <span className="truncate text-[10px] text-muted-foreground">
+                    <span className="text-muted-foreground truncate text-[10px]">
                       {user.role} • {user.email}
                     </span>
                   </div>
@@ -103,30 +101,30 @@ export function NavUser({ user }: NavUserProps) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2 text-xs cursor-pointer">
-                <Sparkles className="size-4 text-brand" />
+              <DropdownMenuItem className="cursor-pointer gap-2 text-xs">
+                <Sparkles className="text-brand size-4" />
                 <span>Super Admin Mode</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2 text-xs cursor-pointer">
-                <BadgeCheck className="size-4 text-muted-foreground" />
+              <DropdownMenuItem className="cursor-pointer gap-2 text-xs">
+                <BadgeCheck className="text-muted-foreground size-4" />
                 <span>Account & Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2 text-xs cursor-pointer">
-                <CreditCard className="size-4 text-muted-foreground" />
+              <DropdownMenuItem className="cursor-pointer gap-2 text-xs">
+                <CreditCard className="text-muted-foreground size-4" />
                 <span>Subscription & Quota</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2 text-xs cursor-pointer">
-                <Bell className="size-4 text-muted-foreground" />
+              <DropdownMenuItem className="cursor-pointer gap-2 text-xs">
+                <Bell className="text-muted-foreground size-4" />
                 <span>Admin Notifications</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={logout}
-              className="gap-2 text-xs cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+              className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer gap-2 text-xs"
             >
               <LogOut className="size-4" />
               <span>Log out</span>

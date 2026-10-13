@@ -33,7 +33,7 @@ export function useTrendingRankings(period: TrendingPeriod, genre: string) {
         if (genre !== "All") {
           const gLower = genre.toLowerCase();
           list = list.filter((item: AnimeItem) =>
-            item.genres.some((g: string) => g.toLowerCase() === gLower)
+            item.genres.some((g: string) => g.toLowerCase() === gLower),
           );
         }
         setAnimeList(list.map((item: AnimeItem, idx: number) => mapToTrendingAnimeItem(item, idx)));

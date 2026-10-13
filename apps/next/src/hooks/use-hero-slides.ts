@@ -22,12 +22,10 @@ export function useHeroSlides(initialFeaturedAnime?: AnimeItem | null) {
     const items: HeroSlideItem[] = [];
 
     // Filter today's schedule items
-    const today = new Date()
-      .toLocaleDateString("en-US", { weekday: "long" })
-      .toLowerCase();
+    const today = new Date().toLocaleDateString("en-US", { weekday: "long" }).toLowerCase();
 
     const todayItems = scheduleItems.filter(
-      (s) => s.airDay.toLowerCase() === today || s.status === "airing_now"
+      (s) => s.airDay.toLowerCase() === today || s.status === "airing_now",
     );
 
     const sourceSchedule = todayItems.length > 0 ? todayItems : scheduleItems;
@@ -39,7 +37,10 @@ export function useHeroSlides(initialFeaturedAnime?: AnimeItem | null) {
         title: item.title,
         japaneseTitle: item.japaneseTitle,
         image: item.bannerImage || item.coverImage,
-        badgeText: item.status === "airing_now" ? "AIRING NOW" : `TAYANG HARI INI (${item.airTime || "WIB"})`,
+        badgeText:
+          item.status === "airing_now"
+            ? "AIRING NOW"
+            : `TAYANG HARI INI (${item.airTime || "WIB"})`,
         rating: item.rating,
         episodeNumber: item.episodeNumber,
         airTime: item.airTime,

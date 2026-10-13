@@ -8,7 +8,7 @@ export interface GeneratedPng {
 
 export async function convertSvgToPngs(
   svgBuffer: Buffer,
-  targets: PngTarget[]
+  targets: PngTarget[],
 ): Promise<GeneratedPng[]> {
   const results: GeneratedPng[] = [];
 

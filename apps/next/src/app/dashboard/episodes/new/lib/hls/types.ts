@@ -47,13 +47,7 @@ export interface HlsTranscodeResult {
 export type EngineStatus = "unloaded" | "loading" | "ready" | "error";
 
 export type ConverterStatus =
-  | "idle"
-  | "ready"
-  | "converting"
-  | "converted"
-  | "uploading"
-  | "complete"
-  | "error";
+  "idle" | "ready" | "converting" | "converted" | "uploading" | "complete" | "error";
 
 export interface MultiResolutionInputFiles {
   file1080p: File;
@@ -73,4 +67,3 @@ export interface HlsUploadResult {
   url: string;
   sizeBytes?: number;
 }
-

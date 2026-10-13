@@ -23,11 +23,11 @@ export function SeasonsMatrix({ animeList }: SeasonsMatrixProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-          <Calendar className="size-5 text-primary" />
+        <h2 className="text-foreground flex items-center gap-2 text-lg font-bold">
+          <Calendar className="text-primary size-5" />
           Weekly Broadcast Schedule Matrix
         </h2>
-        <span className="text-xs text-muted-foreground">
+        <span className="text-muted-foreground text-xs">
           Timings displayed in JST (Japan Standard Time)
         </span>
       </div>
@@ -37,42 +37,48 @@ export function SeasonsMatrix({ animeList }: SeasonsMatrixProps) {
           const dayAnime = animeList.filter((a) => a.airDay === day);
 
           return (
-            <Card key={day} className="rounded-xl border-border/60 bg-card/60 flex flex-col h-full shadow-xs">
-              <CardHeader className="p-3 border-b border-border/60 bg-muted/30">
-                <CardTitle className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center justify-between">
+            <Card
+              key={day}
+              className="border-border/60 bg-card/60 flex h-full flex-col rounded-xl shadow-xs"
+            >
+              <CardHeader className="border-border/60 bg-muted/30 border-b p-3">
+                <CardTitle className="text-foreground flex items-center justify-between text-xs font-bold tracking-wider uppercase">
                   <span>{label}</span>
-                  <Badge variant="secondary" className="size-5 rounded-full p-0 flex items-center justify-center text-[10px]">
+                  <Badge
+                    variant="secondary"
+                    className="flex size-5 items-center justify-center rounded-full p-0 text-[10px]"
+                  >
                     {dayAnime.length}
                   </Badge>
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="p-2 flex flex-col gap-2 flex-1 min-h-[160px]">
+              <CardContent className="flex min-h-[160px] flex-1 flex-col gap-2 p-2">
                 {dayAnime.map((anime) => (
                   <div
                     key={anime.id}
-                    className="p-2 rounded-lg border border-border/40 bg-background/80 hover:border-primary/50 transition-colors flex flex-col gap-1.5"
+                    className="border-border/40 bg-background/80 hover:border-primary/50 flex flex-col gap-1.5 rounded-lg border p-2 transition-colors"
                   >
-                    <div className="flex items-center justify-between gap-1 text-[11px] font-medium text-muted-foreground">
+                    <div className="text-muted-foreground flex items-center justify-between gap-1 text-[11px] font-medium">
                       <span className="flex items-center gap-1">
-                        <Clock className="size-3 text-primary" />
+                        <Clock className="text-primary size-3" />
                         {anime.airTime}
                       </span>
-                      <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-mono">
+                      <span className="bg-muted rounded px-1.5 py-0.5 font-mono text-[10px]">
                         Ep {anime.currentEpisode}/{anime.episodeCount}
                       </span>
                     </div>
 
-                    <span className="text-xs font-semibold text-foreground line-clamp-2 leading-tight">
+                    <span className="text-foreground line-clamp-2 text-xs leading-tight font-semibold">
                       {anime.titleRomaji}
                     </span>
 
-                    <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-1 border-t border-border/20">
-                      <span className="truncate flex items-center gap-1">
+                    <div className="text-muted-foreground border-border/20 flex items-center justify-between border-t pt-1 text-[10px]">
+                      <span className="flex items-center gap-1 truncate">
                         <Film className="size-3 shrink-0" />
                         {anime.studio}
                       </span>
-                      <Badge variant="outline" className="text-[9px] px-1 py-0 h-4">
+                      <Badge variant="outline" className="h-4 px-1 py-0 text-[9px]">
                         {anime.licenseRegion}
                       </Badge>
                     </div>
@@ -80,10 +86,8 @@ export function SeasonsMatrix({ animeList }: SeasonsMatrixProps) {
                 ))}
 
                 {dayAnime.length === 0 && (
-                  <div className="flex-1 flex items-center justify-center p-4 text-center">
-                    <span className="text-xs text-muted-foreground/60 italic">
-                      No airings
-                    </span>
+                  <div className="flex flex-1 items-center justify-center p-4 text-center">
+                    <span className="text-muted-foreground/60 text-xs italic">No airings</span>
                   </div>
                 )}
               </CardContent>

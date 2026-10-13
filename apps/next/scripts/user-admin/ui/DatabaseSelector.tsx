@@ -18,7 +18,8 @@ export const DatabaseSelector: React.FC<DatabaseSelectorProps> = ({ targets, onS
           Error: No available database connections detected!
         </Text>
         <Text color="yellow">
-          Please check your .env (DB_URL / DATABASE_URL) or ensure Wrangler is initialized/logged in.
+          Please check your .env (DB_URL / DATABASE_URL) or ensure Wrangler is initialized/logged
+          in.
         </Text>
       </Box>
     );

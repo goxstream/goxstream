@@ -30,51 +30,52 @@ export function EditEpisodeHeader({
   onDelete,
 }: EditEpisodeHeaderProps) {
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-border/60 min-w-0">
-      <div className="flex items-center gap-3 min-w-0">
+    <div className="border-border/60 flex min-w-0 flex-col gap-3 border-b pb-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex min-w-0 items-center gap-3">
         <Link href="/dashboard/episodes" className="shrink-0">
-          <Button variant="outline" size="icon" className="size-9 border-border/60">
+          <Button variant="outline" size="icon" className="border-border/60 size-9">
             <ArrowLeft className="size-4" />
           </Button>
         </Link>
         <div className="min-w-0">
-          <div className="flex items-center gap-2 min-w-0 flex-wrap">
-            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground truncate">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <h1 className="text-foreground truncate text-lg font-bold tracking-tight sm:text-xl">
               Edit Episode #{episodeNumber}
             </h1>
-            <Badge variant="outline" className="text-xs font-mono bg-muted/30">
+            <Badge variant="outline" className="bg-muted/30 font-mono text-xs">
               {episodeId}
             </Badge>
             <Badge
               className={
                 status === "published"
-                  ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                  ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-500"
                   : status === "scheduled"
-                  ? "bg-sky-500/10 text-sky-500 border-sky-500/20"
-                  : status === "processing"
-                  ? "bg-amber-500/10 text-amber-500 border-amber-500/20"
-                  : "bg-muted text-muted-foreground"
+                    ? "border-sky-500/20 bg-sky-500/10 text-sky-500"
+                    : status === "processing"
+                      ? "border-amber-500/20 bg-amber-500/10 text-amber-500"
+                      : "bg-muted text-muted-foreground"
               }
             >
               {status.toUpperCase()}
             </Badge>
           </div>
-          <p className="text-xs text-muted-foreground truncate mt-0.5">
-            {animeTitle ? `${animeTitle} • ` : ""}{title || "Untitled Episode"}
+          <p className="text-muted-foreground mt-0.5 truncate text-xs">
+            {animeTitle ? `${animeTitle} • ` : ""}
+            {title || "Untitled Episode"}
             {viewsCount > 0 && ` • ${viewsCount.toLocaleString()} views`}
           </p>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 shrink-0 flex-wrap">
+      <div className="flex shrink-0 flex-wrap items-center gap-2">
         {onDelete && (
           <Button
             variant="ghost"
             size="sm"
             onClick={onDelete}
-            className="text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10 text-xs"
           >
-            <Trash2 className="size-3.5 mr-1" />
+            <Trash2 className="mr-1 size-3.5" />
             Delete
           </Button>
         )}
@@ -83,18 +84,18 @@ export function EditEpisodeHeader({
           size="sm"
           onClick={onSave}
           disabled={isSaving}
-          className="text-xs border-border/60"
+          className="border-border/60 text-xs"
         >
-          <Save className="size-3.5 mr-1.5" />
+          <Save className="mr-1.5 size-3.5" />
           Save Draft
         </Button>
         <Button
           size="sm"
           onClick={onSave}
           disabled={isSaving}
-          className="text-xs bg-primary text-primary-foreground hover:bg-primary/90"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 text-xs"
         >
-          <CheckCircle2 className="size-3.5 mr-1.5" />
+          <CheckCircle2 className="mr-1.5 size-3.5" />
           {isSaving ? "Saving..." : "Update Episode"}
         </Button>
       </div>

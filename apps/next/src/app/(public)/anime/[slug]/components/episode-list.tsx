@@ -2,14 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import {
-  Play,
-  Search,
-  LayoutGrid,
-  List,
-  Clock,
-  Sparkles,
-} from "lucide-react";
+import { Play, Search, LayoutGrid, List, Clock, Sparkles } from "lucide-react";
 import { EpisodeCard } from "@/components/episode-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
@@ -80,18 +73,18 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
     return (
       <section id="episodes" className="my-8 scroll-mt-20">
         <Card className="border-border/60 bg-card/40 shadow-xs">
-          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
+          <CardHeader className="flex flex-col justify-between gap-4 pb-4 sm:flex-row sm:items-center">
             <div className="space-y-1">
               <Skeleton className="h-6 w-48 rounded" />
               <Skeleton className="h-3 w-64 rounded" />
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {Array.from({ length: 12 }).map((_, i) => (
-                <Card key={i} className="flex flex-col border-border/60 overflow-hidden">
+                <Card key={i} className="border-border/60 flex flex-col overflow-hidden">
                   <Skeleton className="aspect-video w-full rounded-none" />
-                  <div className="p-2.5 space-y-1.5">
+                  <div className="space-y-1.5 p-2.5">
                     <Skeleton className="h-3 w-3/4 rounded" />
                     <Skeleton className="h-2.5 w-1/2 rounded" />
                   </div>
@@ -104,18 +97,19 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
     );
   }
 
-  const latestEpNumber = episodes.length > 0 ? Math.max(...episodes.map((e) => e.episodeNumber)) : 0;
+  const latestEpNumber =
+    episodes.length > 0 ? Math.max(...episodes.map((e) => e.episodeNumber)) : 0;
 
   return (
     <section id="episodes" className="my-8 scroll-mt-20">
       <Card className="border-border/60 bg-card/40 shadow-xs">
-        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4">
+        <CardHeader className="flex flex-col justify-between gap-4 pb-4 sm:flex-row sm:items-center">
           <div className="space-y-1">
-            <CardTitle className="text-xl font-extrabold flex items-center gap-2">
-              <Play className="size-5 text-primary fill-primary" />
+            <CardTitle className="flex items-center gap-2 text-xl font-extrabold">
+              <Play className="text-primary fill-primary size-5" />
               <span>Episode List ({episodes.length})</span>
             </CardTitle>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               Select an episode to start streaming in high definition
             </p>
           </div>
@@ -143,27 +137,27 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
 
         <CardContent className="space-y-4">
           {/* Controls Bar: Search Input & Range Selector */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
             {/* Search Input */}
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <div className="relative max-w-sm flex-1">
+              <Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
               <Input
                 placeholder="Search episode # or title..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 h-9 text-xs border-border/80"
+                className="border-border/80 h-9 pl-9 text-xs"
               />
             </div>
 
             {/* Range Selector Tabs */}
             {ranges.length > 1 && (
               <Tabs value={activeRange} onValueChange={setActiveRange} className="w-full sm:w-auto">
-                <TabsList className="h-9 p-1 bg-muted/60 flex-wrap">
+                <TabsList className="bg-muted/60 h-9 flex-wrap p-1">
                   {ranges.map((r) => (
                     <TabsTrigger
                       key={r.value}
                       value={r.value}
-                      className="text-xs h-7 px-2.5 font-medium"
+                      className="h-7 px-2.5 text-xs font-medium"
                     >
                       {r.label}
                     </TabsTrigger>
@@ -175,17 +169,15 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
 
           {/* Episode Grid or List */}
           {filteredEpisodes.length === 0 ? (
-            <div className="text-center py-12 border border-dashed border-border/60 rounded-xl">
-              <p className="text-sm font-semibold text-muted-foreground">
-                No episodes found
-              </p>
-              <p className="text-xs text-muted-foreground/80 mt-1">
+            <div className="border-border/60 rounded-xl border border-dashed py-12 text-center">
+              <p className="text-muted-foreground text-sm font-semibold">No episodes found</p>
+              <p className="text-muted-foreground/80 mt-1 text-xs">
                 Try adjusting your search query or episode filter.
               </p>
             </div>
           ) : viewMode === "grid" ? (
             /* Grid View Mode */
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
               {filteredEpisodes.map((ep) => {
                 const isLatest = ep.episodeNumber === latestEpNumber;
                 const isGradient = ep.thumbnail && ep.thumbnail.startsWith("linear-gradient");
@@ -194,13 +186,13 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
                   <Link
                     key={ep.id}
                     href={`/anime/${animeSlug}/${ep.episodeNumber}`}
-                    className="group relative flex flex-col rounded-xl overflow-hidden border border-border/60 bg-card hover:border-primary/50 transition-all duration-200 hover:shadow-xs"
+                    className="group border-border/60 bg-card hover:border-primary/50 relative flex flex-col overflow-hidden rounded-xl border transition-all duration-200 hover:shadow-xs"
                   >
                     {/* Thumbnail Poster */}
-                    <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                    <div className="bg-muted relative aspect-video w-full overflow-hidden">
                       {isGradient ? (
                         <div
-                          className="w-full h-full transition-transform duration-300 group-hover:scale-105"
+                          className="h-full w-full transition-transform duration-300 group-hover:scale-105"
                           style={getImageStyle(ep.thumbnail)}
                         />
                       ) : (
@@ -209,7 +201,7 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
                           alt={ep.episodeTitle}
                           loading="lazy"
                           decoding="async"
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.opacity = "0";
                           }}
@@ -218,26 +210,26 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                       {/* Play Button Overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="size-9 rounded-full bg-primary/90 text-primary-foreground flex items-center justify-center shadow-lg">
-                          <Play className="size-4 fill-primary-foreground ml-0.5" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+                        <div className="bg-primary/90 text-primary-foreground flex size-9 items-center justify-center rounded-full shadow-lg">
+                          <Play className="fill-primary-foreground ml-0.5 size-4" />
                         </div>
                       </div>
 
                       {/* Episode Number Badge */}
                       <div className="absolute top-1.5 left-1.5 flex items-center gap-1">
-                        <Badge className="bg-black/70 backdrop-blur-md text-white border-white/20 text-[10px] font-bold px-1.5 py-0.5">
+                        <Badge className="border-white/20 bg-black/70 px-1.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-md">
                           EP {ep.episodeNumber}
                         </Badge>
                         {isLatest && (
-                          <Badge className="bg-emerald-500 text-white text-[9px] font-bold gap-0.5 px-1.5 py-0.5">
+                          <Badge className="gap-0.5 bg-emerald-500 px-1.5 py-0.5 text-[9px] font-bold text-white">
                             <Sparkles className="size-2" /> NEW
                           </Badge>
                         )}
                       </div>
 
                       {/* Audio & Duration Badges */}
-                      <div className="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between text-[10px] text-white/90 font-medium">
+                      <div className="absolute right-1.5 bottom-1.5 left-1.5 flex items-center justify-between text-[10px] font-medium text-white/90">
                         <span>{ep.isSub && ep.isDub ? "SUB & DUB" : ep.isSub ? "SUB" : "DUB"}</span>
                         <span className="flex items-center gap-1">
                           <Clock className="size-2.5" />
@@ -247,13 +239,13 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
                     </div>
 
                     {/* Card Content Info */}
-                    <div className="p-2.5 space-y-1">
-                      <h4 className="font-semibold text-xs text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                    <div className="space-y-1 p-2.5">
+                      <h4 className="text-foreground group-hover:text-primary line-clamp-1 text-xs font-semibold transition-colors">
                         {ep.episodeTitle}
                       </h4>
-                      <p className="text-[10px] text-muted-foreground flex items-center justify-between">
+                      <p className="text-muted-foreground flex items-center justify-between text-[10px]">
                         <span>{ep.releasedAt}</span>
-                        <span className="text-primary font-medium text-[10px] group-hover:underline">
+                        <span className="text-primary text-[10px] font-medium group-hover:underline">
                           Watch →
                         </span>
                       </p>
@@ -264,32 +256,32 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
             </div>
           ) : (
             /* Compact List View Mode */
-            <div className="divide-y divide-border/40 border border-border/60 rounded-xl overflow-hidden">
+            <div className="divide-border/40 border-border/60 divide-y overflow-hidden rounded-xl border">
               {filteredEpisodes.map((ep) => {
                 const isLatest = ep.episodeNumber === latestEpNumber;
                 return (
                   <Link
                     key={ep.id}
                     href={`/anime/${animeSlug}/${ep.episodeNumber}`}
-                    className="group flex items-center justify-between p-3 bg-card hover:bg-muted/50 transition-colors"
+                    className="group bg-card hover:bg-muted/50 flex items-center justify-between p-3 transition-colors"
                   >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="size-8 rounded-lg bg-primary/10 text-primary font-extrabold text-xs flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-lg text-xs font-extrabold transition-colors">
                         {ep.episodeNumber}
                       </div>
 
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-xs text-foreground group-hover:text-primary transition-colors truncate">
+                          <h4 className="text-foreground group-hover:text-primary truncate text-xs font-semibold transition-colors">
                             {ep.episodeTitle}
                           </h4>
                           {isLatest && (
-                            <Badge className="bg-emerald-500 text-white text-[9px] font-bold py-0 px-1.5 shrink-0">
+                            <Badge className="shrink-0 bg-emerald-500 px-1.5 py-0 text-[9px] font-bold text-white">
                               NEW
                             </Badge>
                           )}
                         </div>
-                        <p className="text-[11px] text-muted-foreground flex items-center gap-2 mt-0.5">
+                        <p className="text-muted-foreground mt-0.5 flex items-center gap-2 text-[11px]">
                           <span>{ep.duration}</span>
                           <span>•</span>
                           <span>{ep.releasedAt}</span>
@@ -297,11 +289,18 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
-                      <Badge variant="outline" className="text-[10px] hidden sm:inline-flex border-border/80">
+                    <div className="flex shrink-0 items-center gap-3">
+                      <Badge
+                        variant="outline"
+                        className="border-border/80 hidden text-[10px] sm:inline-flex"
+                      >
                         {ep.isSub && ep.isDub ? "SUB & DUB" : ep.isSub ? "SUB" : "DUB"}
                       </Badge>
-                      <Button size="xs" variant="ghost" className="size-8 p-0 group-hover:text-primary">
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        className="group-hover:text-primary size-8 p-0"
+                      >
                         <Play className="size-4 fill-current" />
                       </Button>
                     </div>

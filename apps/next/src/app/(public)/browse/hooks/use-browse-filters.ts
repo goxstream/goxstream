@@ -75,7 +75,7 @@ export function useBrowseFilters() {
       const newPath = queryString ? `${pathname}?${queryString}` : pathname;
       router.replace(newPath, { scroll: false });
     },
-    [searchParams, pathname, router]
+    [searchParams, pathname, router],
   );
 
   // Handle individual filter updates

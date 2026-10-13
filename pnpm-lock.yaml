@@ -171,6 +171,9 @@ importers:
       drizzle-kit:
         specifier: 'catalog:'
         version: 0.31.10
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.10
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -334,6 +337,9 @@ importers:
       png-to-ico:
         specifier: ^3.0.2
         version: 3.0.2
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.10
       sharp:
         specifier: ^0.35.3
         version: 0.35.3(@types/node@22.20.5)
@@ -395,6 +401,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.5(@types/react@19.2.18)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.10
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.3
@@ -426,6 +435,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
         version: 5.20261012.1
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.10
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -435,6 +447,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
         version: 5.20261012.1
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.10
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -451,6 +466,9 @@ importers:
       drizzle-kit:
         specifier: 'catalog:'
         version: 0.31.10
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.10
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -461,6 +479,9 @@ importers:
         specifier: 'catalog:'
         version: 4.6.7
     devDependencies:
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.10
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -549,6 +570,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.5(@types/react@19.2.18)
+      prettier:
+        specifier: 'catalog:'
+        version: 3.9.10
       react:
         specifier: 'catalog:'
         version: 19.2.8

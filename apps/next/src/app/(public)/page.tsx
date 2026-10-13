@@ -6,7 +6,7 @@ import { CtaSection } from "./components/cta-section";
 
 export default function HomePage() {
   return (
-    <div className="pt-6 pb-6 px-4 sm:px-6 lg:px-8">
+    <div className="px-4 pt-6 pb-6 sm:px-6 lg:px-8">
       <HeroSection />
       <TrendingSection />
       <LatestEpisodesSection />

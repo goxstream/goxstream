@@ -28,7 +28,7 @@ export function CategoriesTable({
   onEditCategory,
 }: CategoriesTableProps) {
   return (
-    <div className="rounded-xl border border-border/60 bg-card/60 overflow-hidden shadow-xs">
+    <div className="border-border/60 bg-card/60 overflow-hidden rounded-xl border shadow-xs">
       <Table>
         <TableHeader>
           <TableRow className="border-border/60 hover:bg-transparent">
@@ -43,28 +43,29 @@ export function CategoriesTable({
         </TableHeader>
         <TableBody>
           {categories.map((category) => (
-            <TableRow key={category.id} className="border-border/40 hover:bg-muted/40 transition-colors">
+            <TableRow
+              key={category.id}
+              className="border-border/40 hover:bg-muted/40 transition-colors"
+            >
               <TableCell className="font-mono text-xs font-semibold">
-                <Badge variant="outline" className="font-mono rounded-md">
+                <Badge variant="outline" className="rounded-md font-mono">
                   {category.code}
                 </Badge>
               </TableCell>
 
               <TableCell>
-                <span className="font-semibold text-foreground text-sm">
-                  {category.name}
-                </span>
+                <span className="text-foreground text-sm font-semibold">{category.name}</span>
               </TableCell>
 
-              <TableCell className="hidden md:table-cell text-xs font-mono text-muted-foreground">
+              <TableCell className="text-muted-foreground hidden font-mono text-xs md:table-cell">
                 {category.slug}
               </TableCell>
 
-              <TableCell className="text-right font-medium text-sm text-foreground">
+              <TableCell className="text-foreground text-right text-sm font-medium">
                 {category.animeCount.toLocaleString()}
               </TableCell>
 
-              <TableCell className="hidden lg:table-cell text-xs text-muted-foreground max-w-xs truncate">
+              <TableCell className="text-muted-foreground hidden max-w-xs truncate text-xs lg:table-cell">
                 {category.description}
               </TableCell>
 
@@ -84,7 +85,7 @@ export function CategoriesTable({
                     variant="ghost"
                     size="icon"
                     onClick={() => onEditCategory(category)}
-                    className="size-8 text-muted-foreground hover:text-foreground rounded-lg"
+                    className="text-muted-foreground hover:text-foreground size-8 rounded-lg"
                   >
                     <Edit2 className="size-4" />
                   </Button>
@@ -92,7 +93,7 @@ export function CategoriesTable({
                     variant="ghost"
                     size="icon"
                     onClick={() => onDeleteCategory(category.id)}
-                    className="size-8 text-muted-foreground hover:text-destructive rounded-lg"
+                    className="text-muted-foreground hover:text-destructive size-8 rounded-lg"
                   >
                     <Trash2 className="size-4" />
                   </Button>

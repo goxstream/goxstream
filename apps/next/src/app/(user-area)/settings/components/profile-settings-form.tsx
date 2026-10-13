@@ -8,32 +8,28 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { UserSettings } from "@/types/user";
 
-
-
-
 interface ProfileSettingsFormProps {
   settings: UserSettings;
   setSettings: React.Dispatch<React.SetStateAction<UserSettings>>;
   onSave: (e: React.FormEvent) => void;
 }
 
-export function ProfileSettingsForm({
-  settings,
-  setSettings,
-  onSave,
-}: ProfileSettingsFormProps) {
+export function ProfileSettingsForm({ settings, setSettings, onSave }: ProfileSettingsFormProps) {
   return (
-    <form onSubmit={onSave} className="p-6 rounded-2xl border border-border/60 bg-card space-y-6 shadow-xs">
+    <form
+      onSubmit={onSave}
+      className="border-border/60 bg-card space-y-6 rounded-2xl border p-6 shadow-xs"
+    >
       <div className="flex items-center gap-4">
-        <Avatar className="size-20 border-2 border-primary/20">
+        <Avatar className="border-primary/20 size-20 border-2">
           <AvatarImage src={settings.profile.avatarUrl} alt={settings.profile.displayName} />
-          <AvatarFallback className="bg-primary/10 text-primary font-bold text-lg">
+          <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
             {settings.profile.displayName.substring(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="space-y-1">
-          <h3 className="font-semibold text-sm text-foreground">Avatar & Display Picture</h3>
-          <p className="text-xs text-muted-foreground">
+          <h3 className="text-foreground text-sm font-semibold">Avatar & Display Picture</h3>
+          <p className="text-muted-foreground text-xs">
             JPG, PNG or GIF. Recommended resolution 400x400px.
           </p>
           <div className="flex items-center gap-2 pt-1">
@@ -44,7 +40,7 @@ export function ProfileSettingsForm({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label className="text-xs font-medium">Display Name</Label>
           <Input
@@ -55,7 +51,7 @@ export function ProfileSettingsForm({
                 profile: { ...settings.profile, displayName: e.target.value },
               })
             }
-            className="rounded-xl text-xs bg-background border-border/60"
+            className="bg-background border-border/60 rounded-xl text-xs"
           />
         </div>
 
@@ -64,10 +60,9 @@ export function ProfileSettingsForm({
           <Input
             value={`@${settings.profile.displayName.toLowerCase().replace(/\s+/g, "_")}`}
             disabled
-            className="rounded-xl text-xs bg-muted/50 border-border/60 cursor-not-allowed opacity-80"
+            className="bg-muted/50 border-border/60 cursor-not-allowed rounded-xl text-xs opacity-80"
           />
         </div>
-
       </div>
 
       <div className="space-y-2">
@@ -81,12 +76,12 @@ export function ProfileSettingsForm({
               profile: { ...settings.profile, bio: e.target.value },
             })
           }
-          className="rounded-xl text-xs bg-background border-border/60 resize-none"
+          className="bg-background border-border/60 resize-none rounded-xl text-xs"
         />
       </div>
 
-      <div className="pt-4 border-t border-border/40 flex justify-end">
-        <Button type="submit" className="rounded-xl text-xs font-semibold gap-2">
+      <div className="border-border/40 flex justify-end border-t pt-4">
+        <Button type="submit" className="gap-2 rounded-xl text-xs font-semibold">
           <Save className="size-3.5" />
           Save Profile Changes
         </Button>

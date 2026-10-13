@@ -8,7 +8,7 @@ import type { ScheduleItem } from "@/types/schedule";
  */
 export async function getAnimeScheduleItems(): Promise<ScheduleItem[]> {
   const db = await getDb();
-  
+
   try {
     const rawList = await db.query.schedules.findMany({
       limit: 50,

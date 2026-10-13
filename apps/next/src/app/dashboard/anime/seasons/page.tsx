@@ -22,15 +22,11 @@ export default function SeasonsPage() {
   const activeSeasonName = `${selectedQuarter.charAt(0) + selectedQuarter.slice(1).toLowerCase()} ${selectedYear}`;
 
   const handleToggleSeasonStatus = (id: string) => {
-    setSeasons((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, isActive: !s.isActive } : s))
-    );
+    setSeasons((prev) => prev.map((s) => (s.id === id ? { ...s, isActive: !s.isActive } : s)));
   };
 
   const handleSetCurrentSeason = (id: string) => {
-    setSeasons((prev) =>
-      prev.map((s) => ({ ...s, isCurrent: s.id === id }))
-    );
+    setSeasons((prev) => prev.map((s) => ({ ...s, isCurrent: s.id === id })));
   };
 
   const handleDeleteSeason = (id: string) => {
@@ -59,7 +55,7 @@ export default function SeasonsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-4 sm:p-6 max-w-7xl mx-auto w-full">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 sm:p-6">
       {/* Header */}
       <SeasonsHeader
         selectedYear={selectedYear}
@@ -71,11 +67,11 @@ export default function SeasonsPage() {
 
       {/* Stats Cards */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
-          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
-          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
-          <Skeleton className="h-24 w-full rounded-xl bg-card border border-border/60" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Skeleton className="bg-card border-border/60 h-24 w-full rounded-xl border" />
+          <Skeleton className="bg-card border-border/60 h-24 w-full rounded-xl border" />
+          <Skeleton className="bg-card border-border/60 h-24 w-full rounded-xl border" />
+          <Skeleton className="bg-card border-border/60 h-24 w-full rounded-xl border" />
         </div>
       ) : (
         <SeasonsStats animeList={animeSlots} seasonName={activeSeasonName} />
@@ -85,10 +81,10 @@ export default function SeasonsPage() {
       <SeasonsMatrix animeList={animeSlots} />
 
       {/* All Seasons Overview Table */}
-      <div className="flex flex-col gap-3 pt-4 border-t border-border/60">
-        <h2 className="text-lg font-bold text-foreground">Season Master Directory</h2>
+      <div className="border-border/60 flex flex-col gap-3 border-t pt-4">
+        <h2 className="text-foreground text-lg font-bold">Season Master Directory</h2>
         {isLoading ? (
-          <Skeleton className="h-64 w-full rounded-xl bg-card border border-border/60" />
+          <Skeleton className="bg-card border-border/60 h-64 w-full rounded-xl border" />
         ) : (
           <SeasonsTable
             seasons={seasons}

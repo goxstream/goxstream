@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.turbo/
+build/
+dist/
+out/
+.react-router/
+.wrangler/
+.open-next/
+pnpm-lock.yaml
+coverage/
+playwright-report/
+test-results/
+public/ffmpeg/
+*.tsbuildinfo
+next-env.d.ts
+cloudflare-env.d.ts

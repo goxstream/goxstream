@@ -33,7 +33,7 @@ export function useScheduleView() {
           item.title.toLowerCase().includes(q) ||
           (item.japaneseTitle && item.japaneseTitle.toLowerCase().includes(q)) ||
           item.genres.some((g) => g.toLowerCase().includes(q)) ||
-          item.studio.toLowerCase().includes(q)
+          item.studio.toLowerCase().includes(q),
       );
     }
 

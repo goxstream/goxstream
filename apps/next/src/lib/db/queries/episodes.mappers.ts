@@ -4,10 +4,13 @@ import type { EpisodeItem, StreamSource } from "@/types/anime";
  * Maps raw database episode record with parent relations into EpisodeItem UI format
  */
 export function mapToEpisodeItem(raw: any, animeSlug: string, animeTitle: string): EpisodeItem {
-  const durationMin = raw.durationSeconds ? `${Math.floor(raw.durationSeconds / 60)} min` : "24 min";
-  const dateStr = raw.airDate instanceof Date
-    ? raw.airDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-    : "Recently";
+  const durationMin = raw.durationSeconds
+    ? `${Math.floor(raw.durationSeconds / 60)} min`
+    : "24 min";
+  const dateStr =
+    raw.airDate instanceof Date
+      ? raw.airDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+      : "Recently";
 
   return {
     id: raw.id,

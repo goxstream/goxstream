@@ -69,9 +69,12 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
     const newUsersCount = newUsersRes?.count || 0;
     const oldUsersCount = oldUsersRes?.count || 0;
 
-    const monthlyGrowthPercent = oldUsersCount > 0 
-      ? Number(((newUsersCount - oldUsersCount) / oldUsersCount * 100).toFixed(1))
-      : newUsersCount > 0 ? 100.0 : 0.0;
+    const monthlyGrowthPercent =
+      oldUsersCount > 0
+        ? Number((((newUsersCount - oldUsersCount) / oldUsersCount) * 100).toFixed(1))
+        : newUsersCount > 0
+          ? 100.0
+          : 0.0;
 
     return calculateDashboardStats(
       totalAnime,
@@ -80,7 +83,7 @@ export async function getDashboardStats(): Promise<DashboardStatsData> {
       activeStreams,
       bandwidthUsageGb,
       storageUsedGb,
-      monthlyGrowthPercent
+      monthlyGrowthPercent,
     );
   } catch {
     return {
@@ -148,9 +151,18 @@ export async function getDashboardRoles(): Promise<RoleDefinition[]> {
   const db = await getDb();
 
   try {
-    const [adminCount] = await db.select({ count: count() }).from(users).where(eq(users.role, "admin"));
-    const [superAdminCount] = await db.select({ count: count() }).from(users).where(eq(users.role, "super_admin"));
-    const [userCount] = await db.select({ count: count() }).from(users).where(eq(users.role, "user"));
+    const [adminCount] = await db
+      .select({ count: count() })
+      .from(users)
+      .where(eq(users.role, "admin"));
+    const [superAdminCount] = await db
+      .select({ count: count() })
+      .from(users)
+      .where(eq(users.role, "super_admin"));
+    const [userCount] = await db
+      .select({ count: count() })
+      .from(users)
+      .where(eq(users.role, "user"));
 
     return [
       {

@@ -33,13 +33,13 @@ export function SearchInput({ query, onQueryChange, className }: SearchInputProp
 
   return (
     <div className={cn("relative w-full", className)}>
-      <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+      <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2" />
       <Input
         type="text"
         placeholder="Search anime title, japanese name, studio..."
         value={localValue}
         onChange={(e) => setLocalValue(e.target.value)}
-        className="pl-10 pr-9 h-10 bg-card border-border/80 rounded-xl focus-visible:ring-primary/40 text-xs font-medium"
+        className="bg-card border-border/80 focus-visible:ring-primary/40 h-10 rounded-xl pr-9 pl-10 text-xs font-medium"
       />
       {localValue && (
         <button
@@ -48,7 +48,7 @@ export function SearchInput({ query, onQueryChange, className }: SearchInputProp
             setLocalValue("");
             onQueryChange("");
           }}
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors"
+          className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 p-1 transition-colors"
           aria-label="Clear search query"
         >
           <X className="size-3.5" />

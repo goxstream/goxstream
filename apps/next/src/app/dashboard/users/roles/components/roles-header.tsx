@@ -12,9 +12,12 @@ export function RolesHeader({ onOpenCreateRole, onOpenInviteStaff }: RolesHeader
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Roles & Access Control</h1>
-        <p className="text-sm text-muted-foreground">
-          Configure Role-Based Access Control (RBAC) permissions and manage internal staff team privileges.
+        <h1 className="text-foreground text-2xl font-bold tracking-tight">
+          Roles & Access Control
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          Configure Role-Based Access Control (RBAC) permissions and manage internal staff team
+          privileges.
         </p>
       </div>
       <div className="flex items-center gap-2">
@@ -22,7 +25,7 @@ export function RolesHeader({ onOpenCreateRole, onOpenInviteStaff }: RolesHeader
           variant="outline"
           size="sm"
           onClick={onOpenCreateRole}
-          className="h-9 gap-1.5 border-border/60 text-xs"
+          className="border-border/60 h-9 gap-1.5 text-xs"
         >
           <ShieldPlus className="size-4" />
           <span>Create Custom Role</span>
@@ -30,7 +33,7 @@ export function RolesHeader({ onOpenCreateRole, onOpenInviteStaff }: RolesHeader
         <Button
           size="sm"
           onClick={onOpenInviteStaff}
-          className="h-9 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 text-xs"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 h-9 gap-1.5 text-xs"
         >
           <UserPlus className="size-4" />
           <span>Invite Staff</span>

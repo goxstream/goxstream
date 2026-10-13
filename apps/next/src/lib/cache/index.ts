@@ -28,9 +28,7 @@ async function resolveCacheAdapter(): Promise<CacheAdapter> {
   const cacheType = (process.env.CACHE_CONNECTION || "").toLowerCase();
   const redisUrl = process.env.REDIS_URL || process.env.REDIS_HOST;
 
-  const isRedisOverride =
-    cacheType === "redis" ||
-    Boolean(redisUrl);
+  const isRedisOverride = cacheType === "redis" || Boolean(redisUrl);
 
   if (isRedisOverride) {
     cachedAdapter = redisCacheAdapter;
@@ -62,11 +60,7 @@ export async function getCacheItem<T>(key: string): Promise<T | null> {
 /**
  * Sets a cached item in Cloudflare KV (Workers) or Redis/In-Memory (Node.js/VPS).
  */
-export async function setCacheItem<T>(
-  key: string,
-  value: T,
-  ttlSeconds = 300
-): Promise<void> {
+export async function setCacheItem<T>(key: string, value: T, ttlSeconds = 300): Promise<void> {
   const adapter = await resolveCacheAdapter();
   return adapter.set<T>(key, value, ttlSeconds);
 }

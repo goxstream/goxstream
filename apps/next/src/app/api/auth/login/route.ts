@@ -10,7 +10,10 @@ export async function POST(req: NextRequest) {
     const { usernameOrEmail, password } = body;
 
     if (!usernameOrEmail || !password) {
-      return NextResponse.json({ error: "Username/email and password are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Username/email and password are required" },
+        { status: 400 },
+      );
     }
 
     const user = await loginUserAccount(usernameOrEmail);
@@ -28,7 +31,8 @@ export async function POST(req: NextRequest) {
     }
 
     const userAgent = req.headers.get("user-agent") || undefined;
-    const ipAddress = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || undefined;
+    const ipAddress =
+      req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || undefined;
 
     const sessionToken = await createSession(user.id, userAgent, ipAddress);
 
@@ -56,7 +60,7 @@ export async function POST(req: NextRequest) {
 
     response.headers.set(
       "Set-Cookie",
-      `${SESSION_COOKIE_NAME}=${sessionToken}; Path=/; Max-Age=604800; HttpOnly; SameSite=Lax`
+      `${SESSION_COOKIE_NAME}=${sessionToken}; Path=/; Max-Age=604800; HttpOnly; SameSite=Lax`,
     );
 
     return response;

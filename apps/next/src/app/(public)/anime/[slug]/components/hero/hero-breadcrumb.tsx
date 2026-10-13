@@ -12,7 +12,7 @@ interface HeroBreadcrumbProps {
 export function HeroBreadcrumb({ title, isLoading }: HeroBreadcrumbProps) {
   if (isLoading || !title) {
     return (
-      <div className="flex items-center gap-2 mb-6">
+      <div className="mb-6 flex items-center gap-2">
         <Skeleton className="h-4 w-12 rounded" />
         <Skeleton className="h-3 w-3 rounded" />
         <Skeleton className="h-4 w-24 rounded" />
@@ -23,7 +23,7 @@ export function HeroBreadcrumb({ title, isLoading }: HeroBreadcrumbProps) {
   }
 
   return (
-    <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-6">
+    <nav className="text-muted-foreground mb-6 flex items-center gap-1.5 text-xs">
       <Link href="/" className="hover:text-foreground transition-colors">
         Home
       </Link>
@@ -32,7 +32,7 @@ export function HeroBreadcrumb({ title, isLoading }: HeroBreadcrumbProps) {
         Browse Anime
       </Link>
       <ChevronRight className="size-3" />
-      <span className="text-foreground font-medium truncate max-w-[200px] sm:max-w-none">
+      <span className="text-foreground max-w-[200px] truncate font-medium sm:max-w-none">
         {title}
       </span>
     </nav>

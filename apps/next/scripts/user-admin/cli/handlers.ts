@@ -36,7 +36,10 @@ export async function handleListCommand(target: DbTarget): Promise<void> {
   process.exit(0);
 }
 
-export async function handleCreateCommand(target: DbTarget, flags: Record<string, any>): Promise<void> {
+export async function handleCreateCommand(
+  target: DbTarget,
+  flags: Record<string, any>,
+): Promise<void> {
   if (!flags.username || !flags.email || !flags.password) {
     console.error("Error: Missing required flags for create (--username, --email, --password).");
     process.exit(1);
@@ -61,7 +64,10 @@ export async function handleCreateCommand(target: DbTarget, flags: Record<string
   process.exit(0);
 }
 
-export async function handleEditCommand(target: DbTarget, flags: Record<string, any>): Promise<void> {
+export async function handleEditCommand(
+  target: DbTarget,
+  flags: Record<string, any>,
+): Promise<void> {
   if (!flags.username) {
     console.error("Error: Missing required flag for edit (--username).");
     process.exit(1);
@@ -85,15 +91,23 @@ export async function handleEditCommand(target: DbTarget, flags: Record<string, 
   process.exit(0);
 }
 
-export async function handleDeleteCommand(target: DbTarget, flags: Record<string, any>): Promise<void> {
+export async function handleDeleteCommand(
+  target: DbTarget,
+  flags: Record<string, any>,
+): Promise<void> {
   if (!flags.username) {
     console.error("Error: Missing required flag for delete (--username).");
     process.exit(1);
   }
-  const rawUsernames = (flags.username as string).split(",").map((s) => s.trim()).filter(Boolean);
+  const rawUsernames = (flags.username as string)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
   const count = await deleteUsersBatch(target, rawUsernames);
   console.log(`\n=========================================================`);
-  console.log(`SUCCESS: Deleted ${count} user(s) (${rawUsernames.join(", ")}) from ${target.toUpperCase()}`);
+  console.log(
+    `SUCCESS: Deleted ${count} user(s) (${rawUsernames.join(", ")}) from ${target.toUpperCase()}`,
+  );
   console.log(`=========================================================`);
   process.exit(0);
 }

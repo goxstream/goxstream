@@ -23,16 +23,16 @@ export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps
   if (isLoading || !anime) {
     if (variant === "list") {
       return (
-        <Card className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-card border border-border/70">
-          <div className="flex items-center gap-4 flex-1 w-full">
-            <Skeleton className="size-16 sm:size-20 rounded-lg shrink-0" />
-            <div className="space-y-2 flex-1 min-w-0">
+        <Card className="bg-card border-border/70 flex flex-col items-start justify-between gap-4 rounded-xl border p-4 sm:flex-row sm:items-center">
+          <div className="flex w-full flex-1 items-center gap-4">
+            <Skeleton className="size-16 shrink-0 rounded-lg sm:size-20" />
+            <div className="min-w-0 flex-1 space-y-2">
               <Skeleton className="h-5 w-2/3 rounded" />
               <Skeleton className="h-3 w-1/3 rounded" />
               <Skeleton className="h-3 w-1/2 rounded" />
             </div>
           </div>
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex w-full items-center gap-3 sm:w-auto">
             <Skeleton className="h-4 w-20 rounded" />
             <Skeleton className="h-4 w-12 rounded" />
           </div>
@@ -41,9 +41,9 @@ export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps
     }
 
     return (
-      <Card className="flex flex-col rounded-xl overflow-hidden bg-card border border-border/80 p-0 gap-0">
+      <Card className="bg-card border-border/80 flex flex-col gap-0 overflow-hidden rounded-xl border p-0">
         <Skeleton className="aspect-[3/4] w-full rounded-none" />
-        <div className="p-3.5 flex flex-col gap-2 bg-card">
+        <div className="bg-card flex flex-col gap-2 p-3.5">
           <Skeleton className="h-4 w-4/5 rounded" />
           <div className="flex items-center justify-between">
             <Skeleton className="h-3 w-1/2 rounded" />
@@ -60,11 +60,11 @@ export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps
     return (
       <Link
         href={`/anime/${anime.slug}`}
-        className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-card border border-border/70 hover:border-primary/60 transition-all duration-200"
+        className="group bg-card border-border/70 hover:border-primary/60 flex flex-col items-start justify-between gap-4 rounded-xl border p-4 transition-all duration-200 sm:flex-row sm:items-center"
       >
-        <div className="flex items-center gap-4 flex-1 min-w-0">
+        <div className="flex min-w-0 flex-1 items-center gap-4">
           {/* Thumbnail Artwork Area with VercelSpinner Overlay */}
-          <div className="relative size-16 sm:size-20 rounded-lg shrink-0 overflow-hidden bg-muted flex items-center justify-center">
+          <div className="bg-muted relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg sm:size-20">
             {!isGradient && !isImageLoaded && (
               <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
                 <VercelSpinner size="sm" />
@@ -72,10 +72,7 @@ export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps
             )}
 
             {isGradient ? (
-              <div
-                className="absolute inset-0 size-full"
-                style={getImageStyle(anime.coverImage)}
-              />
+              <div className="absolute inset-0 size-full" style={getImageStyle(anime.coverImage)} />
             ) : (
               <img
                 src={anime.coverImage || ""}
@@ -93,32 +90,28 @@ export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps
                 }}
               />
             )}
-            <Play className="relative size-6 text-white/80 fill-white/80 group-hover:scale-110 transition-transform z-10" />
+            <Play className="relative z-10 size-6 fill-white/80 text-white/80 transition-transform group-hover:scale-110" />
           </div>
 
           {/* Info */}
-          <div className="space-y-1 flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-bold text-base text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+          <div className="min-w-0 flex-1 space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="text-foreground group-hover:text-primary line-clamp-1 text-base font-bold transition-colors">
                 {anime.title}
               </h3>
-              <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+              <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
                 {anime.type}
               </Badge>
             </div>
             {anime.japaneseTitle && (
-              <p className="text-xs text-muted-foreground/80 line-clamp-1">
-                {anime.japaneseTitle}
-              </p>
+              <p className="text-muted-foreground/80 line-clamp-1 text-xs">{anime.japaneseTitle}</p>
             )}
-            <p className="text-xs text-muted-foreground line-clamp-1">
-              {anime.genres.join(" • ")}
-            </p>
+            <p className="text-muted-foreground line-clamp-1 text-xs">{anime.genres.join(" • ")}</p>
           </div>
         </div>
 
         {/* Stats & Actions */}
-        <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto text-xs text-muted-foreground border-t sm:border-t-0 border-border/40 pt-2 sm:pt-0">
+        <div className="text-muted-foreground border-border/40 flex w-full items-center justify-between gap-4 border-t pt-2 text-xs sm:w-auto sm:justify-end sm:border-t-0 sm:pt-0">
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1 font-semibold text-amber-500">
               <Star className="size-3.5 fill-amber-500 stroke-amber-500" />
@@ -141,10 +134,10 @@ export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps
   return (
     <Link
       href={`/anime/${anime.slug}`}
-      className="group flex flex-col rounded-xl overflow-hidden bg-card border border-border/80 hover:border-primary/60 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group bg-card border-border/80 hover:border-primary/60 focus-visible:ring-ring flex flex-col overflow-hidden rounded-xl border transition-all duration-200 focus-visible:ring-2 focus-visible:outline-none"
     >
       {/* Poster Artwork Area */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
+      <div className="bg-muted relative aspect-[3/4] w-full overflow-hidden">
         {/* Vercel Spinner Overlay while image loads */}
         {!isGradient && !isImageLoaded && (
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 backdrop-blur-xs transition-opacity duration-300">
@@ -180,9 +173,20 @@ export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps
         {/* Abstract SVG Pattern overlay for gradients */}
         {isGradient && (
           <div className="absolute inset-0 opacity-20 mix-blend-overlay">
-            <svg className="size-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none">
+            <svg
+              className="size-full"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
+              fill="none"
+            >
               <defs>
-                <pattern id={`grid-${anime.id}`} width="20" height="20" patternUnits="userSpaceOnUse">
+                <pattern
+                  id={`grid-${anime.id}`}
+                  width="20"
+                  height="20"
+                  patternUnits="userSpaceOnUse"
+                >
                   <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" />
                 </pattern>
               </defs>
@@ -192,38 +196,38 @@ export function AnimeCard({ anime, isLoading, variant = "grid" }: AnimeCardProps
         )}
 
         {/* Top Badges */}
-        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-10">
-          <Badge className="bg-background/85 text-foreground backdrop-blur-md border border-border/60 text-[10px] font-bold tracking-wide px-2 py-0.5">
+        <div className="absolute top-2.5 right-2.5 left-2.5 z-10 flex items-center justify-between">
+          <Badge className="bg-background/85 text-foreground border-border/60 border px-2 py-0.5 text-[10px] font-bold tracking-wide backdrop-blur-md">
             {anime.subOrDub}
           </Badge>
 
-          <Badge className="bg-black/70 text-amber-400 backdrop-blur-md border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 flex items-center gap-1">
+          <Badge className="flex items-center gap-1 border border-amber-500/30 bg-black/70 px-2 py-0.5 text-[10px] font-bold text-amber-400 backdrop-blur-md">
             <Star className="size-3 fill-amber-400 stroke-amber-400" />
             {anime.rating ? anime.rating.toFixed(1) : "N/A"}
           </Badge>
         </div>
 
         {/* Hover Overlay with Play Icon */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10 backdrop-blur-[2px]">
-          <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center border border-primary-foreground/20 transform scale-75 group-hover:scale-100 transition-transform duration-300">
-            <Play className="size-6 fill-primary-foreground stroke-primary-foreground ml-0.5" />
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100">
+          <div className="bg-primary text-primary-foreground border-primary-foreground/20 flex size-12 scale-75 transform items-center justify-center rounded-full border transition-transform duration-300 group-hover:scale-100">
+            <Play className="fill-primary-foreground stroke-primary-foreground ml-0.5 size-6" />
           </div>
         </div>
 
         {/* Bottom Card Shadow Gradient */}
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/80 to-transparent z-0" />
+        <div className="absolute inset-x-0 bottom-0 z-0 h-16 bg-gradient-to-t from-black/80 to-transparent" />
       </div>
 
       {/* Card Info Content */}
-      <div className="p-3.5 flex flex-col gap-1.5 flex-1 bg-card">
-        <h3 className="font-bold text-sm text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+      <div className="bg-card flex flex-1 flex-col gap-1.5 p-3.5">
+        <h3 className="text-foreground group-hover:text-primary line-clamp-1 text-sm font-bold transition-colors">
           {anime.title}
         </h3>
 
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <div className="text-muted-foreground flex items-center justify-between text-xs">
           <span className="line-clamp-1">{anime.genres.slice(0, 2).join(" • ")}</span>
-          <span className="font-medium shrink-0 flex items-center gap-1">
-            <Tv className="size-3 text-muted-foreground" />
+          <span className="flex shrink-0 items-center gap-1 font-medium">
+            <Tv className="text-muted-foreground size-3" />
             Ep {anime.latestEpisode || anime.episodesCount}
           </span>
         </div>

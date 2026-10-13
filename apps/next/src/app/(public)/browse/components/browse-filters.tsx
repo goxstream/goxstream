@@ -10,7 +10,7 @@ export function BrowseFilters(props: BrowseFiltersProps) {
   return (
     <div className="space-y-4">
       {/* Mobile & Tablet Header Controls (< lg) */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 lg:hidden">
+      <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center lg:hidden">
         <SearchInput query={props.query} onQueryChange={props.onQueryChange} />
 
         <MobileFilterDrawer

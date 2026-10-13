@@ -29,8 +29,8 @@ export async function listPgUsers(searchFilter?: string): Promise<UserItem[]> {
             ilike(users.username, q),
             ilike(users.email, q),
             ilike(users.displayName, q),
-            ilike(users.role, q)
-          )
+            ilike(users.role, q),
+          ),
         );
     } else {
       records = await db.select().from(users);
@@ -107,7 +107,10 @@ export async function createPgUser(input: CreateUserInput): Promise<UserItem> {
   }
 }
 
-export async function updatePgUser(existingUser: UserItem, input: UpdateUserInput): Promise<UserItem> {
+export async function updatePgUser(
+  existingUser: UserItem,
+  input: UpdateUserInput,
+): Promise<UserItem> {
   const { client, db } = getPgDb();
   const now = new Date();
   let passwordHash: string | undefined = undefined;

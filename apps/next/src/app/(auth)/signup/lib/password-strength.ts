@@ -1,4 +1,4 @@
-import type { PasswordStrengthResult, PasswordRequirement } from "../types"
+import type { PasswordStrengthResult, PasswordRequirement } from "../types";
 
 export function getPasswordStrength(pwd: string): PasswordStrengthResult {
   if (!pwd) {
@@ -12,7 +12,7 @@ export function getPasswordStrength(pwd: string): PasswordStrengthResult {
         { id: "number", label: "At least one number (0-9)", met: false },
         { id: "special", label: "At least one special character (!@#$)", met: false },
       ],
-    }
+    };
   }
 
   const requirements: PasswordRequirement[] = [
@@ -36,25 +36,25 @@ export function getPasswordStrength(pwd: string): PasswordStrengthResult {
       label: "At least one special character (!@#$)",
       met: /[^A-Za-z0-9]/.test(pwd),
     },
-  ]
+  ];
 
-  const metCount = requirements.filter((r) => r.met).length
+  const metCount = requirements.filter((r) => r.met).length;
 
-  let label: "Weak" | "Medium" | "Strong" | "Very Strong" | "" = "Weak"
-  let color = "bg-destructive"
+  let label: "Weak" | "Medium" | "Strong" | "Very Strong" | "" = "Weak";
+  let color = "bg-destructive";
 
   if (metCount === 1) {
-    label = "Weak"
-    color = "bg-destructive"
+    label = "Weak";
+    color = "bg-destructive";
   } else if (metCount === 2) {
-    label = "Medium"
-    color = "bg-amber-500"
+    label = "Medium";
+    color = "bg-amber-500";
   } else if (metCount === 3) {
-    label = "Strong"
-    color = "bg-emerald-500"
+    label = "Strong";
+    color = "bg-emerald-500";
   } else if (metCount === 4) {
-    label = "Very Strong"
-    color = "bg-primary"
+    label = "Very Strong";
+    color = "bg-primary";
   }
 
   return {
@@ -62,5 +62,5 @@ export function getPasswordStrength(pwd: string): PasswordStrengthResult {
     label,
     color,
     requirements,
-  }
+  };
 }

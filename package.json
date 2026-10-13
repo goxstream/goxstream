@@ -3,14 +3,24 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "turbo build",
     "dev": "turbo dev",
     "dev:api": "turbo dev --filter=@goxstream/api",
     "dev:next": "turbo dev --filter=@goxstream/next",
     "dev:rr": "turbo dev --filter=@goxstream/react-router",
-    "format": "turbo format",
+    "build": "turbo build",
+    "build:api": "turbo build --filter=@goxstream/api",
+    "build:next": "turbo build --filter=@goxstream/next",
+    "build:rr": "turbo build --filter=@goxstream/react-router",
     "typecheck": "turbo typecheck",
-    "lint": "turbo lint"
+    "typecheck:api": "turbo typecheck --filter=@goxstream/api",
+    "typecheck:next": "turbo typecheck --filter=@goxstream/next",
+    "typecheck:rr": "turbo typecheck --filter=@goxstream/react-router",
+    "lint": "turbo lint",
+    "lint:api": "turbo lint --filter=@goxstream/api",
+    "lint:next": "turbo lint --filter=@goxstream/next",
+    "lint:rr": "turbo lint --filter=@goxstream/react-router",
+    "format": "turbo format",
+    "format:check": "turbo format:check"
   },
   "devDependencies": {
     "prettier": "catalog:",

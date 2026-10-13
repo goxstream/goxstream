@@ -51,7 +51,7 @@ export function useWatchlist() {
       }).catch(() => {});
     }
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
+      prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item)),
     );
   };
 
@@ -65,9 +65,7 @@ export function useWatchlist() {
       }).catch(() => {});
     }
     setItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-      )
+      prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
     );
   };
 

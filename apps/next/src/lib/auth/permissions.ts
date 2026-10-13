@@ -118,7 +118,9 @@ export function hasRole(userRole: Role | undefined | null, allowedRoles: Role[])
 /**
  * Checks if a user has access to VIP Pro exclusive episodes/content.
  */
-export function canAccessVipContent(user: { membership_tier?: MembershipTier | string | null } | null): boolean {
+export function canAccessVipContent(
+  user: { membership_tier?: MembershipTier | string | null } | null,
+): boolean {
   return user?.membership_tier === "vip_pro";
 }
 
@@ -128,7 +130,7 @@ export function canAccessVipContent(user: { membership_tier?: MembershipTier | s
  */
 export function canAccessQuality(
   user: { membership_tier?: MembershipTier | string | null } | null,
-  quality: string
+  quality: string,
 ): boolean {
   if (quality === "1080p") {
     return user?.membership_tier === "vip_pro";
@@ -142,7 +144,7 @@ export function canAccessQuality(
  */
 export function hasPermission(
   user: { role?: Role | null; permissions?: string[] | null } | null,
-  requiredPermission: PermissionScope
+  requiredPermission: PermissionScope,
 ): boolean {
   if (!user || !user.role) return false;
 
@@ -153,9 +155,10 @@ export function hasPermission(
   if (user.role === "super_admin") return true;
 
   // Evaluate user custom permissions or fallback to role defaults
-  const userScopes = (user.permissions && user.permissions.length > 0)
-    ? (user.permissions as PermissionScope[])
-    : getRoleDefaultScopes(user.role);
+  const userScopes =
+    user.permissions && user.permissions.length > 0
+      ? (user.permissions as PermissionScope[])
+      : getRoleDefaultScopes(user.role);
 
   return userScopes.includes(requiredPermission);
 }

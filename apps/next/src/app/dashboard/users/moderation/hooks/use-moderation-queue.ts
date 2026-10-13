@@ -14,7 +14,6 @@ export function useModerationQueue() {
     }
   }, [fetchedReports]);
 
-
   const handleClearDismissed = () => {
     setReports((prev) => prev.filter((r) => r.status !== "dismissed"));
   };
@@ -25,16 +24,14 @@ export function useModerationQueue() {
   };
 
   const handleApproveReport = (reportId: string) => {
-    setReports((prev) =>
-      prev.map((r) => (r.id === reportId ? { ...r, status: "dismissed" } : r))
-    );
+    setReports((prev) => prev.map((r) => (r.id === reportId ? { ...r, status: "dismissed" } : r)));
   };
 
   const handleConfirmAction = (
     reportId: string,
     actionType: "delete" | "mute" | "dismiss",
     _duration?: string,
-    _moderatorNote?: string
+    _moderatorNote?: string,
   ) => {
     setReports((prev) =>
       prev.map((r) =>
@@ -43,8 +40,8 @@ export function useModerationQueue() {
               ...r,
               status: actionType === "dismiss" ? "dismissed" : "resolved",
             }
-          : r
-      )
+          : r,
+      ),
     );
   };
 

@@ -9,7 +9,11 @@ export async function getEstimatedDownlinkMbps(): Promise<number> {
 
   // 1. Check Network Information API
   const nav = window.navigator as any;
-  if (nav?.connection?.downlink && typeof nav.connection.downlink === "number" && nav.connection.downlink > 0) {
+  if (
+    nav?.connection?.downlink &&
+    typeof nav.connection.downlink === "number" &&
+    nav.connection.downlink > 0
+  ) {
     return nav.connection.downlink;
   }
 
@@ -45,4 +49,3 @@ export function calculateDynamicTimeoutMs(fileSizeMB: number, downlinkMbps: numb
   // Minimum budget of 45s, maximum of 90s for WASM CDN fetching
   return Math.min(Math.max(totalMs, 45000), 90000);
 }
-

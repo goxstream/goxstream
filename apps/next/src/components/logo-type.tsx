@@ -9,12 +9,12 @@
  * @author      GoxStream Architecture & Brand Design Team
  * @copyright   (c) 2026 GoxStream Inc. All rights reserved.
  * @license     MIT License (https://opensource.org/licenses/MIT)
- * 
+ *
  * @description
  * High-fidelity typography mark component for GoxStream.
  * Renders the "GoxStream" wordmark using the Syne font, with a brand gradient
  * on "Gox" and the active foreground color on "Stream".
- * 
+ *
  * @see {@link https://gox.my.id}
  * ============================================================================
  */
@@ -80,9 +80,9 @@ export function LogoType({ size = "md", className, renderAs = "html" }: LogoType
   return (
     <span
       className={cn(
-        "inline-flex items-center font-brand font-extrabold leading-none select-none py-0.5 px-1",
+        "font-brand inline-flex items-center px-1 py-0.5 leading-none font-extrabold select-none",
         SIZE_CLASSES[size],
-        className
+        className,
       )}
     >
       <span className="bg-linear-to-br from-[#31ffe7] to-[#34d094] bg-clip-text text-transparent">

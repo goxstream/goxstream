@@ -27,8 +27,6 @@ export interface SearchInputProps {
   className?: string;
 }
 
-
-
 export interface FilterSelectStripProps {
   query: string;
   onQueryChange: (q: string) => void;

@@ -1,5 +1,6 @@
 export type SeasonQuarter = "WINTER" | "SPRING" | "SUMMER" | "FALL";
-export type BroadcastDay = "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY" | "TBA";
+export type BroadcastDay =
+  "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY" | "FRIDAY" | "SATURDAY" | "SUNDAY" | "TBA";
 
 export interface SeasonItem {
   id: string;

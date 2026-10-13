@@ -1,10 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import type { RoleDefinition } from "../types";
 
@@ -40,26 +53,30 @@ export function InviteStaffDialog({
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <DialogHeader className="text-left">
             <DialogTitle className="text-lg font-bold">Invite Staff Member</DialogTitle>
-            <DialogDescription className="text-xs text-muted-foreground">
+            <DialogDescription className="text-muted-foreground text-xs">
               Send an invitation link to a team member and assign their initial platform role.
             </DialogDescription>
           </DialogHeader>
 
           <div className="flex flex-col gap-4 text-xs">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="staff-name" className="text-xs font-medium">Full Name</Label>
+              <Label htmlFor="staff-name" className="text-xs font-medium">
+                Full Name
+              </Label>
               <Input
                 id="staff-name"
                 placeholder="e.g. Alice Smith"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="h-9 text-xs border-border/60"
+                className="border-border/60 h-9 text-xs"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="staff-email" className="text-xs font-medium">Work Email Address</Label>
+              <Label htmlFor="staff-email" className="text-xs font-medium">
+                Work Email Address
+              </Label>
               <Input
                 id="staff-email"
                 type="email"
@@ -67,14 +84,14 @@ export function InviteStaffDialog({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-9 text-xs border-border/60"
+                className="border-border/60 h-9 text-xs"
               />
             </div>
 
             <div className="flex flex-col gap-2">
               <Label className="text-xs font-medium">Assign Initial Role</Label>
               <Select value={roleSlug} onValueChange={(val) => setRoleSlug(val ?? "moderator")}>
-                <SelectTrigger className="h-9 text-xs border-border/60">
+                <SelectTrigger className="border-border/60 h-9 text-xs">
                   <SelectValue placeholder="Select Role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -98,7 +115,11 @@ export function InviteStaffDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" size="sm" className="h-9 text-xs bg-primary text-primary-foreground">
+            <Button
+              type="submit"
+              size="sm"
+              className="bg-primary text-primary-foreground h-9 text-xs"
+            >
               Send Invitation
             </Button>
           </DialogFooter>

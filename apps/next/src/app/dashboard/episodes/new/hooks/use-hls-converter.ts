@@ -46,7 +46,7 @@ export function useHlsConverter({
 
   const [validationResult, setValidationResult] = useState<VideoValidationResult | null>(null);
   const [engineStatus, setEngineStatus] = useState<EngineStatus>(
-    isFFmpegCoreLoaded() ? "ready" : "unloaded"
+    isFFmpegCoreLoaded() ? "ready" : "unloaded",
   );
   const [status, setStatus] = useState<ConverterStatus>("idle");
   const [progress, setProgress] = useState(0);
@@ -65,7 +65,8 @@ export function useHlsConverter({
 
   // Active stage timer ticker
   useEffect(() => {
-    const isPipelineActive = status === "converting" || status === "uploading" || engineStatus === "loading";
+    const isPipelineActive =
+      status === "converting" || status === "uploading" || engineStatus === "loading";
     if (!isPipelineActive) return;
 
     const timer = setInterval(() => {
@@ -79,7 +80,7 @@ export function useHlsConverter({
             };
           }
           return stg;
-        })
+        }),
       );
     }, 1000);
 
@@ -97,10 +98,10 @@ export function useHlsConverter({
             return { ...stg, status: "completed" };
           }
           return stg;
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   const addLog = useCallback((type: LogSeverity, message: string) => {
@@ -113,13 +114,25 @@ export function useHlsConverter({
     };
 
     if (type === "error") {
-      console.error(`%c[Studio Converter Error] [${timestamp}]`, "color: #ef4444; font-weight: bold;", message);
+      console.error(
+        `%c[Studio Converter Error] [${timestamp}]`,
+        "color: #ef4444; font-weight: bold;",
+        message,
+      );
     } else if (type === "success") {
-      console.log(`%c[Studio Converter Success] [${timestamp}]`, "color: #10b981; font-weight: bold;", message);
+      console.log(
+        `%c[Studio Converter Success] [${timestamp}]`,
+        "color: #10b981; font-weight: bold;",
+        message,
+      );
     } else if (type === "ffmpeg") {
       console.log(`%c[FFmpeg WASM] [${timestamp}]`, "color: #06b6d4; font-weight: bold;", message);
     } else {
-      console.info(`%c[Studio Converter] [${timestamp}]`, "color: #a855f7; font-weight: bold;", message);
+      console.info(
+        `%c[Studio Converter] [${timestamp}]`,
+        "color: #a855f7; font-weight: bold;",
+        message,
+      );
     }
 
     setLogs((prev) => [...prev, entry]);
@@ -134,68 +147,94 @@ export function useHlsConverter({
   }, []);
 
   const copyLogsToClipboard = useCallback(() => {
-    const text = logs.map((l) => `[${l.timestamp}] [${l.type.toUpperCase()}] ${l.message}`).join("\n");
+    const text = logs
+      .map((l) => `[${l.timestamp}] [${l.type.toUpperCase()}] ${l.message}`)
+      .join("\n");
     navigator.clipboard.writeText(text);
   }, [logs]);
 
-  const handleFileSelect = useCallback(async (file: File | null) => {
-    if (!file) {
-      setSelectedFile(null);
-      setValidationResult(null);
-      setStatus("idle");
+  const handleFileSelect = useCallback(
+    async (file: File | null) => {
+      if (!file) {
+        setSelectedFile(null);
+        setValidationResult(null);
+        setStatus("idle");
+        setStages(INITIAL_STAGES);
+        setTotalDuration(0);
+        return;
+      }
+
+      setSelectedFile(file);
       setStages(INITIAL_STAGES);
       setTotalDuration(0);
-      return;
-    }
+      updateStageStatus("init", "running");
 
-    setSelectedFile(file);
-    setStages(INITIAL_STAGES);
-    setTotalDuration(0);
-    updateStageStatus("init", "running");
+      const initMsg = "Validating MP4 1080p Master format...";
+      setStatusText(initMsg);
+      addLog(
+        "info",
+        `1080p Master selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`,
+      );
 
-    const initMsg = "Validating MP4 1080p Master format...";
-    setStatusText(initMsg);
-    addLog("info", `1080p Master selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
+      const valResult = await validateVideoFile(file);
+      setValidationResult(valResult);
 
-    const valResult = await validateVideoFile(file);
-    setValidationResult(valResult);
+      if (!valResult.isValid) {
+        setStatus("error");
+        updateStageStatus("init", "error");
+        const err = valResult.errorMessage || "Validation failed.";
+        setStatusText(err);
+        addLog("error", `Validation error: ${err}`);
+      } else {
+        setStatus("ready");
+        updateStageStatus("init", "completed");
+        setProgress(0);
+        const readyMsg = `Verified MP4 ${valResult.resolution}: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
+        setStatusText(readyMsg);
+        addLog("success", readyMsg);
+      }
+    },
+    [addLog, updateStageStatus],
+  );
 
-    if (!valResult.isValid) {
-      setStatus("error");
-      updateStageStatus("init", "error");
-      const err = valResult.errorMessage || "Validation failed.";
-      setStatusText(err);
-      addLog("error", `Validation error: ${err}`);
-    } else {
-      setStatus("ready");
-      updateStageStatus("init", "completed");
-      setProgress(0);
-      const readyMsg = `Verified MP4 ${valResult.resolution}: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
-      setStatusText(readyMsg);
-      addLog("success", readyMsg);
-    }
-  }, [addLog, updateStageStatus]);
+  const handleFileSelect720p = useCallback(
+    (file: File | null) => {
+      setFile720p(file);
+      if (file) {
+        addLog(
+          "info",
+          `720p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`,
+        );
+      }
+    },
+    [addLog],
+  );
 
-  const handleFileSelect720p = useCallback((file: File | null) => {
-    setFile720p(file);
-    if (file) {
-      addLog("info", `720p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
-    }
-  }, [addLog]);
+  const handleFileSelect480p = useCallback(
+    (file: File | null) => {
+      setFile480p(file);
+      if (file) {
+        addLog(
+          "info",
+          `480p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`,
+        );
+      }
+    },
+    [addLog],
+  );
 
-  const handleFileSelect480p = useCallback((file: File | null) => {
-    setFile480p(file);
-    if (file) {
-      addLog("info", `480p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
-    }
-  }, [addLog]);
-
-  const handleFileSelect360p = useCallback((file: File | null) => {
-    setFile360p(file);
-    if (file) {
-      addLog("info", `360p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`);
-    }
-  }, [addLog]);
+  const handleFileSelect360p = useCallback(
+    (file: File | null) => {
+      setFile360p(file);
+      if (file) {
+        addLog(
+          "info",
+          `360p Source selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`,
+        );
+      }
+    },
+    [addLog],
+  );
 
   const initEngine = useCallback(async () => {
     if (engineStatus === "ready" || engineStatus === "loading") return;
@@ -257,7 +296,7 @@ export function useHlsConverter({
             updateStageStatus(stageId, "running");
           }
         },
-        appendFfmpegLog
+        appendFfmpegLog,
       );
 
       updateStageStatus("360p", "completed");
@@ -274,7 +313,17 @@ export function useHlsConverter({
       setStatusText(errMsg);
       addLog("error", errMsg);
     }
-  }, [selectedFile, file720p, file480p, file360p, validationResult, initEngine, addLog, appendFfmpegLog, updateStageStatus]);
+  }, [
+    selectedFile,
+    file720p,
+    file480p,
+    file360p,
+    validationResult,
+    initEngine,
+    addLog,
+    appendFfmpegLog,
+    updateStageStatus,
+  ]);
 
   const downloadHls = useCallback(async () => {
     if (!hlsResult) return;
@@ -333,7 +382,15 @@ export function useHlsConverter({
       setStatusText(errMsg);
       addLog("error", errMsg);
     }
-  }, [selectedFile, hlsResult, animeSlug, episodeNumber, onUrlGenerated, addLog, updateStageStatus]);
+  }, [
+    selectedFile,
+    hlsResult,
+    animeSlug,
+    episodeNumber,
+    onUrlGenerated,
+    addLog,
+    updateStageStatus,
+  ]);
 
   return {
     selectedFile,

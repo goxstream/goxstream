@@ -14,7 +14,7 @@ interface TrendingHeroProps {
 
 export function TrendingHero({ topAnime, isLoading }: TrendingHeroProps) {
   if (isLoading) {
-    return <Skeleton className="w-full aspect-[21/9] sm:aspect-[25/8] rounded-2xl" />;
+    return <Skeleton className="aspect-[21/9] w-full rounded-2xl sm:aspect-[25/8]" />;
   }
 
   if (!topAnime) return null;
@@ -24,70 +24,68 @@ export function TrendingHero({ topAnime, isLoading }: TrendingHeroProps) {
   const isGradient = topAnime.coverImage && topAnime.coverImage.startsWith("linear-gradient");
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 via-background to-background p-6 md:p-8 lg:p-10 shadow-sm">
+    <div className="via-background to-background relative overflow-hidden rounded-2xl border border-amber-500/30 bg-gradient-to-r from-amber-950/40 p-6 shadow-sm md:p-8 lg:p-10">
       {/* Background Gradient Accent Glow */}
-      <div className="pointer-events-none absolute -right-20 -top-20 size-96 rounded-full bg-amber-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -left-20 -bottom-20 size-80 rounded-full bg-primary/10 blur-3xl" />
+      <div className="pointer-events-none absolute -top-20 -right-20 size-96 rounded-full bg-amber-500/10 blur-3xl" />
+      <div className="bg-primary/10 pointer-events-none absolute -bottom-20 -left-20 size-80 rounded-full blur-3xl" />
 
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
         {/* Left Column: Info & Actions */}
-        <div className="lg:col-span-8 space-y-5">
+        <div className="space-y-5 lg:col-span-8">
           {/* Top Badges */}
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-amber-950 shadow-xs">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-3 py-1 text-xs font-bold text-amber-950 shadow-xs">
               <Crown className="size-3.5 fill-amber-950 stroke-amber-950" />
               #1 TRENDING NOW
             </span>
 
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/15 px-2.5 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
               <TrendingUp className="size-3" />
               {topAnime.weeklyGrowth} Views
             </span>
 
-            <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+            <span className="bg-secondary text-secondary-foreground rounded-full px-2.5 py-1 text-xs font-medium">
               {primaryGenre}
             </span>
 
-            <span className="text-xs text-muted-foreground font-medium">
+            <span className="text-muted-foreground text-xs font-medium">
               {topAnime.type} • {topAnime.season} {topAnime.year}
             </span>
           </div>
 
           {/* Title */}
           <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
+            <h1 className="text-foreground text-2xl font-extrabold tracking-tight sm:text-3xl md:text-4xl">
               {topAnime.title}
             </h1>
             {topAnime.japaneseTitle && (
-              <p className="text-sm font-medium text-muted-foreground">
-                {topAnime.japaneseTitle}
-              </p>
+              <p className="text-muted-foreground text-sm font-medium">{topAnime.japaneseTitle}</p>
             )}
           </div>
 
           {/* Synopsis */}
-          <p className="text-sm sm:text-base text-muted-foreground line-clamp-3 max-w-3xl leading-relaxed">
+          <p className="text-muted-foreground line-clamp-3 max-w-3xl text-sm leading-relaxed sm:text-base">
             {topAnime.synopsis}
           </p>
 
           {/* Stats Bar */}
-          <div className="flex flex-wrap items-center gap-6 pt-1 text-sm border-t border-border/60">
+          <div className="border-border/60 flex flex-wrap items-center gap-6 border-t pt-1 text-sm">
             <div className="flex items-center gap-1.5 font-bold text-amber-500">
               <Star className="size-4 fill-amber-500 stroke-amber-500" />
               <span>{topAnime.rating ? topAnime.rating.toFixed(2) : "N/A"}</span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <Eye className="size-4 text-primary" />
-              <span className="font-semibold text-foreground">
+            <div className="text-muted-foreground flex items-center gap-1.5">
+              <Eye className="text-primary size-4" />
+              <span className="text-foreground font-semibold">
                 {(topAnime.weeklyViews / 1000000).toFixed(2)}M
               </span>
               <span>weekly views</span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-1.5">
               <Flame className="size-4 text-orange-500" />
-              <span className="font-semibold text-foreground">
+              <span className="text-foreground font-semibold">
                 Ep {topAnime.latestEpisode || topAnime.episodesCount}
               </span>
               <span>/ {topAnime.episodesCount}</span>
@@ -99,10 +97,10 @@ export function TrendingHero({ topAnime, isLoading }: TrendingHeroProps) {
             <Button
               asChild
               size="lg"
-              className="rounded-xl font-bold shadow-xs bg-amber-500 hover:bg-amber-600 text-amber-950"
+              className="rounded-xl bg-amber-500 font-bold text-amber-950 shadow-xs hover:bg-amber-600"
             >
               <Link href={`/anime/${topAnime.slug}/${topAnime.latestEpisode || 1}`}>
-                <Play className="size-4 fill-current mr-2" />
+                <Play className="mr-2 size-4 fill-current" />
                 Watch Episode {topAnime.latestEpisode || 1}
               </Link>
             </Button>
@@ -110,10 +108,10 @@ export function TrendingHero({ topAnime, isLoading }: TrendingHeroProps) {
               asChild
               variant="outline"
               size="lg"
-              className="rounded-xl border-border/80 font-medium"
+              className="border-border/80 rounded-xl font-medium"
             >
               <Link href={`/anime/${topAnime.slug}`}>
-                <Sparkles className="size-4 mr-2 text-amber-500" />
+                <Sparkles className="mr-2 size-4 text-amber-500" />
                 View Details
               </Link>
             </Button>
@@ -121,8 +119,8 @@ export function TrendingHero({ topAnime, isLoading }: TrendingHeroProps) {
         </div>
 
         {/* Right Column: Visual Poster Card */}
-        <div className="lg:col-span-4 flex justify-center lg:justify-end">
-          <div className="relative group w-48 sm:w-56 md:w-64 aspect-[2/3] rounded-xl overflow-hidden shadow-lg border border-amber-500/30 bg-muted">
+        <div className="flex justify-center lg:col-span-4 lg:justify-end">
+          <div className="group bg-muted relative aspect-[2/3] w-48 overflow-hidden rounded-xl border border-amber-500/30 shadow-lg sm:w-56 md:w-64">
             {isGradient ? (
               <div
                 className="absolute inset-0 transition-transform duration-500 group-hover:scale-105"
@@ -143,18 +141,18 @@ export function TrendingHero({ topAnime, isLoading }: TrendingHeroProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
             {/* Rank Badge Floating on Poster */}
-            <div className="absolute top-3 left-3 size-10 rounded-xl bg-amber-500 text-amber-950 flex items-center justify-center font-black text-lg shadow-md border border-amber-400">
+            <div className="absolute top-3 left-3 flex size-10 items-center justify-center rounded-xl border border-amber-400 bg-amber-500 text-lg font-black text-amber-950 shadow-md">
               #1
             </div>
 
             {/* Sub/Dub Tag */}
-            <div className="absolute top-3 right-3 px-2.5 py-1 rounded-md bg-black/60 backdrop-blur-xs text-[10px] font-bold text-white uppercase tracking-wider">
+            <div className="absolute top-3 right-3 rounded-md bg-black/60 px-2.5 py-1 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-xs">
               {topAnime.subOrDub}
             </div>
 
             {/* Poster Footer Info */}
-            <div className="absolute bottom-3 left-3 right-3 text-white text-xs space-y-0.5">
-              <p className="font-semibold truncate">{topAnime.studio}</p>
+            <div className="absolute right-3 bottom-3 left-3 space-y-0.5 text-xs text-white">
+              <p className="truncate font-semibold">{topAnime.studio}</p>
               <p className="text-[11px] text-zinc-300">
                 {topAnime.episodesCount} Episodes • {topAnime.status}
               </p>

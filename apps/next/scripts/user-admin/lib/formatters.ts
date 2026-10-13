@@ -2,11 +2,7 @@ import type { UserItem } from "../types";
 
 export function formatRole(role: string): string {
   const roleColor =
-    role === "super_admin"
-      ? "\x1b[35m"
-      : role === "admin"
-      ? "\x1b[33m"
-      : "\x1b[32m";
+    role === "super_admin" ? "\x1b[35m" : role === "admin" ? "\x1b[33m" : "\x1b[32m";
   return `${roleColor}${role}\x1b[0m`;
 }
 
