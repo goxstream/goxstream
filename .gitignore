@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -16,15 +16,16 @@
 /test-results/
 *-snapshots/
 
+# turbo
+.turbo/
 
-
-# next.js
-/.next/
-/out/
-/temp/
-
-# production
-/build
+# monorepo build outputs
+**/.next/
+**/build/
+**/dist/
+**/.react-router/
+out/
+temp/
 
 # misc
 .DS_Store

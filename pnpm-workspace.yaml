@@ -1,5 +1,6 @@
 packages:
-  - "."
+  - "apps/*"
+  - "packages/*"
 
 # Pre-approve build scripts for the packages C3 itself installs that need
 # them: `workerd` downloads the platform binary and `esbuild` downloads/
