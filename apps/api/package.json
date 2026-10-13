@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "build": "echo 'API build ready'",
     "deploy": "wrangler deploy --minify",
     "typecheck": "tsc --noEmit",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
@@ -16,14 +17,15 @@
     "@goxstream/types": "workspace:*",
     "@hono/zod-openapi": "^1.6.3",
     "@scalar/hono-api-reference": "^0.12.12",
-    "better-auth": "^1.7.1",
-    "drizzle-orm": "^0.45.2",
-    "hono": "^4.13.13",
-    "zod": "^4.6.7"
+    "better-auth": "catalog:",
+    "drizzle-orm": "catalog:",
+    "hono": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261012.1",
-    "drizzle-kit": "^0.31.10",
-    "wrangler": "^4.110.0"
+    "@cloudflare/workers-types": "catalog:",
+    "drizzle-kit": "catalog:",
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
   }
 }

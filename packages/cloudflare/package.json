@@ -7,8 +7,11 @@
     ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261012.1",
-    "typescript": "^5.9.3"
+    "@cloudflare/workers-types": "catalog:",
+    "typescript": "catalog:"
   }
 }
