@@ -5,6 +5,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "dev:api": "turbo dev --filter=@goxstream/api",
     "dev:next": "turbo dev --filter=@goxstream/next",
     "dev:rr": "turbo dev --filter=@goxstream/react-router",
     "format": "turbo format",
