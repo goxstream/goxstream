@@ -13,13 +13,13 @@
     {
       "binding": "DB",
       "database_name": "goxstream",
-      "database_id": "93a28981-ac5e-4381-a3aa-18d98b9bf5ca"
+      "database_id": "c7c88377-414d-4d56-a17b-d7210c47b803"
     }
   ],
   "kv_namespaces": [
     {
       "binding": "CACHE_KV",
-      "id": "6ff3ff4ae7d54091910f3a6d3fb34f0c"
+      "id": "6dce1dd3808943ae8bcb2130f1b36b9a"
     }
   ],
   "r2_buckets": [
@@ -29,8 +29,7 @@
     }
   ],
   "vars": {
-    "BETTER_AUTH_URL": "http://localhost:8787",
-    "BETTER_AUTH_SECRET": "goxstream-secret-key-development-min-32-chars!",
+    "BETTER_AUTH_URL": "https://api.gox.my.id",
     "NODE_ENV": "development"
   },
   "observability": {

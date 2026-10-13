@@ -12,6 +12,7 @@
     "build:next": "turbo build --filter=@goxstream/next",
     "build:next:cf": "turbo build:cf --filter=@goxstream/next",
     "build:rr": "turbo build --filter=@goxstream/react-router",
+    "deploy:api": "turbo deploy --filter=@goxstream/api",
     "deploy:next:cf": "turbo deploy:cf --filter=@goxstream/next",
     "typecheck": "turbo typecheck",
     "typecheck:api": "turbo typecheck --filter=@goxstream/api",
