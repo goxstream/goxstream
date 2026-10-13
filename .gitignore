@@ -49,7 +49,7 @@ yarn-error.log*
 next-env.d.ts
 
 # OpenNext
-/.open-next
+**/.open-next/
 
 # wrangler files
 .wrangler
