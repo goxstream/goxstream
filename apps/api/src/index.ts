@@ -53,10 +53,6 @@ app.doc("/v1/openapi.json", {
     version: "1.0.0",
     description: "Modular anime streaming and metadata API built with Hono on Cloudflare Workers.",
   },
-  servers: [
-    { url: "http://localhost:8787", description: "Local Development" },
-    { url: "https://api.goxstream.com", description: "Production" },
-  ],
 });
 
 // Register Bearer Security Scheme for Swagger / Scalar "Try It" console
