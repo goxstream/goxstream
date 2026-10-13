@@ -38,7 +38,6 @@
   ],
   "vars": {
     "BETTER_AUTH_URL": "https://api.gox.my.id",
-    "NODE_ENV": "development"
   },
   "observability": {
     "enabled": true
