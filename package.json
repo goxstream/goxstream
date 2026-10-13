@@ -28,7 +28,8 @@
     "prettier": "catalog:",
     "prettier-plugin-tailwindcss": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "wrangler": "catalog:"
   },
   "packageManager": "pnpm@11.25.0",
   "engines": {
