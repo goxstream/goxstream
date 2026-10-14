@@ -11,9 +11,9 @@ node_modules/
 !.yarn/versions
 
 # testing
-/coverage
-/playwright-report/
-/test-results/
+**/coverage/
+**/playwright-report/
+**/test-results/
 *-snapshots/
 
 # turbo
@@ -24,7 +24,7 @@ node_modules/
 **/build/
 **/dist/
 **/.react-router/
-out/
+**/out/
 temp/
 
 # misc
@@ -52,11 +52,11 @@ next-env.d.ts
 **/.open-next/
 
 # wrangler files
-.wrangler
+**/.wrangler/
 .dev.vars*
 
 
 !.dev.vars.example
 
 # local FFmpeg WASM binaries
-/public/ffmpeg/
+**/public/ffmpeg/

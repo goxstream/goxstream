@@ -9,6 +9,26 @@ const compat = new FlatCompat({
 	baseDirectory: __dirname,
 });
 
-const eslintConfig = [...compat.extends("next/core-web-vitals", "next/typescript")];
+const eslintConfig = [
+	{
+		ignores: [
+			"**/node_modules/**",
+			"**/.next/**",
+			"**/.turbo/**",
+			"**/.wrangler/**",
+			"**/.open-next/**",
+			"**/.react-router/**",
+			"**/build/**",
+			"**/dist/**",
+			"**/out/**",
+			"**/coverage/**",
+			"**/playwright-report/**",
+			"**/test-results/**",
+			"**/public/ffmpeg/**",
+			"temp/**",
+		],
+	},
+	...compat.extends("next/core-web-vitals", "next/typescript"),
+];
 
 export default eslintConfig;
