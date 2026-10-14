@@ -38,6 +38,7 @@
   ],
   "vars": {
     "BETTER_AUTH_URL": "https://api.gox.my.id",
+    "COOKIE_DOMAIN": ".gox.my.id"
   },
   "observability": {
     "enabled": true

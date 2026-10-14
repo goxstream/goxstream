@@ -28,6 +28,8 @@ export interface CloudflareEnv {
   // ── Environment Variables & Secrets ──────────────────────────────────
   BETTER_AUTH_SECRET: string;
   BETTER_AUTH_URL: string;
+  COOKIE_DOMAIN?: string;
+  TRUSTED_ORIGINS?: string;
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;
   NODE_ENV?: "development" | "production" | "test";

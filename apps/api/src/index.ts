@@ -8,11 +8,29 @@ import { protectedApp } from "./routes/protected";
 
 const app = new OpenAPIHono<{ Bindings: CloudflareEnv }>();
 
+function isAllowedOrigin(origin: string): boolean {
+  if (!origin) return false;
+  try {
+    const url = new URL(origin);
+    const host = url.hostname;
+    // Allow gox.my.id and all subdomains (api.gox.my.id, www.gox.my.id, etc.)
+    if (host === "gox.my.id" || host.endsWith(".gox.my.id")) return true;
+    if (host === "goxstream.dpdns.org" || host.endsWith(".goxstream.dpdns.org")) return true;
+    if (host === "localhost" || host === "127.0.0.1") return true;
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 // ── Global Middlewares ──────────────────────────────────────────────────
 app.use(
   "*",
   cors({
-    origin: (origin) => origin || "*",
+    origin: (origin) => {
+      if (!origin) return null;
+      return isAllowedOrigin(origin) ? origin : null;
+    },
     allowHeaders: ["Content-Type", "Authorization", "x-api-key"],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,

@@ -14,12 +14,14 @@ interface AuthEnv {
   DB: D1Database;
   BETTER_AUTH_SECRET: string;
   BETTER_AUTH_URL: string;
+  COOKIE_DOMAIN?: string;
+  TRUSTED_ORIGINS?: string;
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;
 }
 
 function buildEnvKey(env: AuthEnv): string {
-  return `${env.BETTER_AUTH_SECRET}|${env.BETTER_AUTH_URL}`;
+  return `${env.BETTER_AUTH_SECRET}|${env.BETTER_AUTH_URL}|${env.COOKIE_DOMAIN ?? ""}|${env.TRUSTED_ORIGINS ?? ""}`;
 }
 
 export function getAuth(env: AuthEnv) {
@@ -29,6 +31,26 @@ export function getAuth(env: AuthEnv) {
   }
 
   const db = getDb(env.DB);
+  const isSecure = env.BETTER_AUTH_URL.startsWith("https://");
+  const isGoxDomain = env.BETTER_AUTH_URL.includes("gox.my.id");
+  const cookieDomain = env.COOKIE_DOMAIN ?? (isGoxDomain ? ".gox.my.id" : undefined);
+  const enableCrossSubdomain = Boolean(cookieDomain);
+
+  const extraOrigins = env.TRUSTED_ORIGINS
+    ? env.TRUSTED_ORIGINS.split(",").map((o) => o.trim()).filter(Boolean)
+    : [];
+
+  const trustedOrigins = [
+    "https://gox.my.id",
+    "https://www.gox.my.id",
+    "https://api.gox.my.id",
+    "https://*.gox.my.id",
+    "https://api.goxstream.dpdns.org",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:8787",
+    ...extraOrigins,
+  ];
 
   const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -37,6 +59,20 @@ export function getAuth(env: AuthEnv) {
     }),
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
+    trustedOrigins,
+    advanced: {
+      cookiePrefix: "goxstream",
+      useSecureCookies: isSecure,
+      crossSubDomainCookies: {
+        enabled: enableCrossSubdomain,
+        ...(cookieDomain ? { domain: cookieDomain } : {}),
+      },
+      defaultCookieAttributes: {
+        sameSite: "lax",
+        secure: isSecure,
+        path: "/",
+      },
+    },
     emailAndPassword: {
       enabled: true,
     },
