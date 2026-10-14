@@ -6,5 +6,7 @@ export default [
     route("browse", "routes/browse.tsx"),
     route("trending", "routes/trending.tsx"),
     route("schedule", "routes/schedule.tsx"),
+    route("anime/:slug", "routes/anime/detail.tsx"),
+    route("anime/:slug/:episode", "routes/anime/watch.tsx"),
   ]),
 ] satisfies RouteConfig;
