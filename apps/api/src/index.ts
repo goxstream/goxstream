@@ -5,6 +5,8 @@ import type { CloudflareEnv } from "@goxstream/cloudflare";
 import { getAuth } from "@goxstream/auth";
 import { healthApp } from "./routes/health";
 import { protectedApp } from "./routes/protected";
+import { animeApp } from "./routes/anime";
+import { episodesApp } from "./routes/episodes";
 
 const app = new OpenAPIHono<{ Bindings: CloudflareEnv }>();
 
@@ -47,6 +49,8 @@ app.on(["POST", "GET"], "/api/auth/*", (c) => {
 // ── Route Sub-Apps ─────────────────────────────────────────────────────
 app.route("/", healthApp);
 app.route("/v1/protected", protectedApp);
+app.route("/", animeApp);
+app.route("/", episodesApp);
 
 // ── Scalar Interactive API Documentation ────────────────────────────────
 app.get(
