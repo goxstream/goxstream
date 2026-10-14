@@ -1,16 +1,28 @@
-import { Button } from "@goxstream/ui/components/button";
+import { HeroSection } from "@/components/home/hero-section";
+import { TrendingSection } from "@/components/home/trending-section";
+import { LatestEpisodesSection } from "@/components/home/latest-episodes-section";
+import { FeaturesSection } from "@/components/home/features-section";
+import { CtaSection } from "@/components/home/cta-section";
 
-export default function Home() {
+export function meta() {
+  return [
+    { title: "GoxStream — Stream High-Quality Anime Ad-Free" },
+    {
+      name: "description",
+      content:
+        "Fast discovery, high-fidelity streaming, and effortless watching. Experience your favorite anime series without ads.",
+    },
+  ];
+}
+
+export default function HomePage() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-      </div>
+    <div className="px-4 pt-6 pb-6 sm:px-6 lg:px-8">
+      <HeroSection />
+      <TrendingSection />
+      <LatestEpisodesSection />
+      <FeaturesSection />
+      <CtaSection />
     </div>
   );
 }

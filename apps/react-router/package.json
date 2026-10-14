@@ -6,22 +6,31 @@
   "scripts": {
     "dev": "react-router dev",
     "build": "react-router build",
-    "start": "react-router-serve ./build/server/index.js",
+    "preview": "pnpm build && wrangler dev",
+    "start": "wrangler dev",
+    "deploy": "pnpm build && wrangler deploy",
+    "cf-typegen": "wrangler types",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
     "@goxstream/ui": "workspace:*",
-    "@react-router/node": "8.4.0",
-    "@react-router/serve": "8.4.0",
+    "@react-router/cloudflare": "8.4.0",
+    "@vidstack/react": "^0.6.15",
+    "better-auth": "catalog:",
+    "date-fns": "catalog:",
+    "embla-carousel-react": "catalog:",
     "isbot": "^5",
     "lucide-react": "catalog:",
+    "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "8.4.0"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.53.1",
+    "@cloudflare/workers-types": "catalog:",
     "@react-router/dev": "8.4.0",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
@@ -30,6 +39,7 @@
     "prettier": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "vite": "^8"
+    "vite": "^8",
+    "wrangler": "catalog:"
   }
 }
