@@ -10,6 +10,7 @@
   "scripts": {
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -20,8 +21,12 @@
     "hono": "catalog:"
   },
   "devDependencies": {
+    "@eslint/js": "catalog:",
     "@cloudflare/workers-types": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
     "prettier": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }

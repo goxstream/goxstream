@@ -7,7 +7,7 @@
 		"build": "next build",
 		"build:cf": "opennextjs-cloudflare build",
 		"start": "next start",
-		"lint": "next lint",
+		"lint": "eslint .",
 		"format": "prettier --write \"**/*.{ts,tsx}\"",
 		"format:check": "prettier --check \"**/*.{ts,tsx}\"",
 		"typecheck": "tsc --noEmit",
@@ -80,7 +80,8 @@
 		"zod": "catalog:"
 	},
 	"devDependencies": {
-		"@eslint/eslintrc": "^3",
+		"eslint": "catalog:",
+		"eslint-config-next": "catalog:",
 		"@playwright/test": "^1.62.1",
 		"@tailwindcss/postcss": "catalog:",
 		"@types/jszip": "^3.4.1",
@@ -89,8 +90,6 @@
 		"@types/react-dom": "catalog:",
 		"cli-table3": "^0.6.5",
 		"drizzle-kit": "catalog:",
-		"eslint": "^9",
-		"eslint-config-next": "16.2.11",
 		"fontkit": "^2.0.4",
 		"ink": "^7.1.1",
 		"ink-select-input": "^6.2.0",

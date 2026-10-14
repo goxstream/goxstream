@@ -6,6 +6,7 @@
   "scripts": {
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
@@ -37,6 +38,11 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@eslint/js": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-react": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "globals": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@turbo/gen": "^2.11.7",
     "@types/node": "catalog:",
@@ -46,7 +52,8 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "tailwindcss": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   },
   "exports": {
     "./globals.css": "./src/styles/globals.css",

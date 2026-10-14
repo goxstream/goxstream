@@ -11,6 +11,7 @@
     "deploy": "pnpm build && wrangler deploy",
     "deploy:only": "wrangler deploy",
     "cf-typegen": "wrangler types",
+    "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "react-router typegen && tsc"
@@ -30,9 +31,14 @@
     "react-router": "8.4.0"
   },
   "devDependencies": {
+    "@eslint/js": "catalog:",
     "@cloudflare/vite-plugin": "^1.53.1",
     "@cloudflare/workers-types": "catalog:",
     "@react-router/dev": "8.4.0",
+    "eslint": "catalog:",
+    "eslint-plugin-react": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "globals": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
@@ -40,6 +46,7 @@
     "prettier": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
     "vite": "^8",
     "wrangler": "catalog:"
   }

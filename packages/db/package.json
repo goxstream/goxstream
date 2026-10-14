@@ -11,6 +11,7 @@
   "scripts": {
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
+    "lint": "eslint .",
     "generate": "drizzle-kit generate",
     "typecheck": "tsc --noEmit"
   },
@@ -18,9 +19,13 @@
     "drizzle-orm": "catalog:"
   },
   "devDependencies": {
+    "@eslint/js": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "drizzle-kit": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
     "prettier": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }
