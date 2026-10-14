@@ -9,6 +9,7 @@
     "preview": "pnpm build && wrangler dev",
     "start": "wrangler dev",
     "deploy": "pnpm build && wrangler deploy",
+    "deploy:only": "wrangler deploy",
     "cf-typegen": "wrangler types",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
