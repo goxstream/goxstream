@@ -7,6 +7,8 @@ import { healthApp } from "./routes/health";
 import { protectedApp } from "./routes/protected";
 import { animeApp } from "./routes/anime";
 import { episodesApp } from "./routes/episodes";
+import { userApp } from "./routes/user";
+import { commentsApp } from "./routes/comments";
 
 const app = new OpenAPIHono<{ Bindings: CloudflareEnv }>();
 
@@ -51,6 +53,8 @@ app.route("/", healthApp);
 app.route("/v1/protected", protectedApp);
 app.route("/", animeApp);
 app.route("/", episodesApp);
+app.route("/", userApp);
+app.route("/", commentsApp);
 
 // ── Scalar Interactive API Documentation ────────────────────────────────
 app.get(

@@ -8,6 +8,13 @@
       "when": 1791938355808,
       "tag": "0000_famous_thundra",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1791939126307,
+      "tag": "0001_smart_senator_kelly",
+      "breakpoints": true
     }
   ]
 }
