@@ -65,7 +65,8 @@ const listAnimeRoute = createRoute({
   path: "/v1/anime",
   tags: ["Anime"],
   summary: "List Anime Catalog",
-  description: "Retrieve paginated list of anime with filters for type, status, season, year, genre, and search.",
+  description:
+    "Retrieve paginated list of anime with filters for type, status, season, year, genre, and search.",
   request: {
     query: z.object({
       page: z.string().optional().default("1"),
@@ -106,7 +107,8 @@ const getAnimeBySlugRoute = createRoute({
   path: "/v1/anime/{slug}",
   tags: ["Anime"],
   summary: "Get Anime Details by Slug",
-  description: "Retrieve comprehensive anime metadata including associated genres, studios, schedule, and trending stats.",
+  description:
+    "Retrieve comprehensive anime metadata including associated genres, studios, schedule, and trending stats.",
   request: {
     params: z.object({
       slug: z.string().min(1),
@@ -184,13 +186,21 @@ animeApp.openapi(listAnimeRoute, async (c) => {
         .where(eq(animeGenres.genreId, matchedGenre[0].id));
 
       if (animeIds.length > 0) {
-        conditions.push(inArray(animes.id, animeIds.map((a) => a.animeId)));
+        conditions.push(
+          inArray(
+            animes.id,
+            animeIds.map((a) => a.animeId),
+          ),
+        );
       } else {
-        return c.json({
-          success: true as const,
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 },
-        }, 200);
+        return c.json(
+          {
+            success: true as const,
+            data: [],
+            pagination: { page, limit, total: 0, totalPages: 0 },
+          },
+          200,
+        );
       }
     }
   }
@@ -205,7 +215,10 @@ animeApp.openapi(listAnimeRoute, async (c) => {
   }
 
   const [totalRes, items] = await Promise.all([
-    db.select({ count: sql<number>`count(*)` }).from(animes).where(whereClause),
+    db
+      .select({ count: sql<number>`count(*)` })
+      .from(animes)
+      .where(whereClause),
     db.select().from(animes).where(whereClause).orderBy(orderByClause).limit(limit).offset(offset),
   ]);
 

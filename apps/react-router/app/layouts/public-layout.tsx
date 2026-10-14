@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 
 export default function PublicLayout() {
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
+    <div className="bg-background relative flex min-h-screen flex-col">
       <SiteHeader />
       <main className="flex-1">
         <Outlet />

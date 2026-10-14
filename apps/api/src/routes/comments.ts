@@ -1,12 +1,7 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import type { CloudflareEnv } from "@goxstream/cloudflare";
 import { requireAuth, optionalAuth } from "@goxstream/auth";
-import {
-  getDb,
-  comments,
-  commentLikes,
-  commentReports,
-} from "@goxstream/db";
+import { getDb, comments, commentLikes, commentReports } from "@goxstream/db";
 import { eq, and, desc, sql } from "drizzle-orm";
 
 type AuthUser = {
@@ -53,7 +48,8 @@ const getCommentsRoute = createRoute({
   path: "/v1/comments",
   tags: ["Comments"],
   summary: "Get Episode Comments",
-  description: "Retrieves threaded comments for an episode, ordered by newest first, with like/dislike counts.",
+  description:
+    "Retrieves threaded comments for an episode, ordered by newest first, with like/dislike counts.",
   request: {
     query: z.object({
       episodeId: z.string().min(1),
@@ -84,7 +80,8 @@ const createCommentRoute = createRoute({
   path: "/v1/comments",
   tags: ["Comments"],
   summary: "Create Comment",
-  description: "Creates a new comment or reply on an episode. Supports both authenticated users and guests (guest requires name and email).",
+  description:
+    "Creates a new comment or reply on an episode. Supports both authenticated users and guests (guest requires name and email).",
   request: {
     body: {
       content: {
@@ -127,7 +124,8 @@ const likeCommentRoute = createRoute({
   path: "/v1/comments/{id}/like",
   tags: ["Comments"],
   summary: "Like or Dislike Comment",
-  description: "Adds or toggles a like/dislike reaction on a comment. Upserts on [commentId, userId].",
+  description:
+    "Adds or toggles a like/dislike reaction on a comment. Upserts on [commentId, userId].",
   security: [{ Bearer: [] }],
   request: {
     params: z.object({ id: z.string().min(1) }),
@@ -215,7 +213,12 @@ commentsApp.openapi(getCommentsRoute, async (c) => {
         count: sql<number>`count(*)`,
       })
       .from(commentLikes)
-      .where(sql`${commentLikes.commentId} IN (${sql.join(commentIds.map((id) => sql`${id}`), sql`, `)})`)
+      .where(
+        sql`${commentLikes.commentId} IN (${sql.join(
+          commentIds.map((id) => sql`${id}`),
+          sql`, `,
+        )})`,
+      )
       .groupBy(commentLikes.commentId, commentLikes.isDislike);
 
     for (const row of likeRows) {
@@ -230,23 +233,26 @@ commentsApp.openapi(getCommentsRoute, async (c) => {
     }
   }
 
-  return c.json({
-    success: true as const,
-    data: rows.map((row) => ({
-      id: row.id,
-      animeId: row.animeId,
-      episodeId: row.episodeId,
-      userId: row.userId,
-      guestName: row.guestName,
-      parentId: row.parentId,
-      content: row.content,
-      isSpoiler: Boolean(row.isSpoiler),
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-      likes: likeCounts[row.id]?.likes ?? 0,
-      dislikes: likeCounts[row.id]?.dislikes ?? 0,
-    })),
-  }, 200);
+  return c.json(
+    {
+      success: true as const,
+      data: rows.map((row) => ({
+        id: row.id,
+        animeId: row.animeId,
+        episodeId: row.episodeId,
+        userId: row.userId,
+        guestName: row.guestName,
+        parentId: row.parentId,
+        content: row.content,
+        isSpoiler: Boolean(row.isSpoiler),
+        createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
+        likes: likeCounts[row.id]?.likes ?? 0,
+        dislikes: likeCounts[row.id]?.dislikes ?? 0,
+      })),
+    },
+    200,
+  );
 });
 
 // POST /v1/comments — Optional auth (guests allowed)
@@ -281,23 +287,26 @@ commentsApp.openapi(createCommentRoute, async (c) => {
 
   const created = newComment[0];
 
-  return c.json({
-    success: true as const,
-    data: {
-      id: created.id,
-      animeId: created.animeId,
-      episodeId: created.episodeId,
-      userId: created.userId,
-      guestName: created.guestName,
-      parentId: created.parentId,
-      content: created.content,
-      isSpoiler: Boolean(created.isSpoiler),
-      createdAt: created.createdAt.toISOString(),
-      updatedAt: created.updatedAt.toISOString(),
-      likes: 0,
-      dislikes: 0,
+  return c.json(
+    {
+      success: true as const,
+      data: {
+        id: created.id,
+        animeId: created.animeId,
+        episodeId: created.episodeId,
+        userId: created.userId,
+        guestName: created.guestName,
+        parentId: created.parentId,
+        content: created.content,
+        isSpoiler: Boolean(created.isSpoiler),
+        createdAt: created.createdAt.toISOString(),
+        updatedAt: created.updatedAt.toISOString(),
+        likes: 0,
+        dislikes: 0,
+      },
     },
-  }, 201);
+    201,
+  );
 });
 
 // POST /v1/comments/:id/like — Requires auth
@@ -321,10 +330,13 @@ commentsApp.openapi(likeCommentRoute, async (c) => {
       set: { isDislike, createdAt: new Date() },
     });
 
-  return c.json({
-    success: true as const,
-    message: isDislike ? "Disliked" : "Liked",
-  }, 200);
+  return c.json(
+    {
+      success: true as const,
+      message: isDislike ? "Disliked" : "Liked",
+    },
+    200,
+  );
 });
 
 // POST /v1/comments/:id/report — Optional auth
@@ -342,8 +354,11 @@ commentsApp.openapi(reportCommentRoute, async (c) => {
     reason,
   });
 
-  return c.json({
-    success: true as const,
-    message: "Report submitted",
-  }, 200);
+  return c.json(
+    {
+      success: true as const,
+      message: "Report submitted",
+    },
+    200,
+  );
 });

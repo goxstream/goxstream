@@ -38,7 +38,8 @@ const getStatsRoute = createRoute({
   path: "/v1/dashboard/stats",
   tags: ["Dashboard"],
   summary: "Get Platform Stats",
-  description: "Returns aggregated platform metrics including anime count, episode count, user count, and storage estimates.",
+  description:
+    "Returns aggregated platform metrics including anime count, episode count, user count, and storage estimates.",
   security: [{ Bearer: [] }],
   responses: {
     200: {
@@ -415,7 +416,10 @@ const updateModerationReportRoute = createRoute({
     },
   },
   responses: {
-    200: { description: "Report updated", content: { "application/json": { schema: SuccessSchema } } },
+    200: {
+      description: "Report updated",
+      content: { "application/json": { schema: SuccessSchema } },
+    },
     401: { description: "Unauthorized", content: { "application/json": { schema: ErrorSchema } } },
     403: { description: "Forbidden", content: { "application/json": { schema: ErrorSchema } } },
     404: { description: "Not found", content: { "application/json": { schema: ErrorSchema } } },
@@ -551,7 +555,9 @@ dashboardApp.openapi(getAnimeListRoute, async (c) => {
   const conditions = [];
   if (status) conditions.push(eq(animes.status, status));
   if (search) {
-    conditions.push(or(like(animes.titleRomaji, `%${search}%`), like(animes.titleEnglish, `%${search}%`)));
+    conditions.push(
+      or(like(animes.titleRomaji, `%${search}%`), like(animes.titleEnglish, `%${search}%`)),
+    );
   }
 
   const whereClause = conditions.length > 0 ? sql.join(conditions, sql` AND `) : undefined;
@@ -748,7 +754,8 @@ dashboardApp.openapi(getSeasonsRoute, async (c) => {
 
   const currentYear = new Date().getFullYear();
   const seasons = seasonGroups.map((s) => {
-    const quarter = (s.seasonName?.toUpperCase() || "WINTER") as "WINTER" | "SPRING" | "SUMMER" | "FALL";
+    const quarter = (s.seasonName?.toUpperCase() || "WINTER") as
+      "WINTER" | "SPRING" | "SUMMER" | "FALL";
     const year = s.seasonYear || currentYear;
     return {
       id: `season-${year}-${s.seasonName}`,
@@ -885,10 +892,7 @@ dashboardApp.openapi(updateModerationReportRoute, async (c) => {
   }
 
   // Update report status
-  await db
-    .update(commentReports)
-    .set({ status })
-    .where(eq(commentReports.id, id));
+  await db.update(commentReports).set({ status }).where(eq(commentReports.id, id));
 
   // If action is to delete comment, remove it
   if (action === "delete_comment") {

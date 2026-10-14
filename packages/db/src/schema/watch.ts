@@ -1,11 +1,4 @@
-import {
-  sqliteTable,
-  text,
-  integer,
-  real,
-  index,
-  uniqueIndex,
-} from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { users } from "./auth";
 import { animes } from "./anime";
@@ -40,9 +33,7 @@ export const watchlists = sqliteTable(
       .notNull()
       .$defaultFn(() => new Date()),
   },
-  (t) => [
-    uniqueIndex("uidx_watchlist_user_anime").on(t.userId, t.animeId),
-  ],
+  (t) => [uniqueIndex("uidx_watchlist_user_anime").on(t.userId, t.animeId)],
 );
 
 export const watchHistories = sqliteTable(
@@ -126,23 +117,20 @@ export const watchlistsRelations = relations(watchlists, ({ one }) => ({
   }),
 }));
 
-export const watchHistoriesRelations = relations(
-  watchHistories,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [watchHistories.userId],
-      references: [users.id],
-    }),
-    anime: one(animes, {
-      fields: [watchHistories.animeId],
-      references: [animes.id],
-    }),
-    episode: one(episodes, {
-      fields: [watchHistories.episodeId],
-      references: [episodes.id],
-    }),
+export const watchHistoriesRelations = relations(watchHistories, ({ one }) => ({
+  user: one(users, {
+    fields: [watchHistories.userId],
+    references: [users.id],
   }),
-);
+  anime: one(animes, {
+    fields: [watchHistories.animeId],
+    references: [animes.id],
+  }),
+  episode: one(episodes, {
+    fields: [watchHistories.episodeId],
+    references: [episodes.id],
+  }),
+}));
 
 export const userSettingsRelations = relations(userSettings, ({ one }) => ({
   user: one(users, {

@@ -107,7 +107,8 @@ const getEpisodeStreamRoute = createRoute({
   path: "/v1/episodes/{id}/stream",
   tags: ["Episodes"],
   summary: "Get Episode Stream Sources",
-  description: "Retrieve video playback manifests, multi-resolution URLs, subtitles, and audio tracks for an episode.",
+  description:
+    "Retrieve video playback manifests, multi-resolution URLs, subtitles, and audio tracks for an episode.",
   request: {
     params: z.object({
       id: z.string().min(1),
@@ -190,10 +191,7 @@ episodesApp.openapi(listAnimeEpisodesRoute, async (c) => {
       .orderBy(orderDirection)
       .limit(limit)
       .offset(offset),
-    db
-      .select({ count: episodes.id })
-      .from(episodes)
-      .where(eq(episodes.animeId, targetAnime.id)),
+    db.select({ count: episodes.id }).from(episodes).where(eq(episodes.animeId, targetAnime.id)),
   ]);
 
   const total = countResult.length;

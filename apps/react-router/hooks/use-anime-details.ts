@@ -19,7 +19,9 @@ export function useAnimeDetails(slug: string) {
     Promise.all([
       apiClient<{ success: boolean; data: any }>(`/v1/anime/${slug}`).catch(() => null),
       apiClient<{ success: boolean; data: any[] }>(`/v1/anime/${slug}/episodes`).catch(() => null),
-      apiClient<{ success: boolean; data: any[] }>(`/v1/anime?limit=8&sort=popular`).catch(() => null),
+      apiClient<{ success: boolean; data: any[] }>(`/v1/anime?limit=8&sort=popular`).catch(
+        () => null,
+      ),
     ])
       .then(([animeRes, episodesRes, recRes]) => {
         if (!isMounted) return;

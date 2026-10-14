@@ -9,7 +9,9 @@ import { AnimeRecommendations } from "./anime-recommendations";
 
 export function AnimeDetailsContent() {
   const { slug } = useParams<{ slug: string }>();
-  const { anime, episodes, recommendations, isLoading, notFoundError } = useAnimeDetails(slug || "");
+  const { anime, episodes, recommendations, isLoading, notFoundError } = useAnimeDetails(
+    slug || "",
+  );
 
   if (notFoundError) {
     return (
@@ -19,7 +21,8 @@ export function AnimeDetailsContent() {
         </div>
         <h1 className="text-foreground text-2xl font-bold">Anime Not Found</h1>
         <p className="text-muted-foreground mt-2 max-w-md text-sm">
-          The requested anime series or movie could not be found. It may have been removed or the URL is incorrect.
+          The requested anime series or movie could not be found. It may have been removed or the
+          URL is incorrect.
         </p>
         <Button asChild className="mt-6 gap-2">
           <Link to="/browse">

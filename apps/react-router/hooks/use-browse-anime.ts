@@ -20,7 +20,8 @@ export function useBrowseAnime(filters?: BrowseFilterOptions, initialList?: Anim
     const params = new URLSearchParams();
     if (filters?.genre && filters.genre !== "All") params.set("genre", filters.genre);
     if (filters?.query) params.set("search", filters.query);
-    if (filters?.status && filters.status !== "All") params.set("status", filters.status.toLowerCase());
+    if (filters?.status && filters.status !== "All")
+      params.set("status", filters.status.toLowerCase());
     if (filters?.type && filters.type !== "All") params.set("type", filters.type.toLowerCase());
     params.set("limit", "100");
 

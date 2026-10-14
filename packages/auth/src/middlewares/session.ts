@@ -86,4 +86,3 @@ export const requireRole = (...allowedRoles: string[]) =>
 
 export const requireAdmin = requireRole("admin");
 export const requireStaff = requireRole("admin", "moderator");
-

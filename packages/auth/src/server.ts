@@ -37,7 +37,9 @@ export function getAuth(env: AuthEnv) {
   const enableCrossSubdomain = Boolean(cookieDomain);
 
   const extraOrigins = env.TRUSTED_ORIGINS
-    ? env.TRUSTED_ORIGINS.split(",").map((o) => o.trim()).filter(Boolean)
+    ? env.TRUSTED_ORIGINS.split(",")
+        .map((o) => o.trim())
+        .filter(Boolean)
     : [];
 
   const trustedOrigins = [

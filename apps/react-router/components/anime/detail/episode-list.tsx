@@ -273,7 +273,7 @@ export function EpisodeList({ episodes = [], animeSlug = "", isLoading }: Episod
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className="text-muted-foreground text-xs font-mono">
+                    <span className="text-muted-foreground font-mono text-xs">
                       {episode.duration}
                     </span>
                     <Button size="sm" variant="ghost" className="size-8 p-0">

@@ -3,12 +3,7 @@ import { Link } from "react-router";
 import { Search, Star, Play } from "lucide-react";
 import { Button } from "@goxstream/ui/components/button";
 import { Skeleton } from "@goxstream/ui/components/skeleton";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@goxstream/ui/components/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@goxstream/ui/components/dialog";
 import {
   Command,
   CommandEmpty,

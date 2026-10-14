@@ -1,10 +1,4 @@
-import {
-  sqliteTable,
-  text,
-  integer,
-  index,
-  uniqueIndex,
-} from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { users } from "./auth";
 import { animes } from "./anime";
@@ -61,9 +55,7 @@ export const commentLikes = sqliteTable(
       .notNull()
       .$defaultFn(() => new Date()),
   },
-  (t) => [
-    uniqueIndex("uidx_comment_likes_user").on(t.commentId, t.userId),
-  ],
+  (t) => [uniqueIndex("uidx_comment_likes_user").on(t.commentId, t.userId)],
 );
 
 export const commentReports = sqliteTable("comment_reports", {
@@ -122,16 +114,13 @@ export const commentLikesRelations = relations(commentLikes, ({ one }) => ({
   }),
 }));
 
-export const commentReportsRelations = relations(
-  commentReports,
-  ({ one }) => ({
-    comment: one(comments, {
-      fields: [commentReports.commentId],
-      references: [comments.id],
-    }),
-    user: one(users, {
-      fields: [commentReports.userId],
-      references: [users.id],
-    }),
+export const commentReportsRelations = relations(commentReports, ({ one }) => ({
+  comment: one(comments, {
+    fields: [commentReports.commentId],
+    references: [comments.id],
   }),
-);
+  user: one(users, {
+    fields: [commentReports.userId],
+    references: [users.id],
+  }),
+}));

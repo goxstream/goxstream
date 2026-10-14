@@ -82,7 +82,9 @@ export function AnimeRecommendations({ recommendations }: AnimeRecommendationsPr
                     </h4>
                     <div className="text-muted-foreground mt-1 flex items-center justify-between text-xs">
                       <span>{anime.studio}</span>
-                      <span>{anime.season} {anime.year}</span>
+                      <span>
+                        {anime.season} {anime.year}
+                      </span>
                     </div>
                   </div>
                 </Link>

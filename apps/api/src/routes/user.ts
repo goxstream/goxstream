@@ -1,13 +1,7 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import type { CloudflareEnv } from "@goxstream/cloudflare";
 import { requireAuth } from "@goxstream/auth";
-import {
-  getDb,
-  users,
-  userSettings,
-  watchlists,
-  watchHistories,
-} from "@goxstream/db";
+import { getDb, users, userSettings, watchlists, watchHistories } from "@goxstream/db";
 import { eq, and, desc } from "drizzle-orm";
 
 type AuthVariables = {
@@ -36,7 +30,8 @@ const getProfileRoute = createRoute({
   path: "/v1/user/profile",
   tags: ["User"],
   summary: "Get User Profile",
-  description: "Retrieves the authenticated user's profile with activity summary (watchlist count and recent history count).",
+  description:
+    "Retrieves the authenticated user's profile with activity summary (watchlist count and recent history count).",
   security: [{ Bearer: [] }],
   responses: {
     200: {
@@ -145,7 +140,10 @@ const updateSettingsRoute = createRoute({
     },
   },
   responses: {
-    200: { description: "Settings updated", content: { "application/json": { schema: SuccessSchema } } },
+    200: {
+      description: "Settings updated",
+      content: { "application/json": { schema: SuccessSchema } },
+    },
     401: { description: "Unauthorized", content: { "application/json": { schema: ErrorSchema } } },
   },
 });
@@ -170,16 +168,18 @@ const getWatchlistRoute = createRoute({
         "application/json": {
           schema: z.object({
             success: z.literal(true),
-            data: z.array(z.object({
-              id: z.string(),
-              animeId: z.string(),
-              status: z.string(),
-              isFavorite: z.boolean(),
-              currentEpisode: z.number(),
-              userRating: z.number().nullable().optional(),
-              createdAt: z.string(),
-              updatedAt: z.string(),
-            })),
+            data: z.array(
+              z.object({
+                id: z.string(),
+                animeId: z.string(),
+                status: z.string(),
+                isFavorite: z.boolean(),
+                currentEpisode: z.number(),
+                userRating: z.number().nullable().optional(),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              }),
+            ),
           }),
         },
       },
@@ -194,7 +194,8 @@ const addWatchlistRoute = createRoute({
   path: "/v1/user/watchlist",
   tags: ["User"],
   summary: "Add to Watchlist",
-  description: "Adds an anime to the user's watchlist. Upserts if the anime already exists in the watchlist.",
+  description:
+    "Adds an anime to the user's watchlist. Upserts if the anime already exists in the watchlist.",
   security: [{ Bearer: [] }],
   request: {
     body: {
@@ -209,7 +210,10 @@ const addWatchlistRoute = createRoute({
     },
   },
   responses: {
-    200: { description: "Added to watchlist", content: { "application/json": { schema: SuccessSchema } } },
+    200: {
+      description: "Added to watchlist",
+      content: { "application/json": { schema: SuccessSchema } },
+    },
     401: { description: "Unauthorized", content: { "application/json": { schema: ErrorSchema } } },
   },
 });
@@ -236,7 +240,10 @@ const updateWatchlistRoute = createRoute({
     },
   },
   responses: {
-    200: { description: "Watchlist updated", content: { "application/json": { schema: SuccessSchema } } },
+    200: {
+      description: "Watchlist updated",
+      content: { "application/json": { schema: SuccessSchema } },
+    },
     401: { description: "Unauthorized", content: { "application/json": { schema: ErrorSchema } } },
   },
 });
@@ -278,16 +285,18 @@ const getHistoryRoute = createRoute({
         "application/json": {
           schema: z.object({
             success: z.literal(true),
-            data: z.array(z.object({
-              id: z.string(),
-              animeId: z.string(),
-              episodeId: z.string(),
-              episodeNumber: z.number().nullable().optional(),
-              progressPercent: z.number(),
-              durationSeconds: z.number(),
-              progressSeconds: z.number(),
-              lastWatchedAt: z.string(),
-            })),
+            data: z.array(
+              z.object({
+                id: z.string(),
+                animeId: z.string(),
+                episodeId: z.string(),
+                episodeNumber: z.number().nullable().optional(),
+                progressPercent: z.number(),
+                durationSeconds: z.number(),
+                progressSeconds: z.number(),
+                lastWatchedAt: z.string(),
+              }),
+            ),
           }),
         },
       },
@@ -302,7 +311,8 @@ const recordHistoryRoute = createRoute({
   path: "/v1/user/history",
   tags: ["User"],
   summary: "Record Playback Progress",
-  description: "Records or updates playback progress for an episode (heartbeat). Upserts on [userId, episodeId].",
+  description:
+    "Records or updates playback progress for an episode (heartbeat). Upserts on [userId, episodeId].",
   security: [{ Bearer: [] }],
   request: {
     body: {
@@ -321,7 +331,10 @@ const recordHistoryRoute = createRoute({
     },
   },
   responses: {
-    200: { description: "Progress recorded", content: { "application/json": { schema: SuccessSchema } } },
+    200: {
+      description: "Progress recorded",
+      content: { "application/json": { schema: SuccessSchema } },
+    },
     401: { description: "Unauthorized", content: { "application/json": { schema: ErrorSchema } } },
   },
 });
@@ -352,7 +365,10 @@ const clearHistoryRoute = createRoute({
   description: "Clears the authenticated user's entire watch history.",
   security: [{ Bearer: [] }],
   responses: {
-    200: { description: "History cleared", content: { "application/json": { schema: SuccessSchema } } },
+    200: {
+      description: "History cleared",
+      content: { "application/json": { schema: SuccessSchema } },
+    },
     401: { description: "Unauthorized", content: { "application/json": { schema: ErrorSchema } } },
   },
 });
@@ -372,24 +388,33 @@ userApp.openapi(getProfileRoute, async (c) => {
   const user = c.var.user;
 
   const [wlCount, histCount] = await Promise.all([
-    db.select({ count: eq(watchlists.userId, user.id) }).from(watchlists).where(eq(watchlists.userId, user.id)),
-    db.select({ count: eq(watchHistories.userId, user.id) }).from(watchHistories).where(eq(watchHistories.userId, user.id)),
+    db
+      .select({ count: eq(watchlists.userId, user.id) })
+      .from(watchlists)
+      .where(eq(watchlists.userId, user.id)),
+    db
+      .select({ count: eq(watchHistories.userId, user.id) })
+      .from(watchHistories)
+      .where(eq(watchHistories.userId, user.id)),
   ]);
 
-  return c.json({
-    success: true as const,
-    data: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      image: user.image ?? null,
-      role: user.role,
-      activity: {
-        watchlistCount: wlCount.length,
-        historyCount: histCount.length,
+  return c.json(
+    {
+      success: true as const,
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        image: user.image ?? null,
+        role: user.role,
+        activity: {
+          watchlistCount: wlCount.length,
+          historyCount: histCount.length,
+        },
       },
     },
-  }, 200);
+    200,
+  );
 });
 
 // GET /v1/user/settings
@@ -397,27 +422,34 @@ userApp.openapi(getSettingsRoute, async (c) => {
   const db = getDb(c.env.DB);
   const user = c.var.user;
 
-  const settings = await db.select().from(userSettings).where(eq(userSettings.userId, user.id)).limit(1);
+  const settings = await db
+    .select()
+    .from(userSettings)
+    .where(eq(userSettings.userId, user.id))
+    .limit(1);
   const s = settings[0];
 
-  return c.json({
-    success: true as const,
-    data: {
-      player: {
-        defaultQuality: s?.defaultQuality ?? "1080p",
-        defaultSubtitle: s?.defaultSubtitle ?? "indonesia",
-        autoPlayNext: s?.autoPlayNext ?? true,
-        autoSkipIntro: s?.autoSkipIntro ?? false,
-        preferredAudio: s?.preferredAudio ?? "japanese",
-      },
-      notifications: {
-        newEpisodeAlerts: s?.newEpisodeAlerts ?? true,
-        watchlistUpdates: s?.watchlistUpdates ?? true,
-        marketingEmails: s?.marketingEmails ?? false,
-        publicWatchlist: s?.publicWatchlist ?? true,
+  return c.json(
+    {
+      success: true as const,
+      data: {
+        player: {
+          defaultQuality: s?.defaultQuality ?? "1080p",
+          defaultSubtitle: s?.defaultSubtitle ?? "indonesia",
+          autoPlayNext: s?.autoPlayNext ?? true,
+          autoSkipIntro: s?.autoSkipIntro ?? false,
+          preferredAudio: s?.preferredAudio ?? "japanese",
+        },
+        notifications: {
+          newEpisodeAlerts: s?.newEpisodeAlerts ?? true,
+          watchlistUpdates: s?.watchlistUpdates ?? true,
+          marketingEmails: s?.marketingEmails ?? false,
+          publicWatchlist: s?.publicWatchlist ?? true,
+        },
       },
     },
-  }, 200);
+    200,
+  );
 });
 
 // PATCH /v1/user/settings
@@ -435,15 +467,24 @@ userApp.openapi(updateSettingsRoute, async (c) => {
 
   if (body.player || body.notifications) {
     const settingsData: Record<string, unknown> = {};
-    if (body.player?.defaultQuality !== undefined) settingsData.defaultQuality = body.player.defaultQuality;
-    if (body.player?.defaultSubtitle !== undefined) settingsData.defaultSubtitle = body.player.defaultSubtitle;
-    if (body.player?.autoPlayNext !== undefined) settingsData.autoPlayNext = body.player.autoPlayNext;
-    if (body.player?.autoSkipIntro !== undefined) settingsData.autoSkipIntro = body.player.autoSkipIntro;
-    if (body.player?.preferredAudio !== undefined) settingsData.preferredAudio = body.player.preferredAudio;
-    if (body.notifications?.newEpisodeAlerts !== undefined) settingsData.newEpisodeAlerts = body.notifications.newEpisodeAlerts;
-    if (body.notifications?.watchlistUpdates !== undefined) settingsData.watchlistUpdates = body.notifications.watchlistUpdates;
-    if (body.notifications?.marketingEmails !== undefined) settingsData.marketingEmails = body.notifications.marketingEmails;
-    if (body.notifications?.publicWatchlist !== undefined) settingsData.publicWatchlist = body.notifications.publicWatchlist;
+    if (body.player?.defaultQuality !== undefined)
+      settingsData.defaultQuality = body.player.defaultQuality;
+    if (body.player?.defaultSubtitle !== undefined)
+      settingsData.defaultSubtitle = body.player.defaultSubtitle;
+    if (body.player?.autoPlayNext !== undefined)
+      settingsData.autoPlayNext = body.player.autoPlayNext;
+    if (body.player?.autoSkipIntro !== undefined)
+      settingsData.autoSkipIntro = body.player.autoSkipIntro;
+    if (body.player?.preferredAudio !== undefined)
+      settingsData.preferredAudio = body.player.preferredAudio;
+    if (body.notifications?.newEpisodeAlerts !== undefined)
+      settingsData.newEpisodeAlerts = body.notifications.newEpisodeAlerts;
+    if (body.notifications?.watchlistUpdates !== undefined)
+      settingsData.watchlistUpdates = body.notifications.watchlistUpdates;
+    if (body.notifications?.marketingEmails !== undefined)
+      settingsData.marketingEmails = body.notifications.marketingEmails;
+    if (body.notifications?.publicWatchlist !== undefined)
+      settingsData.publicWatchlist = body.notifications.publicWatchlist;
 
     if (Object.keys(settingsData).length > 0) {
       await db
@@ -474,15 +515,18 @@ userApp.openapi(getWatchlistRoute, async (c) => {
     .where(and(...conditions))
     .orderBy(desc(watchlists.updatedAt));
 
-  return c.json({
-    success: true as const,
-    data: items.map((item) => ({
-      ...item,
-      isFavorite: Boolean(item.isFavorite),
-      createdAt: item.createdAt.toISOString(),
-      updatedAt: item.updatedAt.toISOString(),
-    })),
-  }, 200);
+  return c.json(
+    {
+      success: true as const,
+      data: items.map((item) => ({
+        ...item,
+        isFavorite: Boolean(item.isFavorite),
+        createdAt: item.createdAt.toISOString(),
+        updatedAt: item.updatedAt.toISOString(),
+      })),
+    },
+    200,
+  );
 });
 
 // POST /v1/user/watchlist
@@ -527,7 +571,9 @@ userApp.openapi(deleteWatchlistRoute, async (c) => {
   const user = c.var.user;
   const { animeId } = c.req.valid("param");
 
-  await db.delete(watchlists).where(and(eq(watchlists.userId, user.id), eq(watchlists.animeId, animeId)));
+  await db
+    .delete(watchlists)
+    .where(and(eq(watchlists.userId, user.id), eq(watchlists.animeId, animeId)));
 
   return c.json({ success: true as const, message: "Removed from watchlist" }, 200);
 });
@@ -546,13 +592,16 @@ userApp.openapi(getHistoryRoute, async (c) => {
     .orderBy(desc(watchHistories.lastWatchedAt))
     .limit(parsedLimit);
 
-  return c.json({
-    success: true as const,
-    data: items.map((item) => ({
-      ...item,
-      lastWatchedAt: item.lastWatchedAt.toISOString(),
-    })),
-  }, 200);
+  return c.json(
+    {
+      success: true as const,
+      data: items.map((item) => ({
+        ...item,
+        lastWatchedAt: item.lastWatchedAt.toISOString(),
+      })),
+    },
+    200,
+  );
 });
 
 // POST /v1/user/history
@@ -592,7 +641,9 @@ userApp.openapi(deleteHistoryItemRoute, async (c) => {
   const user = c.var.user;
   const { id } = c.req.valid("param");
 
-  await db.delete(watchHistories).where(and(eq(watchHistories.id, id), eq(watchHistories.userId, user.id)));
+  await db
+    .delete(watchHistories)
+    .where(and(eq(watchHistories.id, id), eq(watchHistories.userId, user.id)));
 
   return c.json({ success: true as const, message: "History item deleted" }, 200);
 });

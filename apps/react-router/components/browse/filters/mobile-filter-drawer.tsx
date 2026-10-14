@@ -103,7 +103,10 @@ export function MobileFilterDrawer({
               label="Season"
               value={season}
               onValueChange={onSeasonChange}
-              options={ANIME_SEASONS.map((s) => ({ label: s === "All" ? "All Seasons" : s, value: s }))}
+              options={ANIME_SEASONS.map((s) => ({
+                label: s === "All" ? "All Seasons" : s,
+                value: s,
+              }))}
             />
 
             <BaseFilterCombobox

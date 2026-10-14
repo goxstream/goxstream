@@ -81,9 +81,7 @@ export function EpisodeListCard({ anime, episodes, currentEpisodeNumber }: Episo
                 </div>
 
                 <div className="flex shrink-0 items-center gap-1.5">
-                  <span className="text-muted-foreground font-mono text-[10px]">
-                    {ep.duration}
-                  </span>
+                  <span className="text-muted-foreground font-mono text-[10px]">{ep.duration}</span>
                   <Badge
                     variant="outline"
                     className="border-border/60 text-muted-foreground px-1 py-0 text-[9px]"

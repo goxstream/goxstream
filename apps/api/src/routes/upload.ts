@@ -44,7 +44,8 @@ const uploadHlsRoute = createRoute({
   path: "/v1/upload/hls",
   tags: ["Upload"],
   summary: "Upload HLS Package to Cloudflare R2",
-  description: "Ingests multi-resolution HLS package (master playlist, variants, and .ts segment chunks) directly into Cloudflare R2 object storage.",
+  description:
+    "Ingests multi-resolution HLS package (master playlist, variants, and .ts segment chunks) directly into Cloudflare R2 object storage.",
   security: [{ Bearer: [] }],
   responses: {
     200: {
@@ -54,7 +55,10 @@ const uploadHlsRoute = createRoute({
     400: { description: "Bad request", content: { "application/json": { schema: ErrorSchema } } },
     401: { description: "Unauthorized", content: { "application/json": { schema: ErrorSchema } } },
     403: { description: "Forbidden", content: { "application/json": { schema: ErrorSchema } } },
-    500: { description: "Internal upload failure", content: { "application/json": { schema: ErrorSchema } } },
+    500: {
+      description: "Internal upload failure",
+      content: { "application/json": { schema: ErrorSchema } },
+    },
   },
 });
 
@@ -74,7 +78,10 @@ const uploadImageRoute = createRoute({
     400: { description: "Bad request", content: { "application/json": { schema: ErrorSchema } } },
     401: { description: "Unauthorized", content: { "application/json": { schema: ErrorSchema } } },
     403: { description: "Forbidden", content: { "application/json": { schema: ErrorSchema } } },
-    500: { description: "Internal upload failure", content: { "application/json": { schema: ErrorSchema } } },
+    500: {
+      description: "Internal upload failure",
+      content: { "application/json": { schema: ErrorSchema } },
+    },
   },
 });
 

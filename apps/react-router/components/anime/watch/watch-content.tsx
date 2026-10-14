@@ -16,8 +16,10 @@ export function WatchContent() {
     slug: string;
     episode: string;
   }>();
-  const { details, episodes, recommendations, isLoading, notFoundError } =
-    useWatchDetails(slug || "", episodeParam || "1");
+  const { details, episodes, recommendations, isLoading, notFoundError } = useWatchDetails(
+    slug || "",
+    episodeParam || "1",
+  );
 
   const [activeSourceId, setActiveSourceId] = useState<string>("");
   const [isCinemaMode, setIsCinemaMode] = useState(false);
@@ -34,12 +36,10 @@ export function WatchContent() {
         <div className="bg-destructive/10 text-destructive mb-4 flex size-14 items-center justify-center rounded-full">
           <AlertCircle className="size-7" />
         </div>
-        <h1 className="text-foreground text-2xl font-bold">
-          Episode Not Found
-        </h1>
+        <h1 className="text-foreground text-2xl font-bold">Episode Not Found</h1>
         <p className="text-muted-foreground mt-2 max-w-md text-sm">
-          The requested episode could not be found. It may have been removed or
-          the URL is incorrect.
+          The requested episode could not be found. It may have been removed or the URL is
+          incorrect.
         </p>
         <Button asChild className="mt-6 gap-2">
           <Link to={slug ? `/anime/${slug}` : "/browse"}>
@@ -55,17 +55,14 @@ export function WatchContent() {
     return <WatchContentSkeleton />;
   }
 
-  const currentSource =
-    details.sources.find((s) => s.id === activeSourceId) || details.sources[0];
+  const currentSource = details.sources.find((s) => s.id === activeSourceId) || details.sources[0];
 
   return (
     <div className="flex-1">
       <div className="container mx-auto px-4 py-6">
         <div
           className={`grid gap-6 ${
-            isCinemaMode
-              ? "grid-cols-1"
-              : "grid-cols-1 lg:grid-cols-[1fr_340px]"
+            isCinemaMode ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-[1fr_340px]"
           }`}
         >
           {/* Main Content Column */}
@@ -142,7 +139,7 @@ function WatchContentSkeleton() {
         </div>
 
         {/* Sidebar Skeleton */}
-        <div className="space-y-3 rounded-xl border border-border/60 p-4">
+        <div className="border-border/60 space-y-3 rounded-xl border p-4">
           <Skeleton className="h-5 w-32 rounded" />
           <Skeleton className="h-8 w-full rounded-lg" />
           {Array.from({ length: 6 }).map((_, i) => (
