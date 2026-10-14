@@ -14,6 +14,7 @@
     "build:rr": "turbo build --filter=@goxstream/react-router",
     "deploy:api": "pnpm --filter @goxstream/api run deploy",
     "deploy:next:cf": "turbo deploy:cf --filter=@goxstream/next",
+    "deploy:rr:only": "pnpm --filter=@goxstream/react-router deploy:only",
     "typecheck": "turbo typecheck",
     "typecheck:api": "turbo typecheck --filter=@goxstream/api",
     "typecheck:next": "turbo typecheck --filter=@goxstream/next",
