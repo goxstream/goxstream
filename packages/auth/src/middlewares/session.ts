@@ -56,3 +56,34 @@ export const optionalAuth = createMiddleware<{
   c.set("session", session ? (session.session as AuthSession) : null);
   await next();
 });
+
+/**
+ * Middleware factory: requires authenticated session and checks user role.
+ */
+export const requireRole = (...allowedRoles: string[]) =>
+  createMiddleware<{
+    Bindings: CloudflareEnv;
+    Variables: { user: AuthUser; session: AuthSession };
+  }>(async (c, next) => {
+    const auth = getAuth(c.env);
+    const session = await auth.api.getSession({
+      headers: c.req.raw.headers,
+    });
+
+    if (!session) {
+      return c.json({ success: false, error: "Unauthorized" }, 401);
+    }
+
+    const user = session.user as AuthUser;
+    if (!allowedRoles.includes(user.role)) {
+      return c.json({ success: false, error: "Forbidden: insufficient permissions" }, 403);
+    }
+
+    c.set("user", user);
+    c.set("session", session.session as AuthSession);
+    await next();
+  });
+
+export const requireAdmin = requireRole("admin");
+export const requireStaff = requireRole("admin", "moderator");
+

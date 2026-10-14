@@ -10,6 +10,11 @@ export const episodeUploads = sqliteTable("episode_uploads", {
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  storageKey: text("storage_key"),
+  format: text("format").$default(() => "hls"),
+  sizeBytes: integer("size_bytes"),
+  mimeType: text("mime_type").$default(() => "application/vnd.apple.mpegurl"),
+  status: text("status").notNull().default("ready"),
   uploadedAt: integer("uploaded_at", { mode: "timestamp" })
     .notNull()
     .$defaultFn(() => new Date()),

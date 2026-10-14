@@ -1,2 +1,8 @@
 export { getAuth } from "./server";
-export { requireAuth, optionalAuth } from "./middlewares/session";
+export {
+  requireAuth,
+  optionalAuth,
+  requireRole,
+  requireAdmin,
+  requireStaff,
+} from "./middlewares/session";
