@@ -55,7 +55,6 @@ next-env.d.ts
 **/.wrangler/
 .dev.vars*
 
-
 !.dev.vars.example
 
 # local FFmpeg WASM binaries
@@ -64,3 +63,4 @@ next-env.d.ts
 # SDKs
 output/
 sdks/
+scripts/sdk-generator/templates-default/

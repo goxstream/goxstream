@@ -7,7 +7,7 @@ import { ROOT_DIR, type GeneratorTarget } from "../config/index.ts";
  */
 export function beforeGenerate(target: GeneratorTarget): void {
   // For PHP, clean the test directory so updated templates always take effect
-  if (target.generator === "php") {
+  if (target.generator === "php" || target.generator === "go") {
     const testDir = path.resolve(target.outputDir, "test");
     if (fs.existsSync(testDir)) {
       fs.rmSync(testDir, { recursive: true, force: true });

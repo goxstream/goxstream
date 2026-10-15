@@ -34,6 +34,16 @@ export async function runGenerator(targetKey: TargetKey, specUrl = DEFAULT_SPEC_
     target.outputDir,
   ];
 
+  if (target.gitHost) {
+    args.push("--git-host", target.gitHost);
+  }
+  if (target.gitUserId) {
+    args.push("--git-user-id", target.gitUserId);
+  }
+  if (target.gitRepoId) {
+    args.push("--git-repo-id", target.gitRepoId);
+  }
+
   if (props) {
     args.push(`--additional-properties=${props}`);
   }
