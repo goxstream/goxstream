@@ -53,13 +53,13 @@ healthApp.openapi(healthRoute, async (c) => {
       },
       200,
     );
-  } catch (err: any) {
+  } catch (err) {
     return c.json(
       {
         status: "degraded" as const,
         timestamp: new Date().toISOString(),
         database: "disconnected",
-        error: err?.message || "Database connection check failed",
+        error: err instanceof Error ? err.message : "Database connection check failed",
       },
       500,
     );

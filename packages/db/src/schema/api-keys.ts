@@ -61,7 +61,7 @@ export const apiKeys = sqliteTable(
       .notNull()
       .$defaultFn(() => new Date()),
   },
-  (table: any) => [
+  (table) => [
     index("idx_api_keys_key_hash").on(table.keyHash),
     index("idx_api_keys_prefix").on(table.prefix),
     index("idx_api_keys_user_id").on(table.userId),

@@ -2,7 +2,7 @@ import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import type { CloudflareEnv } from "@goxstream/cloudflare";
 import { requireAuth, optionalAuth } from "@goxstream/auth";
 import { getDb, comments, commentLikes, commentReports } from "@goxstream/db";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 
 type AuthUser = {
   id: string;
@@ -203,7 +203,7 @@ commentsApp.openapi(getCommentsRoute, async (c) => {
 
   // Batch-fetch like/dislike counts for all returned comments
   const commentIds = rows.map((r) => r.id);
-  let likeCounts: Record<string, { likes: number; dislikes: number }> = {};
+  const likeCounts: Record<string, { likes: number; dislikes: number }> = {};
 
   if (commentIds.length > 0) {
     const likeRows = await db

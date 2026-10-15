@@ -1,7 +1,7 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import type { CloudflareEnv } from "@goxstream/cloudflare";
 import { getDb, animes, genres, animeGenres } from "@goxstream/db";
-import { and, desc, asc, eq, like, sql, inArray } from "drizzle-orm";
+import { and, desc, eq, sql, inArray } from "drizzle-orm";
 
 const AnimeItemSchema = z.object({
   id: z.string(),

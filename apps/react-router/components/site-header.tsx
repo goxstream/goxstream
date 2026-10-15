@@ -1,6 +1,4 @@
 import { Link, useLocation } from "react-router";
-import { Sparkles, Calendar, Compass, Tv } from "lucide-react";
-import { buttonVariants } from "@goxstream/ui/components/button";
 import { LogoBrand } from "@/components/logo-brand";
 import { MobileNav } from "@/components/mobile-nav";
 import { SearchDialog } from "@/components/search-dialog";

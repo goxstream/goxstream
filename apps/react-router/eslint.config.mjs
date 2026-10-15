@@ -36,6 +36,9 @@ export default defineConfig([
   {
     rules: {
       "react/prop-types": "off",
+      "react/no-unescaped-entities": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
 ]);

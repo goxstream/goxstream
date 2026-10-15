@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router";
-import { Play, Search, LayoutGrid, List, Clock, Sparkles } from "lucide-react";
+import { Play, Search, LayoutGrid, List } from "lucide-react";
 import { Skeleton } from "@goxstream/ui/components/skeleton";
 import { Input } from "@goxstream/ui/components/input";
 import { Button } from "@goxstream/ui/components/button";

@@ -34,7 +34,7 @@ export const requireAuth = createMiddleware<{
     return c.json({ success: false, error: "Unauthorized" }, 401);
   }
 
-  c.set("user", session.user as AuthUser);
+  c.set("user", session.user as unknown as AuthUser);
   c.set("session", session.session as AuthSession);
   await next();
 });
@@ -52,7 +52,7 @@ export const optionalAuth = createMiddleware<{
     headers: c.req.raw.headers,
   });
 
-  c.set("user", session ? (session.user as AuthUser) : null);
+  c.set("user", session ? (session.user as unknown as AuthUser) : null);
   c.set("session", session ? (session.session as AuthSession) : null);
   await next();
 });
@@ -74,7 +74,7 @@ export const requireRole = (...allowedRoles: string[]) =>
       return c.json({ success: false, error: "Unauthorized" }, 401);
     }
 
-    const user = session.user as AuthUser;
+    const user = session.user as unknown as AuthUser;
     if (!allowedRoles.includes(user.role)) {
       return c.json({ success: false, error: "Forbidden: insufficient permissions" }, 403);
     }

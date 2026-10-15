@@ -6,7 +6,7 @@ const requestHandler = createRequestHandler(
 );
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request) {
     return requestHandler(request);
   },
 } satisfies ExportedHandler<Record<string, unknown>>;

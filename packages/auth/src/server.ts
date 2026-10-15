@@ -7,9 +7,6 @@ import { getDb, schema } from "@goxstream/db";
  * Re-creating auth on every request wastes CPU and risks hitting
  * the 10ms free-plan limit.
  */
-let cachedAuth: any = null;
-let cachedEnvKey: string | null = null;
-
 interface AuthEnv {
   DB: D1Database;
   BETTER_AUTH_SECRET: string;
@@ -24,12 +21,7 @@ function buildEnvKey(env: AuthEnv): string {
   return `${env.BETTER_AUTH_SECRET}|${env.BETTER_AUTH_URL}|${env.COOKIE_DOMAIN ?? ""}|${env.TRUSTED_ORIGINS ?? ""}`;
 }
 
-export function getAuth(env: AuthEnv) {
-  const key = buildEnvKey(env);
-  if (cachedAuth && cachedEnvKey === key) {
-    return cachedAuth;
-  }
-
+function createAuth(env: AuthEnv) {
   const db = getDb(env.DB);
   const isSecure = env.BETTER_AUTH_URL.startsWith("https://");
   const isGoxDomain = env.BETTER_AUTH_URL.includes("gox.my.id");
@@ -45,8 +37,6 @@ export function getAuth(env: AuthEnv) {
   const trustedOrigins = [
     "https://gox.my.id",
     "https://www.gox.my.id",
-    "https://api.gox.my.id",
-    "https://*.gox.my.id",
     "https://api.goxstream.dpdns.org",
     "http://localhost:3000",
     "http://localhost:3001",
@@ -54,7 +44,7 @@ export function getAuth(env: AuthEnv) {
     ...extraOrigins,
   ];
 
-  const auth = betterAuth({
+  return betterAuth({
     database: drizzleAdapter(db, {
       provider: "sqlite",
       schema,
@@ -89,7 +79,25 @@ export function getAuth(env: AuthEnv) {
         : {}),
     },
   });
+}
 
+type AuthInstance = ReturnType<typeof createAuth>;
+
+/**
+ * Module-level isolate singleton for the Better Auth instance.
+ * Re-creating auth on every request wastes CPU and risks hitting
+ * the 10ms free-plan limit.
+ */
+let cachedAuth: AuthInstance | null = null;
+let cachedEnvKey: string | null = null;
+
+export function getAuth(env: AuthEnv): AuthInstance {
+  const key = buildEnvKey(env);
+  if (cachedAuth && cachedEnvKey === key) {
+    return cachedAuth;
+  }
+
+  const auth = createAuth(env);
   cachedAuth = auth;
   cachedEnvKey = key;
   return auth;
