@@ -1,19 +1,23 @@
 import { useState, useEffect } from "react";
 import type { EpisodeItem } from "@/types/anime";
-import { apiClient } from "@/lib/api-client";
+import { animeApi } from "@/lib/api-client";
 
 export function useLatestEpisodes(initialEpisodes?: EpisodeItem[]) {
   const [episodesList, setEpisodesList] = useState<EpisodeItem[]>(initialEpisodes || []);
   const [isLoading, setIsLoading] = useState(!initialEpisodes || initialEpisodes.length === 0);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialEpisodes && initialEpisodes.length > 0) return;
 
     let isMounted = true;
-    apiClient<{ success: boolean; data: any[] }>("/v1/anime?limit=8")
+    setError(null);
+
+    animeApi
+      .v1AnimeGet({ limit: "8" })
       .then((res) => {
         if (!isMounted) return;
-        const items: EpisodeItem[] = (res.data || []).map((a: any) => ({
+        const items: EpisodeItem[] = (res.data || []).map((a) => ({
           id: `ep-${a.id}-${a.episodesCount || 1}`,
           animeId: a.id,
           animeSlug: a.slug,
@@ -28,8 +32,9 @@ export function useLatestEpisodes(initialEpisodes?: EpisodeItem[]) {
         }));
         setEpisodesList(items);
       })
-      .catch(() => {
+      .catch((err) => {
         if (!isMounted) return;
+        setError(err instanceof Error ? err.message : "Failed to load latest episodes");
         setEpisodesList([]);
       })
       .finally(() => {
@@ -44,5 +49,6 @@ export function useLatestEpisodes(initialEpisodes?: EpisodeItem[]) {
   return {
     episodesList,
     isLoading,
+    error,
   };
 }

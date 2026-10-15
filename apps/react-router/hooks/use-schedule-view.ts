@@ -5,7 +5,7 @@ import { getCurrentDayOfWeek } from "@/lib/schedule-utils";
 import type { DayOfWeek, ScheduleViewMode } from "@/types/schedule";
 
 export function useScheduleView() {
-  const { scheduleItems, isLoading } = useScheduleAnime();
+  const { scheduleItems, isLoading, error } = useScheduleAnime();
   const todayDay = useMemo(() => getCurrentDayOfWeek(), []);
   const [activeDay, setActiveDay] = useState<DayOfWeek>(todayDay);
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,5 +54,6 @@ export function useScheduleView() {
     currentItems,
     activeDayInfo,
     isLoading,
+    error,
   };
 }

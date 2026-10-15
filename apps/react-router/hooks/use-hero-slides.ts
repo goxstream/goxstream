@@ -11,9 +11,9 @@ export function useHeroSlides(initialFeaturedAnime?: AnimeItem | null) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [count, setCount] = useState(0);
 
-  const { scheduleItems, isLoading: isScheduleLoading } = useScheduleAnime();
-  const { featuredAnime } = useFeaturedAnime(initialFeaturedAnime);
-  const { trendingAnime } = useTrendingAnime();
+  const { scheduleItems, isLoading: isScheduleLoading, error: scheduleError } = useScheduleAnime();
+  const { featuredAnime, error: featuredError } = useFeaturedAnime(initialFeaturedAnime);
+  const { trendingAnime, error: trendingError } = useTrendingAnime();
 
   const slideItems = useMemo(() => {
     const items: HeroSlideItem[] = [];
@@ -108,6 +108,9 @@ export function useHeroSlides(initialFeaturedAnime?: AnimeItem | null) {
     return () => clearInterval(timer);
   }, [api, slideItems.length]);
 
+  const error =
+    slideItems.length === 0 ? scheduleError || featuredError || trendingError : null;
+
   return {
     api,
     setApi,
@@ -115,5 +118,6 @@ export function useHeroSlides(initialFeaturedAnime?: AnimeItem | null) {
     currentSlide,
     count,
     isLoading: isScheduleLoading && slideItems.length === 0,
+    error,
   };
 }

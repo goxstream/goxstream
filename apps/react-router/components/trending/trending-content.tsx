@@ -4,6 +4,7 @@ import { TrendingTabs } from "./trending-tabs";
 import { TrendingGenreFilter } from "./trending-genre-filter";
 import { TrendingGrid } from "./trending-grid";
 import { useTrendingRankings } from "@/hooks/use-trending-rankings";
+import { ApiError } from "@/components/api-error";
 import { TRENDING_GENRES } from "./constants";
 import type { TrendingPeriod } from "@/types/anime";
 
@@ -12,7 +13,7 @@ export function TrendingContent() {
   const [selectedGenre, setSelectedGenre] = useState<string>("All");
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
-  const { animeList, isLoading } = useTrendingRankings(period, selectedGenre);
+  const { animeList, isLoading, error } = useTrendingRankings(period, selectedGenre);
   const topRankedAnime = animeList[0];
 
   return (
@@ -30,14 +31,18 @@ export function TrendingContent() {
         selectedGenre={selectedGenre}
         onGenreSelect={setSelectedGenre}
       />
-      <TrendingGrid
-        items={animeList}
-        period={period}
-        viewMode={viewMode}
-        selectedGenre={selectedGenre}
-        onResetGenre={() => setSelectedGenre("All")}
-        isLoading={isLoading}
-      />
+      {error ? (
+        <ApiError message={error} onRetry={() => window.location.reload()} />
+      ) : (
+        <TrendingGrid
+          items={animeList}
+          period={period}
+          viewMode={viewMode}
+          selectedGenre={selectedGenre}
+          onResetGenre={() => setSelectedGenre("All")}
+          isLoading={isLoading}
+        />
+      )}
     </div>
   );
 }

@@ -39,11 +39,11 @@ export type TrendingPeriod = "weekly" | "monthly" | "all-time";
 export interface TrendingAnimeItem extends AnimeItem {
   rank: number;
   previousRank?: number;
-  weeklyViews: number;
-  monthlyViews: number;
-  totalViews: number;
-  weeklyGrowth: string;
-  trendScore: number;
+  weeklyViews?: number;
+  monthlyViews?: number;
+  totalViews?: number;
+  weeklyGrowth?: string;
+  trendScore?: number;
 }
 
 export interface PlatformStat {

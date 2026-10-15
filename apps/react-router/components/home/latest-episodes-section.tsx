@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { ArrowRight, Radio } from "lucide-react";
 import { buttonVariants } from "@goxstream/ui/components/button";
 import { EpisodeCard } from "@/components/anime/episode-card";
+import { ApiError } from "@/components/api-error";
 import { useLatestEpisodes } from "@/hooks/use-latest-episodes";
 import type { EpisodeItem } from "@/types/anime";
 
@@ -10,7 +11,7 @@ interface LatestEpisodesSectionProps {
 }
 
 export function LatestEpisodesSection({ initialEpisodes }: LatestEpisodesSectionProps) {
-  const { episodesList, isLoading } = useLatestEpisodes(initialEpisodes);
+  const { episodesList, isLoading, error } = useLatestEpisodes(initialEpisodes);
 
   return (
     <section
@@ -42,7 +43,9 @@ export function LatestEpisodesSection({ initialEpisodes }: LatestEpisodesSection
           </Link>
         </div>
 
-        {isLoading ? (
+        {error ? (
+          <ApiError message={error} onRetry={() => window.location.reload()} />
+        ) : isLoading ? (
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {Array.from({ length: 6 }).map((_, i) => (
               <EpisodeCard key={i} isLoading={true} />

@@ -73,13 +73,15 @@ export function TrendingHero({ topAnime, isLoading }: TrendingHeroProps) {
               <span>{topAnime.rating ? topAnime.rating.toFixed(2) : "N/A"}</span>
             </div>
 
-            <div className="text-muted-foreground flex items-center gap-1.5">
-              <Eye className="text-primary size-4" />
-              <span className="text-foreground font-semibold">
-                {(topAnime.weeklyViews / 1000000).toFixed(2)}M
-              </span>
-              <span>weekly views</span>
-            </div>
+            {topAnime.weeklyViews != null && (
+              <div className="text-muted-foreground flex items-center gap-1.5">
+                <Eye className="text-primary size-4" />
+                <span className="text-foreground font-semibold">
+                  {(topAnime.weeklyViews / 1000000).toFixed(2)}M
+                </span>
+                <span>weekly views</span>
+              </div>
+            )}
 
             <div className="text-muted-foreground flex items-center gap-1.5">
               <Flame className="size-4 text-orange-500" />

@@ -18,7 +18,7 @@ import { getImageStyle } from "@/lib/utils";
 export function SearchDialog() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const { results, isLoading } = useAnimeSearch(query);
+  const { results, isLoading, error } = useAnimeSearch(query);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -76,6 +76,10 @@ export function SearchDialog() {
                       </div>
                     </div>
                   ))}
+                </div>
+              ) : error ? (
+                <div className="text-destructive py-6 text-center text-sm font-medium">
+                  {error}
                 </div>
               ) : results.length === 0 ? (
                 <CommandEmpty className="text-muted-foreground py-6 text-center text-sm">

@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import type { EpisodeWatchDetails, EpisodeItem, AnimeItem, StreamSource } from "@/types/anime";
-import { apiClient } from "@/lib/api-client";
+import { animeApi, episodesApi } from "@/lib/api-client";
+import { V1AnimeGetSortEnum, ResponseError } from "@goxstream/goxstream-sdk";
+import {
+  mapDetailAnimeToItem,
+  mapCatalogAnimeToItem,
+  mapSdkEpisodeToItem,
+  mapSdkStreamSource,
+} from "@/lib/anime-mappers";
 
 function parseEpisodeNumber(epParam: string): number {
   const match = epParam.match(/\d+/);
@@ -24,9 +31,9 @@ export function useWatchDetails(slug: string, episodeNumParam: string) {
     setNotFoundError(false);
 
     Promise.all([
-      apiClient<{ success: boolean; data: any }>(`/v1/anime/${slug}`).catch(() => null),
-      apiClient<{ success: boolean; data: any[] }>(`/v1/anime/${slug}/episodes`).catch(() => null),
-      apiClient<{ success: boolean; data: any[] }>(`/v1/anime?limit=8&sort=popular`).catch(
+      animeApi.v1AnimeSlugGet({ slug }).catch(() => null),
+      episodesApi.v1AnimeSlugEpisodesGet({ slug }).catch(() => null),
+      animeApi.v1AnimeGet({ limit: "8", sort: V1AnimeGetSortEnum.Popular }).catch(
         () => null,
       ),
     ])
@@ -39,49 +46,16 @@ export function useWatchDetails(slug: string, episodeNumParam: string) {
         }
 
         const a = animeRes.data;
-        const mappedAnime: AnimeItem = {
-          id: a.id,
-          slug: a.slug,
-          title: a.titleRomaji || a.titleEnglish || "Untitled Anime",
-          japaneseTitle: a.titleJapanese,
-          synopsis: a.synopsis || "",
-          coverImage: a.coverImage || "",
-          bannerImage: a.bannerImage || a.coverImage,
-          rating: a.rating ?? 0,
-          episodesCount: a.episodesCount ?? 0,
-          status: (a.status === "ongoing"
-            ? "Ongoing"
-            : a.status === "completed"
-              ? "Completed"
-              : "Upcoming") as any,
-          type: (a.type?.toUpperCase() || "TV") as any,
-          season: a.seasonName || "",
-          year: a.seasonYear ?? 2026,
-          genres: Array.isArray(a.genres)
-            ? a.genres.map((g: any) => (typeof g === "string" ? g : g.name))
-            : [],
-          studio: Array.isArray(a.studios)
-            ? a.studios.map((s: any) => (typeof s === "string" ? s : s.name)).join(", ")
-            : "Studio",
-          isTrending: Boolean(a.isTrending),
-          isFeatured: Boolean(a.isFeatured),
-          subOrDub: (a.subOrDub?.toUpperCase() || "SUB") as any,
-        };
+        const mappedAnime = mapDetailAnimeToItem(a);
 
-        const rawEpisodes = episodesRes?.data || [];
-        const mappedEpisodes: EpisodeItem[] = rawEpisodes.map((ep: any) => ({
-          id: ep.id,
-          animeId: a.id,
-          animeSlug: a.slug,
-          animeTitle: mappedAnime.title,
-          episodeNumber: ep.number,
-          episodeTitle: ep.title || `Episode ${ep.number}`,
-          thumbnail: ep.thumbnail || a.coverImage || "",
-          duration: `${Math.round((ep.durationSeconds || 1440) / 60)}m`,
-          releasedAt: ep.airDate || ep.createdAt || "",
-          isSub: true,
-          isDub: false,
-        }));
+        const mappedEpisodes = (episodesRes?.data || []).map((ep) =>
+          mapSdkEpisodeToItem(ep, {
+            id: a.id,
+            slug: a.slug,
+            title: mappedAnime.title,
+            coverImage: a.coverImage,
+          }),
+        );
 
         // Find current episode matching epNum or fallback to first
         let currentEpisode = mappedEpisodes.find((e) => e.episodeNumber === epNum);
@@ -109,50 +83,19 @@ export function useWatchDetails(slug: string, episodeNumParam: string) {
         // Fetch stream sources for the episode
         let streamSources: StreamSource[] = [];
         if (currentEpisode.id && !currentEpisode.id.startsWith("ep-")) {
-          const streamRes = await apiClient<{
-            success: boolean;
-            sources: any[];
-          }>(`/v1/episodes/${currentEpisode.id}/stream`).catch(() => null);
-
-          if (streamRes && streamRes.sources && streamRes.sources.length > 0) {
-            streamSources = streamRes.sources.map((s: any) => ({
-              id: s.id,
-              serverName: s.serverName || "Primary Stream",
-              quality: s.quality || "1080p",
-              url: s.streamUrl,
-              type: s.format === "hls" ? "hls" : "mp4",
-              isPrimary: Boolean(s.isPrimary),
-              qualityUrls: {
-                url1080p: s.url1080p || undefined,
-                url720p: s.url720p || undefined,
-                url480p: s.url480p || undefined,
-                url360p: s.url360p || undefined,
-              },
-            }));
+          try {
+            const streamRes = await episodesApi.v1EpisodesIdStreamGet({
+              id: currentEpisode.id,
+            });
+            if (streamRes?.sources?.length) {
+              streamSources = streamRes.sources.map(mapSdkStreamSource);
+            }
+          } catch {
+            // Silently handle stream fetch failures
           }
         }
 
-        // Fallback default demo stream source if none returned from DB
-        if (streamSources.length === 0) {
-          streamSources = [
-            {
-              id: "server-alpha",
-              serverName: "FastStream Alpha (1080p)",
-              quality: "1080p",
-              url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-              type: "mp4",
-              isPrimary: true,
-            },
-            {
-              id: "server-beta",
-              serverName: "Backup Stream Beta (720p)",
-              quality: "720p",
-              url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-              type: "mp4",
-              isPrimary: false,
-            },
-          ];
-        }
+        // No fallback — if no stream sources exist, UI should show an error message
 
         const currentIndex = mappedEpisodes.findIndex(
           (e) => e.episodeNumber === currentEpisode?.episodeNumber,
@@ -163,27 +106,10 @@ export function useWatchDetails(slug: string, episodeNumParam: string) {
             ? mappedEpisodes[currentIndex + 1]
             : undefined;
 
-        const mappedRecs: AnimeItem[] = (recRes?.data || [])
-          .filter((r: any) => r.slug !== slug)
+        const mappedRecs = (recRes?.data || [])
+          .filter((r) => r.slug !== slug)
           .slice(0, 4)
-          .map((r: any) => ({
-            id: r.id,
-            slug: r.slug,
-            title: r.titleRomaji || r.titleEnglish || "Untitled Anime",
-            japaneseTitle: r.titleJapanese,
-            synopsis: r.synopsis || "",
-            coverImage: r.coverImage || "",
-            bannerImage: r.bannerImage || r.coverImage,
-            rating: r.rating ?? 0,
-            episodesCount: r.episodesCount ?? 0,
-            status: "Ongoing" as any,
-            type: "TV" as any,
-            season: r.seasonName || "",
-            year: r.seasonYear ?? 2026,
-            genres: [],
-            studio: "Studio",
-            subOrDub: "SUB" as any,
-          }));
+          .map(mapCatalogAnimeToItem);
 
         setDetails({
           anime: mappedAnime,

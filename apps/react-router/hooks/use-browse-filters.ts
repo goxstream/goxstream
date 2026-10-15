@@ -28,7 +28,7 @@ export function useBrowseFilters() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { animeList: fetchedList, isLoading } = useBrowseAnime({
+  const { animeList: fetchedList, isLoading, error } = useBrowseAnime({
     genre,
     query,
     status,
@@ -208,5 +208,6 @@ export function useBrowseFilters() {
     paginatedList,
     activeGenres,
     isLoading,
+    error,
   };
 }

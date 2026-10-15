@@ -13,6 +13,7 @@ import {
 } from "@goxstream/ui/components/carousel";
 import { getImageStyle } from "@/lib/utils";
 import { useHeroSlides } from "@/hooks/use-hero-slides";
+import { ApiError } from "@/components/api-error";
 import type { AnimeItem } from "@/types/anime";
 
 interface HeroSectionProps {
@@ -20,13 +21,17 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ initialFeaturedAnime }: HeroSectionProps) {
-  const { api, setApi, slideItems, currentSlide, count, isLoading } =
+  const { api, setApi, slideItems, currentSlide, count, isLoading, error } =
     useHeroSlides(initialFeaturedAnime);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   return (
     <section className="bg-card text-card-foreground border-border/60 group relative mx-auto w-full max-w-[1400px] overflow-hidden rounded-3xl border shadow-xl">
-      {isLoading ? (
+      {error && slideItems.length === 0 ? (
+        <div className="p-8">
+          <ApiError message={error} onRetry={() => window.location.reload()} />
+        </div>
+      ) : isLoading ? (
         <div className="relative flex min-h-[380px] w-full items-center justify-center p-6 sm:min-h-[480px] lg:min-h-[640px]">
           <Skeleton className="size-full rounded-2xl" />
         </div>

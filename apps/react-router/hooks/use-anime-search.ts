@@ -1,55 +1,33 @@
 import { useState, useEffect } from "react";
 import type { AnimeItem } from "@/types/anime";
-import { apiClient } from "@/lib/api-client";
+import { animeApi } from "@/lib/api-client";
+import { V1AnimeGetSortEnum } from "@goxstream/goxstream-sdk";
+import { mapCatalogAnimeToItem } from "@/lib/anime-mappers";
 
 export function useAnimeSearch(query: string) {
   const [results, setResults] = useState<AnimeItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
     setIsLoading(true);
+    setError(null);
 
     const timer = setTimeout(() => {
-      const endpoint = query
-        ? `/v1/anime?search=${encodeURIComponent(query)}&limit=10`
-        : `/v1/anime?sort=popular&limit=5`;
+      const params = query
+        ? { search: query, limit: "10" as const }
+        : { sort: V1AnimeGetSortEnum.Popular, limit: "5" as const };
 
-      apiClient<{ success: boolean; data: any[] }>(endpoint)
+      animeApi
+        .v1AnimeGet(params)
         .then((res) => {
           if (!isMounted) return;
-          const items: AnimeItem[] = (res.data || []).map((a: any) => ({
-            id: a.id,
-            slug: a.slug,
-            title: a.titleRomaji || a.titleEnglish || "Untitled Anime",
-            japaneseTitle: a.titleJapanese,
-            synopsis: a.synopsis || "",
-            coverImage: a.coverImage || "",
-            bannerImage: a.bannerImage || a.coverImage,
-            rating: a.rating ?? 0,
-            episodesCount: a.episodesCount ?? 0,
-            status: (a.status === "ongoing"
-              ? "Ongoing"
-              : a.status === "completed"
-                ? "Completed"
-                : "Upcoming") as any,
-            type: (a.type?.toUpperCase() || "TV") as any,
-            season: a.seasonName || "",
-            year: a.seasonYear ?? 2026,
-            genres: Array.isArray(a.genres)
-              ? a.genres.map((g: any) => (typeof g === "string" ? g : g.name))
-              : [],
-            studio: Array.isArray(a.studios)
-              ? a.studios.map((s: any) => (typeof s === "string" ? s : s.name)).join(", ")
-              : "Studio",
-            isTrending: Boolean(a.isTrending),
-            isFeatured: Boolean(a.isFeatured),
-            subOrDub: (a.subOrDub?.toUpperCase() || "SUB") as any,
-          }));
-          setResults(items);
+          setResults((res.data || []).map(mapCatalogAnimeToItem));
         })
-        .catch(() => {
+        .catch((err) => {
           if (!isMounted) return;
+          setError(err instanceof Error ? err.message : "Search failed");
           setResults([]);
         })
         .finally(() => {
@@ -66,5 +44,6 @@ export function useAnimeSearch(query: string) {
   return {
     results,
     isLoading,
+    error,
   };
 }

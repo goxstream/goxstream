@@ -4,6 +4,7 @@ import { Sparkles, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@goxstream/ui/components/button";
 import { Skeleton } from "@goxstream/ui/components/skeleton";
 import { AnimeCard } from "@/components/anime/anime-card";
+import { ApiError } from "@/components/api-error";
 import { useTrendingAnime } from "@/hooks/use-trending-anime";
 import type { AnimeItem } from "@/types/anime";
 
@@ -14,7 +15,7 @@ interface TrendingSectionProps {
 
 export function TrendingSection({ initialTrending, initialGenres }: TrendingSectionProps) {
   const [selectedGenre, setSelectedGenre] = useState("All");
-  const { trendingAnime, genresList, isLoading } = useTrendingAnime(initialTrending, initialGenres);
+  const { trendingAnime, genresList, isLoading, error } = useTrendingAnime(initialTrending, initialGenres);
 
   const filteredAnime =
     selectedGenre === "All"
@@ -50,7 +51,9 @@ export function TrendingSection({ initialTrending, initialGenres }: TrendingSect
           </Link>
         </div>
 
-        {isLoading ? (
+        {error ? (
+          <ApiError message={error} onRetry={() => window.location.reload()} />
+        ) : isLoading ? (
           <div className="space-y-6">
             <div className="flex items-center gap-2 overflow-hidden pb-3">
               {Array.from({ length: 8 }).map((_, i) => (

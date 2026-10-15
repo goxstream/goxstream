@@ -19,10 +19,10 @@ export function TrendingItemCard({ anime, period, viewMode }: TrendingItemCardPr
 
   const viewsDisplay =
     period === "weekly"
-      ? `${(anime.weeklyViews / 1000000).toFixed(2)}M weekly`
+      ? anime.weeklyViews != null ? `${(anime.weeklyViews / 1000000).toFixed(2)}M weekly` : "—"
       : period === "monthly"
-        ? `${(anime.monthlyViews / 1000000).toFixed(2)}M monthly`
-        : `${(anime.totalViews / 1000000).toFixed(1)}M total`;
+        ? anime.monthlyViews != null ? `${(anime.monthlyViews / 1000000).toFixed(2)}M monthly` : "—"
+        : anime.totalViews != null ? `${(anime.totalViews / 1000000).toFixed(1)}M total` : "—";
 
   const getRankBadgeStyle = (rank: number) => {
     if (rank === 1) {

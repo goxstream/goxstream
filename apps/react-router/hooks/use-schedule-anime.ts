@@ -1,31 +1,34 @@
 import { useState, useEffect } from "react";
 import type { ScheduleItem, DayOfWeek } from "@/types/schedule";
-import { apiClient } from "@/lib/api-client";
+import { animeApi } from "@/lib/api-client";
 
-const DAYS_OF_WEEK: DayOfWeek[] = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-];
-
+/**
+ * NOTE: The current /v1/anime endpoint does NOT provide schedule-specific fields
+ * (airDay, airTime, broadcast status). These fields are mapped from whatever the
+ * API returns. When a dedicated schedule endpoint is available, this hook should
+ * be updated to use it.
+ * See: docs/DEVELOPER_NOTES.md — "Missing API Data Fields"
+ */
 export function useScheduleAnime() {
   const [scheduleItems, setScheduleItems] = useState<ScheduleItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
     setIsLoading(true);
+    setError(null);
 
-    apiClient<{ success: boolean; data: any[] }>("/v1/anime?limit=50")
+    animeApi
+      .v1AnimeGet({ limit: "50" })
       .then((res) => {
         if (!isMounted) return;
-        const items: ScheduleItem[] = (res.data || []).map((a: any, idx: number) => {
-          const day = a.schedule?.releaseDay?.toLowerCase() || DAYS_OF_WEEK[idx % 7];
-          const time = a.schedule?.releaseTime || "19:00";
+        const items: ScheduleItem[] = (res.data || []).map((a) => {
+          // Use broadcast data from API if available, otherwise leave empty
+          const raw = a as unknown as Record<string, unknown>;
+          const broadcastDay = raw.broadcastDay as DayOfWeek | undefined;
+          const broadcastTime = raw.broadcastTime as string | undefined;
+
           return {
             id: a.id,
             animeId: a.id,
@@ -34,27 +37,24 @@ export function useScheduleAnime() {
             japaneseTitle: a.titleJapanese,
             coverImage: a.coverImage || "",
             bannerImage: a.bannerImage || a.coverImage,
-            airDay: (DAYS_OF_WEEK.includes(day as DayOfWeek) ? day : "monday") as DayOfWeek,
-            airTime: time,
-            episodeNumber: a.schedule?.episodeNumber || a.episodesCount || 1,
-            status: a.schedule?.status === "airing_now" ? "airing_now" : "upcoming",
-            genres: Array.isArray(a.genres)
-              ? a.genres.map((g: any) => (typeof g === "string" ? g : g.name))
-              : [],
+            airDay: broadcastDay || ("" as DayOfWeek),
+            airTime: broadcastTime || "",
+            episodeNumber: a.episodesCount || 0,
+            status: "upcoming" as const,
+            genres: [],
             rating: a.rating ?? 0,
-            studio: Array.isArray(a.studios)
-              ? a.studios.map((s: any) => (typeof s === "string" ? s : s.name)).join(", ")
-              : "Studio",
-            subOrDub: (a.subOrDub?.toUpperCase() || "SUB") as any,
+            studio: "",
+            subOrDub: (a.subOrDub?.toUpperCase() === "DUB" ? "DUB" : "SUB") as ScheduleItem["subOrDub"],
             season: a.seasonName || "",
-            year: a.seasonYear ?? 2026,
-            isPopular: Boolean(a.isTrending),
+            year: a.seasonYear ?? 0,
+            isPopular: a.isTrending,
           };
         });
         setScheduleItems(items);
       })
-      .catch(() => {
+      .catch((err) => {
         if (!isMounted) return;
+        setError(err instanceof Error ? err.message : "Failed to load schedule");
         setScheduleItems([]);
       })
       .finally(() => {
@@ -69,5 +69,6 @@ export function useScheduleAnime() {
   return {
     scheduleItems,
     isLoading,
+    error,
   };
 }

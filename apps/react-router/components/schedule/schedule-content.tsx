@@ -4,6 +4,7 @@ import { DaySelectorTabs } from "./day-selector-tabs";
 import { TimelineView } from "./timeline-view";
 import { GridView } from "./grid-view";
 import { useScheduleView } from "@/hooks/use-schedule-view";
+import { ApiError } from "@/components/api-error";
 
 export function ScheduleContent() {
   const {
@@ -18,6 +19,7 @@ export function ScheduleContent() {
     currentItems,
     activeDayInfo,
     isLoading,
+    error,
   } = useScheduleView();
 
   return (
@@ -38,7 +40,9 @@ export function ScheduleContent() {
         dayCounts={dayCounts}
       />
 
-      {isLoading ? (
+      {error ? (
+        <ApiError message={error} onRetry={() => window.location.reload()} />
+      ) : isLoading ? (
         <div className="grid grid-cols-1 gap-4 py-4 lg:grid-cols-2">
           {Array.from({ length: 6 }).map((_, i) => (
             <EpisodeCard key={i} isLoading={true} />

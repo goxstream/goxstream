@@ -2,6 +2,7 @@ import { BrowseFilters } from "./browse-filters";
 import { BrowseGrid } from "./browse-grid";
 import { BrowsePagination } from "./browse-pagination";
 import { useBrowseFilters } from "@/hooks/use-browse-filters";
+import { ApiError } from "@/components/api-error";
 
 export function BrowseContent() {
   const {
@@ -31,6 +32,7 @@ export function BrowseContent() {
     onResetFilters,
     paginatedList,
     isLoading,
+    error,
   } = useBrowseFilters();
 
   return (
@@ -55,15 +57,19 @@ export function BrowseContent() {
         onResetFilters={onResetFilters}
         activeFiltersCount={activeFiltersCount}
       />
-      <BrowseGrid
-        items={paginatedList}
-        totalResults={totalResults}
-        totalAnimeCount={totalResults}
-        viewMode={viewMode}
-        onViewModeChange={onViewModeChange}
-        onResetFilters={onResetFilters}
-        isLoading={isLoading}
-      />
+      {error ? (
+        <ApiError message={error} onRetry={() => window.location.reload()} />
+      ) : (
+        <BrowseGrid
+          items={paginatedList}
+          totalResults={totalResults}
+          totalAnimeCount={totalResults}
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+          onResetFilters={onResetFilters}
+          isLoading={isLoading}
+        />
+      )}
       <BrowsePagination
         currentPage={currentPage}
         totalPages={totalPages}

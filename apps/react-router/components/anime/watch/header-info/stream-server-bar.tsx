@@ -16,7 +16,10 @@ export function StreamServerBar({ sources, activeSourceId, onSelectSource }: Str
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        {sources.map((source) => {
+        {sources.length === 0 ? (
+          <span className="text-muted-foreground text-xs italic">No stream servers available</span>
+        ) : (
+          sources.map((source) => {
           const isActive = source.id === activeSourceId;
           const isPrimary = source.isPrimary || source.id === "default-r2-primary";
 
@@ -44,7 +47,7 @@ export function StreamServerBar({ sources, activeSourceId, onSelectSource }: Str
               </span>
             </button>
           );
-        })}
+        }))}
       </div>
     </div>
   );

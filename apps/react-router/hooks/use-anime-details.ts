@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import type { AnimeItem, EpisodeItem } from "@/types/anime";
-import { apiClient } from "@/lib/api-client";
+import { animeApi, episodesApi } from "@/lib/api-client";
+import { V1AnimeGetSortEnum } from "@goxstream/goxstream-sdk";
+import { mapDetailAnimeToItem, mapCatalogAnimeToItem, mapSdkEpisodeToItem } from "@/lib/anime-mappers";
 
 export function useAnimeDetails(slug: string) {
   const [anime, setAnime] = useState<AnimeItem | null>(null);
@@ -17,11 +19,9 @@ export function useAnimeDetails(slug: string) {
     setNotFoundError(false);
 
     Promise.all([
-      apiClient<{ success: boolean; data: any }>(`/v1/anime/${slug}`).catch(() => null),
-      apiClient<{ success: boolean; data: any[] }>(`/v1/anime/${slug}/episodes`).catch(() => null),
-      apiClient<{ success: boolean; data: any[] }>(`/v1/anime?limit=8&sort=popular`).catch(
-        () => null,
-      ),
+      animeApi.v1AnimeSlugGet({ slug }).catch(() => null),
+      episodesApi.v1AnimeSlugEpisodesGet({ slug }).catch(() => null),
+      animeApi.v1AnimeGet({ limit: "8", sort: V1AnimeGetSortEnum.Popular }).catch(() => null),
     ])
       .then(([animeRes, episodesRes, recRes]) => {
         if (!isMounted) return;
@@ -32,71 +32,21 @@ export function useAnimeDetails(slug: string) {
         }
 
         const a = animeRes.data;
-        const mappedAnime: AnimeItem = {
-          id: a.id,
-          slug: a.slug,
-          title: a.titleRomaji || a.titleEnglish || "Untitled Anime",
-          japaneseTitle: a.titleJapanese,
-          synopsis: a.synopsis || "",
-          coverImage: a.coverImage || "",
-          bannerImage: a.bannerImage || a.coverImage,
-          rating: a.rating ?? 0,
-          episodesCount: a.episodesCount ?? 0,
-          latestEpisode: a.episodesCount || 1,
-          status: (a.status === "ongoing"
-            ? "Ongoing"
-            : a.status === "completed"
-              ? "Completed"
-              : "Upcoming") as any,
-          type: (a.type?.toUpperCase() || "TV") as any,
-          season: a.seasonName || "",
-          year: a.seasonYear ?? 2026,
-          genres: Array.isArray(a.genres)
-            ? a.genres.map((g: any) => (typeof g === "string" ? g : g.name))
-            : [],
-          studio: Array.isArray(a.studios)
-            ? a.studios.map((s: any) => (typeof s === "string" ? s : s.name)).join(", ")
-            : "Studio",
-          isTrending: Boolean(a.isTrending),
-          isFeatured: Boolean(a.isFeatured),
-          subOrDub: (a.subOrDub?.toUpperCase() || "SUB") as any,
-        };
+        const mappedAnime = mapDetailAnimeToItem(a);
 
-        const mappedEpisodes: EpisodeItem[] = (episodesRes?.data || []).map((ep: any) => ({
-          id: ep.id,
-          animeId: a.id,
-          animeSlug: a.slug,
-          animeTitle: mappedAnime.title,
-          episodeNumber: ep.number,
-          episodeTitle: ep.title || `Episode ${ep.number}`,
-          thumbnail: ep.thumbnail || a.coverImage || "",
-          duration: `${Math.round((ep.durationSeconds || 1440) / 60)}m`,
-          releasedAt: ep.airDate || ep.createdAt || "",
-          isSub: true,
-          isDub: false,
-        }));
+        const mappedEpisodes = (episodesRes?.data || []).map((ep) =>
+          mapSdkEpisodeToItem(ep, {
+            id: a.id,
+            slug: a.slug,
+            title: mappedAnime.title,
+            coverImage: a.coverImage,
+          }),
+        );
 
-        const mappedRecs: AnimeItem[] = (recRes?.data || [])
-          .filter((r: any) => r.slug !== slug)
+        const mappedRecs = (recRes?.data || [])
+          .filter((r) => r.slug !== slug)
           .slice(0, 4)
-          .map((r: any) => ({
-            id: r.id,
-            slug: r.slug,
-            title: r.titleRomaji || r.titleEnglish || "Untitled Anime",
-            japaneseTitle: r.titleJapanese,
-            synopsis: r.synopsis || "",
-            coverImage: r.coverImage || "",
-            bannerImage: r.bannerImage || r.coverImage,
-            rating: r.rating ?? 0,
-            episodesCount: r.episodesCount ?? 0,
-            status: "Ongoing" as any,
-            type: "TV" as any,
-            season: r.seasonName || "",
-            year: r.seasonYear ?? 2026,
-            genres: [],
-            studio: "Studio",
-            subOrDub: "SUB" as any,
-          }));
+          .map(mapCatalogAnimeToItem);
 
         setAnime(mappedAnime);
         setEpisodes(mappedEpisodes);
