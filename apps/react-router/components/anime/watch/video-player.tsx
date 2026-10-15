@@ -1,8 +1,13 @@
+"use client";
+
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Link } from "react-router";
-import { MediaPlayer, MediaOutlet, MediaPoster } from "@vidstack/react";
 import { buttonVariants } from "@goxstream/ui/components/button";
 import { ChevronRight } from "lucide-react";
 import type { StreamSource, EpisodeItem } from "@/types/anime";
+
+// Client-only dynamic import to prevent SSR evaluation of @vidstack/react in Cloudflare Worker isolates
+const VideoPlayerClient = lazy(() => import("./video-player-client"));
 
 interface VideoPlayerProps {
   currentSource: StreamSource;
@@ -19,23 +24,29 @@ export function VideoPlayer({
   nextEpisode,
   animeSlug,
 }: VideoPlayerProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
     <div className="border-border/60 group relative aspect-video w-full overflow-hidden rounded-xl border bg-black shadow-xs">
-      <MediaPlayer
-        title={title}
-        src={currentSource.url}
-        controls
-        aspectRatio={16 / 9}
-        className="h-full w-full overflow-hidden font-sans text-white"
-      >
-        <MediaOutlet>
-          <MediaPoster
-            src={poster}
-            alt={title}
-            className="h-full w-full object-cover opacity-80 transition-opacity group-hover:opacity-100"
-          />
-        </MediaOutlet>
-      </MediaPlayer>
+      {isMounted ? (
+        <Suspense
+          fallback={
+            <div className="relative h-full w-full">
+              <img src={poster} alt={title} className="h-full w-full object-cover opacity-80" />
+            </div>
+          }
+        >
+          <VideoPlayerClient title={title} src={currentSource.url} poster={poster} />
+        </Suspense>
+      ) : (
+        <div className="relative h-full w-full">
+          <img src={poster} alt={title} className="h-full w-full object-cover opacity-80" />
+        </div>
+      )}
 
       {/* Overlay Next Ep button */}
       {nextEpisode && (

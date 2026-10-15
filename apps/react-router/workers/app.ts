@@ -1,3 +1,4 @@
+import "./shims";
 import { createRequestHandler } from "react-router";
 
 const requestHandler = createRequestHandler(
