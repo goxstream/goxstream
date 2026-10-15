@@ -1,0 +1,28 @@
+PSTOPIC
+    about_{{{packageName}}}
+
+SHORT DESCRIPTION
+    {{{packageName}}} - the PowerShell module for the {{{appName}}}
+
+LONG DESCRIPTION
+{{#appDescription}}
+    {{{.}}}
+
+{{/appDescription}}
+    This PowerShell module is automatically generated for {{#appName}}{{{.}}}{{/appName}}{{^appName}}API{{/appName}} using OpenAPI specification:
+
+    - API version: {{appVersion}}
+    - SDK version: {{packageVersion}}
+    {{^hideGenerationTimestamp}}
+    - Build date: {{generatedDate}}
+    {{/hideGenerationTimestamp}}
+    - Generator version: {{generatorVersion}}
+    - Build package: {{{generatorClass}}}
+    {{#infoUrl}}
+    For more information, please visit [{{{infoUrl}}}]({{{infoUrl}}})
+    {{/infoUrl}}
+
+    Frameworks supported:
+
+    * PowerShell {{{powershellVersion}}} or later
+    * .NET 4.0 or later

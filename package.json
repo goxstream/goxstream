@@ -24,12 +24,22 @@
     "lint:next": "turbo lint --filter=@goxstream/next",
     "lint:rr": "turbo lint --filter=@goxstream/react-router",
     "format": "turbo format",
-    "format:check": "turbo format:check"
+    "format:check": "turbo format:check",
+    "sdk:generate": "pnpm --filter=@goxstream/sdk-generator generate:ts",
+    "sdk:generate:all": "pnpm --filter=@goxstream/sdk-generator generate:all",
+    "sdk:generate:php": "pnpm --filter=@goxstream/sdk-generator generate:php",
+    "sdk:generate:py": "pnpm --filter=@goxstream/sdk-generator generate:py",
+    "sdk:generate:go": "pnpm --filter=@goxstream/sdk-generator generate:go",
+    "sdk:generate:bash": "pnpm --filter=@goxstream/sdk-generator generate:bash",
+    "sdk:generate:ps": "pnpm --filter=@goxstream/sdk-generator generate:ps"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "catalog:",
+    "@types/node": "catalog:",
     "prettier": "catalog:",
     "prettier-plugin-tailwindcss": "catalog:",
     "turbo": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "wrangler": "catalog:"
   },

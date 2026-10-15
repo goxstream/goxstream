@@ -1,6 +1,7 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "scripts/*"
 
 catalog:
   # Runtimes & Languages
@@ -55,12 +56,15 @@ catalog:
   prettier: ^3.9.9
   prettier-plugin-tailwindcss: ^0.8.1
   turbo: ^2.11.7
+  tsx: ^4.19.3
+  "@openapitools/openapi-generator-cli": ^2.41.0
 
 # Pre-approve build scripts for the packages C3 itself installs that need
 # them: `workerd` downloads the platform binary and `esbuild` downloads/
 # builds native bindings. Without these, pnpm 11+ aborts the install with
 # ERR_PNPM_IGNORED_BUILDS.
 allowBuilds:
+  '@openapitools/openapi-generator-cli': true
   esbuild: true
   sharp: true
   unrs-resolver: true

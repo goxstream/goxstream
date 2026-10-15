@@ -1,0 +1,23 @@
+{
+  "name": "@goxstream/sdk-generator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "tsx src/index.ts",
+    "generate:all": "tsx src/index.ts all",
+    "generate:ts": "tsx src/index.ts typescript",
+    "generate:php": "tsx src/index.ts php",
+    "generate:py": "tsx src/index.ts python",
+    "generate:go": "tsx src/index.ts go",
+    "generate:bash": "tsx src/index.ts bash",
+    "generate:ps": "tsx src/index.ts powershell",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "catalog:",
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  }
+}

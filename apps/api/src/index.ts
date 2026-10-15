@@ -89,6 +89,15 @@ app.doc("/v1/openapi.json", {
     title: "GoxStream API",
     version: "1.0.0",
     description: "Modular anime streaming and metadata API built with Hono on Cloudflare Workers.",
+    license: {
+      name: "Apache-2.0",
+      url: "https://www.apache.org/licenses/LICENSE-2.0.html",
+    },
+    contact: {
+      name: "GoxStream Engineering Team",
+      email: "dev@gox.my.id",
+      url: "https://gox.my.id",
+    },
   },
   servers: [
     {

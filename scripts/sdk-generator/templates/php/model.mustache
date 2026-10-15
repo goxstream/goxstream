@@ -1,0 +1,46 @@
+<?php
+{{#models}}
+{{#model}}
+/**
+ * {{classname}}
+ *
+ * PHP version 8.1
+ *
+ * @category Class
+ * @package  {{invokerPackage}}
+ * @author   {{#infoName}}{{{.}}}{{/infoName}}{{^infoName}}{{#appName}}{{{.}}}{{/appName}}{{/infoName}}
+ * @link     {{#infoUrl}}{{{.}}}{{/infoUrl}}
+ */
+
+{{>partial_header}}
+
+/**
+ * NOTE: This class is auto generated for {{#appName}}{{{.}}}{{/appName}}{{^appName}}API{{/appName}}.
+ * Do not edit the class manually.
+ */
+
+namespace {{modelPackage}};
+{{^isEnum}}
+{{^parentSchema}}
+
+use \ArrayAccess;
+{{/parentSchema}}
+{{/isEnum}}
+use \{{invokerPackage}}\ObjectSerializer;
+
+/**
+ * {{classname}} Class Doc Comment
+ *
+ * @category Class
+{{#description}}
+ * @description {{.}}
+{{/description}}
+ * @package  {{invokerPackage}}
+ * @author   {{#infoName}}{{{.}}}{{/infoName}}{{^infoName}}{{#appName}}{{{.}}}{{/appName}}{{/infoName}}
+ * @link     {{#infoUrl}}{{{.}}}{{/infoUrl}}
+{{^isEnum}}
+ * @implements \ArrayAccess<string, mixed>
+{{/isEnum}}
+ */
+{{#isEnum}}{{>model_enum}}{{/isEnum}}{{^isEnum}}{{>model_generic}}{{/isEnum}}
+{{/model}}{{/models}}

@@ -1,0 +1,28 @@
+"""
+{{#appName}}
+    {{{.}}}
+
+{{/appName}}
+{{#appDescription}}
+    {{{.}}}
+
+{{/appDescription}}
+    {{#version}}
+    The version of the OpenAPI document: {{{.}}}
+    {{/version}}
+    {{#infoName}}
+    Author: {{{.}}}
+    {{/infoName}}
+    {{#infoEmail}}
+    Contact: {{{.}}}
+    {{/infoEmail}}
+    {{#infoUrl}}
+    Website: {{{.}}}
+    {{/infoUrl}}
+    {{#licenseName}}
+    License: {{{.}}} {{#licenseUrl}}({{{.}}}){{/licenseUrl}}
+    {{/licenseName}}
+
+    Generated for {{#appName}}{{{.}}}{{/appName}}{{^appName}}API{{/appName}} SDK.
+    Do not edit the class manually.
+"""  # noqa: E501

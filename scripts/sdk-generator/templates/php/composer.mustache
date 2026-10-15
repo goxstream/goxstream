@@ -1,0 +1,42 @@
+{
+    {{#composerPackageName}}
+    "name": "{{{.}}}",
+    {{/composerPackageName}}
+    {{#artifactVersion}}
+    "version": "{{{.}}}",
+    {{/artifactVersion}}
+    "description": "{{{appDescription}}}",
+    "keywords": [
+                "openapi",
+        "php",
+        "sdk",
+        "rest",
+        "api"
+    ],
+    "homepage": "{{#infoUrl}}{{{.}}}{{/infoUrl}}{{^infoUrl}}https://gox.my.id{{/infoUrl}}",
+    "license": "{{{licenseName}}}",
+    "authors": [
+        {
+            "name": "{{#infoName}}{{{.}}}{{/infoName}}{{^infoName}}GoxStream Engineering Team{{/infoName}}",
+            "homepage": "{{#infoUrl}}{{{.}}}{{/infoUrl}}{{^infoUrl}}https://gox.my.id{{/infoUrl}}"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/psr7": "^1.7 || ^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0 || ^9.0",
+        "friendsofphp/php-cs-fixer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": { "{{{escapedInvokerPackage}}}\\" : "{{{srcBasePath}}}/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "{{{escapedInvokerPackage}}}\\Test\\" : "{{{testBasePath}}}/" }
+    }
+}
