@@ -32,10 +32,9 @@
     "reselect": "^4.0.0",
 {{/sagasAndRecords}}
     "typescript": "^4.0 || ^5.0"
-  }{{#npmRepository}},{{/npmRepository}}
-{{#npmRepository}}
+  },
   "publishConfig": {
-    "registry": "{{npmRepository}}"
+    "access": "public"{{#npmRepository}},
+    "registry": "{{npmRepository}}"{{/npmRepository}}
   }
-{{/npmRepository}}
 }

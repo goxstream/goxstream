@@ -24,7 +24,7 @@ export const TARGETS: Record<TargetKey, GeneratorTarget> = {
     gitRepoId: "goxstream-typescript",
     additionalProperties: {
       npmName: "@goxstream/goxstream-sdk",
-      npmVersion: "1.0.0",
+      npmVersion: "1.0.1",
       typescriptThreePlus: "true",
       supportsES6: "true",
       licenseName: "Apache-2.0",
