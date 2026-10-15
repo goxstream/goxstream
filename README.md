@@ -45,22 +45,22 @@ GoxStream mengadopsi prinsip **Cloudflare-First, Not Cloudflare-Locked**. Kode i
 
 ```mermaid
 flowchart TD
-    subgraph ClientLayer ["Client Layer (Browser)"]
+    subgraph ClientLayer["Client Layer - Browser"]
         ClientUI["React 19 App Router UI"]
-        Player["Vidstack Video Player (HLS / DASH)"]
+        Player["Vidstack Video Player - HLS / DASH"]
     end
 
-    subgraph EdgeRuntime ["Edge Runtime / Server Layer"]
-        WorkerEntry["Cloudflare Workers (OpenNext Bundle)"]
+    subgraph EdgeRuntime["Edge Runtime - Server Layer"]
+        WorkerEntry["Cloudflare Workers - OpenNext Bundle"]
         NextServer["Next.js Server Components & Route Handlers"]
         AuthModule["Better Auth Authentication Layer"]
     end
 
-    subgraph DataAbstraction ["Data Access & Storage Layer"]
+    subgraph DataAbstraction["Data Access & Storage Layer"]
         DrizzleLayer["Drizzle ORM Core Engine"]
-        D1DB[("Cloudflare D1 (Primary SQLite Edge)")]
-        PgDB[("Neon PostgreSQL (Alternative / Docker)")]
-        R2Store["Cloudflare R2 / Object CDN Storage"]
+        D1DB[("Cloudflare D1 - Primary SQLite Edge")]
+        PgDB[("Neon PostgreSQL - Alternative / Docker")]
+        R2Store["Cloudflare R2 - Object CDN Storage"]
     end
 
     ClientUI --> WorkerEntry
