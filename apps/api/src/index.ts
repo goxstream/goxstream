@@ -62,18 +62,25 @@ app.route("/", uploadApp);
 
 // ── Scalar Interactive API Documentation ────────────────────────────────
 app.get(
-  "/reference",
+  "/",
   apiReference({
     theme: "purple",
     pageTitle: "GoxStream API Reference",
     spec: {
       url: "/v1/openapi.json",
     },
+    servers: [
+      {
+        url: "https://api.gox.my.id",
+        description: "Production Server",
+      },
+      {
+        url: "http://localhost:8787",
+        description: "Local Development",
+      },
+    ],
   }),
 );
-
-// Redirect root to /reference for developer convenience
-app.get("/", (c) => c.redirect("/reference"));
 
 // ── OpenAPI 3.1 Document Spec ──────────────────────────────────────────
 app.doc("/v1/openapi.json", {
@@ -83,6 +90,16 @@ app.doc("/v1/openapi.json", {
     version: "1.0.0",
     description: "Modular anime streaming and metadata API built with Hono on Cloudflare Workers.",
   },
+  servers: [
+    {
+      url: "https://api.gox.my.id",
+      description: "Production Server",
+    },
+    {
+      url: "http://localhost:8787",
+      description: "Local Development",
+    },
+  ],
 });
 
 // Register Bearer Security Scheme for Swagger / Scalar "Try It" console
