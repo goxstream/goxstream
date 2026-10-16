@@ -7,7 +7,7 @@ import {
   DashboardApi,
   SystemApi,
   UploadApi,
-} from "@goxstream/goxstream-sdk";
+} from "@shionstream/shionstream-sdk";
 
 /**
  * Single source of truth for the API base URL.

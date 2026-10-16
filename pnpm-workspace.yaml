@@ -18,7 +18,7 @@ catalog:
   drizzle-kit: ^0.31.10
   better-auth: ^1.7.1
   hono: ^4.13.13
-  "@goxstream/goxstream-sdk": ^1.0.1
+  "@shionstream/shionstream-sdk": ^1.0.1
 
   # Cloudflare
   wrangler: ^4.125.0
@@ -73,3 +73,4 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - '@goxstream/goxstream-sdk@1.0.1'
+  - '@shionstream/shionstream-sdk@1.0.1'

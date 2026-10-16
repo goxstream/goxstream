@@ -1,7 +1,7 @@
-import type { V1AnimeGet200ResponseDataInner } from "@goxstream/goxstream-sdk";
-import type { V1AnimeSlugGet200ResponseData } from "@goxstream/goxstream-sdk";
-import type { V1AnimeSlugEpisodesGet200ResponseDataInner } from "@goxstream/goxstream-sdk";
-import type { V1EpisodesIdStreamGet200ResponseSourcesInner } from "@goxstream/goxstream-sdk";
+import type { V1AnimeGet200ResponseDataInner } from "@shionstream/shionstream-sdk";
+import type { V1AnimeSlugGet200ResponseData } from "@shionstream/shionstream-sdk";
+import type { V1AnimeSlugEpisodesGet200ResponseDataInner } from "@shionstream/shionstream-sdk";
+import type { V1EpisodesIdStreamGet200ResponseSourcesInner } from "@shionstream/shionstream-sdk";
 import type { AnimeItem, EpisodeItem, StreamSource } from "@/types/anime";
 
 /**

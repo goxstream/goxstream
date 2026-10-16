@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { TrendingAnimeItem, TrendingPeriod, AnimeItem } from "@/types/anime";
 import { animeApi } from "@/lib/api-client";
-import { V1AnimeGetSortEnum } from "@goxstream/goxstream-sdk";
+import { V1AnimeGetSortEnum } from "@shionstream/shionstream-sdk";
 import { mapCatalogAnimeToItem } from "@/lib/anime-mappers";
 
 /**

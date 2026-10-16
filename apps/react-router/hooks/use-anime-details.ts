@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { AnimeItem, EpisodeItem } from "@/types/anime";
 import { animeApi, episodesApi } from "@/lib/api-client";
-import { V1AnimeGetSortEnum } from "@goxstream/goxstream-sdk";
+import { V1AnimeGetSortEnum } from "@shionstream/shionstream-sdk";
 import { mapDetailAnimeToItem, mapCatalogAnimeToItem, mapSdkEpisodeToItem } from "@/lib/anime-mappers";
 
 export function useAnimeDetails(slug: string) {
