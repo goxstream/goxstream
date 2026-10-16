@@ -13,4 +13,11 @@ export default [
     route("anime/:slug", "routes/anime/detail.tsx"),
     route("anime/:slug/:episode", "routes/anime/watch.tsx"),
   ]),
+  layout("layouts/user-area-layout.tsx", [
+    route("profile", "routes/profile.tsx"),
+    route("watchlist", "routes/watchlist.tsx"),
+    route("history", "routes/history.tsx"),
+    route("settings", "routes/settings.tsx"),
+  ]),
 ] satisfies RouteConfig;
+
