@@ -2,9 +2,9 @@
 
 import { Link } from "react-router";
 import { Bookmark, Search } from "lucide-react";
-import { Input } from "@goxstream/ui/components/input";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Tabs, TabsList, TabsTrigger } from "@goxstream/ui/components/tabs";
+import { Input } from "@shionstream/ui/components/input";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Tabs, TabsList, TabsTrigger } from "@shionstream/ui/components/tabs";
 import { ApiError } from "@/components/api-error";
 import { WatchlistHeader } from "./watchlist-header";
 import { WatchlistGridItem } from "./watchlist-grid-item";

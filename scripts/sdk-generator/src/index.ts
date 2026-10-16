@@ -5,10 +5,10 @@ const [targetArg, customSpecUrl] = process.argv.slice(2);
 
 function printHelp(): void {
   console.log(`
-GoxStream SDK Multi-Language Generator CLI
-==========================================
+ShionStream SDK Multi-Language Generator CLI
+============================================
 Usage:
-  pnpm --filter=@goxstream/sdk-generator generate [target] [specUrl]
+  pnpm --filter=@shionstream/sdk-generator generate [target] [specUrl]
   or:
   tsx src/index.ts [target] [specUrl]
 
@@ -25,9 +25,9 @@ Options:
   [specUrl]     OpenAPI specification URL (Default: ${DEFAULT_SPEC_URL})
 
 Examples:
-  pnpm --filter=@goxstream/sdk-generator generate typescript
-  pnpm --filter=@goxstream/sdk-generator generate all
-  pnpm --filter=@goxstream/sdk-generator generate python https://api.gox.my.id/v1/openapi.json
+  pnpm --filter=@shionstream/sdk-generator generate typescript
+  pnpm --filter=@shionstream/sdk-generator generate all
+  pnpm --filter=@shionstream/sdk-generator generate python https://api.gox.my.id/v1/openapi.json
 `);
 }
 

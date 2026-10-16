@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import type { CloudflareEnv } from "@goxstream/cloudflare";
-import { requireStaff } from "@goxstream/auth";
+import type { CloudflareEnv } from "@shionstream/cloudflare";
+import { requireStaff } from "@shionstream/auth";
 import {
   getDb,
   animes,
@@ -11,7 +11,7 @@ import {
   commentReports,
   comments,
   episodeUploads,
-} from "@goxstream/db";
+} from "@shionstream/db";
 import { eq, sql, count, desc, like, or } from "drizzle-orm";
 
 type AuthVariables = {

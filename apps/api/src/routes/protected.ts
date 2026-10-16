@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import type { CloudflareEnv } from "@goxstream/cloudflare";
-import { requireAuth } from "@goxstream/auth";
+import type { CloudflareEnv } from "@shionstream/cloudflare";
+import { requireAuth } from "@shionstream/auth";
 
 const protectedSampleRoute = createRoute({
   method: "get",

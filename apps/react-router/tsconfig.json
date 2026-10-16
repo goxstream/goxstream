@@ -15,7 +15,7 @@
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "@/*": ["./*"],
-      "@goxstream/ui/*": ["../../packages/ui/src/*"]
+      "@shionstream/ui/*": ["../../packages/ui/src/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

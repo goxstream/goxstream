@@ -1,5 +1,5 @@
 import { createMiddleware } from "hono/factory";
-import type { CloudflareEnv } from "@goxstream/cloudflare";
+import type { CloudflareEnv } from "@shionstream/cloudflare";
 import { getAuth } from "../server";
 
 type AuthUser = {

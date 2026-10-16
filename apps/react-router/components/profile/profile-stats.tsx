@@ -1,8 +1,8 @@
 "use client";
 
 import { CheckCircle2, PlayCircle, Clock, Bookmark, Sparkles } from "lucide-react";
-import { Progress } from "@goxstream/ui/components/progress";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { Progress } from "@shionstream/ui/components/progress";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import type { UserProfile } from "@/types/user";
 
 interface ProfileStatsProps {

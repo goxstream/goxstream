@@ -1,5 +1,5 @@
 import { AlertCircle, RefreshCw } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 
 interface ApiErrorProps {
   message?: string;

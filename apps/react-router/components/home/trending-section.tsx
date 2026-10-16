@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Sparkles, ArrowRight } from "lucide-react";
-import { buttonVariants } from "@goxstream/ui/components/button";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { buttonVariants } from "@shionstream/ui/components/button";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import { AnimeCard } from "@/components/anime/anime-card";
 import { ApiError } from "@/components/api-error";
 import { useTrendingAnime } from "@/hooks/use-trending-anime";

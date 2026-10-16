@@ -3,7 +3,7 @@ import { BrowseContent } from "@/components/browse/browse-content";
 
 export function meta() {
   return [
-    { title: "Browse Anime Catalog - GoxStream" },
+    { title: "Browse Anime Catalog - ShionStream" },
     {
       name: "description",
       content:

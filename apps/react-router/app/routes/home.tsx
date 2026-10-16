@@ -6,7 +6,7 @@ import { CtaSection } from "@/components/home/cta-section";
 
 export function meta() {
   return [
-    { title: "GoxStream — Stream High-Quality Anime Ad-Free" },
+    { title: "ShionStream — Stream High-Quality Anime Ad-Free" },
     {
       name: "description",
       content:

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import type { CarouselApi } from "@goxstream/ui/components/carousel";
+import type { CarouselApi } from "@shionstream/ui/components/carousel";
 import { useScheduleAnime } from "@/hooks/use-schedule-anime";
 import { useFeaturedAnime } from "@/hooks/use-featured-anime";
 import { useTrendingAnime } from "@/hooks/use-trending-anime";

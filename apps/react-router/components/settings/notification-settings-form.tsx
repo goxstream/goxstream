@@ -1,8 +1,8 @@
 "use client";
 
 import { Bell, Save } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
-import { Switch } from "@goxstream/ui/components/switch";
+import { Button } from "@shionstream/ui/components/button";
+import { Switch } from "@shionstream/ui/components/switch";
 import type { UserSettings } from "@/types/user";
 
 interface NotificationSettingsFormProps {

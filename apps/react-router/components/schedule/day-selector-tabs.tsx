@@ -1,6 +1,6 @@
 import { DAYS_OF_WEEK_MAP } from "@/lib/constants";
 import type { DayOfWeek } from "@/types/schedule";
-import { Badge } from "@goxstream/ui/components/badge";
+import { Badge } from "@shionstream/ui/components/badge";
 import { cn } from "@/lib/utils";
 
 interface DaySelectorTabsProps {

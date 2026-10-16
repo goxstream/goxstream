@@ -11,11 +11,11 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@goxstream/ui/components",
-    "utils": "@goxstream/ui/lib/utils",
-    "hooks": "@goxstream/ui/hooks",
-    "lib": "@goxstream/ui/lib",
-    "ui": "@goxstream/ui/components"
+    "components": "@shionstream/ui/components",
+    "utils": "@shionstream/ui/lib/utils",
+    "hooks": "@shionstream/ui/hooks",
+    "lib": "@shionstream/ui/lib",
+    "ui": "@shionstream/ui/components"
   },
   "rtl": false,
   "menuColor": "default",

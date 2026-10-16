@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SlidersHorizontal, RotateCcw } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
-import { Badge } from "@goxstream/ui/components/badge";
+import { Button } from "@shionstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
 import { BaseFilterCombobox } from "./base-filter-combobox";
 import { BaseGenreMultiSelectCombobox } from "./base-genre-multiselect-combobox";
 import {
@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@goxstream/ui/components/sheet";
+} from "@shionstream/ui/components/sheet";
 import {
   ANIME_STATUSES,
   ANIME_FORMATS,

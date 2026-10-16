@@ -54,7 +54,7 @@ export function LogoBrand({
         height={height}
         viewBox={`0 0 ${width} ${height}`}
         role="img"
-        aria-label="GoxStream"
+        aria-label="ShionStream"
         className={className}
       >
         <g transform={`translate(${padding} ${variant === "horizontal" ? padding : padding})`}>

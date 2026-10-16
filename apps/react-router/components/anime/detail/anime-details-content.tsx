@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router";
 import { AlertCircle, ArrowLeft } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 import { useAnimeDetails } from "@/hooks/use-anime-details";
 import { AnimeHero } from "./anime-hero";
 import { AnimeMetadata } from "./anime-metadata";

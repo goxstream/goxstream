@@ -2,7 +2,7 @@
 
 import { useEffect, useState, lazy, Suspense } from "react";
 import { Link } from "react-router";
-import { buttonVariants } from "@goxstream/ui/components/button";
+import { buttonVariants } from "@shionstream/ui/components/button";
 import { ChevronRight, AlertCircle } from "lucide-react";
 import type { StreamSource, EpisodeItem } from "@/types/anime";
 

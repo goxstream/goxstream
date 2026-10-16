@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Search, X } from "lucide-react";
-import { Input } from "@goxstream/ui/components/input";
+import { Input } from "@shionstream/ui/components/input";
 import { cn } from "@/lib/utils";
 import type { SearchInputProps } from "@/types/browse";
 

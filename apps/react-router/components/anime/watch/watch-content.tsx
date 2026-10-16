@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router";
 import { AlertCircle, ArrowLeft } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { Button } from "@shionstream/ui/components/button";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import { useWatchDetails } from "@/hooks/use-watch-details";
 import { VideoPlayer } from "./video-player";
 import { EpisodeHeaderInfo } from "./episode-header-info";

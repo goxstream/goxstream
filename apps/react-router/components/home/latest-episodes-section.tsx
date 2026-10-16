@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ArrowRight, Radio } from "lucide-react";
-import { buttonVariants } from "@goxstream/ui/components/button";
+import { buttonVariants } from "@shionstream/ui/components/button";
 import { EpisodeCard } from "@/components/anime/episode-card";
 import { ApiError } from "@/components/api-error";
 import { useLatestEpisodes } from "@/hooks/use-latest-episodes";

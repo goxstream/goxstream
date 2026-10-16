@@ -1,6 +1,6 @@
 <div align="center">
 
-# GoxStream
+# ShionStream
 
 **Platform Streaming Anime Open-Source Modern Berbasis Edge Runtime & Hybrid Cloud Infrastructure**
 
@@ -17,7 +17,7 @@
 ---
 
 > [!NOTE]
-> **GoxStream** dirancang khusus untuk memberikan pengalaman streaming video berperforma ultra-rendah latensi dengan memanfaatkan arsitektur Server Components (RSC), pemrosesan video modern berbasis WebAssembly, serta abstraksi runtime independen yang mendukung eksekusi di Cloudflare Workers maupun kontainer Docker/Node.js.
+> **ShionStream** dirancang khusus untuk memberikan pengalaman streaming video berperforma ultra-rendah latensi dengan memanfaatkan arsitektur Server Components (RSC), pemrosesan video modern berbasis WebAssembly, serta abstraksi runtime independen yang mendukung eksekusi di Cloudflare Workers maupun kontainer Docker/Node.js.
 
 ---
 
@@ -41,7 +41,7 @@
 
 ## Arsitektur Sistem
 
-GoxStream mengadopsi prinsip **Cloudflare-First, Not Cloudflare-Locked**. Kode infrastruktur diisolasi penuh melalui abstraksi layer data-access sehingga aplikasi dapat berjalan di Cloudflare Workers Edge Network (menggunakan D1 Database dan KV Cache) atau di lingkungan Node.js/VPS tradisional (menggunakan PostgreSQL dan Redis).
+ShionStream mengadopsi prinsip **Cloudflare-First, Not Cloudflare-Locked**. Kode infrastruktur diisolasi penuh melalui abstraksi layer data-access sehingga aplikasi dapat berjalan di Cloudflare Workers Edge Network (menggunakan D1 Database dan KV Cache) atau di lingkungan Node.js/VPS tradisional (menggunakan PostgreSQL dan Redis).
 
 ```mermaid
 flowchart TD
@@ -90,7 +90,7 @@ flowchart TD
 
 ## Matriks Teknologi & Komparasi Runtime
 
-Berikut adalah perbandingan dukungan fitur pada dua target runtime utama GoxStream:
+Berikut adalah perbandingan dukungan fitur pada dua target runtime utama ShionStream:
 
 | Fitur / Komponen | Cloudflare Workers Runtime | Docker / Standalone Node.js |
 | :--- | :--- | :--- |
@@ -119,8 +119,8 @@ Sebelum memulai instalasi, pastikan lingkungan pengembang memenuhi kriteria beri
 ### 1. Kloning Repositori & Instalasi Dependensi
 
 ```bash
-git clone https://github.com/user/goxstream.git
-cd goxstream
+git clone https://github.com/shionstream/shionstream.git
+cd shionstream
 pnpm install
 ```
 
@@ -149,7 +149,7 @@ Buka peramban di `http://localhost:3000` untuk melihat aplikasi berjalan.
 
 ## Pengelolaan Database & Migrasi
 
-GoxStream menggunakan Drizzle ORM dengan dua skenario driver database. Pengelolaan tabel dan data awal dapat dilakukan melalui skrip pnpm berikut:
+ShionStream menggunakan Drizzle ORM dengan dua skenario driver database. Pengelolaan tabel dan data awal dapat dilakukan melalui skrip pnpm berikut:
 
 ### Skenario A: Cloudflare D1 (SQLite Edge)
 
@@ -210,7 +210,7 @@ pnpm deploy
 
 ### Deployment Kontainer dengan Docker
 
-Untuk lingkungan deployment VPS, Kubernetes, atau server independen, GoxStream menyediakan `Dockerfile` berbasis Node.js 24 Slim dengan Multi-Stage Build serta `docker-compose.yml` lengkap dengan PostgreSQL dan Redis internal.
+Untuk lingkungan deployment VPS, Kubernetes, atau server independen, ShionStream menyediakan `Dockerfile` berbasis Node.js 24 Slim dengan Multi-Stage Build serta `docker-compose.yml` lengkap dengan PostgreSQL dan Redis internal.
 
 #### 1. Menjalankan Seluruh Stack dengan Docker Compose
 
@@ -237,7 +237,7 @@ docker compose down
 
 ## Skrip CLI & Alat Pembantu
 
-GoxStream menyediakan serangkaian skrip CLI interaktif untuk mempermudah pemeliharaan sistem.
+ShionStream menyediakan serangkaian skrip CLI interaktif untuk mempermudah pemeliharaan sistem.
 
 <details>
 <summary><b>Klik untuk melihat daftar skrip CLI internal</b></summary>
@@ -260,7 +260,7 @@ GoxStream menyediakan serangkaian skrip CLI interaktif untuk mempermudah pemelih
 
 ## Pengujian (Testing)
 
-GoxStream dilengkapi dengan pengujian unit serta pengujian E2E (End-to-End) menggunakan Vitest dan Playwright.
+ShionStream dilengkapi dengan pengujian unit serta pengujian E2E (End-to-End) menggunakan Vitest dan Playwright.
 
 ### Unit Testing (Vitest)
 
@@ -289,7 +289,7 @@ pnpm test:e2e:report
 
 ## Referensi Variabel Lingkungan
 
-Tabel berikut menjelaskan variabel lingkungan yang dibutuhkan oleh GoxStream:
+Tabel berikut menjelaskan variabel lingkungan yang dibutuhkan oleh ShionStream:
 
 | Nama Variabel | Status | Nilai Default | Deskripsi |
 | :--- | :--- | :--- | :--- |
@@ -306,7 +306,7 @@ Tabel berikut menjelaskan variabel lingkungan yang dibutuhkan oleh GoxStream:
 
 ### Kontribusi
 
-Kontribusi pada proyek GoxStream sangat diapresiasi. Pastikan Anda mengikuti pedoman berikut sebelum mengajukan Pull Request:
+Kontribusi pada proyek ShionStream sangat diapresiasi. Pastikan Anda mengikuti pedoman berikut sebelum mengajukan Pull Request:
 
 1. Kode ditulis menggunakan bahasa Inggris (identifier, komentar, serta nama variabel).
 2. Mematuhi standar TypeScript Strict Mode.

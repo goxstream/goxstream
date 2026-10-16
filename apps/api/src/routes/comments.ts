@@ -1,7 +1,7 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import type { CloudflareEnv } from "@goxstream/cloudflare";
-import { requireAuth, optionalAuth } from "@goxstream/auth";
-import { getDb, comments, commentLikes, commentReports } from "@goxstream/db";
+import type { CloudflareEnv } from "@shionstream/cloudflare";
+import { requireAuth, optionalAuth } from "@shionstream/auth";
+import { getDb, comments, commentLikes, commentReports } from "@shionstream/db";
 import { eq, desc, sql } from "drizzle-orm";
 
 type AuthUser = {

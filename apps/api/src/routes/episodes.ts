@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import type { CloudflareEnv } from "@goxstream/cloudflare";
-import { getDb, animes, episodes, streamSources, subtitleTracks, audioTracks } from "@goxstream/db";
+import type { CloudflareEnv } from "@shionstream/cloudflare";
+import { getDb, animes, episodes, streamSources, subtitleTracks, audioTracks } from "@shionstream/db";
 import { desc, asc, eq } from "drizzle-orm";
 
 const EpisodeListItemSchema = z.object({

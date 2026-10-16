@@ -1,6 +1,6 @@
 import { Link } from "react-router";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Button, buttonVariants } from "@goxstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Button, buttonVariants } from "@shionstream/ui/components/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { AnimeItem, EpisodeItem } from "@/types/anime";
 

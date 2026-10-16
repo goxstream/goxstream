@@ -7,7 +7,7 @@ import {
   ComboboxList,
   ComboboxItem,
   ComboboxEmpty,
-} from "@goxstream/ui/components/combobox";
+} from "@shionstream/ui/components/combobox";
 import { ANIME_GENRES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { BaseGenreMultiSelectComboboxProps } from "@/types/browse";

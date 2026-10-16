@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Sparkles, Star } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import { VercelSpinner } from "@/components/vercel-spinner";
 import {
   Carousel,
@@ -10,7 +10,7 @@ import {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-} from "@goxstream/ui/components/carousel";
+} from "@shionstream/ui/components/carousel";
 import { getImageStyle } from "@/lib/utils";
 import { useHeroSlides } from "@/hooks/use-hero-slides";
 import { ApiError } from "@/components/api-error";

@@ -1,8 +1,8 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { apiReference } from "@scalar/hono-api-reference";
 import { cors } from "hono/cors";
-import type { CloudflareEnv } from "@goxstream/cloudflare";
-import { getAuth } from "@goxstream/auth";
+import type { CloudflareEnv } from "@shionstream/cloudflare";
+import { getAuth } from "@shionstream/auth";
 import { healthApp } from "./routes/health";
 import { protectedApp } from "./routes/protected";
 import { animeApp } from "./routes/anime";
@@ -65,7 +65,7 @@ app.get(
   "/",
   apiReference({
     theme: "purple",
-    pageTitle: "GoxStream API Reference",
+    pageTitle: "ShionStream API Reference",
     spec: {
       url: "/v1/openapi.json",
     },
@@ -86,7 +86,7 @@ app.get(
 app.doc("/v1/openapi.json", {
   openapi: "3.1.0",
   info: {
-    title: "GoxStream API",
+    title: "ShionStream API",
     version: "1.0.0",
     description: "Modular anime streaming and metadata API built with Hono on Cloudflare Workers.",
     license: {
@@ -94,7 +94,7 @@ app.doc("/v1/openapi.json", {
       url: "https://www.apache.org/licenses/LICENSE-2.0.html",
     },
     contact: {
-      name: "GoxStream Engineering Team",
+      name: "ShionStream Engineering Team",
       email: "dev@gox.my.id",
       url: "https://gox.my.id",
     },

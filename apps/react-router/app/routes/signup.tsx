@@ -2,8 +2,8 @@ import { SignupForm } from "@/components/auth/signup-form";
 
 export function meta() {
   return [
-    { title: "Create Account — GoxStream" },
-    { name: "description", content: "Create a new GoxStream account to start streaming anime." },
+    { title: "Create Account — ShionStream" },
+    { name: "description", content: "Create a new ShionStream account to start streaming anime." },
   ];
 }
 

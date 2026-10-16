@@ -1,5 +1,5 @@
 import { Flame, Calendar, Trophy, LayoutList, Grid } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 import { cn } from "@/lib/utils";
 import type { TrendingPeriod } from "@/types/anime";
 

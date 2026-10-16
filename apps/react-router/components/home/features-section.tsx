@@ -60,7 +60,7 @@ export function FeaturesSection() {
             <span>Built for True Anime Fans</span>
           </div>
           <h2 className="text-foreground text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Why Streamers Choose GoxStream
+            Why Streamers Choose ShionStream
           </h2>
           <p className="text-muted-foreground text-base leading-relaxed">
             Engineered from the ground up for speed, visual clarity, and seamless user experience

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { Search, Star, Play } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@goxstream/ui/components/dialog";
+import { Button } from "@shionstream/ui/components/button";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@shionstream/ui/components/dialog";
 import {
   Command,
   CommandEmpty,
@@ -11,7 +11,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@goxstream/ui/components/command";
+} from "@shionstream/ui/components/command";
 import { useAnimeSearch } from "@/hooks/use-anime-search";
 import { getImageStyle } from "@/lib/utils";
 

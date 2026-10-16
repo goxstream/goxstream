@@ -1,6 +1,6 @@
 import { LayoutGrid, List, SearchX } from "lucide-react";
 import { AnimeCard } from "@/components/anime/anime-card";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 import type { AnimeItem } from "@/types/anime";
 
 export interface BrowseGridProps {

@@ -1,6 +1,6 @@
 import { X, RotateCcw } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Button } from "@goxstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Button } from "@shionstream/ui/components/button";
 import { parseActiveGenres, removeGenreFromSelection } from "@/lib/filter-utils";
 import type { ActiveFiltersBarProps } from "@/types/browse";
 

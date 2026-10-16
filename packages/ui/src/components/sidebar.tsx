@@ -5,19 +5,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "cn";
 import { Slot } from "radix-ui";
 
-import { useIsMobile } from "@goxstream/ui/hooks/use-mobile";
-import { Button } from "@goxstream/ui/components/button";
-import { Input } from "@goxstream/ui/components/input";
-import { Separator } from "@goxstream/ui/components/separator";
+import { useIsMobile } from "@shionstream/ui/hooks/use-mobile";
+import { Button } from "@shionstream/ui/components/button";
+import { Input } from "@shionstream/ui/components/input";
+import { Separator } from "@shionstream/ui/components/separator";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@goxstream/ui/components/sheet";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@goxstream/ui/components/tooltip";
+} from "@shionstream/ui/components/sheet";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@shionstream/ui/components/tooltip";
 import { PanelLeftIcon } from "lucide-react";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";

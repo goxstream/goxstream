@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 import type { BrowsePaginationProps } from "@/types/browse";
 
 export function BrowsePagination({ currentPage, totalPages, onPageChange }: BrowsePaginationProps) {

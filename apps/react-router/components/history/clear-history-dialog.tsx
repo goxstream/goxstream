@@ -1,7 +1,7 @@
 "use client";
 
 import { Trash2, AlertTriangle } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@goxstream/ui/components/alert-dialog";
+} from "@shionstream/ui/components/alert-dialog";
 
 interface ClearHistoryDialogProps {
   onConfirmClear: () => void;

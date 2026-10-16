@@ -2,10 +2,10 @@
 
 import { Link, useLocation } from "react-router";
 import { User, Bookmark, History, Settings, Crown } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@goxstream/ui/components/avatar";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Separator } from "@goxstream/ui/components/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@shionstream/ui/components/avatar";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Separator } from "@shionstream/ui/components/separator";
 import { useUserNav } from "@/hooks/use-user-nav";
 import { cn } from "@/lib/utils";
 

@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router";
 import { Play, Search, LayoutGrid, List } from "lucide-react";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Input } from "@goxstream/ui/components/input";
-import { Button } from "@goxstream/ui/components/button";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@goxstream/ui/components/card";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Input } from "@shionstream/ui/components/input";
+import { Button } from "@shionstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@shionstream/ui/components/card";
 import { getImageStyle } from "@/lib/utils";
 import type { EpisodeItem } from "@/types/anime";
 

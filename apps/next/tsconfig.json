@@ -29,7 +29,7 @@
 			"@/components/ui/*": [
 				"../../packages/ui/src/components/*"
 			],
-			"@goxstream/ui/*": [
+			"@shionstream/ui/*": [
 				"../../packages/ui/src/*"
 			]
 		},

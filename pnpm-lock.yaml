@@ -176,24 +176,24 @@ importers:
 
   apps/api:
     dependencies:
-      '@goxstream/auth':
-        specifier: workspace:*
-        version: link:../../packages/auth
-      '@goxstream/cloudflare':
-        specifier: workspace:*
-        version: link:../../packages/cloudflare
-      '@goxstream/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-      '@goxstream/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       '@hono/zod-openapi':
         specifier: ^1.6.3
         version: 1.6.3(hono@4.13.13)(zod@4.6.7)
       '@scalar/hono-api-reference':
         specifier: ^0.12.12
         version: 0.12.12(hono@4.13.13)
+      '@shionstream/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@shionstream/cloudflare':
+        specifier: workspace:*
+        version: link:../../packages/cloudflare
+      '@shionstream/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@shionstream/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       better-auth:
         specifier: 'catalog:'
         version: 1.7.1(@cloudflare/workers-types@5.20261012.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20261012.1)(@neondatabase/serverless@1.1.0)(kysely@0.29.5)(postgres@3.4.9))(next@16.2.11(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.11(@types/node@22.20.5)(vite@8.2.2(@types/node@22.20.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.16.9)(tsx@4.23.12)(yaml@2.9.0)))
@@ -246,9 +246,6 @@ importers:
       '@ffmpeg/util':
         specifier: ^0.12.2
         version: 0.12.2
-      '@goxstream/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@icons-pack/react-simple-icons':
         specifier: ^13.15.1
         version: 13.15.1(react@19.2.8)
@@ -261,6 +258,9 @@ importers:
       '@shadcn/react':
         specifier: 'catalog:'
         version: 0.3.0(@types/react@19.2.18)(react@19.2.8)
+      '@shionstream/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@vidstack/react':
         specifier: ^0.6.15
         version: 0.6.15(@types/react@19.2.18)(maverick.js@0.37.0)(react@19.2.8)(vidstack@0.6.15)
@@ -415,15 +415,15 @@ importers:
       '@goxstream/goxstream-sdk':
         specifier: 'catalog:'
         version: 1.0.1
-      '@goxstream/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       '@icons-pack/react-simple-icons':
         specifier: ^13.15.1
         version: 13.15.1(react@19.2.8)
       '@react-router/cloudflare':
         specifier: 8.4.0
         version: 8.4.0(@cloudflare/workers-types@5.20261012.1)(react-router@8.4.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(typescript@6.0.3)
+      '@shionstream/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@vidstack/react':
         specifier: ^0.6.15
         version: 0.6.15(@types/react@19.2.18)(maverick.js@0.37.0)(react@19.2.8)(vidstack@0.6.15)
@@ -512,10 +512,10 @@ importers:
 
   packages/auth:
     dependencies:
-      '@goxstream/cloudflare':
+      '@shionstream/cloudflare':
         specifier: workspace:*
         version: link:../cloudflare
-      '@goxstream/db':
+      '@shionstream/db':
         specifier: workspace:*
         version: link:../db
       better-auth:

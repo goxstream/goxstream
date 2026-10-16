@@ -4,7 +4,7 @@ import * as React from "react";
 import { Questionnaire as QuestionnairePrimitive } from "@shadcn/react/questionnaire";
 import { cn } from "cn";
 
-import { buttonVariants, type Button } from "@goxstream/ui/components/button";
+import { buttonVariants, type Button } from "@shionstream/ui/components/button";
 import { CheckIcon } from "lucide-react";
 
 function Questionnaire({

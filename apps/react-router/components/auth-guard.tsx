@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import { useSession } from "@/lib/auth-client";
 
 interface AuthGuardProps {

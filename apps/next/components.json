@@ -14,8 +14,8 @@
   "rtl": false,
   "aliases": {
     "components": "@/components",
-    "utils": "@goxstream/ui/lib/utils",
-    "ui": "@goxstream/ui/components",
+    "utils": "@shionstream/ui/lib/utils",
+    "ui": "@shionstream/ui/components",
     "lib": "@/lib",
     "hooks": "@/hooks"
   },

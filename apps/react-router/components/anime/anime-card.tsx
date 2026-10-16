@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Play, Star, Tv } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Card } from "@goxstream/ui/components/card";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Card } from "@shionstream/ui/components/card";
 import { VercelSpinner } from "@/components/vercel-spinner";
 import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";

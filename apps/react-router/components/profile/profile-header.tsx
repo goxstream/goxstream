@@ -2,11 +2,11 @@
 
 import { Link } from "react-router";
 import { Calendar, Settings, ShieldCheck } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@goxstream/ui/components/avatar";
-import { Badge } from "@goxstream/ui/components/badge";
-import { buttonVariants } from "@goxstream/ui/components/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@shionstream/ui/components/avatar";
+import { Badge } from "@shionstream/ui/components/badge";
+import { buttonVariants } from "@shionstream/ui/components/button";
 import { getImageStyle } from "@/lib/utils";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import type { UserProfile } from "@/types/user";
 
 interface ProfileHeaderProps {

@@ -1,16 +1,16 @@
 "use client";
 
 import { Tv, Save } from "lucide-react";
-import { Label } from "@goxstream/ui/components/label";
-import { Button } from "@goxstream/ui/components/button";
-import { Switch } from "@goxstream/ui/components/switch";
+import { Label } from "@shionstream/ui/components/label";
+import { Button } from "@shionstream/ui/components/button";
+import { Switch } from "@shionstream/ui/components/switch";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@goxstream/ui/components/select";
+} from "@shionstream/ui/components/select";
 import type { UserSettings } from "@/types/user";
 
 interface PlayerSettingsFormProps {

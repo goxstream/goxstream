@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { getDb, schema } from "@goxstream/db";
+import { getDb, schema } from "@shionstream/db";
 
 /**
  * Module-level isolate singleton for the Better Auth instance.

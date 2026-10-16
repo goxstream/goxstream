@@ -1,4 +1,4 @@
-import { cn } from "@goxstream/ui/lib/utils";
+import { cn } from "@shionstream/ui/lib/utils";
 import type { CSSProperties } from "react";
 
 export { cn };

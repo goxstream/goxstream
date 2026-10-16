@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 import { Moon, Sun, Bookmark, Share2, Check, AlertCircle } from "lucide-react";
 import type { AnimeItem } from "@/types/anime";
 

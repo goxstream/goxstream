@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { Play, Bookmark, BookmarkCheck, Share2, Check } from "lucide-react";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Button, buttonVariants } from "@goxstream/ui/components/button";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Button, buttonVariants } from "@shionstream/ui/components/button";
 
 interface HeroActionsProps {
   slug?: string;

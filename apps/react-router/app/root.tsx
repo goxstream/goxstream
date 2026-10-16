@@ -8,7 +8,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import "@goxstream/ui/globals.css";
+import "@shionstream/ui/globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 

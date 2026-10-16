@@ -12,9 +12,9 @@ import {
   CalendarDays,
   ShieldCheck,
 } from "lucide-react";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@goxstream/ui/components/card";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@shionstream/ui/components/card";
 import type { AnimeItem } from "@/types/anime";
 
 interface AnimeMetadataProps {

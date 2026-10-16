@@ -12,10 +12,10 @@ import {
 } from "lucide-react";
 import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons";
 
-import { Button, buttonVariants } from "@goxstream/ui/components/button";
-import { Input } from "@goxstream/ui/components/input";
+import { Button, buttonVariants } from "@shionstream/ui/components/button";
+import { Input } from "@shionstream/ui/components/input";
 import { LogoBrand } from "@/components/logo-brand";
-import { Checkbox } from "@goxstream/ui/components/checkbox";
+import { Checkbox } from "@shionstream/ui/components/checkbox";
 import {
   Card,
   CardContent,
@@ -23,8 +23,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@goxstream/ui/components/card";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+} from "@shionstream/ui/components/card";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import { authClient } from "@/lib/auth-client";
 import { getPasswordStrength } from "@/lib/password-strength";
 
@@ -88,7 +88,7 @@ export function SignupForm() {
           </div>
           <CardTitle className="text-2xl font-bold">Registration Successful!</CardTitle>
           <CardDescription>
-            Your account has been created successfully. You can now start exploring GoxStream.
+            Your account has been created successfully. You can now start exploring ShionStream.
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex justify-center pb-6">
@@ -112,7 +112,7 @@ export function SignupForm() {
         </Link>
         <LogoBrand variant="1:1" size="lg" className="mx-auto mb-2" />
         <CardTitle className="text-2xl font-bold tracking-tight">
-          Create GoxStream Account
+          Create ShionStream Account
         </CardTitle>
         <CardDescription className="text-muted-foreground text-sm">
           Join the ultimate anime streaming community now

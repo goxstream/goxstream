@@ -1,8 +1,8 @@
 "use client";
 
 import { User, Shield, Tv, Bell, Check } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@goxstream/ui/components/tabs";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shionstream/ui/components/tabs";
 import { ApiError } from "@/components/api-error";
 import { ProfileSettingsForm } from "./profile-settings-form";
 import { PlayerSettingsForm } from "./player-settings-form";

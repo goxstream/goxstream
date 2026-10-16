@@ -2,9 +2,9 @@
 
 import { Link } from "react-router";
 import { Play, Trash2, Clock, RotateCcw } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Progress } from "@goxstream/ui/components/progress";
+import { Button } from "@shionstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Progress } from "@shionstream/ui/components/progress";
 import { getImageStyle } from "@/lib/utils";
 import type { WatchHistoryItem } from "@/types/user";
 

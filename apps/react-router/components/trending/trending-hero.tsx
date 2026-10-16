@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Crown, Play, Star, Flame, Eye, TrendingUp, Sparkles } from "lucide-react";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Button } from "@goxstream/ui/components/button";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Button } from "@shionstream/ui/components/button";
 import { getImageStyle } from "@/lib/utils";
 import type { TrendingAnimeItem } from "@/types/anime";
 

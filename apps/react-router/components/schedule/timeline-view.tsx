@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Play, Clock, CheckCircle2, Star, Radio } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { buttonVariants } from "@goxstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
+import { buttonVariants } from "@shionstream/ui/components/button";
 import { TIMEZONE_CONFIG } from "@/lib/constants";
 import { getImageStyle } from "@/lib/utils";
 import type { ScheduleItem } from "@/types/schedule";

@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { ShieldCheck, Zap } from "lucide-react";
 import { LogoBrand } from "@/components/logo-brand";
 import { LogoType } from "@/components/logo-type";
-import { Separator } from "@goxstream/ui/components/separator";
+import { Separator } from "@shionstream/ui/components/separator";
 
 export function SiteFooter() {
   return (

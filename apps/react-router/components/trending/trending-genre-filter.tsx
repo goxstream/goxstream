@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef } from "react";
 import { Filter, Check, X, RotateCcw } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Button } from "@goxstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Button } from "@shionstream/ui/components/button";
 import {
   Combobox,
   ComboboxInput,
@@ -9,7 +9,7 @@ import {
   ComboboxList,
   ComboboxItem,
   ComboboxEmpty,
-} from "@goxstream/ui/components/combobox";
+} from "@shionstream/ui/components/combobox";
 import { cn } from "@/lib/utils";
 
 interface TrendingGenreFilterProps {

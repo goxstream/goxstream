@@ -1,6 +1,6 @@
 import { Sparkles, Tv, Calendar, Star } from "lucide-react";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Badge } from "@goxstream/ui/components/badge";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Badge } from "@shionstream/ui/components/badge";
 import type { AnimeItem } from "@/types/anime";
 
 interface HeroMetaProps {

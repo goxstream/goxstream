@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Play, Clock, Subtitles, Mic } from "lucide-react";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
-import { Card } from "@goxstream/ui/components/card";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
+import { Card } from "@shionstream/ui/components/card";
 import { VercelSpinner } from "@/components/vercel-spinner";
 import type { EpisodeItem } from "@/types/anime";
 

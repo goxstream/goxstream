@@ -31,11 +31,11 @@ export function LogoType({ size = "md", className, renderAs = "html" }: LogoType
         height={svgSize.height}
         viewBox={`0 0 ${svgSize.width} ${svgSize.height}`}
         role="img"
-        aria-label="GoxStream"
+        aria-label="ShionStream"
         className={className}
       >
         <defs>
-          <linearGradient id="goxstream-wordmark-gradient" x1="0" y1="0" x2="1" y2="1">
+          <linearGradient id="shionstream-wordmark-gradient" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#31ffe7" stopOpacity=".988" />
             <stop offset="1" stopColor="#34d094" />
           </linearGradient>
@@ -49,7 +49,7 @@ export function LogoType({ size = "md", className, renderAs = "html" }: LogoType
           fontWeight="800"
           letterSpacing="-0.5"
         >
-          <tspan fill="url(#goxstream-wordmark-gradient)">Gox</tspan>
+          <tspan fill="url(#shionstream-wordmark-gradient)">Shion</tspan>
           <tspan fill="currentColor">Stream</tspan>
         </text>
       </svg>
@@ -65,7 +65,7 @@ export function LogoType({ size = "md", className, renderAs = "html" }: LogoType
       )}
     >
       <span className="bg-linear-to-br from-[#31ffe7] to-[#34d094] bg-clip-text text-transparent">
-        Gox
+        Shion
       </span>
       <span className="text-foreground transition-colors">Stream</span>
     </span>

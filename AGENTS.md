@@ -1,4 +1,4 @@
-# GoxStream — AI Agent Development Instructions
+# ShionStream — AI Agent Development Instructions
 
 ## Repository Context
 

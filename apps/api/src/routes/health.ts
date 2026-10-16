@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import type { CloudflareEnv } from "@goxstream/cloudflare";
-import { getDb } from "@goxstream/db";
+import type { CloudflareEnv } from "@shionstream/cloudflare";
+import { getDb } from "@shionstream/db";
 import { sql } from "drizzle-orm";
 
 const healthRoute = createRoute({

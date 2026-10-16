@@ -3,7 +3,7 @@ import { TrendingContent } from "@/components/trending/trending-content";
 
 export function meta() {
   return [
-    { title: "Anime Trending Leaderboard - GoxStream" },
+    { title: "Anime Trending Leaderboard - ShionStream" },
     {
       name: "description",
       content:

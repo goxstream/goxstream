@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ChevronRight } from "lucide-react";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 
 interface HeroBreadcrumbProps {
   title?: string;

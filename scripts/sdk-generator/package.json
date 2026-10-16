@@ -1,5 +1,5 @@
 {
-  "name": "@goxstream/sdk-generator",
+  "name": "@shionstream/sdk-generator",
   "version": "0.1.0",
   "private": true,
   "type": "module",

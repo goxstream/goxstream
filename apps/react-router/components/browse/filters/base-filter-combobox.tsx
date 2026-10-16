@@ -6,7 +6,7 @@ import {
   ComboboxList,
   ComboboxItem,
   ComboboxEmpty,
-} from "@goxstream/ui/components/combobox";
+} from "@shionstream/ui/components/combobox";
 import { cn } from "@/lib/utils";
 import type { BaseFilterComboboxProps, ComboboxOption } from "@/types/browse";
 

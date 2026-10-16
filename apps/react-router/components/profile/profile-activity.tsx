@@ -2,11 +2,11 @@
 
 import { Link } from "react-router";
 import { Play, ArrowRight, Star, History } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { buttonVariants } from "@goxstream/ui/components/button";
-import { Progress } from "@goxstream/ui/components/progress";
+import { Badge } from "@shionstream/ui/components/badge";
+import { buttonVariants } from "@shionstream/ui/components/button";
+import { Progress } from "@shionstream/ui/components/progress";
 import { getImageStyle } from "@/lib/utils";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import type { WatchlistItem, WatchHistoryItem } from "@/types/user";
 
 interface ProfileActivityProps {

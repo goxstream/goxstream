@@ -1,8 +1,8 @@
 import { Link } from "react-router";
 import { Search, Clock, LayoutGrid, ListFilter, Globe, ChevronRight } from "lucide-react";
-import { Input } from "@goxstream/ui/components/input";
-import { Button } from "@goxstream/ui/components/button";
-import { Badge } from "@goxstream/ui/components/badge";
+import { Input } from "@shionstream/ui/components/input";
+import { Button } from "@shionstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
 import { TIMEZONE_CONFIG } from "@/lib/constants";
 import type { ScheduleViewMode } from "@/types/schedule";
 

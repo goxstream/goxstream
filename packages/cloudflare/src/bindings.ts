@@ -3,8 +3,8 @@
  *
  * All Cloudflare bindings (D1, KV, R2, Durable Objects, AI, Queues)
  * and environment variables/secrets are declared here as the single
- * source of truth consumed by `@goxstream/api`, `@goxstream/db`,
- * and `@goxstream/auth`.
+ * source of truth consumed by `@shionstream/api`, `@shionstream/db`,
+ * and `@shionstream/auth`.
  */
 export interface CloudflareEnv {
   // ── D1 Database ──────────────────────────────────────────────────────

@@ -1,11 +1,11 @@
 "use client";
 
 import { Save } from "lucide-react";
-import { Input } from "@goxstream/ui/components/input";
-import { Label } from "@goxstream/ui/components/label";
-import { Button } from "@goxstream/ui/components/button";
-import { Textarea } from "@goxstream/ui/components/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@goxstream/ui/components/avatar";
+import { Input } from "@shionstream/ui/components/input";
+import { Label } from "@shionstream/ui/components/label";
+import { Button } from "@shionstream/ui/components/button";
+import { Textarea } from "@shionstream/ui/components/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@shionstream/ui/components/avatar";
 import type { UserSettings } from "@/types/user";
 
 interface ProfileSettingsFormProps {

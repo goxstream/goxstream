@@ -10,7 +10,7 @@ import {
   LogIn,
   UserPlus,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@goxstream/ui/components/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@shionstream/ui/components/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +18,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@goxstream/ui/components/dropdown-menu";
-import { Badge } from "@goxstream/ui/components/badge";
-import { buttonVariants } from "@goxstream/ui/components/button";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+} from "@shionstream/ui/components/dropdown-menu";
+import { Badge } from "@shionstream/ui/components/badge";
+import { buttonVariants } from "@shionstream/ui/components/button";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import { useUserNav } from "@/hooks/use-user-nav";
 
 export function UserNav() {

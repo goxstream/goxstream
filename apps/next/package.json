@@ -1,5 +1,5 @@
 {
-	"name": "@goxstream/next",
+	"name": "@shionstream/next",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -45,7 +45,7 @@
 		"db:seed:all": "tsx scripts/seed/export-all.ts"
 	},
 	"dependencies": {
-		"@goxstream/ui": "workspace:*",
+		"@shionstream/ui": "workspace:*",
 		"@base-ui/react": "catalog:",
 		"@ffmpeg/ffmpeg": "^0.12.15",
 		"@ffmpeg/util": "^0.12.2",

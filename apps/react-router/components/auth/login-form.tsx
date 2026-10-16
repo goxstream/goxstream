@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import { SiGoogle, SiDiscord } from "@icons-pack/react-simple-icons";
 
-import { Button } from "@goxstream/ui/components/button";
-import { Input } from "@goxstream/ui/components/input";
+import { Button } from "@shionstream/ui/components/button";
+import { Input } from "@shionstream/ui/components/input";
 import { LogoBrand } from "@/components/logo-brand";
 import {
   Card,
@@ -22,8 +22,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@goxstream/ui/components/card";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+} from "@shionstream/ui/components/card";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import { authClient } from "@/lib/auth-client";
 
 type LoginMethod = "password" | "magic-link";
@@ -94,7 +94,7 @@ export function LoginForm() {
           Back to Home
         </Link>
         <LogoBrand variant="1:1" size="lg" className="mx-auto mb-2" />
-        <CardTitle className="text-2xl font-bold tracking-tight">Sign in to GoxStream</CardTitle>
+        <CardTitle className="text-2xl font-bold tracking-tight">Sign in to ShionStream</CardTitle>
         <CardDescription className="text-muted-foreground text-sm">
           Stream thousands of your favorite anime without limits
         </CardDescription>

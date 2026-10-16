@@ -1,10 +1,10 @@
 "use client";
 
 import { Lock, Save, Smartphone } from "lucide-react";
-import { Input } from "@goxstream/ui/components/input";
-import { Label } from "@goxstream/ui/components/label";
-import { Button } from "@goxstream/ui/components/button";
-import { Badge } from "@goxstream/ui/components/badge";
+import { Input } from "@shionstream/ui/components/input";
+import { Label } from "@shionstream/ui/components/label";
+import { Button } from "@shionstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
 
 interface SecuritySettingsFormProps {
   onSave: (e: React.FormEvent) => void;

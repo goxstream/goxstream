@@ -1,7 +1,7 @@
 "use client";
 
 import { Bookmark, Grid, List } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 import type { WatchlistViewMode } from "@/types/watchlist";
 
 interface WatchlistHeaderProps {

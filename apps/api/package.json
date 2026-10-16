@@ -1,5 +1,5 @@
 {
-  "name": "@goxstream/api",
+  "name": "@shionstream/api",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -14,10 +14,10 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
-    "@goxstream/auth": "workspace:*",
-    "@goxstream/cloudflare": "workspace:*",
-    "@goxstream/db": "workspace:*",
-    "@goxstream/types": "workspace:*",
+    "@shionstream/auth": "workspace:*",
+    "@shionstream/cloudflare": "workspace:*",
+    "@shionstream/db": "workspace:*",
+    "@shionstream/types": "workspace:*",
     "@hono/zod-openapi": "^1.6.3",
     "@scalar/hono-api-reference": "^0.12.12",
     "better-auth": "catalog:",

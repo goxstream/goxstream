@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import type { CloudflareEnv } from "@goxstream/cloudflare";
-import { getDb, animes, genres, animeGenres } from "@goxstream/db";
+import type { CloudflareEnv } from "@shionstream/cloudflare";
+import { getDb, animes, genres, animeGenres } from "@shionstream/db";
 import { and, desc, eq, sql, inArray } from "drizzle-orm";
 
 const AnimeItemSchema = z.object({

@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { Sparkles, Star, Play } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@goxstream/ui/components/card";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@shionstream/ui/components/card";
 import { getImageStyle } from "@/lib/utils";
 import type { AnimeItem } from "@/types/anime";
 

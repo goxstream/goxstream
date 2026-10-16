@@ -1,5 +1,5 @@
 {
-  "name": "@goxstream/auth",
+  "name": "@shionstream/auth",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -14,8 +14,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@goxstream/cloudflare": "workspace:*",
-    "@goxstream/db": "workspace:*",
+    "@shionstream/cloudflare": "workspace:*",
+    "@shionstream/db": "workspace:*",
     "better-auth": "catalog:",
     "drizzle-orm": "catalog:",
     "hono": "catalog:"

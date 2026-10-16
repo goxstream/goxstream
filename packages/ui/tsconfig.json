@@ -9,7 +9,7 @@
     "strict": true,
     "noEmit": true,
     "paths": {
-      "@goxstream/ui/*": ["./src/*"]
+      "@shionstream/ui/*": ["./src/*"]
     }
   },
   "include": ["."],

@@ -52,7 +52,7 @@ async function run() {
   let prompt = fs.readFileSync(templatePath, 'utf8');
   prompt = prompt.replace('{{COMMIT_LOG}}', commitLog);
 
-  const githubRepository = process.env.GITHUB_REPOSITORY || 'goxstream/goxstream';
+  const githubRepository = process.env.GITHUB_REPOSITORY || 'shionstream/shionstream';
   const releaseVersion = process.env.GITHUB_REF_NAME || 'v0.0.0-beta';
   const artifactTable = generateArtifactTable(githubRepository, releaseVersion);
 
@@ -151,7 +151,7 @@ function generateArtifactTable(githubRepository, releaseVersion) {
 
 | Registry | Image Tag | Pull Command |
 | --- | --- | --- |
-| Docker Hub | \`goxstream/goxstream:${releaseVersion}\` | \`docker pull goxstream/goxstream:${releaseVersion}\` |
+| Docker Hub | \`shionstream/shionstream:${releaseVersion}\` | \`docker pull shionstream/shionstream:${releaseVersion}\` |
 `;
 }
 

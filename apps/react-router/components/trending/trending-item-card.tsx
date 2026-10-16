@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Crown, Star, Eye, ArrowUp, ArrowDown, Play } from "lucide-react";
-import { Button } from "@goxstream/ui/components/button";
+import { Button } from "@shionstream/ui/components/button";
 import { cn, getImageStyle } from "@/lib/utils";
 import type { TrendingAnimeItem, TrendingPeriod } from "@/types/anime";
 

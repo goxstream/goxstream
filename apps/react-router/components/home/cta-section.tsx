@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Sparkles, ArrowRight, UserPlus } from "lucide-react";
-import { buttonVariants } from "@goxstream/ui/components/button";
+import { buttonVariants } from "@shionstream/ui/components/button";
 
 export function CtaSection() {
   return (

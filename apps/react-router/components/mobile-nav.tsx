@@ -17,18 +17,18 @@ import {
   LogOut,
   Crown,
 } from "lucide-react";
-import { Button, buttonVariants } from "@goxstream/ui/components/button";
+import { Button, buttonVariants } from "@shionstream/ui/components/button";
 import { LogoBrand } from "@/components/logo-brand";
-import { Avatar, AvatarFallback, AvatarImage } from "@goxstream/ui/components/avatar";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Skeleton } from "@goxstream/ui/components/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@shionstream/ui/components/avatar";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Skeleton } from "@shionstream/ui/components/skeleton";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@goxstream/ui/components/sheet";
+} from "@shionstream/ui/components/sheet";
 import { useUserNav } from "@/hooks/use-user-nav";
 
 const ICON_MAP: Record<string, React.ElementType> = {

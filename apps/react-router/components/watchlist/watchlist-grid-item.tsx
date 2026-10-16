@@ -2,14 +2,14 @@
 
 import { Link } from "react-router";
 import { Play, Star, Trash2, ChevronDown } from "lucide-react";
-import { Badge } from "@goxstream/ui/components/badge";
-import { Button } from "@goxstream/ui/components/button";
+import { Badge } from "@shionstream/ui/components/badge";
+import { Button } from "@shionstream/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@goxstream/ui/components/dropdown-menu";
+} from "@shionstream/ui/components/dropdown-menu";
 import { getImageStyle } from "@/lib/utils";
 import type { WatchlistItem, WatchlistStatus } from "@/types/user";
 
