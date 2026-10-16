@@ -72,5 +72,4 @@ allowBuilds:
   workerd: true
 
 minimumReleaseAgeExclude:
-  - '@goxstream/goxstream-sdk@1.0.1'
   - '@shionstream/shionstream-sdk@1.0.1'
