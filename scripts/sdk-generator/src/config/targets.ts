@@ -24,7 +24,7 @@ export const TARGETS: Record<TargetKey, GeneratorTarget> = {
     gitRepoId: "shionstream-typescript",
     additionalProperties: {
       npmName: "@shionstream/shionstream-sdk",
-      npmVersion: "1.0.0",
+      npmVersion: "1.0.1",
       typescriptThreePlus: "true",
       supportsES6: "true",
       licenseName: "Apache-2.0",
